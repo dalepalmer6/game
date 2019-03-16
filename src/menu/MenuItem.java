@@ -19,13 +19,13 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
-	private int width = 200;
+	private int width = 300;
 	private int height = 100;
 	private int x;
 	private int y;
 	
 	public boolean hovered(double mousex, double mousey) {	
-		if (mousex >= this.x && mousex <= this.x + this.width && mousey >= this.y && mousey <= this.y + this.height) {
+		if (mousex >= x && mousex <= x + width && mousey >= y && mousey <=y + height) {
 			System.out.println(mousex + ", " + mousey);
 			return true;
 		}
@@ -110,12 +110,23 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	@Override
 	public void draw() {
 		//for each MenuItem, draw to the canvas
-		GlobalVars.mainWindow.render(this.image,x,y,width,height);
-		//g.drawString(this.getText(), this.getX(),this.getY() + this.getHeight()/2);
+		GlobalVars.mainWindow.render(this.image,this.text,x,y,width,height);
 	}
 	
 	@Override
 	public void execute() {
 		//extending classes need to define this method
+	}
+
+	@Override
+	public boolean isMouseDown() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isMouseRightDown() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

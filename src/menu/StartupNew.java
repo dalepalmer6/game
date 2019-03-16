@@ -48,6 +48,8 @@ public class StartupNew{
 				GlobalVars.mainWindow = new MainWindow();
 				GlobalVars.mainWindow.start();
 			}
+			
+			GlobalVars.mainWindow.renderBG("bg.png");
 			GlobalVars.mainWindow.drawDrawables();
 		
 			frames++;

@@ -1,6 +1,7 @@
 package canvas;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +18,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -30,6 +32,14 @@ public class MainWindow {
 	private int SCREEN_WIDTH = 1280;
 	private int SCREEN_HEIGHT = 720;
 
+	
+	public int getScreenWidth() {
+		return SCREEN_WIDTH;
+	}
+	
+	public int getScreenHeight() {
+		return SCREEN_HEIGHT;
+	}
 //	public static void main(String[] args) {
 //		MainWindow m = new MainWindow();
 //		m.start();
@@ -52,11 +62,35 @@ public class MainWindow {
 //		System.out.println(">> Texture width: " + texture.getTextureWidth());
 //		System.out.println(">> Texture height: " + texture.getTextureHeight());
 //		System.out.println(">> Texture ID: " + texture.getTextureID());
+		
 	}
 
+	public void renderBG(String bgImg) {
+		setTexture("img/" + bgImg);
+		texture.bind(); // or GL11.glBind(texture.getTextureID());
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(0, 0);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2f(1280, 0);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2f(1280, 720);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2f(0, 720);
+//		GL11.glVertex2f(SCREEN_WIDTH, 0);
+//		GL11.glTexCoord2f(1, 1);
+//		GL11.glVertex2f(SCREEN_WIDTH, SCREEN_HEIGHT);
+//		GL11.glTexCoord2f(0, 1);
+//		GL11.glVertex2f(0, SCREEN_HEIGHT);
+		GL11.glEnd();
+	}
+	
 	public void render(int x, int y, int width, int height) {
 		//draw with no texture
 		Color.white.bind();
+		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glBegin(GL11.GL_QUADS);
@@ -71,8 +105,31 @@ public class MainWindow {
 		GL11.glEnd();
 	}
 	
+	public void render(String textureName, String text, int x, int y, int width, int height) {
+		//render with text (buttons)
+		setTexture("img/" + textureName);
+		texture.bind(); // or GL11.glBind(texture.getTextureID());
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2f(x + width, y);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2f(x + width, y + height);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2f(x, y + height);
+		GL11.glEnd();
+		
+		Color.white.bind();
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		TrueTypeFont font = new TrueTypeFont(awtFont, true);
+		font.drawString(x, y + height/2 - 25, text, Color.white);
+	}
+	
 	public void render(String textureName, int x, int y, int width, int height) {
-		// Color.white.bind();
+//		Color.white.bind();
 		setTexture("img/" + textureName);
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -123,8 +180,7 @@ public class MainWindow {
 
 	public void drawDrawables() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		// render(10,10,300,120);
-
+//		render(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 		Point mouse = GlobalVars.mainWindow.getMouseCoordinates();
 		// draws all the objects that need to be drawn
 		boolean somethingIsHovered = false;
@@ -135,20 +191,10 @@ public class MainWindow {
 					somethingIsHovered = true;
 					((Hoverable) d).hoveredAction();
 					if (d instanceof Clickable) {
-						//on click run execute
-						
 						if (mouseLeft()) {
 //							System.out.println(d.getClass().toString());
 							((Clickable) d).execute();
 						}
-					}
-					if (d instanceof MapPreview) {
-						//System.out.println("Hovering over the MapPreview");
-
-					}
-					if (d instanceof TileBar) {
-						//System.out.println("Hovering over the TileBar");
-
 					}
 				} else {
 					((Hoverable) d).unhoveredAction();

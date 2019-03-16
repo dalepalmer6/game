@@ -1,22 +1,51 @@
 package menu.namecharactersmenu;
 
+import global.GlobalVars;
 import menu.BackButton;
 import menu.Menu;
+import menu.MenuItem;
 import menu.TextBox;
 
 public class CharacterNamingMenu extends Menu{
-	
+	private int curX = 10;
+	private int curY = 10;
+	private int numButtons;
 	public CharacterNamingMenu() {
 		super();
 		//add all buttons and menuitems
 		addMenuItem(new TextBox("Name the main character!"));
 		addMenuItem(new BackButton());
-		addMenuItem(new PromptForCharacterNameButton("Ness",10,10));
-		addMenuItem(new PromptForCharacterNameButton("Paula",10,60));
-		addMenuItem(new PromptForCharacterNameButton("Jeff",10,110));
-		addMenuItem(new PromptForCharacterNameButton("Poo",10,160));
-		addMenuItem(new PromptForCharacterNameButton("King",10,210));
-		addMenuItem(new PromptForCharacterNameButton("Steak",110,10));
-		addMenuItem(new PromptForCharacterNameButton("Rockin",110,60));
+		addToView("Ness");
+		addToView("Paula");
+		addToView("Jeff");
+		addToView("Poo");
+		addToView("King");
+		addToView("Steak");
+		addToView("Rockin");
+	}
+	
+	public void addToView(String text) {
+		MenuItem mi = new PromptForCharacterNameButton(text,curX,curY);
+		updateXY(mi.getWidth(), mi.getHeight()); 
+		numButtons++;
+		addMenuItem(mi);
+	}
+	
+	public void updateXY(int width, int height) {
+		curX += width;
+		if (curX + width > GlobalVars.mainWindow.getScreenWidth()) {
+			curX = 10;
+			updateCurY(height);
+		} 
+	}
+	
+	public void updateCurY(int height) {
+		curY += height;
+		if (curY + height > GlobalVars.mainWindow.getScreenHeight()) {
+			curX = 10;
+			curY = 10;
+			System.err.println("Too many items on screen. Need new page.");
+			//needs logic if y overflows as well, create another page
+		} 
 	}
 }
