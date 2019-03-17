@@ -15,7 +15,6 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	private String text;
 	private Color textColor = Color.white;
 	private Color bgColor = Color.black;
-	private Color altBGColor = Color.LIGHT_GRAY;
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
@@ -26,7 +25,6 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	
 	public boolean hovered(double mousex, double mousey) {	
 		if (mousex >= x && mousex <= x + width && mousey >= y && mousey <=y + height) {
-			System.out.println(mousex + ", " + mousey);
 			return true;
 		}
 		return false;

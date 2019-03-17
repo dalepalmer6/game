@@ -3,14 +3,7 @@ package canvas;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
@@ -24,8 +17,6 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 import global.GlobalVars;
-import mapeditor.MapPreview;
-import mapeditor.TileBar;
 
 public class MainWindow {
 	private Texture texture;
@@ -40,10 +31,6 @@ public class MainWindow {
 	public int getScreenHeight() {
 		return SCREEN_HEIGHT;
 	}
-//	public static void main(String[] args) {
-//		MainWindow m = new MainWindow();
-//		m.start();
-//	}
 
 	public void setTexture(String pathToFile) {
 		try {
@@ -53,18 +40,7 @@ public class MainWindow {
 			e.printStackTrace();
 		}
 	}
-
-	public void init() {
-//		setTexture("img/button.png");
-//		System.out.println("Texture loaded: " + texture);
-//		System.out.println(">> Image width: " + texture.getImageWidth());
-//		System.out.println(">> Image height: " + texture.getImageHeight());
-//		System.out.println(">> Texture width: " + texture.getTextureWidth());
-//		System.out.println(">> Texture height: " + texture.getTextureHeight());
-//		System.out.println(">> Texture ID: " + texture.getTextureID());
-		
-	}
-
+	
 	public void renderBG(String bgImg) {
 		setTexture("img/" + bgImg);
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
@@ -151,21 +127,19 @@ public class MainWindow {
 		try {
 			Display.setDisplayMode(new DisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT));
 			Display.create();
-			Display.setVSyncEnabled(true);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 
-
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		// enable alpha blending
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		GL11.glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//
+//		GL11.glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
@@ -175,44 +149,37 @@ public class MainWindow {
 
 	public void start() {
 		initGL();
-		init();
 	}
 
 	public void drawDrawables() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-//		render(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-		Point mouse = GlobalVars.mainWindow.getMouseCoordinates();
 		// draws all the objects that need to be drawn
-		boolean somethingIsHovered = false;
 		for (Drawable d : GlobalVars.getDrawables()) {
 			d.draw();
-			if (d instanceof Hoverable) {
-				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
-					somethingIsHovered = true;
-					((Hoverable) d).hoveredAction();
-					if (d instanceof Clickable) {
-						if (mouseLeft()) {
-//							System.out.println(d.getClass().toString());
-							((Clickable) d).execute();
-						}
-					}
-				} else {
-					((Hoverable) d).unhoveredAction();
-				}
-			}
-			if (somethingIsHovered == false) {
-				GlobalVars.somethingHovered = null;
-			}
-		}
-
-		Display.update();
-		Display.sync(100);
-
-		if (Display.isCloseRequested()) {
-			Display.destroy();
-			System.exit(0);
 		}
 	}
+	
+//	public void drawDrawables() {
+//		//GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+////		render(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+//		Point mouse = GlobalVars.mainWindow.getMouseCoordinates();
+//		// draws all the objects that need to be drawn
+//		for (Drawable d : GlobalVars.getDrawables()) {
+//			d.draw();
+//			if (d instanceof Hoverable) {
+//				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
+//					((Hoverable) d).hoveredAction();
+//					if (d instanceof Clickable) {
+//						if (mouseLeft()) {
+//							((Clickable) d).execute();
+//						}
+//					}
+//				} else {
+//					((Hoverable) d).unhoveredAction();
+//				}
+//			}
+//		}
+//	}
 
 	public boolean mouseLeft() {
 		if (Mouse.isButtonDown(0)) {
