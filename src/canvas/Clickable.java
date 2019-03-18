@@ -1,7 +1,8 @@
 package canvas;
 
+import global.InputController;
+
 public interface Clickable {
 	public void execute();
-	public boolean isMouseDown();
-	public boolean isMouseRightDown();
+	public void checkInputs(InputController input);
 }

@@ -1,20 +1,17 @@
 package mapeditor;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 import canvas.Clickable;
 import canvas.Drawable;
 import canvas.Hoverable;
-import global.GlobalVars;
+import canvas.MainWindow;
 
-public class MapPreview implements Drawable, Hoverable, Clickable {
+public class MapPreview extends LeftAndRightClickableItem implements Drawable, Hoverable, Clickable {
 	private Map map;
-	private Point currentTileId = getTilePosition();
-	private boolean dragging = false;
 	private int x;
 	private int y;
 	private int widthInTiles;
@@ -22,6 +19,12 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 	private int width;
 	private int height;
 	private int tileTool;
+	private int TILE_SIZE = 32;
+	private TileHashMap tileMap;
+	
+	public int getTileSize() {
+		return TILE_SIZE;
+	}
 	
 	public void setTool(int t_id) {
 		this.tileTool = t_id;
@@ -29,11 +32,6 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 	
 	public int getTool() {
 		return tileTool;
-	}
-	
-	public void toggleDragging(boolean b) {
-		System.out.println("setting dragging to " + b );
-		dragging = b;
 	}
 	
 	public void editMap(int currentTileId) {
@@ -45,32 +43,41 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 			this.map.setTile(currentTileId, x, y);
 	}
 	
-	public MapPreview(Map m) {
+	public MapPreview(int ts, int x, int y, Map m, TileHashMap tm) {
 		this.map = m;
+		this.TILE_SIZE = ts;
 		//set at the default position
-		this.x = 3 * GlobalVars.TILE_SIZE;
-		this.y = 3 * GlobalVars.TILE_SIZE;
+		this.x = x;
+		this.y = y;
 		this.widthInTiles = 20;
 		this.heightInTiles = 20;
-		this.width = this.widthInTiles * GlobalVars.TILE_SIZE;
-		this.height = this.heightInTiles * GlobalVars.TILE_SIZE;
+		this.width = this.widthInTiles * TILE_SIZE;
+		this.height = this.heightInTiles * TILE_SIZE;
+		this.tileMap = tm;
 	}
 	
 	//can toggle this off!
-	public void drawGrid() {
-		for (int i = this.x; i < this.x + 20*GlobalVars.TILE_SIZE; i+=GlobalVars.TILE_SIZE) {
+	public void drawGrid(MainWindow m) {
+		for (int i = this.x; i <= this.x + width; i+= TILE_SIZE) {
 			//for every row
-			for (int j = this.y; j < this.y + 20*GlobalVars.TILE_SIZE; j+=GlobalVars.TILE_SIZE) {
+			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
-				GlobalVars.mainWindow.render(j,this.x,1,this.heightInTiles * GlobalVars.TILE_SIZE);
+				m.render(this.x,j,width,1);
 			}
-			GlobalVars.mainWindow.render(this.y,i,this.widthInTiles * GlobalVars.TILE_SIZE,1);
+			m.render(i,this.y,1,height);
 		}
 	}
 
+	public Point getMouseCoordinates() {
+		//relative to the tool
+		int x = Mouse.getX() - this.x;
+		int y = Display.getHeight() - Mouse.getY() - this.y;
+		return new Point(x, y);
+	}
+	
 	public Point getTilePosition() {
-		double tileX = Math.floor((-this.x + GlobalVars.mainWindow.getMouseCoordinates().getX())/GlobalVars.TILE_SIZE);
-		double tileY = Math.floor((-this.y + GlobalVars.mainWindow.getMouseCoordinates().getY())/GlobalVars.TILE_SIZE);
+		double tileX = Math.floor((getMouseCoordinates().getX())/TILE_SIZE);
+		double tileY = Math.floor((getMouseCoordinates().getY())/TILE_SIZE);
 		if (tileX > this.widthInTiles || tileX < 0) {
 			tileX = -1;
 		}
@@ -82,25 +89,20 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 		return xy;
 	}
 	
-	public int getTileAtPos(Point xy) {
-		int x = (int) xy.getX();
-		int y = (int) xy.getY();
-		return this.map.getTile(x,y);
-	}
-	
-	public void drawTiles() {
-		int t_id;
-		for (int i = 0; i < 20; i++) {
-			//for every row
-			for (int j = 0; j < 20; j++) {
-				//for every column
-				t_id = this.map.getTile(i,j);
-				GlobalVars.mainWindow.render(GlobalVars.tileMap.getTile(t_id).getImageName(), x + (i*GlobalVars.TILE_SIZE),y + j*GlobalVars.TILE_SIZE,GlobalVars.TILE_SIZE,GlobalVars.TILE_SIZE);
+	public void drawTiles(MainWindow m) {
+			Tile.initDrawTiles(m);
+			Tile tile;
+			for (int i = 0; i < widthInTiles; i++) {
+				//for every row
+				for (int j = 0; j < heightInTiles; j++) {
+					//for every column
+					tile = this.map.getTile(i,j);
+					m.renderTile(x + (i*TILE_SIZE),y + j*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
+				}
 			}
-		}
 	}
 	
-	public void drawCoordinates() {
+	public void drawCoordinates(MainWindow m) {
 		Point xy = getTilePosition();
 		if (!(xy.getX() < 0) && !(xy.getY() < 0)) {}
 //		System.out.println("(" + getTilePosition().getX() + "," + getTilePosition().getY() + ")");
@@ -110,10 +112,10 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 	
 	
 	@Override
-	public void draw() {
-		drawTiles();
-		drawGrid();
-		drawCoordinates();
+	public void draw(MainWindow m) {
+		drawTiles(m);
+		drawGrid(m);
+		drawCoordinates(m);
 	}
 
 	public boolean hovered(double mousex, double mousey) {
@@ -134,23 +136,12 @@ public class MapPreview implements Drawable, Hoverable, Clickable {
 
 	@Override
 	public void execute() {
-		if (isMouseDown()) {
-			editMap(GlobalVars.mapPreviewEditTool);
-		}
+		editMap(tileTool);
 	}
-
+	
 	@Override
-	public boolean isMouseDown() {
-		if (Mouse.isButtonDown(0)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean isMouseRightDown() {
-		return false;
+	public void executeRightClick() {
+		editMap(0);
 	}
 	
 }

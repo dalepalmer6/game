@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import canvas.Drawable;
+import canvas.MainWindow;
 
 public class TextBox implements Drawable {
 	private String text;
@@ -33,7 +34,7 @@ public class TextBox implements Drawable {
 //	}
 
 	@Override
-	public void draw() {
+	public void draw(MainWindow m) {
 		// TODO Auto-generated method stub
 		
 	}

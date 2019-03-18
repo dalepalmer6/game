@@ -5,14 +5,16 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import canvas.Drawable;
-import global.GlobalVars;
+import global.MenuStack;
 
 public class Menu implements MenuInterface {
 	private String title = "Welcome to Game!";
 	private List<Drawable> menuItems;
 	private String id;
+	protected StartupNew state;
 	
-	public Menu() {
+	public Menu(StartupNew m) {
+		setState(m);
 		menuItems = new ArrayList<Drawable>();
 	}
 	
@@ -40,6 +42,14 @@ public class Menu implements MenuInterface {
 	public void addMenuItem(Drawable m) {
 		// TODO Auto-generated method stub
 		menuItems.add(m);
+	}
+
+	public StartupNew getState() {
+		return state;
+	}
+
+	public void setState(StartupNew state) {
+		this.state = state;
 	}
 
 }

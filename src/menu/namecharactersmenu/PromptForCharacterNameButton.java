@@ -11,11 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import menu.MenuItem;
+import menu.StartupNew;
 
 public class PromptForCharacterNameButton extends MenuItem {
 	
-	public PromptForCharacterNameButton(String text, int x, int y) {
-		super(text,x,y);
+	public PromptForCharacterNameButton(String text, int x, int y,StartupNew m ) {
+		super(text,x,y,m);
 	}
 	
 	public void execute() {

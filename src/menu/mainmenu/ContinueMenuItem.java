@@ -1,12 +1,14 @@
 package menu.mainmenu;
 
+import global.MenuStack;
 import menu.MenuItem;
+import menu.StartupNew;
 
 public class ContinueMenuItem extends MenuItem {
 	private static String text = "Continue";
 	
-	public ContinueMenuItem(int x, int y) {
-		super(text,x,y);
+	public ContinueMenuItem(int x, int y, StartupNew m) {
+		super(text,x,y,m);
 	}
 	
 	public void execute() {

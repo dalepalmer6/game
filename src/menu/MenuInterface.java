@@ -3,9 +3,9 @@ package menu;
 import java.util.List;
 
 import canvas.Drawable;
+import global.MenuStack;
 
 public interface MenuInterface {
-	
 	public void addMenuItem(Drawable m);
 	
 	public List<Drawable> getMenuItems();

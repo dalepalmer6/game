@@ -9,9 +9,11 @@ import java.awt.Rectangle;
 import canvas.Clickable;
 import canvas.Drawable;
 import canvas.Hoverable;
-import global.GlobalVars;
+import canvas.MainWindow;
+import global.InputController;
+import global.MenuStack;
 
-public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickable{
+public class MenuItem extends LeftClickableItem implements MenuItemInterface, Hoverable, Drawable, Clickable {
 	private String text;
 	private Color textColor = Color.white;
 	private Color bgColor = Color.black;
@@ -22,6 +24,7 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	private int height = 100;
 	private int x;
 	private int y;
+	protected StartupNew state;
 	
 	public boolean hovered(double mousex, double mousey) {	
 		if (mousex >= x && mousex <= x + width && mousey >= y && mousey <=y + height) {
@@ -83,13 +86,15 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 		this.bgColor = color;
 	}
 	
-	public MenuItem(String t, int x, int y) {
+	public MenuItem(String t, int x, int y, StartupNew m) {
+		state = m;
 		text = t;
 		this.x = x;
 		this.y = y;
 	}
 	
-	public MenuItem(String t, int x, int y, int width, int height) {
+	public MenuItem(String t, int x, int y, int width, int height, StartupNew m) {
+		state = m;
 		text = t;
 		this.x = x;
 		this.y = y;
@@ -106,25 +111,14 @@ public class MenuItem implements MenuItemInterface, Hoverable, Drawable, Clickab
 	}
 	
 	@Override
-	public void draw() {
+	public void draw(MainWindow m) {
 		//for each MenuItem, draw to the canvas
-		GlobalVars.mainWindow.render(this.image,this.text,x,y,width,height);
+		m.render(this.image,this.text,x,y,width,height);
 	}
-	
+
 	@Override
 	public void execute() {
-		//extending classes need to define this method
+		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public boolean isMouseDown() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isMouseRightDown() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

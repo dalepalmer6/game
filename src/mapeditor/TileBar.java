@@ -1,19 +1,18 @@
 package mapeditor;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 import canvas.Clickable;
 import canvas.Drawable;
 import canvas.Hoverable;
-import global.GlobalVars;
+import canvas.MainWindow;
+import menu.LeftClickableItem;
+import menu.StartupNew;
 
-public class TileBar implements Drawable, Hoverable, Clickable {
+public class TileBar extends LeftClickableItem implements Drawable, Hoverable, Clickable {
 	private int x;
 	private int y;
 	private int width;
@@ -21,15 +20,32 @@ public class TileBar implements Drawable, Hoverable, Clickable {
 	private int widthInTiles;
 	private int heightInTiles;
 	private int hoveredTileId;
-	private int MAX_HEIGHT_IN_TILES = 10;
-	private int MAX_WIDTH_IN_TILES =1;
+	private int MAX_HEIGHT_IN_TILES = 16;
+	private int MAX_WIDTH_IN_TILES = 32;
+	private TileHashMap tileMap;
+	private MapPreview mapPreview;
+	private StartupNew state;
+	private int TILE_SIZE = 32;
 	
-	public TileBar() {
+	public Point getMouseCoordinates() {
+		int x = Mouse.getX();
+		int y = Display.getHeight() - Mouse.getY();
+		return new Point(x, y);
+	}
+	
+	public TileBar(int x, int y, int maxWidthTiles, int maxHeightTiles, TileHashMap tm, MapPreview mapPreview, StartupNew state) {
 		//set location
-		x = (21 + 3) * GlobalVars.TILE_SIZE;
-		y = 3 * GlobalVars.TILE_SIZE;
+		this.x = x;
+		this.y = y;
+		this.MAX_HEIGHT_IN_TILES = maxHeightTiles;
+		this.MAX_WIDTH_IN_TILES = maxWidthTiles;
+		this.state= state;
+		this.mapPreview = mapPreview;
+		tileMap = tm;
+		x = (21 + 3) * mapPreview.getTileSize();
+		y = 3 * mapPreview.getTileSize();
 		//create a grid that shows the tiles
-		int numTiles = GlobalVars.tileMap.size();
+		int numTiles = tileMap.size();
 		int i = 0; int j = 0;
 		while (i < numTiles) {
 			if (i % this.MAX_WIDTH_IN_TILES == 0) {
@@ -40,15 +56,15 @@ public class TileBar implements Drawable, Hoverable, Clickable {
 		if (j > 1) {
 			i = this.MAX_WIDTH_IN_TILES;
 		}
-		this.width = i*GlobalVars.TILE_SIZE;
-		this.height = j*GlobalVars.TILE_SIZE;
+		this.width = i*mapPreview.getTileSize();
+		this.height = j*mapPreview.getTileSize();
 		this.widthInTiles = i;
 		this.heightInTiles = j;
 	}
 	
 	public Point getTilePosition() {
-		double tileX = Math.floor((-this.x + GlobalVars.mainWindow.getMouseCoordinates().getX())/GlobalVars.TILE_SIZE);
-		double tileY = Math.floor((-this.y + GlobalVars.mainWindow.getMouseCoordinates().getY())/GlobalVars.TILE_SIZE);
+		double tileX = Math.floor((-this.x + state.getMainWindow().getMouseCoordinates().getX())/mapPreview.getTileSize());
+		double tileY = Math.floor((-this.y + state.getMainWindow().getMouseCoordinates().getY())/mapPreview.getTileSize());
 		if (tileX > this.widthInTiles || tileX < 0) {
 			tileX = -1;
 		}
@@ -63,7 +79,13 @@ public class TileBar implements Drawable, Hoverable, Clickable {
 	public void setHoveredTileId() {
 		Point xy = getTilePosition();
 		int index = xy.x + (xy.y * this.widthInTiles);
-		this.hoveredTileId = GlobalVars.tileMap.getTile(index).getId();
+		try {
+			this.hoveredTileId = tileMap.getTile(index).getId();
+		} catch(NullPointerException e) {
+			System.err.println("Tile Index: " + index +  " out of bounds, tile does not exist.");
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public int getHoveredTile() {
@@ -75,23 +97,42 @@ public class TileBar implements Drawable, Hoverable, Clickable {
 //		System.out.println("(" + xy.getX() + "," + xy.getY() + ")");
 	}
 	
-	@Override
-	public void draw() {
+	public void drawGrid(MainWindow m) {
+		for (int i = this.x; i <= this.x + width; i+= TILE_SIZE) {
+			//for every row
+			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
+				//for every column
+				m.render(this.x,j,width,1);
+			}
+			m.render(i,this.y,1,height);
+			
+		}
+	}
+	
+	public void drawTiles() {
 		// read the tileMap and for each tile, draw to the next open spot
-		TileHashMap tm = GlobalVars.tileMap;
+		MainWindow m = state.getMainWindow();
+		Tile.initDrawTiles(m);
 		int i = 0;
 		int j = 0;
 		while (j < this.heightInTiles) {
-			int drawingX = i * GlobalVars.TILE_SIZE;
-			int drawingY = j * GlobalVars.TILE_SIZE;
+			int drawingX = i * TILE_SIZE;
+			int drawingY = j * TILE_SIZE;
 			int tileNo =  i+(j*this.widthInTiles);
-			GlobalVars.mainWindow.render(GlobalVars.tileMap.getTile(tileNo).getImageName(),drawingX + this.x,drawingY + this.y,GlobalVars.TILE_SIZE,GlobalVars.TILE_SIZE);
+			Tile tile = tileMap.getTile(tileNo);
+			m.renderTile(drawingX + this.x,drawingY + this.y,mapPreview.getTileSize(),mapPreview.getTileSize(), tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
 			i++;
 			if (i == this.widthInTiles) {
 				i=0;
 				j++;
 			}
 		}
+	}
+	
+	@Override
+	public void draw(MainWindow m) {
+		drawTiles();
+		drawGrid(m);
 		drawCoordinates();
 	}
 
@@ -118,24 +159,6 @@ public class TileBar implements Drawable, Hoverable, Clickable {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		System.out.println("Setting edit tool to " + getHoveredTile());
-		GlobalVars.mapPreviewEditTool = getHoveredTile();
+		mapPreview.setTool(hoveredTileId);
 	}
-
-	@Override
-	public boolean isMouseDown() {
-		// TODO Auto-generated method stub
-		if (Mouse.isButtonDown(0)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean isMouseRightDown() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

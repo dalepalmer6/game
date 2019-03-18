@@ -25,9 +25,7 @@ public class MenuStack {
 	}
 	
 	public Menu popAndAddMenuItems() {
-		Menu m = stack.remove(stack.size()-1);
-		GlobalVars.clearDrawables();
-		GlobalVars.setDrawables(m.getMenuItems());
+		Menu m = pop();
 		return m;
 	}
 	

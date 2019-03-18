@@ -1,20 +1,20 @@
 package menu.namecharactersmenu;
 
-import global.GlobalVars;
 import menu.BackButton;
 import menu.Menu;
 import menu.MenuItem;
+import menu.StartupNew;
 import menu.TextBox;
 
 public class CharacterNamingMenu extends Menu{
 	private int curX = 10;
 	private int curY = 10;
 	private int numButtons;
-	public CharacterNamingMenu() {
-		super();
+	public CharacterNamingMenu(StartupNew m) {
+		super(m);
 		//add all buttons and menuitems
 		addMenuItem(new TextBox("Name the main character!"));
-		addMenuItem(new BackButton());
+		addMenuItem(new BackButton(m));
 		addToView("Ness");
 		addToView("Paula");
 		addToView("Jeff");
@@ -25,7 +25,7 @@ public class CharacterNamingMenu extends Menu{
 	}
 	
 	public void addToView(String text) {
-		MenuItem mi = new PromptForCharacterNameButton(text,curX,curY);
+		MenuItem mi = new PromptForCharacterNameButton(text,curX,curY, state);
 		updateXY(mi.getWidth(), mi.getHeight()); 
 		numButtons++;
 		addMenuItem(mi);
@@ -33,7 +33,7 @@ public class CharacterNamingMenu extends Menu{
 	
 	public void updateXY(int width, int height) {
 		curX += width;
-		if (curX + width > GlobalVars.mainWindow.getScreenWidth()) {
+		if (curX + width > state.getMainWindow().getScreenWidth()) {
 			curX = 10;
 			updateCurY(height);
 		} 
@@ -41,7 +41,7 @@ public class CharacterNamingMenu extends Menu{
 	
 	public void updateCurY(int height) {
 		curY += height;
-		if (curY + height > GlobalVars.mainWindow.getScreenHeight()) {
+		if (curY + height > state.getMainWindow().getScreenHeight()) {
 			curX = 10;
 			curY = 10;
 			System.err.println("Too many items on screen. Need new page.");

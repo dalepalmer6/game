@@ -1,6 +1,9 @@
 package menu;
 
-public interface MenuItemInterface {
+import canvas.Clickable;
+import global.InputController;
+
+public interface MenuItemInterface extends Clickable {
 
 	public void setText(String s);
 	
