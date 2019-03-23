@@ -14,7 +14,7 @@ import global.InputController;
 import global.MenuStack;
 
 public class MenuItem extends LeftClickableItem implements MenuItemInterface, Hoverable, Drawable, Clickable {
-	private String text;
+	protected String text;
 	private Color textColor = Color.white;
 	private Color bgColor = Color.black;
 	private String imageNeutral = "button.png";
@@ -113,12 +113,19 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	@Override
 	public void draw(MainWindow m) {
 		//for each MenuItem, draw to the canvas
-		m.render(this.image,this.text,x,y,width,height);
+//		m.render(this.image,this.text,x,y,width,height);
 	}
 
+	public String prepareToExecute() {
+		state.getSelectionStack().push(this);
+		execute();
+		return null;
+	}
+	
 	@Override
-	public void execute() {
+	public String execute() {
 		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

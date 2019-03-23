@@ -6,7 +6,8 @@ public class BackButton extends MenuItem {
 		super("Back",m.getMainWindow().getScreenHeight()-200,m.getMainWindow().getScreenHeight()-200,100,50, m);
 	}
 	
-	public void execute() {
+	public String execute() {
 		state.getMenuStack().popAndAddMenuItems();
+		return null;
 	}
 }

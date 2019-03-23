@@ -12,8 +12,9 @@ public class MapPreviewTestButton extends MenuItem {
 		super(text,x,y,m);
 	}
 	
-	public void execute() {
+	public String execute() {
 		System.out.println("Loading map edit.");
 		state.getMenuStack().push(new MapEditMenu(state,state.tileMap));
+		return null;
 	}
 }

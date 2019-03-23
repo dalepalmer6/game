@@ -11,8 +11,9 @@ public class ContinueMenuItem extends MenuItem {
 		super(text,x,y,m);
 	}
 	
-	public void execute() {
+	public String execute() {
 		System.out.println("Loading a previous game.");
+		return null;
 	}
 	
 }

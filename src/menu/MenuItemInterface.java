@@ -9,5 +9,5 @@ public interface MenuItemInterface extends Clickable {
 	
 	public String getText();
 	
-	public void execute();
+	public String execute();
 }

@@ -1,9 +1,11 @@
 package mapeditor;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.Texture;
 
 import canvas.Clickable;
 import canvas.Drawable;
@@ -17,6 +19,8 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 	private int y;
 	private int width;
 	private int height;
+	private int viewX = 0;
+	private int viewY = 0;
 	private int widthInTiles;
 	private int heightInTiles;
 	private int hoveredTileId;
@@ -26,40 +30,43 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 	private MapPreview mapPreview;
 	private StartupNew state;
 	private int TILE_SIZE = 32;
+	private ArrayList<ArrayList<Tile>> currentTilesOfInterest;
 	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
 	public Point getMouseCoordinates() {
 		int x = Mouse.getX();
 		int y = Display.getHeight() - Mouse.getY();
 		return new Point(x, y);
 	}
 	
-	public TileBar(int x, int y, int maxWidthTiles, int maxHeightTiles, TileHashMap tm, MapPreview mapPreview, StartupNew state) {
+	public TileBar(int maxWidthTiles, int maxHeightTiles, TileHashMap tm, MapPreview mapPreview, StartupNew state) {
 		//set location
-		this.x = x;
-		this.y = y;
-		this.MAX_HEIGHT_IN_TILES = maxHeightTiles;
-		this.MAX_WIDTH_IN_TILES = maxWidthTiles;
+		this.x = mapPreview.getRightEdge() + 3*TILE_SIZE;
+		this.y = mapPreview.getY();
+		state.getTextureAtlas().setRectByName("img/tiles.png");
+//		this.MAX_HEIGHT_IN_TILES = state.textures.get("img/tiles.png").getTextureHeight() / 16;
+//		this.MAX_WIDTH_IN_TILES = state.textures.get("img/tiles.png").getTextureWidth() / 16;
 		this.state= state;
 		this.mapPreview = mapPreview;
 		tileMap = tm;
-		x = (21 + 3) * mapPreview.getTileSize();
-		y = 3 * mapPreview.getTileSize();
-		//create a grid that shows the tiles
-		int numTiles = tileMap.size();
-		int i = 0; int j = 0;
-		while (i < numTiles) {
-			if (i % this.MAX_WIDTH_IN_TILES == 0) {
-				j++;
-			}
-			i++;
-		}
-		if (j > 1) {
-			i = this.MAX_WIDTH_IN_TILES;
-		}
-		this.width = i*mapPreview.getTileSize();
-		this.height = j*mapPreview.getTileSize();
-		this.widthInTiles = i;
-		this.heightInTiles = j;
+		this.widthInTiles = maxWidthTiles;
+		this.heightInTiles = maxHeightTiles;
+		this.width = widthInTiles * TILE_SIZE;
+		this.height = heightInTiles * TILE_SIZE;
 	}
 	
 	public Point getTilePosition() {
@@ -78,13 +85,15 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 	
 	public void setHoveredTileId() {
 		Point xy = getTilePosition();
-		int index = xy.x + (xy.y * this.widthInTiles);
+//		int index = xy.x + (xy.y * this.widthInTiles);
 		try {
-			this.hoveredTileId = tileMap.getTile(index).getId();
+			this.hoveredTileId = currentTilesOfInterest.get(xy.y).get(xy.x).getId();
 		} catch(NullPointerException e) {
-			System.err.println("Tile Index: " + index +  " out of bounds, tile does not exist.");
+			System.err.println("Tile Index: " +  " out of bounds, tile does not exist.");
 			e.printStackTrace();
-		}
+		} catch(IndexOutOfBoundsException e) {
+			
+		} 
 		
 	}
 	
@@ -102,35 +111,55 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 			//for every row
 			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
-				m.render(this.x,j,width,1);
+				m.renderTile(this.x,j,width,1,1,1,1,1);
 			}
-			m.render(i,this.y,1,height);
+			m.renderTile(i,this.y,1,height,1,1,1,1);
 			
 		}
+	}
+	
+	public void getTilesOfInterest() {
+		MainWindow m = state.getMainWindow();
+		m.setTexture("img/tiles.png");
+		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
+		this.MAX_WIDTH_IN_TILES =  state.getTextureAtlas().getCurrentRectangle().width / 16;
+//		Texture t = m.getTexture();
+		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 16;
+		ArrayList<ArrayList<Tile>> tiles = new ArrayList<ArrayList<Tile>>();
+		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
+		ArrayList<Tile> row = new ArrayList<Tile>();
+		for (int j = viewY; j < this.heightInTiles + viewY; j++) {
+			for (int i = viewX; i < widthInTiles + viewX; i++) {
+				int curId = i + (j * numTilesX);
+				row.add(tileMap.getTile(curId));
+			}
+			tiles.add(row);
+			row = new ArrayList<Tile>();
+		}
+		currentTilesOfInterest = tiles;
+	}
+	
+	public Tile getCurrentTileFromInterestList(int x, int y) {
+		return currentTilesOfInterest.get(y).get(x);
 	}
 	
 	public void drawTiles() {
 		// read the tileMap and for each tile, draw to the next open spot
 		MainWindow m = state.getMainWindow();
 		Tile.initDrawTiles(m);
-		int i = 0;
-		int j = 0;
-		while (j < this.heightInTiles) {
-			int drawingX = i * TILE_SIZE;
-			int drawingY = j * TILE_SIZE;
-			int tileNo =  i+(j*this.widthInTiles);
-			Tile tile = tileMap.getTile(tileNo);
-			m.renderTile(drawingX + this.x,drawingY + this.y,mapPreview.getTileSize(),mapPreview.getTileSize(), tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
-			i++;
-			if (i == this.widthInTiles) {
-				i=0;
-				j++;
+		for (int i = 0; i < this.widthInTiles; i++) {
+			for (int j = 0; j < this.heightInTiles; j++) {
+				int drawingX =  (i) * TILE_SIZE;
+				int drawingY =  (j) * TILE_SIZE;
+				Tile tile = getCurrentTileFromInterestList(i,j);
+				m.renderTile(drawingX + this.x,drawingY + this.y,mapPreview.getTileSize(),mapPreview.getTileSize(), tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
 			}
 		}
 	}
 	
 	@Override
 	public void draw(MainWindow m) {
+		getTilesOfInterest();
 		drawTiles();
 		drawGrid(m);
 		drawCoordinates();
@@ -156,9 +185,44 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 		
 	}
 
+	public void updateView(String movement) {
+		if (movement.equals("L")) {
+			if (viewX != 0) {
+				this.viewX--;
+			} else {
+				System.err.println("View is already at beginning.");
+			}
+			
+		} else if (movement.equals("R")) {
+			if (widthInTiles + viewX < MAX_WIDTH_IN_TILES) {
+				//expand the map in the right
+				System.out.println(viewX);
+				this.viewX++;
+				
+			} else {
+				System.err.println("View is already at the end of the file");
+			}
+		} else if (movement.equals("U")) {
+			if (viewY != 0) {
+				this.viewY--;
+				
+			} else {
+				System.err.println("View is already at the end of the file");
+			}
+		} else if (movement.equals("D")) {
+			if (heightInTiles + viewY >= MAX_HEIGHT_IN_TILES) {
+				this.viewY++;
+				
+			} else {
+				System.err.println("View is already at the end of the file");
+			}
+		}
+	}
+	
 	@Override
-	public void execute() {
+	public String execute() {
 		// TODO Auto-generated method stub
 		mapPreview.setTool(hoveredTileId);
+		return null;
 	}
 }

@@ -6,18 +6,33 @@ import java.util.ArrayList;
 import java.util.List;
 import canvas.Drawable;
 import global.MenuStack;
+import menu.namecharactersmenu.PromptForCharacterNameButton;
 
 public class Menu implements MenuInterface {
 	private String title = "Welcome to Game!";
-	private List<Drawable> menuItems;
+	protected List<Drawable> menuItems;
 	private String id;
 	protected StartupNew state;
-	
-	public Menu(StartupNew m) {
-		setState(m);
-		menuItems = new ArrayList<Drawable>();
+	protected String input;
+	public void setInput(String s) {
+		input =s;
 	}
 	
+	public void appendInput(String s) {
+		input += s;
+	}
+
+	public String getInput() {
+		return input;
+	}
+	public Menu(StartupNew m) {
+		this.state = m;
+		menuItems = new ArrayList<Drawable>();
+	}
+	public MenuItem createMenuItem(String text) {
+		MenuItem mi = new MenuItem(text,0,0, state);
+		return mi;
+	}
 	public String getTitle() {
 		return this.title;
 	}
@@ -48,8 +63,9 @@ public class Menu implements MenuInterface {
 		return state;
 	}
 
-	public void setState(StartupNew state) {
-		this.state = state;
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

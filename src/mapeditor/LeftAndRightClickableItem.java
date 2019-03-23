@@ -7,9 +7,9 @@ import menu.LeftClickableItem;
 public class LeftAndRightClickableItem extends LeftClickableItem implements Clickable{
 
 	@Override
-	public void execute() {
+	public String execute() {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 	
 	public void executeRightClick() {

@@ -3,19 +3,21 @@ package global;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class InputController {
 	private Map<String, Boolean> controllerSignals = new HashMap<String, Boolean>();
 	private Map<String, String> keyMappings = new HashMap<String, String>();
-	private boolean MOUSE_LEFT_DOWN = false;
-	private boolean MOUSE_RIGHT_DOWN = false;
-	private boolean CONFIRM = false;
-	private boolean BACK = false;
-	private boolean UP = false;
-	private boolean LEFT = false;
-	private boolean DOWN = false;
-	private boolean RIGHT = false;
+	public boolean MOUSE_LEFT_DOWN = false;
+	public boolean MOUSE_RIGHT_DOWN = false;
+	public boolean CONFIRM = false;
+	public boolean BACK = false;
+	public boolean UP = false;
+	public boolean LEFT = false;
+	public boolean DOWN = false;
+	public boolean RIGHT = false;
+	public boolean holdable = false;
 	
 	
 	public InputController() {
@@ -29,6 +31,90 @@ public class InputController {
 		controllerSignals.put("RIGHT", RIGHT);
 	}
 	
+	public void pollKeyConfirm() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_X) && !CONFIRM) {
+			System.out.println("Keydown: X");
+			setSignal("CONFIRM", true);
+			CONFIRM = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_X) && CONFIRM) {
+			System.out.println("Keyup: X");
+			setSignal("CONFIRM", false);
+			CONFIRM = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+			setSignal("CONFIRM",false);
+		}
+	}
+	
+	public void pollKeyUp() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP) && !UP) {
+			System.out.println("Keydown: UP");
+			setSignal("UP", true);
+			UP = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_UP) && UP) {
+			System.out.println("Keyup: UP");
+			setSignal("UP", false);
+			UP = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP) && !holdable) {
+			setSignal("UP",false);
+		}
+	}
+	
+	public void pollKeyDown() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN) && !DOWN) {
+			System.out.println("Keydown: DOWN");
+			setSignal("DOWN", true);
+			DOWN = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_DOWN) && DOWN) {
+			System.out.println("Keyup: DOWN");
+			setSignal("DOWN", false);
+			DOWN = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN) && !holdable) {
+			setSignal("DOWN",false);
+		}
+	}
+	
+	public void pollKeyLeft() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT) && !LEFT) {
+			System.out.println("Keydown: LEFT");
+			setSignal("LEFT", true);
+			LEFT = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_LEFT) && LEFT) {
+			System.out.println("Keyup: LEFT");
+			setSignal("LEFT", false);
+			LEFT = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT) && !holdable) {
+			setSignal("LEFT",false);
+		}
+	}
+	
+	public void pollKeyRight() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && !RIGHT) {
+			System.out.println("Keydown: RIGHT");
+			setSignal("RIGHT", true);
+			RIGHT = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && RIGHT) {
+			System.out.println("Keyup: RIGHT");
+			setSignal("RIGHT", false);
+			RIGHT = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && !holdable) {
+			setSignal("RIGHT",false);
+		}
+	}
+	
 	public void pollMouseLeft() {
 		if (mouseLeft() && !MOUSE_LEFT_DOWN) {
 			System.out.println("Clicking Mouse Left");
@@ -39,6 +125,10 @@ public class InputController {
 			System.out.println("Unset Mouse Left");
 			setSignal("MOUSE_LEFT_DOWN", false);
 			MOUSE_LEFT_DOWN = false;
+			holdable = false;
+		}
+		if (mouseLeft() && !holdable) {
+			setSignal("MOUSE_LEFT_DOWN",false);
 		}
 	}
 	
@@ -53,14 +143,21 @@ public class InputController {
 			System.out.println("Unset Mouse Right");
 			setSignal("MOUSE_RIGHT_DOWN", false);
 			MOUSE_RIGHT_DOWN = false;
-			return;
+			holdable = false;
 		} 
+		if (mouseLeft() && !holdable) {
+			setSignal("MOUSE_RIGHT_DOWN",false);
+		}
 	}
 	
 	public void handleInputs() {
 		pollMouseLeft();
 		pollMouseRight();
-		
+		pollKeyLeft();
+		pollKeyRight();
+		pollKeyDown();
+		pollKeyUp();
+		pollKeyConfirm();
 	}
 	
 	public boolean mouseRight() {
@@ -90,5 +187,9 @@ public class InputController {
 	
 	public Map<String, Boolean> getSignals() {
 		return controllerSignals;
+	}
+
+	public void setHoldable(boolean b) {
+		holdable = b;
 	}
 }

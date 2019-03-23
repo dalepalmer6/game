@@ -21,7 +21,21 @@ public class MenuStack {
 	}
 	
 	public Menu pop() {
-		return stack.remove(stack.size()-1);
+		if (stack.size() != 0) {
+			return stack.remove(stack.size()-1);
+		}
+		return null;
+	}
+	
+	public Menu peek() {
+		if (stack.size() != 0) {
+			return stack.get(stack.size()-1);
+		}
+		return null;
+	}
+	
+	public boolean isEmpty() {
+		return stack.isEmpty();
 	}
 	
 	public Menu popAndAddMenuItems() {

@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 
@@ -19,11 +20,14 @@ public class PromptForCharacterNameButton extends MenuItem {
 		super(text,x,y,m);
 	}
 	
-	public void execute() {
-		//create a new JFrame with a Textfield to input the name
-		JOptionPane name = new JOptionPane();
-		String n = name.showInputDialog("Enter a Name:");
-		this.setText(n);
+	public String execute() {
+//		JOptionPane name = new JOptionPane();
+//		String n = name.showInputDialog("Enter a Name:",text);
+//		this.setText(n);
+		CharacterNameInputMenu m = new CharacterNameInputMenu(state);
+		m.create();
+		state.getMenuStack().push(m);
+		return null;
 	}
 	
 }

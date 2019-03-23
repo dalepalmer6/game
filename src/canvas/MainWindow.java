@@ -2,6 +2,7 @@ package canvas;
 
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,25 +11,30 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import global.TextureAtlas;
+
 public class MainWindow {
-	private Texture texture;
+//	private Texture texture;
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
+	private TextureAtlas textureAtlas;
 
-	public MainWindow(int sw, int sh) { 
+	public MainWindow(TextureAtlas ta, int sw, int sh) { 
+		textureAtlas = ta;
 		SCREEN_WIDTH = sw;
 		SCREEN_HEIGHT = sh;
 	}
 	
-	public Texture getTexture() {
-		return texture;
-	}
+//	public Texture getTexture() {
+//		return texture;
+//	}
 	
 	public int getScreenWidth() {
 		return SCREEN_WIDTH;
@@ -39,33 +45,23 @@ public class MainWindow {
 	}
 
 	public void setTexture(String pathToFile) {
-		try {
-			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(pathToFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(pathToFile));
+			textureAtlas.setRectByName(pathToFile);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
+	//renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh)
 	public void renderBG(String bgImg) {
 		setTexture("img/" +  bgImg);
-		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		int TILE_SIZE = 100;
 		for (int i = 0; i < SCREEN_WIDTH; i+=TILE_SIZE) {
 			for (int j = 0; j < SCREEN_HEIGHT; j+=TILE_SIZE) {
-				GL11.glPushMatrix();
-			        GL11.glBegin(GL11.GL_QUADS);
-						GL11.glTexCoord2f(0, 0);
-						GL11.glVertex2f(i, j);
-						GL11.glTexCoord2f(1, 0);
-						GL11.glVertex2f(i + TILE_SIZE, j);
-						GL11.glTexCoord2f(1, 1);
-						GL11.glVertex2f(i + TILE_SIZE,j + TILE_SIZE);
-						GL11.glTexCoord2f(0, 1);
-						GL11.glVertex2f(i,j + TILE_SIZE);
-			        GL11.glEnd();
-		        GL11.glPopMatrix();
+				renderTile(i,j,TILE_SIZE,TILE_SIZE,0,0,64,64);
 			}
 		}
 		
@@ -73,90 +69,42 @@ public class MainWindow {
 		
 	}
 	
-	public void render(int x, int y, int width, int height) {
-		//draw with no texture
-		Color.white.bind();
-		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		
-        GL11.glPushMatrix();
-            GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex2f(x, y);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex2f(x + width, y);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex2f(x + width, y + height);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex2f(x, y + height);
-            GL11.glEnd();
-        GL11.glPopMatrix();
-	}
-	
-	public void render(String textureName, String text, int x, int y, int width, int height) {
-		//render with text (buttons)
-		setTexture("img/" + textureName);
-		texture.bind(); // or GL11.glBind(texture.getTextureID());
-        // draw quad
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPushMatrix();
-            GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0f, 0f);
-				GL11.glVertex2f(x, y);
-				GL11.glTexCoord2f(1f, 0f);
-				GL11.glVertex2f(x + width, y);
-				GL11.glTexCoord2f(1f, 1f);
-				GL11.glVertex2f(x + width, y + height);
-				GL11.glTexCoord2f(0f, 1f);
-				GL11.glVertex2f(x, y + height);
-            GL11.glEnd();
-        GL11.glPopMatrix();
-        
-//        Color.white.bind();
-//		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
-//		TrueTypeFont font = new TrueTypeFont(awtFont, true);
-//		font.drawString(x, y + height/2 - 25, text, Color.white);
-	}
-	
-	public void bindTexture() {
-		texture.bind(); // or GL11.glBind(texture.getTextureID());
-	}
-	
+//	public void render(int x, int y, int width, int height) {
+//		//draw with no texture
+//		Color.white.bind();
+//		
+//		GL11.glDisable(GL11.GL_TEXTURE_2D);
+//		
+//        GL11.glPushMatrix();
+//            GL11.glBegin(GL11.GL_QUADS);
+//				GL11.glTexCoord2f(0, 0);
+//				GL11.glVertex2f(x, y);
+//				GL11.glTexCoord2f(1, 0);
+//				GL11.glVertex2f(x + width, y);
+//				GL11.glTexCoord2f(1, 1);
+//				GL11.glVertex2f(x + width, y + height);
+//				GL11.glTexCoord2f(0, 1);
+//				GL11.glVertex2f(x, y + height);
+//            GL11.glEnd();
+//        GL11.glPopMatrix();
+//	}
+
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
         GL11.glPushMatrix();
-        	float xo = dx/texture.getImageWidth();
-        	float xw = (dx+dw)/texture.getImageWidth();
-        	float yo = dy/texture.getImageHeight();
-        	float yw = (dy+dh)/texture.getImageHeight();
+        Rectangle rect = textureAtlas.getCurrentRectangle();
+	        float xo = (rect.x + dx)/textureAtlas.getTexture().getTextureWidth();
+	    	float xw = (rect.x + dx+dw)/textureAtlas.getTexture().getTextureWidth();
+	    	float yo = (rect.y + dy)/textureAtlas.getTexture().getTextureHeight();
+	    	float yw = (rect.y + dy+dh)/textureAtlas.getTexture().getTextureHeight();
             GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(xo,yo);
-				GL11.glVertex2f(x, y);
-				GL11.glTexCoord2f(xw, yo);
-				GL11.glVertex2f(x + width, y);
-				GL11.glTexCoord2f(xw,yw);
-				GL11.glVertex2f(x + width, y + height);
-				GL11.glTexCoord2f(xo,yw);
-				GL11.glVertex2f(x, y + height);
-            GL11.glEnd();
-        GL11.glPopMatrix();
-
-	}
-	
-	public void render(String textureName, int x, int y, int width, int height) {
-		setTexture("img/" + textureName);
-		texture.bind(); // or GL11.glBind(texture.getTextureID());
-		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPushMatrix();
-            GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex2f(x, y);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex2f(x + width, y);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex2f(x + width, y + height);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex2f(x, y + height);
+			GL11.glTexCoord2f(xo,yo);
+			GL11.glVertex2f(x, y);
+			GL11.glTexCoord2f(xw, yo);
+			GL11.glVertex2f(x + width, y);
+			GL11.glTexCoord2f(xw,yw);
+			GL11.glVertex2f(x + width, y + height);
+			GL11.glTexCoord2f(xo,yw);
+			GL11.glVertex2f(x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
 
@@ -184,6 +132,7 @@ public class MainWindow {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
 	}
 
 	public void start() {

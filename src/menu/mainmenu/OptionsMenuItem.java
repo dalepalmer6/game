@@ -10,8 +10,9 @@ public class OptionsMenuItem extends MenuItem {
 		super(text,x,y,m);
 	}
 	
-	public void execute() {
+	public String execute() {
 		System.out.println("Loading the options menu.");
+		return null;
 	}
 	
 }

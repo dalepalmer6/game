@@ -17,4 +17,5 @@ public interface MenuInterface {
 	public String getTitle();
 	
 	public void setTitle(String s);
+
 }

@@ -1,5 +1,7 @@
 package mapeditor;
 
+import java.awt.Rectangle;
+
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
@@ -11,11 +13,11 @@ public class Tile {
 	private float dy = 0;
 	private float dw = 0;
 	private float dh = 0;
-	Texture texture;
+	private Rectangle tileMapBounds;
 	
-	public Tile(int id, Texture t) {
+	public Tile(int id, Rectangle tileBounds) {
 		this.id = id;
-		this.texture = t;
+		tileMapBounds = tileBounds;
 		getTileCoordinatesInSheet();
 	}
 	
@@ -40,8 +42,8 @@ public class Tile {
 	}
 	
 	public void getTileCoordinatesInSheet() {
-		int tmx = id % (texture.getImageWidth()/16);
-		int tmy = id / (texture.getImageWidth()/16); 
+		int tmx = id % (tileMapBounds.width/16);
+		int tmy = id / (tileMapBounds.width/16); 
 		dx = tmx * 16;
 		dy = tmy * 16;
 		dw = 16;
@@ -50,7 +52,7 @@ public class Tile {
 	
 	public static void initDrawTiles(MainWindow m) {
 		m.setTexture("img/tiles.png");
-		m.bindTexture();
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 }

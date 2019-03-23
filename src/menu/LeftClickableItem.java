@@ -6,9 +6,9 @@ import global.InputController;
 public class LeftClickableItem implements Clickable {
 
 	@Override
-	public void execute() {
+	public String execute() {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	@Override
