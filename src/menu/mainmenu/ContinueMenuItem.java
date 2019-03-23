@@ -1,5 +1,6 @@
 package menu.mainmenu;
 
+import gamestate.GameState;
 import global.MenuStack;
 import menu.MenuItem;
 import menu.StartupNew;
@@ -13,6 +14,9 @@ public class ContinueMenuItem extends MenuItem {
 	
 	public String execute() {
 		System.out.println("Loading a previous game.");
+		state.getMenuStack().pop();
+		GameState gs = new GameState(state);
+		state.setGameState(gs);
 		return null;
 	}
 	

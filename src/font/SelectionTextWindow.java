@@ -29,7 +29,6 @@ public class SelectionTextWindow extends TextWindow {
 		super(true,"", x,y,width,height,m);
 		currentOpenX = this.x + this.TEXT_START_X;
 		currentOpenY = this.y+ this.TEXT_START_Y;
-//		this.text = new Text(true,this.text.getText(),x+16,y+16,width+8,height,m.charList);
 	}
 	
 	public void add(MenuItem m) {
@@ -189,7 +188,6 @@ public class SelectionTextWindow extends TextWindow {
 	
 	@Override
 	public void handleInput(InputController input) {
-			
 			if (input.getSignals().get("UP")) {
 				updateIndex("U");
 			} else if (input.getSignals().get("DOWN")) {

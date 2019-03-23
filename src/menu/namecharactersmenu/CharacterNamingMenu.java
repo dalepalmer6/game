@@ -18,26 +18,7 @@ public class CharacterNamingMenu extends Menu{
 	@Override
 	public MenuItem createMenuItem(String text) {
 		MenuItem mi = new PromptForCharacterNameButton(text,curX,curY, state);
-//		updateXY(mi.getWidth(), mi.getHeight()); 
-//		numButtons++;
 		return mi;
 	}
 	
-//	public void updateXY(int width, int height) {
-//		curX += width;
-//		if (curX + width > state.getMainWindow().getScreenWidth()) {
-//			curX = 10;
-//			updateCurY(height);
-//		} 
-//	}
-//	
-//	public void updateCurY(int height) {
-//		curY += height;
-//		if (curY + height > state.getMainWindow().getScreenHeight()) {
-//			curX = 10;
-//			curY = 10;
-//			System.err.println("Too many items on screen. Need new page.");
-//			//needs logic if y overflows as well, create another page
-//		} 
-//	}
 }

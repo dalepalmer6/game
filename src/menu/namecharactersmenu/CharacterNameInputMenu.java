@@ -36,10 +36,9 @@ public class CharacterNameInputMenu extends Menu {
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		SelectionTextWindow STW = new SelectionTextWindow(300,300,30,8,state);		
 		
-		TextWindow TW = new TextWindow(true,input,220,220,5,1,state); 
+		TextWindow TW = new TextWindow(true,input,300,220,5,1,state); 
 		int x = 0;
 		int y = 0;
-		//state.charList.getCharObjects().keySet()
 		for (char key : alphabet.toCharArray()) {
 			STW.add(createMenuItem(key,x,y));
 			x += 32;
@@ -50,10 +49,11 @@ public class CharacterNameInputMenu extends Menu {
 		}
 		STW.add(new BackButton(state));
 		STW.add(new SubmitButton(state));
-		addMenuItem(STW);
 		addMenuItem(TW);
-		this.STW = STW;
+		addMenuItem(STW);
+		
 		this.TW = TW;
+		this.STW = STW;
 	}
 	
 	public MenuItem createMenuItem(char c, int x , int y) {
