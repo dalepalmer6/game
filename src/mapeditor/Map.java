@@ -127,7 +127,7 @@ public class Map {
 		for (int i = 0; i < height; i++) {
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			for (int j = 0; j < width; j++) {
-				list.add(7);
+				list.add(0);
 			}
 			tileMap.add(list);
 		}

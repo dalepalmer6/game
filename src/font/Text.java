@@ -1,5 +1,6 @@
 package font;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -12,11 +13,10 @@ import global.InputController;
 
 public class Text implements Drawable{
 	private String textString;
-	private String stringDuringLastCall = "";
 	private String parsedString;
+	protected int drawStart = 0;
 	protected int drawUntil = 1;
 	protected boolean drawAll;
-	private String name;
 	private int x;
 	private int y;
 	private int width;
@@ -24,13 +24,16 @@ public class Text implements Drawable{
 	private HashMap<Integer, String> controlCodes = new HashMap<Integer,String>();
 	private CharList charList;
 	private boolean textChanged;
+	private boolean freeze;
+	private int saveStart;
+	private boolean done;
 	
 	public void setTextChanged(boolean f) {
 		this.textChanged = f;
 	}
 	
 	public void incrementDrawUntil() {
-		if (parsedString != null && !drawAll) {
+		if (parsedString != null && !drawAll && !freeze) {
 			if (drawUntil < parsedString.length()) {
 				drawUntil++;
 			}
@@ -64,60 +67,141 @@ public class Text implements Drawable{
 		setTextChanged(true);
 	}
 	
-	public String getText() {
-		return this.textString;
+	public String getParsedText() {
+		return this.parsedString;
 	}
 	
-	public boolean parse() {
-		int currentWidth = 0;
-		int currentHeight = 0;
-		int indexOfLastSpace = 0;
-		int indexOfNewSpace = 0;
-		int wordWidth = 0;
+	public void parse() {
+		parseCodes();
+		reparseForWidths();
+		reparseForHeights();
+	}
+	
+	public void parseCodes() {
 		char[] stringArray = parsedString.toCharArray();
+		String controlCode = "";
+		int indexOfCode = 0;
+		boolean parsingControlCode = false;
 		for (int i = 0; i < stringArray.length; i++) {
-			if (controlCodes.containsKey(i)) {
+			if (stringArray[i] == '[') {
+				//start a new control code
+				controlCode = "";
+				indexOfCode = i;
+				parsingControlCode = true;
 				continue;
 			}
-			String controlCode = "";
-			if (stringArray[i] == '[') {
-				wordWidth = 0;
+			
+			if (stringArray[i] != ']' && parsingControlCode) {
+				controlCode += stringArray[i];
+			} 
+			if (stringArray[i] == ']' && parsingControlCode) {
+				String controlCodesList = controlCode;
+				if (controlCodes.containsKey(indexOfCode)) {
+					controlCodesList = controlCodes.get(indexOfCode) + "," + controlCode;
+				}
+				controlCodes.put(indexOfCode,controlCodesList);
+				parsedString = parsedString.replaceFirst("\\[" + controlCode + "\\]", "");
+				i -= (controlCode.length()+2);
+				stringArray = parsedString.toCharArray();
+				parsingControlCode = false;
+				continue;
+			}
+			
+		}
+	}
+	
+	public void setFreeze(boolean c) {
+		freeze = c;
+		drawStart = saveStart;
+	}
+	
+	public int getDrawStart() {
+		return drawStart;
+	}
+	
+	public void reparseForWidths() {
+		//implement text that can scroll, and be prompted next
+		int currentWidth = 0;
+		int currentHeight = 0;
+		int currentWordWidth = 0;
+		int indexOfLastSpace = 0;
+		boolean addToWidths = true;
+		char[] stringArray = parsedString.toCharArray();
+		for (int i = 0; i < stringArray.length; i++) {
+			addToWidths = true;
+			if (controlCodes.containsKey(i)){
+				currentWordWidth = 0;
 				currentWidth = 0;
-				for (int j = i+1; j < stringArray.length; j++) {
-					if (stringArray[j] != ']') {
-						controlCode += stringArray[j];
+				indexOfLastSpace = i;
+				continue;
+			}
+			if (stringArray[i] == ' ') {
+				currentWidth += currentWordWidth;
+				currentWordWidth = 0;
+				indexOfLastSpace = i;
+			}  
+			if (currentWidth + currentWordWidth > this.width) {
+				String controlCode = "NEWLINE";
+				if (controlCodes.containsKey(indexOfLastSpace)) {
+					controlCode = "NEWLINE," + controlCodes.get(indexOfLastSpace);
+				}
+				controlCodes.put(indexOfLastSpace,controlCode);
+				
+				parsedString = parsedString.substring(0,indexOfLastSpace) + parsedString.substring(indexOfLastSpace+1); 
+				stringArray = parsedString.toCharArray();
+				//fix the control codes that are greater than i
+				HashMap<Integer, String> newCtrlCodes = new HashMap<Integer,String>();
+				for (int key : controlCodes.keySet()) {
+					if (key > indexOfLastSpace) {
+						String val = controlCodes.get(key);
+						newCtrlCodes.put(key-1,val);
+					}
+					else if (key == indexOfLastSpace) {
+						String val = controlCodes.get(key);
+						newCtrlCodes.put(key,val);
 					} else {
-						parsedString = parsedString.replaceFirst("\\[" + controlCode + "\\]", "");
-						controlCodes.put(i, controlCode);
-						if (parse()) {
-							return true;
-						};
-						stringArray = parsedString.toCharArray();
-						break;
+						String val = controlCodes.get(key);
+						newCtrlCodes.put(key,val);
 					}
 				}
-			} 
-			else if (stringArray[i] == '@') {
-				controlCode = "INDENT";
-			} else if (stringArray[i] == ' ') {
-				indexOfLastSpace = indexOfNewSpace;
-				indexOfNewSpace = i;
-				currentWidth += wordWidth;
-				wordWidth = 0;
-			}
-			else if (currentWidth + wordWidth > width) {
-				if (indexOfNewSpace != 0) {
-					controlCodes.put(indexOfNewSpace,"NEWLINE");
-				}
+				controlCodes = newCtrlCodes;
 				
-				currentWidth = 0;
-				wordWidth = 0;
-				indexOfLastSpace = indexOfNewSpace;
-			} else {
-				wordWidth += charList.getCharObjects().get(parsedString.toCharArray()[i]).getDw() + 2;
+				currentWidth = currentWordWidth;
+				currentWordWidth = 0;
+				addToWidths = false;
+			}
+			if (addToWidths) {
+				currentWordWidth += charList.getCharObjects().get(parsedString.toCharArray()[i]).getDw() + 1;
 			}
 		}
-		return true;
+	}
+	
+	public void reparseForHeights() {
+		int curY = y;
+		char[] stringArray = parsedString.toCharArray();
+		//count the number of NEWLINES in the controlCodes,
+		Object[] controlCodesKeys =  controlCodes.keySet().toArray();
+		Arrays.sort(controlCodesKeys);
+		for (Object key : controlCodesKeys) {
+			String[] controlCodesAtKey = controlCodes.get(key).split(",");
+			String controlCodesReplace = "";
+			for (int i = 0; i < controlCodesAtKey.length; i++) {
+				String cc = controlCodesAtKey[i];
+				if (cc.equals("NEWLINE")) {
+					curY+=32;
+					if (curY + 32 > y + (this.height + 16) * 2) {
+						cc = "PROMPTINPUT";
+						curY = y;
+					}
+				}
+				controlCodesReplace = controlCodesReplace + "," +cc;
+			}
+			controlCodes.put((Integer) key,controlCodesReplace);
+		}
+	}
+	
+	public boolean getDrawState() {
+		return done;
 	}
 	
 	@Override
@@ -145,17 +229,28 @@ public class Text implements Drawable{
 		int curY = y;
 		int scale = 2;
 		char[] chars = parsedString.toCharArray();
-//		for (int i = 0; i < parsedString.length(); i++) {
-		for (int i = 0; i < drawUntil; i++) {
+		for (int i = drawStart; i < drawUntil; i++) {
 			char c = chars[i];
 			if (i == 0 && c != '@') {
-				curX += charList.getCharObjects().get(c).getDw()*scale;
+//				curX += charList.getCharObjects().get(c).getDw()*scale;
 			}
 			if (controlCodes.containsKey(i)) {
-				String control = controlCodes.get(i);
-				if (control.equalsIgnoreCase("NEWLINE")) {
-					curX = x + (int) charList.getCharObjects().get('@').getDw() + 2;
-					curY +=32;
+				String[] controls = controlCodes.get(i).split(",");
+				String newListOfControlCodes = "";
+				for (String control : controls) {
+					if (control.equalsIgnoreCase("NEWLINE")) {
+//						curX = x + (int) charList.getCharObjects().get('@').getDw() + 2;
+						curX = x;
+						curY +=32;
+						newListOfControlCodes += ",NEWLINE";
+					}
+					if (control.equalsIgnoreCase("PROMPTINPUT")) {
+						saveStart = i;
+						drawUntil = i;
+						freeze = true;
+						return;
+					}
+					controlCodes.put(i,newListOfControlCodes);
 				}
 			}
 			m.renderTile(curX,curY,
@@ -165,7 +260,10 @@ public class Text implements Drawable{
 					charList.getCharObjects().get(c).getDy(),
 					charList.getCharObjects().get(c).getDw(),
 					charList.getCharObjects().get(c).getDh());
-			curX += 1*scale +  charList.getCharObjects().get(c).getDw()*scale;
+			curX += scale + charList.getCharObjects().get(c).getDw()*scale;
+			if (i >= parsedString.length()-1) {
+				done = true;
+			}
 		}
 	}
 	

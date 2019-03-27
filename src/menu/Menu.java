@@ -10,7 +10,7 @@ import menu.namecharactersmenu.PromptForCharacterNameButton;
 
 public class Menu implements MenuInterface {
 	private String title = "Welcome to Game!";
-	protected List<Drawable> menuItems;
+	protected List<DrawableObject> menuItems;
 	private String id;
 	protected StartupNew state;
 	protected String input;
@@ -27,7 +27,7 @@ public class Menu implements MenuInterface {
 	}
 	public Menu(StartupNew m) {
 		this.state = m;
-		menuItems = new ArrayList<Drawable>();
+		menuItems = new ArrayList<DrawableObject>();
 	}
 	public MenuItem createMenuItem(String text) {
 		MenuItem mi = new MenuItem(text,0,0, state);
@@ -49,12 +49,12 @@ public class Menu implements MenuInterface {
 		return this.id;
 	}
 	
-	public List<Drawable> getMenuItems() {
+	public List<DrawableObject> getMenuItems() {
 		return this.menuItems;
 	}
 
 	@Override
-	public void addMenuItem(Drawable m) {
+	public void addMenuItem(DrawableObject m) {
 		// TODO Auto-generated method stub
 		menuItems.add(m);
 	}

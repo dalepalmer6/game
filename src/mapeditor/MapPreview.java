@@ -13,6 +13,7 @@ import canvas.Drawable;
 import canvas.Hoverable;
 import canvas.MainWindow;
 import global.InputController;
+import tiles.SingleInstanceTile;
 
 public class MapPreview extends LeftAndRightClickableItem implements Controllable, Drawable, Hoverable, Clickable {
 	private Map map;
@@ -27,6 +28,7 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 	private int height;
 	private int tileTool;
 	private int TILE_SIZE = 32;
+	private int instance = 0;
 	private TileHashMap tileMap;
 	
 	public int getRightEdge() {
@@ -54,8 +56,8 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Integer> row = new ArrayList<Integer>();
-		for (int j = viewY; j < this.heightInTiles + viewY; j++) {
-			for (int i = viewX; i < widthInTiles + viewX; i++) {
+		for (int j = viewY; j < this.heightInTiles + viewY + 2; j++) {
+			for (int i = viewX; i < widthInTiles + viewX + 2; i++) {
 				int curId = map.getTileId(i, j);
 				row.add(curId);
 			}
@@ -80,17 +82,17 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 		//set at the default position
 		this.x = x;
 		this.y = y;
-		this.widthInTiles = 30;
-		this.heightInTiles = 30;
-		this.width = this.widthInTiles * TILE_SIZE;
-		this.height = this.heightInTiles * TILE_SIZE;
+		this.widthInTiles = 30+2;
+		this.heightInTiles = 30+2;
+		this.width = (-2 + this.widthInTiles) * TILE_SIZE;
+		this.height = (-2 + this.heightInTiles) * TILE_SIZE;
 		this.tileMap = tm;
 	}
 	
 	//can toggle this off!
 	public void drawGrid(MainWindow m) {
 		m.setTexture("img/line.png");
-		for (int i = this.x; i <= this.x + width; i+= TILE_SIZE) {
+		for (int i = this.x; i <= this.x + width ; i+= TILE_SIZE) {
 			//for every row
 			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
@@ -108,8 +110,8 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 	}
 	
 	public Point getTilePosition() {
-		double tileX = Math.floor((getMouseCoordinates().getX())/TILE_SIZE);
-		double tileY = Math.floor((getMouseCoordinates().getY())/TILE_SIZE);
+		double tileX = Math.floor((getMouseCoordinates().getX())/TILE_SIZE+1);
+		double tileY = Math.floor((getMouseCoordinates().getY())/TILE_SIZE+1);
 		if (tileX > this.widthInTiles || tileX < 0) {
 			tileX = -1;
 		}
@@ -124,15 +126,118 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 	public void drawTiles(MainWindow m) {
 			Tile.initDrawTiles(m);
 			Tile tile;
-			for (int i = 0; i < widthInTiles; i++) {
+			for (int i = 1; i < widthInTiles-1; i++) {
 				//for every row
-				for (int j = 0; j < heightInTiles; j++) {
+				for (int j = 1; j < heightInTiles-1; j++) {
 					//for every column
 					int val = this.areaOfInterest.get(j).get(i);
 					tile = tileMap.getTile(val);
-					m.renderTile(x + (i*TILE_SIZE),y + j*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
+					int instance  = inspectSurroundings(i,j);
+					m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 				}
 			}
+	}
+	
+	public int inspectSurroundings(int x , int y) {
+		//check the adjacent tiles, if they're the same, then draw the appropriate instance of the tile
+		//middle tile that we are comparing with
+		if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof SingleInstanceTile) {
+			return 0;
+		}
+		int mid = areaOfInterest.get(y).get(x);
+		
+//		if (x == 0 && y == 0 && viewX > 0 && viewY > 0) {
+//			int l = map.getTile(viewX-1,y).getId();
+//			int r = areaOfInterest.get(y).get(x+1);
+//			int u = map.getTile(x,viewY-1).getId();
+//			int d = areaOfInterest.get(y+1).get(x);
+//			if (mid != u && mid != l && mid == r && mid == d) {
+//				return 1;
+//			}
+//			if (mid == u && mid != l && mid == r && mid == d) {
+//				return 4;
+//			}
+//			if (mid == u && mid != l && mid == r && mid != d) {
+//				return 7;
+//			}
+//			if (mid == u && mid == l && mid == r && mid == d) {
+//				return 5;
+//			}
+//		}
+//		if (x == 0 && viewX > 0) {
+//			int l = map.getTile(viewX-1,y).getId();
+//			int r = areaOfInterest.get(y).get(x+1);
+//			int u = areaOfInterest.get(y-1).get(x);
+//			int d = areaOfInterest.get(y+1).get(x);
+//			if (mid != u && mid != l && mid == r && mid == d) {
+//				return 1;
+//			}
+//			if (mid == u && mid != l && mid == r && mid == d) {
+//				return 4;
+//			}
+//			if (mid == u && mid != l && mid == r && mid != d) {
+//				return 7;
+//			}
+//			if (mid == u && mid == l && mid == r && mid == d) {
+//				return 5;
+//			}
+//		}
+//		
+//		if (y == 0 && viewY > 0) {
+//			int u = map.getTile(x,viewY-1).getId();
+//			int l = areaOfInterest.get(y).get(x-1);
+//			int r = areaOfInterest.get(y).get(x+1);
+//			int d = areaOfInterest.get(y+1).get(x);
+//			if (mid != u && mid != l && mid == r && mid == d) {
+//				return 1;
+//			}
+//			if (mid != u && mid == l && mid == r && mid == d) {
+//				return 2;
+//			}
+//			if (mid != u && mid == l && mid != r && mid == d) {
+//				return 3;
+//			}
+//			if (mid == u && mid == l && mid == r && mid == d) {
+//				return 5;
+//			}
+//		}
+		
+		
+		
+		if (x > 0 && y > 0) {
+			int l = areaOfInterest.get(y).get(x-1);
+			int r = areaOfInterest.get(y).get(x+1);
+			int u = areaOfInterest.get(y-1).get(x);
+			int d = areaOfInterest.get(y+1).get(x);
+			if (mid != u && mid != l && mid == r && mid == d) {
+				return 1;
+			}
+			if (mid != u && mid == l && mid == r && mid == d) {
+				return 2;
+			}
+			if (mid != u && mid == l && mid != r && mid == d) {
+				return 3;
+			}
+			if (mid == u && mid != l && mid == r && mid == d) {
+				return 4;
+			}
+			if (mid == u && mid == l && mid == r && mid == d) {
+				return 5;
+			}
+			if (mid == u && mid == l && mid != r && mid == d) {
+				return 6;
+			}
+			if (mid == u && mid != l && mid == r && mid != d) {
+				return 7;
+			}
+			if (mid == u && mid == l && mid == r && mid != d) {
+				return 8;
+			}
+			if (mid == u && mid == l && mid != r && mid != d) {
+				return 9;
+			}
+		}
+		return 0;
 	}
 	
 	public void drawCoordinates(MainWindow m) {
@@ -196,7 +301,7 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 				this.viewX++;
 				
 			} else {
-				System.err.println("View is already at the end of the file");
+				this.viewX++;
 			}
 		} else if (movement.equals("U")) {
 			if (viewY != 0) {
@@ -212,7 +317,7 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 				this.viewY++;
 				
 			} else {
-				System.err.println("View is already at the end of the file");
+				this.viewY++;
 			}
 		}
 	}

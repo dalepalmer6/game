@@ -12,20 +12,29 @@ import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class TextWindow extends MenuItem implements Drawable, Controllable{
+public class TextWindow extends MenuItem implements Drawable{
 	public Text text;
+	private double tickCount;
+	private double ticksPerFrame = 0.5;
 	protected int TEXT_START_X = 16;
 	protected int TEXT_START_Y = 16;
-	private long createdAt;
-	private long lastTime;
-	private long now;
+	protected long createdAt;
+	protected long lastTime;
+	protected long now;
 	private int TILE_SIZE = 16;
 	private int width;
 	private int height;
 	protected int x;
 	protected int y;
 	protected StartupNew m;
-	private boolean shouldDrawAll;
+	protected boolean shouldDrawAll;
+	
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
+	}
 	
 	public TextWindow(String s, int x, int y, StartupNew m) {
 		this(false,s,x,y,m);
@@ -41,21 +50,20 @@ public class TextWindow extends MenuItem implements Drawable, Controllable{
 	
 	public TextWindow(boolean shouldDrawAll, String s, int x, int y, int width, int height, StartupNew m) {
 		super("",x,y,m);
-		this.createdAt = m.now;
-		this.now = createdAt;
+		this.tickCount = 0;
 		this.x = x;
 		this.y = y;
 		this.width = width * TILE_SIZE;
 		this.height = height * TILE_SIZE;
-		this.text = new Text(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width+8,this.height,m.charList);
+		this.text = new Text(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
 		this.m = m;
 		this.shouldDrawAll = shouldDrawAll;
 	}
 	
 	public void drawWindow(MainWindow m) {
 		initDrawWindow(m);
-		int tileWidth =  width/TILE_SIZE - 2;
-		int tileHeight = height/TILE_SIZE - 2;
+		int tileWidth =  width/TILE_SIZE;
+		int tileHeight = height/TILE_SIZE;
 		int xCoord = 0;
 		int yCoord = 0;
 		int xPos = x;
@@ -132,6 +140,10 @@ public class TextWindow extends MenuItem implements Drawable, Controllable{
 	
 	public void drawText(MainWindow m) {
 		Text.initDrawText(m);
+		if (!shouldDrawAll) {
+			this.tickCount += ticksPerFrame;
+			if (tickCount % 1 == 0) this.text.incrementDrawUntil();
+		}
 		text.draw(m);
 	}
 	
@@ -150,27 +162,13 @@ public class TextWindow extends MenuItem implements Drawable, Controllable{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
-	@Override
-	public void handleInput(InputController input) {
-		// TODO Auto-generated method stub
-		if (!shouldDrawAll) {
-			this.lastTime = this.now;
-			this.now = System.nanoTime();
-//			long delta = (long) ((this.now - this.lastTime)/(1000000000.0/60));
-			long delta = (long) ((now - createdAt)/(1000000000.0/60.0));
-			if (delta % 2 == 0) this.text.incrementDrawUntil();
-			
-			System.out.println(delta);
-		}
-		
-		if (input.getSignals().get("CONFIRM")) {
-			next();
-		}
-	}
-	
 	public void next() {
 		//if there is more text, move the text up, and print until the next line or whatever the case may be
 		//for now, just drop the box.
-		state.getMenuStack().pop();
+		text.setFreeze(false);
+		if (text.getDrawState()) {
+			state.needToPop = true;
+		}
+//		
 	}
 }

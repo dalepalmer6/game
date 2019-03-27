@@ -5,7 +5,6 @@ import menu.BackButton;
 import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
-import menu.TextBox;
 
 public class CharacterNamingMenu extends Menu{
 	private int curX = 10;

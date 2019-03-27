@@ -113,7 +113,8 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	@Override
 	public void draw(MainWindow m) {
 		//for each MenuItem, draw to the canvas
-//		m.render(this.image,this.text,x,y,width,height);
+		m.setTexture("img/" + this.image);
+		m.renderTile(x,y,width,height,0,0,490,234);
 	}
 
 	public String prepareToExecute() {

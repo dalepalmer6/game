@@ -7,7 +7,7 @@ public class BackButton extends MenuItem {
 	}
 	
 	public String execute() {
-		state.getMenuStack().popAndAddMenuItems();
+		state.needToPop = true;
 		return null;
 	}
 }

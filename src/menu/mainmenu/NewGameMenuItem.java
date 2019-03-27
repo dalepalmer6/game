@@ -26,7 +26,7 @@ public class NewGameMenuItem extends MenuItem{
 		
 		//push a new menu onto the stack
 		Menu m = new CharacterNamingMenu(state);
-			SelectionTextWindow STW = new SelectionTextWindow(300,300,5,10,state);			
+			SelectionTextWindow STW = new SelectionTextWindow("vertical",300,300,5,10,state);			
 				STW.add(m.createMenuItem("Ness"));
 				STW.add(m.createMenuItem("Paula"));
 				STW.add(m.createMenuItem("Jeff"));

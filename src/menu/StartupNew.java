@@ -28,6 +28,7 @@ import canvas.MainWindow;
 import font.CharList;
 import font.SelectionTextWindow;
 import font.TextWindow;
+import gamestate.Entity;
 import gamestate.GameState;
 import global.ImagePacker;
 import global.InputController;
@@ -41,9 +42,11 @@ import menu.mainmenu.MainMenu;
 import menu.mainmenu.MapPreviewTestButton;
 import menu.mainmenu.NewGameMenuItem;
 import menu.mainmenu.OptionsMenuItem;
+import tiles.types.*;
 
 public class StartupNew{
 	private long sleepTime = 1000L / 60L;
+	int frameCount = 0;
 	long lastTime = System.nanoTime();
 	public double delta = 0.0;
 	double ns = 1000000000.0 / 60.0;
@@ -56,7 +59,7 @@ public class StartupNew{
 	private MenuStack menuStack;
 	private ArrayList<Controllable> c = new ArrayList<Controllable>();
 	private SelectionStack selectionStack;
-	private List<Drawable> drawables = new ArrayList<Drawable>();
+	private List<DrawableObject> drawables = new ArrayList<DrawableObject>();
 	public List<String> imageFileNames = new ArrayList<String>();
 	public Map<String, BufferedImage> textures = new HashMap<String,BufferedImage>(); 
 	public final int TILE_SIZE = 32;
@@ -67,6 +70,7 @@ public class StartupNew{
 	private String outputFromSelect = "";
 	public GameState gameState;
 	private TextureAtlas textureAtlas = new TextureAtlas();
+	public boolean needToPop;
 //	public static int mapPreviewEditTool = 0;
 	
 	public GameState getGameState() {
@@ -85,9 +89,13 @@ public class StartupNew{
 	public void loadAllTiles() {
 		textureAtlas.setRectByName("img/tiles.png");
 		Rectangle tileBounds = textureAtlas.getCurrentRectangle();
-		for (int i = 0; i < tileBounds.width*tileBounds.height / 256; i++) {
-			tileMap.addTile(new Tile(i,tileBounds));
-		} 
+//		for (int i = 0; i < tileBounds.width*tileBounds.height / 256; i++) {
+//			tileMap.addTile(new Tile(i,tileBounds));
+//		} 
+		tileMap.addTile(new Plain(0));
+		tileMap.addTile(new Path(1));
+		tileMap.addTile(new Mountain(2));
+		tileMap.addTile(new Tree(3));
 	}
 	
 	public void loadAllImages()  {
@@ -123,23 +131,23 @@ public class StartupNew{
 		textureAtlas.setRects(packer.getRects());
 	}
 	
-	public void addToDrawables(ArrayList<Drawable> d) {
+	public void addToDrawables(ArrayList<DrawableObject> d) {
 		drawables.addAll(d);
 	}
 	
-	public List<Drawable> getDrawables() {
+	public List<DrawableObject> getDrawables() {
 		return drawables;
 	}
 	
 	public void clearDrawables() {
-		drawables = new ArrayList<Drawable>();
+		drawables = new ArrayList<DrawableObject>();
 	}
 	
-	public void setDrawables(List<Drawable> l) {
+	public void setDrawables(List<DrawableObject> l) {
 		drawables = l;
 	}
 	
-	public Drawable getDrawable(int i) {
+	public DrawableObject getDrawable(int i) {
 		return drawables.get(i);
 	}
 	
@@ -171,18 +179,7 @@ public class StartupNew{
 	
 	
 	public void update() {
-		input.setHoldable(true);
-		if (gameState != null) {
-			gameState.update();
-		}
-		
 		input.setHoldable(false);
-		Menu c = getMenuStack().popAndAddMenuItems();
-		if (c != null) {
-			getMenuStack().push(c);
-			c.update();
-		}
-		
 		Point mouse = getMainWindow().getMouseCoordinates();
 		for (Drawable d : getDrawables()) {
 			if (d instanceof Hoverable) {
@@ -196,17 +193,33 @@ public class StartupNew{
 				}
 			}
 			if (d instanceof Controllable) {
+				if (!c.isEmpty()) {
+					this.c.remove(0);
+				}
 				this.c.add((Controllable) d);
 			}
 		}
 		this.c.get(this.c.size() -1).handleInput(input);
+		
+		if (gameState != null && menuStack.isEmpty()) {
+			gameState.update();
+		}
+		
+		Menu c = getMenuStack().popAndAddMenuItems();
+		if (c != null) {
+			getMenuStack().push(c);
+			c.update();
+		}
 	}
 	
 	
 	
 	public void render() {
 //		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		getMainWindow().renderBG("bg.png");	
+		getMainWindow().renderBG("bg.png");
+		if (gameState != null) {
+			gameState.drawGameState();
+		}
 		getMainWindow().drawDrawables(drawables);
 	}
 	
@@ -214,15 +227,14 @@ public class StartupNew{
 		
 		while(running){
 			clearDrawables();
-			//load in the gameState objects
-			if (gameState != null) {
-				addToDrawables(gameState.getDrawables());
-				
-			}
+//			//load in the gameState objects
+//			if (gameState != null) {
+//				addToDrawables(gameState.getDrawables());
+//			}
 			//load current menu
 			Menu c = getMenuStack().popAndAddMenuItems();
 			if (c != null) {
-				addToDrawables((ArrayList<Drawable>) c.getMenuItems());
+				addToDrawables((ArrayList<DrawableObject>) c.getMenuItems());
 				getMenuStack().push(c);
 			}
 			
@@ -231,9 +243,8 @@ public class StartupNew{
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if (delta >= 1.0) {
-				
-				update();
 				input.handleInputs();
+				update();
 				updates++;
 				delta--;
 			}
@@ -245,7 +256,7 @@ public class StartupNew{
 				updates = 0;
 				frames = 0;
 			}
-
+			removeMenu();
 			Display.update();
 			Display.sync(60);
 
@@ -253,11 +264,16 @@ public class StartupNew{
 				Display.destroy();
 				System.exit(0);
 			}
-			//when to close the game
-//			if(glfwWindowShouldClose(window) == GL_TRUE){
-//				running = false;
-//			}
+			frameCount++;
 		}
+	}
+	
+	public void removeMenu() {
+		if (needToPop) {
+			menuStack.pop();
+			needToPop = false;
+		}
+		
 	}
 	
 	public void run(){
@@ -297,5 +313,10 @@ public class StartupNew{
 	public TextureAtlas getTextureAtlas() {
 		// TODO Auto-generated method stub
 		return textureAtlas;
+	}
+
+	public void setControllable(Entity e) {
+		// TODO Auto-generated method stub
+		c.add((Controllable) e);
 	}
 }

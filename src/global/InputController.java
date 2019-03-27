@@ -192,4 +192,24 @@ public class InputController {
 	public void setHoldable(boolean b) {
 		holdable = b;
 	}
+
+	public void reset() {
+		controllerSignals.put("MOUSE_LEFT_DOWN", false);
+		controllerSignals.put("MOUSE_RIGHT_DOWN", false);
+		controllerSignals.put("CONFIRM", false);
+		controllerSignals.put("BACK", false);
+		controllerSignals.put("UP", false);
+		controllerSignals.put("LEFT", false);
+		controllerSignals.put("DOWN", false);
+		controllerSignals.put("RIGHT", false);
+		MOUSE_LEFT_DOWN = false;
+		MOUSE_RIGHT_DOWN = false;
+		CONFIRM = false;
+		  BACK = false;
+		  UP = false;
+		  LEFT = false;
+		  DOWN = false;
+		  RIGHT = false;
+		  holdable = false;
+	}
 }

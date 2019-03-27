@@ -34,7 +34,7 @@ public class CharacterNameInputMenu extends Menu {
 	
 	public void create() {
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		SelectionTextWindow STW = new SelectionTextWindow(300,300,30,8,state);		
+		SelectionTextWindow STW = new SelectionTextWindow("horizontal",300,300,30,8,state);		
 		
 		TextWindow TW = new TextWindow(true,input,300,220,5,1,state); 
 		int x = 0;

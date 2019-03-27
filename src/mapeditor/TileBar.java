@@ -14,7 +14,7 @@ import canvas.MainWindow;
 import menu.LeftClickableItem;
 import menu.StartupNew;
 
-public class TileBar extends LeftClickableItem implements Drawable, Hoverable, Clickable {
+public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	private int x;
 	private int y;
 	private int width;
@@ -152,7 +152,9 @@ public class TileBar extends LeftClickableItem implements Drawable, Hoverable, C
 				int drawingX =  (i) * TILE_SIZE;
 				int drawingY =  (j) * TILE_SIZE;
 				Tile tile = getCurrentTileFromInterestList(i,j);
-				m.renderTile(drawingX + this.x,drawingY + this.y,mapPreview.getTileSize(),mapPreview.getTileSize(), tile.getDx(),tile.getDy(),tile.getDw(),tile.getDh());
+				if (tile != null) {
+					m.renderTile(drawingX + this.x,drawingY + this.y,mapPreview.getTileSize(),mapPreview.getTileSize(), tile.getDx(0),tile.getDy(0),tile.getDw(0),tile.getDh(0));
+				}
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
@@ -19,6 +20,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 import global.TextureAtlas;
+import menu.DrawableObject;
 
 public class MainWindow {
 //	private Texture texture;
@@ -90,21 +92,34 @@ public class MainWindow {
 //	}
 
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
+		renderTile(x,y,width,height,dx,dy,dw,dh,false);
+	}
+	
+	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
         GL11.glPushMatrix();
         Rectangle rect = textureAtlas.getCurrentRectangle();
 	        float xo = (rect.x + dx)/textureAtlas.getTexture().getTextureWidth();
 	    	float xw = (rect.x + dx+dw)/textureAtlas.getTexture().getTextureWidth();
 	    	float yo = (rect.y + dy)/textureAtlas.getTexture().getTextureHeight();
 	    	float yw = (rect.y + dy+dh)/textureAtlas.getTexture().getTextureHeight();
-            GL11.glBegin(GL11.GL_QUADS);
+	    	float scaleX = 1;
+	    	int correction = 0;
+	    	if (needToFlip) {
+	    		scaleX = -1.0f;
+//	    		GL11.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            	GL11.glScalef(-1.0f, 1.0f, 1.0f);
+            	correction = width;
+            }
+	    	GL11.glBegin(GL11.GL_QUADS);
+            
 			GL11.glTexCoord2f(xo,yo);
-			GL11.glVertex2f(x, y);
+			GL11.glVertex2f(-correction + scaleX*x, y);
 			GL11.glTexCoord2f(xw, yo);
-			GL11.glVertex2f(x + width, y);
+			GL11.glVertex2f(-correction + scaleX*x + width, y);
 			GL11.glTexCoord2f(xw,yw);
-			GL11.glVertex2f(x + width, y + height);
+			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
 			GL11.glTexCoord2f(xo,yw);
-			GL11.glVertex2f(x, y + height);
+			GL11.glVertex2f(-correction + scaleX*x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
 
@@ -139,10 +154,14 @@ public class MainWindow {
 		initGL();
 	}
 
-	public void drawDrawables(List<Drawable> drawables) {
+	
+	
+	public void drawDrawables(List<DrawableObject> drawables) {
 //		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		//sort the list, so that the objects with the lowest y-value are first
+//		drawables = sortDrawables(drawables);
 		// draws all the objects that need to be drawn
-		for (Drawable d : drawables) {
+		for (DrawableObject d : drawables) {
 			d.draw(this);
 		}
 	}

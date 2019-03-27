@@ -15,28 +15,49 @@ public class Tile {
 	private float dh = 0;
 	private Rectangle tileMapBounds;
 	
+	public Tile(int id) {
+		this.id = id;
+	}
+	
+	public String getCollisionInfoAtIndex(int x, int y) {
+		return null;
+	}
+	
 	public Tile(int id, Rectangle tileBounds) {
 		this.id = id;
 		tileMapBounds = tileBounds;
 		getTileCoordinatesInSheet();
 	}
 	
-	public float getDx() {
-		return dx;
+	public int getDx(int inst_id) {
+		return 1;
+	}
+	public int getDy(int inst_id) {
+		return 1;
+	}
+	public int getDw(int inst_id) {
+		return 1;
+	}
+	public int getDh(int inst_id) {
+		return 1;
 	}
 	
-	public float getDy() {
-		return dy;
-	}
-	
-	public float getDw() {
-		return dw;
-	}
-	
-	public float getDh() {
-		return dh;
-	}
-	
+//	public float getDx() {
+//		return dx;
+//	}
+//	
+//	public float getDy() {
+//		return dy;
+//	}
+//	
+//	public float getDw() {
+//		return dw;
+//	}
+//	
+//	public float getDh() {
+//		return dh;
+//	}
+//	
 	public int getId() {
 		return this.id;
 	}

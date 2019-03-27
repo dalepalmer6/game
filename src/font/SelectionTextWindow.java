@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import canvas.Controllable;
 import canvas.MainWindow;
 import global.InputController;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class SelectionTextWindow extends TextWindow {
+public class SelectionTextWindow extends TextWindow implements Controllable{
 	private List<List<MenuItem>> selections2D;
 	private String output = "";
 	private int currentOpenX;
@@ -26,7 +27,19 @@ public class SelectionTextWindow extends TextWindow {
 	private String t = "";
 	
 	public SelectionTextWindow(int x, int y, int width, int height, StartupNew m) {
+		this("vertical",x,y,width,height,m);
+	}
+	
+	public SelectionTextWindow(String orientation, int x, int y, int width, int height, StartupNew m) {
 		super(true,"", x,y,width,height,m);
+		this.orientation = orientation;
+		if (orientation.equals("horizontal")) {
+			dimX = 0;
+			dimY = 1;
+		} else if (orientation.equals("vertical")) {
+			dimX = 1;
+			dimY = 0;
+		}
 		currentOpenX = this.x + this.TEXT_START_X;
 		currentOpenY = this.y+ this.TEXT_START_Y;
 	}
@@ -36,8 +49,6 @@ public class SelectionTextWindow extends TextWindow {
 		int stepForwardY = 32;
 		switch (orientation) {
 			case "vertical":
-				stepForwardX = 64;
-				stepForwardY = 32;
 				if (currentOpenY > this.y + this.getHeight()*2) {
 					currentOpenY = this.y + this.TEXT_START_Y;
 					currentOpenX += stepForwardX;
@@ -52,19 +63,17 @@ public class SelectionTextWindow extends TextWindow {
 					}
 				break;
 			case "horizontal" :
-				stepForwardX = 64;
-				stepForwardY = 32;
 				if (currentOpenX > this.x + this.getWidth()*2) {
 					currentOpenX = this.x + this.TEXT_START_X;
 					currentOpenY += stepForwardY;
-					dimX++;
+					dimY++;
 				} 
 					m.setX(currentOpenX);
 					m.setY(currentOpenY);
 					selections.add(m);
 					currentOpenX += stepForwardX;
-					if (dimX == 1) {
-						dimY += 1;
+					if (dimY == 1) {
+						dimX += 1;
 					}
 				break;
 		}
@@ -80,47 +89,103 @@ public class SelectionTextWindow extends TextWindow {
 	}
 	
 	public void updateIndex(String direction) {
-		switch(direction) {
-			case "D" : 
-				selectedIndexY++;
-				overallIndex = dimY * selectedIndexX + selectedIndexY;
-				if (selectedIndexY >= dimY) {
-					selectedIndexY = 0;
+		switch (orientation) {
+		case "vertical" : 
+				switch(direction) {
+				case "D" : 
+					selectedIndexY++;
 					overallIndex = dimY * selectedIndexX + selectedIndexY;
+					if (selectedIndexY >= dimY) {
+						selectedIndexY = 0;
+						overallIndex = dimY * selectedIndexX + selectedIndexY;
+					}
+					break;
+				case "U" :
+					selectedIndexY--;
+					overallIndex = dimY * selectedIndexX + selectedIndexY;
+					if (selectedIndexY < 0) {
+						selectedIndexY = dimY-1;
+						overallIndex = dimY * selectedIndexX + selectedIndexY;
+					}
+					break;
+				case "R" :
+					selectedIndexX++;
+					overallIndex = dimY * selectedIndexX + selectedIndexY;
+					if (overallIndex >= selections.size()) {
+						selectedIndexX = 0;
+						selectedIndexY = selectedIndexY % dimY;
+						overallIndex = dimY * selectedIndexX + selectedIndexY;
+					}
+					break;
+				case "L" :
+					selectedIndexX--;
+					overallIndex = dimY * selectedIndexX + selectedIndexY;
+					if (overallIndex < 0) {
+						selectedIndexX = (selections.size()-1) / dimY;
+						selectedIndexY = selectedIndexY % dimY;
+						overallIndex = dimY * selectedIndexX + selectedIndexY;
+					}
+					break;
 				}
-				break;
-			case "U" :
-				selectedIndexY--;
-				overallIndex = dimY * selectedIndexX + selectedIndexY;
-				if (selectedIndexY < 0) {
-					selectedIndexY = dimY-1;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
+			if (overallIndex > selections.size()-1) {
+				overallIndex = selections.size()-1;
+				selectedIndexX = overallIndex / dimY;
+				selectedIndexY = overallIndex % dimY;
+			}
+			break;
+			case "horizontal" : 
+				System.out.println(overallIndex);
+				switch(direction) {
+					case "D" : 
+						selectedIndexY++;
+						overallIndex = dimX * selectedIndexY + selectedIndexX;
+						if (overallIndex >= selections.size()) {
+							selectedIndexY = 0;
+							overallIndex = dimX* selectedIndexY + selectedIndexX;
+						}
+						break;
+					case "U" :
+						selectedIndexY--;
+						overallIndex = dimX * selectedIndexY + selectedIndexX;
+						if (selectedIndexY < 0) {
+							selectedIndexY = dimY-1;
+							overallIndex = dimX * selectedIndexY + selectedIndexX;
+							if (overallIndex > selections.size()-1) {
+								selectedIndexY = dimY-2;
+								overallIndex = dimX * selectedIndexY + selectedIndexX;
+							}
+						}
+						break;
+					case "R" :
+						selectedIndexX++;
+						overallIndex = dimX * selectedIndexY + selectedIndexX;
+						if (selectedIndexX > dimX-1) {
+							selectedIndexX = 0;
+							overallIndex = dimX * selectedIndexY + selectedIndexX;
+						}
+						if (overallIndex >= selections.size()) {
+							selectedIndexX = dimX-1;
+							selectedIndexY = dimY-2;
+							overallIndex = dimX * selectedIndexY + selectedIndexX;
+						}
+						break;
+					case "L" :
+						selectedIndexX--;
+						overallIndex = dimX * selectedIndexY + selectedIndexX;
+						if (selectedIndexX < 0) {
+							selectedIndexX = dimX-1;
+							overallIndex = dimX * selectedIndexY + selectedIndexX;
+						}
+						break;
 				}
-				break;
-			case "R" :
-				selectedIndexX++;
-				overallIndex = dimY * selectedIndexX + selectedIndexY;
-				if (overallIndex >= selections.size()) {
-					selectedIndexX = 0;
-					selectedIndexY = selectedIndexY % dimY;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
-				}
-				break;
-			case "L" :
-				selectedIndexX--;
-				overallIndex = dimY * selectedIndexX + selectedIndexY;
-				if (overallIndex < 0) {
-					selectedIndexX = (selections.size()-1) / dimY;
-					selectedIndexY = selectedIndexY % dimY;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
+				if (overallIndex > selections.size()-1) {
+					overallIndex = selections.size()-1;
+					selectedIndexX = overallIndex % dimX;
+					selectedIndexY = overallIndex / dimX;
 				}
 				break;
 		}
-		if (overallIndex > selections.size()-1) {
-			overallIndex = selections.size()-1;
-			selectedIndexX = overallIndex / dimY;
-			selectedIndexY = overallIndex % dimY;
-		}
+		
 	}
 	
 	public void appendOutput(String s) {
