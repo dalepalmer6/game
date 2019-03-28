@@ -96,6 +96,7 @@ public class StartupNew{
 		tileMap.addTile(new Path(1));
 		tileMap.addTile(new Mountain(2));
 		tileMap.addTile(new Tree(3));
+		tileMap.addTile(new TreesEBTest2(4));
 	}
 	
 	public void loadAllImages()  {

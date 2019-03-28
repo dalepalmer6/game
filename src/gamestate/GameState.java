@@ -20,6 +20,7 @@ public class GameState {
 	private Map map;
 	private MapRenderer mapRenderer;
 	private StartupNew state;
+	private ArrayList<RedrawObject> ro;
 	
 	public Map getMap() {
 		return map;
@@ -55,9 +56,9 @@ public class GameState {
 		this.entities = new ArrayList<Entity>();
 		this.state = s;
 		this.camera = new Camera(state);
-		this.entities.add(new Mook(800,100,32*4,64*4,state));
-		this.player = new Ness(600,150,16*4,24*4,camera,state);
-		this.entities.add(new Nooo(1000,100,100*4,64*4,state));
+		this.entities.add(new Mook(800,100,32*3,64*3,state));
+		this.player = new Ness(600,150,16*3,24*3,camera,state);
+		this.entities.add(new Nooo(1000,100,100*4,64*3,state));
 		this.entities.add(player);
 		
 		this.map = m;
@@ -65,6 +66,7 @@ public class GameState {
 		this.mapRenderer = new MapRenderer(m,getCamera(),state); 
 		camera.setMapRenderer(mapRenderer);
 //		addToDrawables(mapRenderer);
+		ro = new ArrayList<RedrawObject>();
 	}
 	
 	void sort()
@@ -95,6 +97,10 @@ public class GameState {
 	public void drawGameState() {
 		drawMapRenderer();
 		drawEntities();
+		for (RedrawObject robj : ro) {
+			robj.draw(state.getMainWindow(), mapRenderer);
+		}
+		ro = new ArrayList<RedrawObject>();
 	}
 	
 	public void drawMapRenderer() {
@@ -165,6 +171,11 @@ public class GameState {
 	public void parseInput() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void addToRedrawing(RedrawObject redrawObject) {
+		// TODO Auto-generated method stub
+		ro.add(redrawObject);
 	}
 	
 }

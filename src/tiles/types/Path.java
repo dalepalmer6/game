@@ -10,10 +10,10 @@ public class Path extends MultiInstanceTile {
 	
 	public Path(int id) {
 		super(id);
-		tcm.setAllCollisions(new String[] {	"PASS","PASS","PASS","PASS",
-				"PASS","PASS","PASS","PASS",
-				"PASS","PASS","PASS","PASS",
-				"PASS","PASS","PASS","PASS"});
+//		tcm.setAllCollisions(new String[] {	"PASS","PASS","PASS","PASS",
+//				"PASS","PASS","PASS","PASS",
+//				"PASS","PASS","PASS","PASS",
+//				"PASS","PASS","PASS","PASS"});
 		tg.addTileInstance(0,192,16,16);
 		tg.addTileInstance(0,208,16,16);
 		tg.addTileInstance(16,208,16,16);
@@ -24,6 +24,8 @@ public class Path extends MultiInstanceTile {
 		tg.addTileInstance(0,240,16,16);
 		tg.addTileInstance(16,240,16,16);
 		tg.addTileInstance(32,240,16,16);
+		tg.addTileInstance(48,208,16,16);
+		tg.addTileInstance(48,224,16,16);
 	}
 
 }

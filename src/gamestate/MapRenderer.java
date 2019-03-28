@@ -10,6 +10,7 @@ import mapeditor.TileHashMap;
 import menu.DrawableObject;
 import menu.StartupNew;
 import tiles.SingleInstanceTile;
+import tiles.TileInstance;
 
 public class MapRenderer extends DrawableObject implements Drawable{
 	private Map map;
@@ -25,10 +26,16 @@ public class MapRenderer extends DrawableObject implements Drawable{
 	private int widthInTiles;
 	private int heightInTiles;
 	private ArrayList<ArrayList<Integer>> areaOfInterest;
+	private ArrayList<ArrayList<TileInstance>> areaOfInterestTileInstances;
+	private ArrayList<ArrayList<TileInstance>> tileInstanceMap;
 	private MainWindow mainWindow;
 	private TileHashMap tileMap;
 	private final int TILE_SIZE = 64;
 	private StartupNew state;
+	
+	public ArrayList<ArrayList<TileInstance>> getAreaOfInterestTiles() {
+		return tileInstanceMap;
+	}
 	
 	public int getTileSize() {
 		return TILE_SIZE;
@@ -45,52 +52,13 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		this.heightInTiles = 4 + mainWindow.getScreenHeight() / TILE_SIZE;
 		this.state = s;
 		this.tileMap = s.tileMap;
+		tileInstanceMap = map.tileInstanceMap;
+		areaOfInterestTileInstances = new ArrayList<ArrayList<TileInstance>> ();
 	}
 
-	public int inspectSurroundings(int x , int y) {
-		//check the adjacent tiles, if they're the same, then draw the appropriate instance of the tile
-		//middle tile that we are comparing with
-		int instance = 0;
-		if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof SingleInstanceTile) {
-			return 0;
-		}
-		if (x == 0 || y == 0) {
-			instance = 0;
-			return 0;
-		}
-		int mid = areaOfInterest.get(y).get(x);
-		int l = areaOfInterest.get(y).get(x-1);
-		int r = areaOfInterest.get(y).get(x+1);
-		int u = areaOfInterest.get(y+1).get(x);
-		int d = areaOfInterest.get(y-1).get(x);
-		if (mid != u && mid != l && mid == r && mid == d) {
-			return 7;
-		}
-		if (mid != u && mid == l && mid == r && mid == d) {
-			return 8;
-		}
-		if (mid != u && mid == l && mid != r && mid == d) {
-			return 9;
-		}
-		if (mid == u && mid != l && mid == r && mid == d) {
-			return 4;
-		}
-		if (mid == u && mid == l && mid == r && mid == d) {
-			return 5;
-		}
-		if (mid == u && mid == l && mid != r && mid == d) {
-			return 6;
-		}
-		if (mid == u && mid != l && mid == r && mid != d) {
-			return 1;
-		}
-		if (mid == u && mid == l && mid == r && mid != d) {
-			return 2;
-		}
-		if (mid == u && mid == l && mid != r && mid != d) {
-			return 3;
-		}
-		return 0;
+	public void redrawTile(MainWindow m,int x, int y,TileInstance instance) {
+		Tile.initDrawTiles(m);
+		m.renderTile(-camera.getX() + this.x + (x-1)*TILE_SIZE, -camera.getY()+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, instance.getDx(),instance.getDy(),instance.getDw(),instance.getDh());
 	}
 	
 	public void drawTiles(MainWindow m) {
@@ -102,8 +70,9 @@ public class MapRenderer extends DrawableObject implements Drawable{
 				//for every column
 				int val = this.areaOfInterest.get(j).get(i);
 				tile = tileMap.getTile(val);
-				int instance = inspectSurroundings(i,j);
-				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+				TileInstance instance = areaOfInterestTileInstances.get(j).get(i);
+				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
+				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, instance.getDx(),instance.getDy(),instance.getDw(),instance.getDh());
 			}
 		}
 }
@@ -118,15 +87,21 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Integer> row = new ArrayList<Integer>();
+		ArrayList<ArrayList<TileInstance>> rowsInst = new ArrayList<ArrayList<TileInstance>>();
+		ArrayList<TileInstance> rowInst = new ArrayList<TileInstance>();
 		for (int j = camera.getY()/TILE_SIZE; j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
 			for (int i = Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
 				int curId = map.getTileId(i, j);
+				rowInst.add(tileInstanceMap.get(j).get(i));
 				row.add(curId);
 			}
 			rows.add(row);
+			rowsInst.add(rowInst);
 			row = new ArrayList<Integer>();
+			rowInst = new ArrayList<TileInstance>();
 		}
 		areaOfInterest = rows;
+		areaOfInterestTileInstances = rowsInst;
 	}
 	
 }

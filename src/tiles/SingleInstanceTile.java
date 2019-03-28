@@ -4,10 +4,11 @@ import mapeditor.Tile;
 
 public class SingleInstanceTile extends Tile {
 	protected TileGenerator tg;
-	protected TileCollisionMap tcm;
 	
-	public String getCollisionInfoAtIndex(int x, int y) {
-		return tcm.getCollisionData(y*4 + x);
+
+	
+	public TileInstance getInstance(int inst_id) {
+		return tg.getTileInstance(inst_id);
 	}
 	
 	public int getDx(int inst_id) {
@@ -26,6 +27,5 @@ public class SingleInstanceTile extends Tile {
 	public SingleInstanceTile(int id) {
 		super(id);
 		tg = new TileGenerator();
-		tcm = new TileCollisionMap();
 	} 
 }

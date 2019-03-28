@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
 import canvas.MainWindow;
+import tiles.TileInstance;
 
 public class Tile {
 	public int id;
@@ -19,9 +20,9 @@ public class Tile {
 		this.id = id;
 	}
 	
-	public String getCollisionInfoAtIndex(int x, int y) {
-		return null;
-	}
+//	public String getCollisionInfoAtIndex(int x, int y) {
+//		return null;
+//	}
 	
 	public Tile(int id, Rectangle tileBounds) {
 		this.id = id;
@@ -75,5 +76,10 @@ public class Tile {
 		m.setTexture("img/tiles.png");
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	public TileInstance getInstance(int i) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

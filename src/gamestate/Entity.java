@@ -10,6 +10,7 @@ import global.InputController;
 import mapeditor.Tile;
 import menu.DrawableObject;
 import menu.StartupNew;
+import tiles.TileInstance;
 
 public class Entity extends DrawableObject implements Drawable,EntityInterface {
 	protected double tickCount = 0;
@@ -131,7 +132,9 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-	
+	public void stageForRedraw(int x, int y, TileInstance t) {
+		state.getGameState().addToRedrawing(new RedrawObject(x,y,t));
+	}
 	
 	public void checkCollisions() {
 		//adding 1 to each to account for the offset of the map renderer
@@ -146,15 +149,32 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		int upperEdgeTest = (this.y + this.height*3/4 + deltaY)%ts / 16;
 		int lowerEdgeTest = (this.y + this.height + deltaY)%ts / 16;
 		
-		Tile t1 = state.getGameState().getMap().getTile(leftEdge, upperEdge);
-		Tile t2 = state.getGameState().getMap().getTile(rightEdge, upperEdge);
-		Tile t3 = state.getGameState().getMap().getTile(rightEdge, lowerEdge);
-		Tile t4 = state.getGameState().getMap().getTile(leftEdge, lowerEdge);
+		TileInstance t1 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(leftEdge);
+		TileInstance t2 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(rightEdge);
+		TileInstance t3 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(rightEdge);
+		TileInstance t4 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(leftEdge);
 		
 		String collisionStatet1 = t1.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
 		String collisionStatet2 = t2.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
 		String collisionStatet3 = t3.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
 		String collisionStatet4 = t4.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
+		
+		if (collisionStatet1.equals("UNDER")) {
+			System.out.println("Do a redraw");
+			stageForRedraw(leftEdge,upperEdge,t1);
+		}
+		if (collisionStatet2.equals("UNDER")) {
+			System.out.println("Do a redraw");
+			stageForRedraw(rightEdge,upperEdge,t2);
+		}
+		if (collisionStatet3.equals("UNDER")) {
+			System.out.println("Do a redraw");
+			stageForRedraw(rightEdge,lowerEdge,t3);
+		}
+		if (collisionStatet4.equals("UNDER")) {
+			System.out.println("Do a redraw");
+			stageForRedraw(leftEdge,lowerEdge,t4);
+		}
 		if (collisionStatet1.equals("STOP")) {
 			System.out.println("Upper left collision");
 			deltaX = 0;

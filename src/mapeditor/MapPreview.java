@@ -13,7 +13,10 @@ import canvas.Drawable;
 import canvas.Hoverable;
 import canvas.MainWindow;
 import global.InputController;
+import tiles.Multi16InstanceTile;
+import tiles.MultiInstanceTile;
 import tiles.SingleInstanceTile;
+import tiles.types.Tree;
 
 public class MapPreview extends LeftAndRightClickableItem implements Controllable, Drawable, Hoverable, Clickable {
 	private Map map;
@@ -133,6 +136,7 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 					int val = this.areaOfInterest.get(j).get(i);
 					tile = tileMap.getTile(val);
 					int instance  = inspectSurroundings(i,j);
+					m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
 					m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 				}
 			}
@@ -146,97 +150,74 @@ public class MapPreview extends LeftAndRightClickableItem implements Controllabl
 		}
 		int mid = areaOfInterest.get(y).get(x);
 		
-//		if (x == 0 && y == 0 && viewX > 0 && viewY > 0) {
-//			int l = map.getTile(viewX-1,y).getId();
-//			int r = areaOfInterest.get(y).get(x+1);
-//			int u = map.getTile(x,viewY-1).getId();
-//			int d = areaOfInterest.get(y+1).get(x);
-//			if (mid != u && mid != l && mid == r && mid == d) {
-//				return 1;
-//			}
-//			if (mid == u && mid != l && mid == r && mid == d) {
-//				return 4;
-//			}
-//			if (mid == u && mid != l && mid == r && mid != d) {
-//				return 7;
-//			}
-//			if (mid == u && mid == l && mid == r && mid == d) {
-//				return 5;
-//			}
-//		}
-//		if (x == 0 && viewX > 0) {
-//			int l = map.getTile(viewX-1,y).getId();
-//			int r = areaOfInterest.get(y).get(x+1);
-//			int u = areaOfInterest.get(y-1).get(x);
-//			int d = areaOfInterest.get(y+1).get(x);
-//			if (mid != u && mid != l && mid == r && mid == d) {
-//				return 1;
-//			}
-//			if (mid == u && mid != l && mid == r && mid == d) {
-//				return 4;
-//			}
-//			if (mid == u && mid != l && mid == r && mid != d) {
-//				return 7;
-//			}
-//			if (mid == u && mid == l && mid == r && mid == d) {
-//				return 5;
-//			}
-//		}
-//		
-//		if (y == 0 && viewY > 0) {
-//			int u = map.getTile(x,viewY-1).getId();
-//			int l = areaOfInterest.get(y).get(x-1);
-//			int r = areaOfInterest.get(y).get(x+1);
-//			int d = areaOfInterest.get(y+1).get(x);
-//			if (mid != u && mid != l && mid == r && mid == d) {
-//				return 1;
-//			}
-//			if (mid != u && mid == l && mid == r && mid == d) {
-//				return 2;
-//			}
-//			if (mid != u && mid == l && mid != r && mid == d) {
-//				return 3;
-//			}
-//			if (mid == u && mid == l && mid == r && mid == d) {
-//				return 5;
-//			}
-//		}
-		
-		
-		
-		if (x > 0 && y > 0) {
-			int l = areaOfInterest.get(y).get(x-1);
-			int r = areaOfInterest.get(y).get(x+1);
-			int u = areaOfInterest.get(y-1).get(x);
-			int d = areaOfInterest.get(y+1).get(x);
-			if (mid != u && mid != l && mid == r && mid == d) {
-				return 1;
-			}
-			if (mid != u && mid == l && mid == r && mid == d) {
-				return 2;
-			}
-			if (mid != u && mid == l && mid != r && mid == d) {
-				return 3;
-			}
-			if (mid == u && mid != l && mid == r && mid == d) {
-				return 4;
-			}
-			if (mid == u && mid == l && mid == r && mid == d) {
-				return 5;
-			}
-			if (mid == u && mid == l && mid != r && mid == d) {
-				return 6;
-			}
-			if (mid == u && mid != l && mid == r && mid != d) {
-				return 7;
-			}
-			if (mid == u && mid == l && mid == r && mid != d) {
-				return 8;
-			}
-			if (mid == u && mid == l && mid != r && mid != d) {
-				return 9;
+		if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof MultiInstanceTile) {
+			if (x > 0 && y > 0) {
+				int l = areaOfInterest.get(y).get(x-1);
+				int r = areaOfInterest.get(y).get(x+1);
+				int u = areaOfInterest.get(y-1).get(x);
+				int d = areaOfInterest.get(y+1).get(x);
+				if (mid != u && mid != l && mid == r && mid == d) {
+					return 1;
+				}
+				if (mid != u && mid == l && mid == r && mid == d) {
+					return 2;
+				}
+				if (mid != u && mid == l && mid != r && mid == d) {
+					return 3;
+				}
+				if (mid == u && mid != l && mid == r && mid == d) {
+					return 4;
+				}
+				if (mid == u && mid == l && mid == r && mid == d) {
+					if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof Tree) {
+						if (mid != areaOfInterest.get(y+1).get(x+1)) {
+							return 10;
+						}
+						if (mid != areaOfInterest.get(y+1).get(x-1)) {
+							return 11;
+						}
+					}
+					if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof tiles.types.Path) {
+						if (mid != areaOfInterest.get(y+1).get(x+1)) {
+							return 11;
+						}
+						if (mid != areaOfInterest.get(y+1).get(x-1)) {
+							return 10;
+						}
+					}
+					return 5;
+				}
+				if (mid == u && mid == l && mid != r && mid == d) {
+					return 6;
+				}
+				if (mid == u && mid != l && mid == r && mid != d) {
+					return 7;
+				}
+				if (mid == u && mid == l && mid == r && mid != d) {
+					return 8;
+				}
+				if (mid == u && mid == l && mid != r && mid != d) {
+					return 9;
+				}
 			}
 		}
+		
+		if (tileMap.getTile(areaOfInterest.get(y).get(x)) instanceof Multi16InstanceTile) {
+			if (x > 0 && y > 0) {
+				int l = areaOfInterest.get(y).get(x-1);
+				int r = areaOfInterest.get(y).get(x+1);
+				int u = areaOfInterest.get(y-1).get(x);
+				int d = areaOfInterest.get(y+1).get(x);
+				if (mid != u && mid != l && mid == r && mid == d) {
+					return 1;
+				}
+				if (mid != u && mid == l && mid == r && mid == d) {
+					return 1;
+				}
+			}
+		}
+		
+		
 		return 0;
 	}
 	

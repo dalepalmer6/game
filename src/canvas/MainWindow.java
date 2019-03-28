@@ -66,30 +66,7 @@ public class MainWindow {
 				renderTile(i,j,TILE_SIZE,TILE_SIZE,0,0,64,64);
 			}
 		}
-		
-		
-		
 	}
-	
-//	public void render(int x, int y, int width, int height) {
-//		//draw with no texture
-//		Color.white.bind();
-//		
-//		GL11.glDisable(GL11.GL_TEXTURE_2D);
-//		
-//        GL11.glPushMatrix();
-//            GL11.glBegin(GL11.GL_QUADS);
-//				GL11.glTexCoord2f(0, 0);
-//				GL11.glVertex2f(x, y);
-//				GL11.glTexCoord2f(1, 0);
-//				GL11.glVertex2f(x + width, y);
-//				GL11.glTexCoord2f(1, 1);
-//				GL11.glVertex2f(x + width, y + height);
-//				GL11.glTexCoord2f(0, 1);
-//				GL11.glVertex2f(x, y + height);
-//            GL11.glEnd();
-//        GL11.glPopMatrix();
-//	}
 
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
 		renderTile(x,y,width,height,dx,dy,dw,dh,false);
