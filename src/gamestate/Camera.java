@@ -74,7 +74,7 @@ public class Camera {
 
 	public void snapToEntity(int x, int y) {
 		this.x = Math.max(0,x - getMainWindow().getScreenWidth()/2);
-		this.y = Math.min(0,y + getMainWindow().getScreenHeight()/2);
+		this.y = Math.max(0,y - getMainWindow().getScreenHeight()/2);
 	}
 	
 }

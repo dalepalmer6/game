@@ -24,6 +24,7 @@ public class InputController {
 		controllerSignals.put("MOUSE_LEFT_DOWN", MOUSE_LEFT_DOWN);
 		controllerSignals.put("MOUSE_RIGHT_DOWN", MOUSE_RIGHT_DOWN);
 		controllerSignals.put("CONFIRM", CONFIRM);
+		controllerSignals.put("BACK",BACK);
 		controllerSignals.put("BACK", BACK);
 		controllerSignals.put("UP", UP);
 		controllerSignals.put("LEFT", LEFT);
@@ -44,6 +45,22 @@ public class InputController {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
 			setSignal("CONFIRM",false);
+		}
+	}
+	
+	public void pollKeyBack() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_Z) && !BACK) {
+			System.out.println("Keydown: Z");
+			setSignal("BACK", true);
+			BACK = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_Z) && BACK) {
+			System.out.println("Keyup: Z");
+			setSignal("BACK", false);
+			BACK = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+			setSignal("BACK",false);
 		}
 	}
 	
@@ -158,6 +175,7 @@ public class InputController {
 		pollKeyDown();
 		pollKeyUp();
 		pollKeyConfirm();
+		pollKeyBack();
 	}
 	
 	public boolean mouseRight() {

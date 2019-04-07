@@ -20,10 +20,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
-	private int width = 300;
-	private int height = 100;
-	private int x;
-	private int y;
+	protected int width = 300;
+	protected int height = 100;
+	protected int x;
+	protected int y;
 	protected StartupNew state;
 	
 	public boolean hovered(double mousex, double mousey) {	

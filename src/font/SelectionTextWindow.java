@@ -17,6 +17,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private int currentOpenY;
 	private int spacingXFactor = 1;
 	private int spacingYFactor = 1;
+	protected int stepForwardX = 64;
+	protected int stepForwardY = 32;
 	private int dimX = 1;
 	private int dimY = 0;
 	private List<MenuItem> selections = new ArrayList<MenuItem>();
@@ -25,6 +27,16 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private int selectedIndexX = 0;
 	private int selectedIndexY = 0;
 	private String t = "";
+	private boolean focused = false;
+	private boolean killWhenComplete;
+	
+	public void setFocused(boolean b) {
+		focused = b;
+	}
+	
+	public boolean getFocused() {
+		return focused;
+	}
 	
 	public SelectionTextWindow(int x, int y, int width, int height, StartupNew m) {
 		this("vertical",x,y,width,height,m);
@@ -45,8 +57,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void add(MenuItem m) {
-		int stepForwardX = 64;
-		int stepForwardY = 32;
+		
 		switch (orientation) {
 			case "vertical":
 				if (currentOpenY > this.y + this.getHeight()*2) {
@@ -200,8 +211,16 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		return output;
 	}
 	
+	
+	public void setKillWhenComplete() {
+		killWhenComplete = true;
+	}
+	
 	public void update() {
 		String t = selections.get(overallIndex).prepareToExecute();
+		if (killWhenComplete) {
+			state.getMenuStack().peek().setToRemove(this);
+		}
 		if (t != null) {
 			appendOutput(t);
 			state.setOutputFromSelect(output);
@@ -240,7 +259,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 //		selectedIndexX = overallIndex / dimY;
 //		selectedIndexY = overallIndex % dimY;
 		CharacterData cursor = this.m.charList.getCharObjects().get('@');
-		m.renderTile(this.text.getX() + selectedIndexX*64,  this.text.getY() + selectedIndexY*32,
+		m.renderTile(this.text.getX() + selectedIndexX*stepForwardX,  this.text.getY() + selectedIndexY*stepForwardY,
 				(int)cursor.getDw()*4,(int)cursor.getDh()*4,
 				cursor.getDx(),cursor.getDy(),
 				cursor.getDw()*2,cursor.getDh()*2);
@@ -248,6 +267,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	
 	public String execute() {
 		selections.get(overallIndex).prepareToExecute();
+		state.getMenuStack().peek().setToRemove(this);
 		return null;
 	}
 	

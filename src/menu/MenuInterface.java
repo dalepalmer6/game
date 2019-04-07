@@ -6,9 +6,9 @@ import canvas.Drawable;
 import global.MenuStack;
 
 public interface MenuInterface {
-	public void addMenuItem(DrawableObject m);
+	public void addMenuItem(MenuItem m);
 	
-	public List<DrawableObject> getMenuItems();
+	public List<MenuItem> getMenuItems();
 	
 	public String getId();
 	

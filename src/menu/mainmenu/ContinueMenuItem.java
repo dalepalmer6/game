@@ -2,6 +2,7 @@ package menu.mainmenu;
 
 import gamestate.GameState;
 import global.MenuStack;
+import menu.Animation;
 import menu.MenuItem;
 import menu.StartupNew;
 

@@ -9,8 +9,11 @@ import mapeditor.Tile;
 import mapeditor.TileHashMap;
 import menu.DrawableObject;
 import menu.StartupNew;
+import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
 import tiles.TileInstance;
+import tiles.types.Plain;
+import tiles.types.Tree;
 
 public class MapRenderer extends DrawableObject implements Drawable{
 	private Map map;
@@ -30,8 +33,17 @@ public class MapRenderer extends DrawableObject implements Drawable{
 	private ArrayList<ArrayList<TileInstance>> tileInstanceMap;
 	private MainWindow mainWindow;
 	private TileHashMap tileMap;
-	private final int TILE_SIZE = 64;
+	private int scaleUp = 4;
+	private final int TILE_SIZE = 32 * scaleUp;
 	private StartupNew state;
+	
+	public int getWidthInTiles() {
+		return widthInTiles;
+	}
+	
+	public int getHeightInTiles() {
+		return heightInTiles;
+	}
 	
 	public ArrayList<ArrayList<TileInstance>> getAreaOfInterestTiles() {
 		return tileInstanceMap;
@@ -52,32 +64,68 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		this.heightInTiles = 4 + mainWindow.getScreenHeight() / TILE_SIZE;
 		this.state = s;
 		this.tileMap = s.tileMap;
-		tileInstanceMap = map.tileInstanceMap;
+		tileInstanceMap = map.tileInstanceMapBG;
 		areaOfInterestTileInstances = new ArrayList<ArrayList<TileInstance>> ();
 	}
 
 	public void redrawTile(MainWindow m,int x, int y,TileInstance instance) {
-		Tile.initDrawTiles(m);
+		Tile.initDrawTiles(m, map.getTileset());
+		if (instance == tileMap.getTile(0).getInstance(0)) {
+			return;
+		}
 		m.renderTile(-camera.getX() + this.x + (x-1)*TILE_SIZE, -camera.getY()+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, instance.getDx(),instance.getDy(),instance.getDw(),instance.getDh());
 	}
 	
 	public void drawTiles(MainWindow m) {
-		Tile.initDrawTiles(m);
+		Tile.initDrawTiles(m,map.getTileset());
 		Tile tile;
 		for (int i = 1; i < widthInTiles-1; i++) {
 			//for every row
 			for (int j = 1; j < heightInTiles-1; j++) {
-				//for every column
 				int val = this.areaOfInterest.get(j).get(i);
 				tile = tileMap.getTile(val);
-				TileInstance instance = areaOfInterestTileInstances.get(j).get(i);
-				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, instance.getDx(),instance.getDy(),instance.getDw(),instance.getDh());
+				if (val == 0) {
+					continue;
+				}
+				int instance  = map.inspectSurroundings(i + camera.getX()/TILE_SIZE,j + camera.getY()/TILE_SIZE);
+				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 			}
 		}
-}
+	}
+	
+	public void drawTilesBG(MainWindow m) {
+		Tile.initDrawTiles(m,map.getTileset());
+		Tile tile;
+		for (int i = 1; i < widthInTiles-1; i++) {
+			//for every row
+			for (int j = 1; j < heightInTiles-1; j++) {
+				int val = this.areaOfInterest.get(j).get(i);
+				tile = tileMap.getTile(val);
+				int instance  = map.inspectSurroundings(i + camera.getX()/TILE_SIZE,j + camera.getY()/TILE_SIZE);
+//				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
+				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+			}
+		}
+	}
+	
+	public void drawTileBase(MainWindow m, int x, int y, Tile t, int instance) {
+		Tile.initDrawTiles(m,map.getTileset());
+		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
+	}
+	
+	public void drawTile(MainWindow m, int x, int y, Tile t, int instance) {
+		Tile.initDrawTiles(m,map.getTileset());
+		if (t == state.tileMap.getTile(0)) {
+			return;
+		}
+		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
+	}
 	
 	public void draw(MainWindow m) {
+		map.setChangeMap("BG");
+		getAreaOfInterest();
+		drawTilesBG(m);
+		map.setChangeMap("FG");
 		getAreaOfInterest();
 		drawTiles(m);
 	}
@@ -87,21 +135,35 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Integer> row = new ArrayList<Integer>();
-		ArrayList<ArrayList<TileInstance>> rowsInst = new ArrayList<ArrayList<TileInstance>>();
-		ArrayList<TileInstance> rowInst = new ArrayList<TileInstance>();
 		for (int j = camera.getY()/TILE_SIZE; j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
 			for (int i = Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
 				int curId = map.getTileId(i, j);
-				rowInst.add(tileInstanceMap.get(j).get(i));
 				row.add(curId);
 			}
 			rows.add(row);
-			rowsInst.add(rowInst);
 			row = new ArrayList<Integer>();
-			rowInst = new ArrayList<TileInstance>();
 		}
 		areaOfInterest = rows;
-		areaOfInterestTileInstances = rowsInst;
+	}
+	
+	public ArrayList<ArrayList<Integer>> returnAreaOfInterest() {
+		return areaOfInterest;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getAreaOfInterest(ArrayList<ArrayList<Integer>> map) {
+		//viewX,viewY
+		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
+		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
+		ArrayList<Integer> row = new ArrayList<Integer>();
+		for (int j = camera.getY()/TILE_SIZE; j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
+			for (int i = Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
+				int curId = map.get(j).get(i);
+				row.add(curId);
+			}
+			rows.add(row);
+			row = new ArrayList<Integer>();
+		}
+		return rows;
 	}
 	
 }

@@ -167,7 +167,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		//for now, just drop the box.
 		text.setFreeze(false);
 		if (text.getDrawState()) {
-			state.needToPop = true;
+			state.getMenuStack().peek().setToRemove(this);
 		}
 //		
 	}

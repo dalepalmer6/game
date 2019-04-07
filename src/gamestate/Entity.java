@@ -6,13 +6,15 @@ import org.lwjgl.opengl.GL11;
 
 import canvas.Drawable;
 import canvas.MainWindow;
+import font.SimpleDialogMenu;
 import global.InputController;
 import mapeditor.Tile;
 import menu.DrawableObject;
 import menu.StartupNew;
 import tiles.TileInstance;
 
-public class Entity extends DrawableObject implements Drawable,EntityInterface {
+public class Entity implements Drawable,EntityInterface {
+	protected String text = "";
 	protected double tickCount = 0;
 	protected double ticksPerFrame = 0.1;
 	protected long now;
@@ -24,6 +26,7 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 	protected String inputLast = "";
 	protected int x;
 	protected int y;
+	private boolean doNotMove;
 	protected int boundingBoxHeight;
 	protected int deltaX;
 	protected int deltaY;
@@ -32,10 +35,33 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 	private String texture;
 	protected int width;
 	protected int height;
-	protected int stepSize = 4;
+	protected int stepSize = 8;
 	protected StartupNew state;
 	protected ArrayList<Entity> interactables;
 	private long delta;
+	private String name;
+	
+	public String getText() {
+		return text;
+	}
+	
+	public String getTexture() {
+		return texture;
+	}
+	
+	public StartupNew getState() {
+		return state;
+	}
+	
+	public void setSpriteCoords(SpritesheetCoordinates sc) {
+		spriteCoordinates = sc;
+	}
+	
+	public Entity createCopy(int newX, int newY, int width, int height) {
+		Entity copy = new Entity(texture,newX,newY,width,height,state,name);
+		copy.setSpriteCoords(spriteCoordinates);
+		return copy;
+	}
 	
 	public void updateActionTaken(String s) {
 		this.actionTaken = s;
@@ -51,6 +77,11 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		}
 	}
 	
+	public void setCoordinates(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
 	public void move() {
 		checkCollisions();
 		x += deltaX;
@@ -58,6 +89,7 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 	}
 	
 	public void update(GameState gs) {
+		move();
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
 		updateFrameTicks();
@@ -75,12 +107,28 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		return yOnScreen;
 	}
 	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
 	public int getHeight() {
 		return height;
 	}
 	
-	public Entity(String texture, int x, int y, int width, int height,StartupNew m) {
-//		this.createdAt = (System.nanoTime());
+	public void setText(String s) {
+		text = s;
+	}
+	
+	public Entity(String texture, int x, int y, int width, int height,StartupNew m,String name) {
+		this.spriteCoordinates = new SpritesheetCoordinates();
 		directionY = "down";
 		actionTaken = "idle";
 		this.texture = texture;
@@ -93,8 +141,10 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		this.height = height;
 		this.state = m;
 		this.interactables = new ArrayList<Entity>();
+		this.name = name;
+//		scaleUp(4);
 	}
-
+	
 	public String interactText() {
 		return null;
 	}
@@ -109,13 +159,9 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		this.interactables.remove(e);
 	}
 	
-//	public List<String> setStates() {
-//		if (entityState.contains(""))
-//	}
-	
 	public void drawEntity(MainWindow m) {
 		initDrawEntity(m,texture);
-		Pose pose = spriteCoordinates.getPose(actionTaken, directionX,directionY);
+		Pose pose = getSpriteCoordinates().getPose(actionTaken, directionX,directionY);
 		int i = (int) tickCount % pose.getNumStates();
 		TileMetadata tm = pose.getStateByNum(i);
 		m.renderTile(xOnScreen, yOnScreen, width, height, tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
@@ -132,69 +178,156 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-	public void stageForRedraw(int x, int y, TileInstance t) {
-		state.getGameState().addToRedrawing(new RedrawObject(x,y,t));
+//	public void stageForRedraw(int x, int y, TileInstance t) {
+//		state.getGameState().addToRedrawing(new RedrawObject(x,y,t));
+//	}
+//	
+//	public void verifyCollisions(TileInstance t1, TileInstance t2, TileInstance t3, TileInstance t4,
+//			String collisionStatet1, String collisionStatet2,
+//			String collisionStatet3, String collisionStatet4,int leftEdge, int rightEdge, 
+//			int upperEdge, int lowerEdge) {
+//		if (collisionStatet1.equals("UNDER")) {
+//			System.out.println("Do a redraw");
+//			stageForRedraw(1+leftEdge,1+upperEdge,t1);
+//		}
+//		if (collisionStatet2.equals("UNDER")) {
+//			System.out.println("Do a redraw");
+//			stageForRedraw(1+rightEdge,1+upperEdge,t2);
+//		}
+//		if (collisionStatet3.equals("UNDER")) {
+//			System.out.println("Do a redraw");
+//			stageForRedraw(1+rightEdge,1+lowerEdge,t3);
+//		}
+//		if (collisionStatet4.equals("UNDER")) {
+//			System.out.println("Do a redraw");
+//			stageForRedraw(1+leftEdge,1+lowerEdge,t4);
+//		}
+//		if (collisionStatet1.equals("STOP")) {
+//			System.out.println("Upper left collision");
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+//		if (collisionStatet2.equals("STOP")) {
+//			System.out.println("Upper right collision");
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+//		if (collisionStatet3.equals("STOP")) {
+//			System.out.println("Lower right collision");
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+//		if (collisionStatet4.equals("STOP")) {
+//			System.out.println("Lower left collision");
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+//	}
+	
+	public void stageForRedraw() {
+		state.getGameState().addToRedrawing(new RedrawObject(this));
 	}
 	
+	public void checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) {
+		if ((collision & 1) == 1) {
+			deltaX = 0;
+			deltaY = 0;
+		}
+		if ((collision & 2) == 0) {
+			System.out.println("TEST");
+			
+			//redraw the tile for overlay
+//			stageForRedraw(x+1,y+1,tbg);
+//			stageForRedraw(x+1,y+1,tfg);
+		}
+	}
+	
+//	public String collisionLogicalOr(String c1, String c2) {
+//		
+//	}
+	
 	public void checkCollisions() {
-		//adding 1 to each to account for the offset of the map renderer
+		//collisions are cumulative over all layers
 		int ts = state.getGameState().getMapRenderer().getTileSize();
-		int leftEdge = 1+(this.x + deltaX)/ts;
-		int rightEdge = 1+(this.x + this.width + deltaX)/ts;
-		int upperEdge = 1+(this.y + this.height*3/4 + deltaY)/ts;
-		int lowerEdge = 1+(this.y + this.height + deltaY)/ts;
+		int leftEdge = (this.x + deltaX)/ts;
+		int rightEdge = (this.x + this.width + deltaX)/ts;
+		int upperEdge = (this.y + this.height*3/4 + deltaY)/ts;
+		int lowerEdge = (this.y + this.height + deltaY)/ts;
 		
-		int leftEdgeTest = (this.x + deltaX)%ts / 16;
-		int rightEdgeTest = (this.x + this.width + deltaX)%ts / 16;
-		int upperEdgeTest = (this.y + this.height*3/4 + deltaY)%ts / 16;
-		int lowerEdgeTest = (this.y + this.height + deltaY)%ts / 16;
+		int leftEdgeTest = (this.x + deltaX)%ts / (ts/4);
+		int rightEdgeTest = (this.x + this.width + deltaX)%ts / (ts/4);
+		int upperEdgeTest = (this.y + this.height*3/4 + deltaY)%ts / (ts/4);
+		int lowerEdgeTest = (this.y + this.height + deltaY)%ts / (ts/4);
 		
-		TileInstance t1 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(leftEdge);
-		TileInstance t2 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(rightEdge);
-		TileInstance t3 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(rightEdge);
-		TileInstance t4 = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(leftEdge);
+		TileInstance t1BG = state.getGameState().getMap().tileInstanceMapBG.get(upperEdge).get(leftEdge);
+		TileInstance t2BG = state.getGameState().getMap().tileInstanceMapBG.get(upperEdge).get(rightEdge);
+		TileInstance t3BG = state.getGameState().getMap().tileInstanceMapBG.get(lowerEdge).get(rightEdge);
+		TileInstance t4BG = state.getGameState().getMap().tileInstanceMapBG.get(lowerEdge).get(leftEdge);
 		
-		String collisionStatet1 = t1.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
-		String collisionStatet2 = t2.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
-		String collisionStatet3 = t3.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
-		String collisionStatet4 = t4.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
+		int collisionStatet1BG = t1BG.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
+		int collisionStatet2BG = t2BG.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
+		int collisionStatet3BG = t3BG.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
+		int collisionStatet4BG = t4BG.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
 		
-		if (collisionStatet1.equals("UNDER")) {
-			System.out.println("Do a redraw");
-			stageForRedraw(leftEdge,upperEdge,t1);
+		TileInstance t1FG = state.getGameState().getMap().tileInstanceMapFG.get(upperEdge).get(leftEdge);
+		TileInstance t2FG = state.getGameState().getMap().tileInstanceMapFG.get(upperEdge).get(rightEdge);
+		TileInstance t3FG = state.getGameState().getMap().tileInstanceMapFG.get(lowerEdge).get(rightEdge);
+		TileInstance t4FG = state.getGameState().getMap().tileInstanceMapFG.get(lowerEdge).get(leftEdge);
+		
+		int collisionStatet1FG = t1FG.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
+		int collisionStatet2FG = t2FG.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
+		int collisionStatet3FG = t3FG.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
+		int collisionStatet4FG = t4FG.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
+		
+//		TileInstance t1mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(leftEdge);
+//		TileInstance t2mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(rightEdge);
+//		TileInstance t3mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(rightEdge);
+//		TileInstance t4mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(leftEdge);
+//		
+//		int collisionStatet1mid = t1mid.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
+//		int collisionStatet2mid = t2mid.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
+//		int collisionStatet3mid = t3mid.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
+//		int collisionStatet4mid = t4mid.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
+
+		int collisiont1=0,collisiont2=0,collisiont3=0,collisiont4=0;
+		
+		if (t1BG == state.tileMap.getTile(0).getInstance(0)) {
+			collisiont1 = collisionStatet1FG;
+		} else if (t1FG == state.tileMap.getTile(0).getInstance(0)){
+			collisiont1 = collisionStatet1BG;
 		}
-		if (collisionStatet2.equals("UNDER")) {
-			System.out.println("Do a redraw");
-			stageForRedraw(rightEdge,upperEdge,t2);
+		
+		if (t2BG == state.tileMap.getTile(0).getInstance(0)) {
+			collisiont2 = collisionStatet2FG;
+		} else if (t2FG == state.tileMap.getTile(0).getInstance(0)){
+			collisiont2 = collisionStatet2BG;
 		}
-		if (collisionStatet3.equals("UNDER")) {
-			System.out.println("Do a redraw");
-			stageForRedraw(rightEdge,lowerEdge,t3);
+		
+		if (t3BG == state.tileMap.getTile(0).getInstance(0)) {
+			collisiont3 = collisionStatet3FG;
+		} else if (t3FG == state.tileMap.getTile(0).getInstance(0)){
+			collisiont3 = collisionStatet3BG;
 		}
-		if (collisionStatet4.equals("UNDER")) {
-			System.out.println("Do a redraw");
-			stageForRedraw(leftEdge,lowerEdge,t4);
+		
+		if (t4BG == state.tileMap.getTile(0).getInstance(0)) {
+			collisiont4 = collisionStatet4FG;
+		} else if (t4FG == state.tileMap.getTile(0).getInstance(0)){
+			collisiont4 = collisionStatet4BG;
 		}
-		if (collisionStatet1.equals("STOP")) {
-			System.out.println("Upper left collision");
-			deltaX = 0;
-			deltaY = 0;
+		
+//		int collisiont1 = collisionStatet1BG | collisionStatet1FG;
+//		int collisiont2 = collisionStatet2BG | collisionStatet2FG;
+//		int collisiont3 = collisionStatet3BG | collisionStatet3FG;
+//		int collisiont4 = collisionStatet4BG | collisionStatet4FG;
+		checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
+		checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
+		checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
+		checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG);
+		
+		if ((collisiont1 & 2) == 0 && (collisiont2 & 2) == 0 && (collisiont3 & 2) ==0 && (collisiont4 & 2) == 0) {
+			stageForRedraw();
 		}
-		if (collisionStatet2.equals("STOP")) {
-			System.out.println("Upper right collision");
-			deltaX = 0;
-			deltaY = 0;
-		}
-		if (collisionStatet3.equals("STOP")) {
-			System.out.println("Lower right collision");
-			deltaX = 0;
-			deltaY = 0;
-		}
-		if (collisionStatet4.equals("STOP")) {
-			System.out.println("Lower left collision");
-			deltaX = 0;
-			deltaY = 0;
-		}
+			
 	}
 	
 	public void handleInput(InputController input) {
@@ -214,6 +347,10 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		return collision;
 	}
 
+	public void interact() {
+		SimpleDialogMenu.createDialogBox(state,this.text);
+	}
+	
 	@Override
 	public void act() {
 		// TODO Auto-generated method stub
@@ -261,4 +398,26 @@ public class Entity extends DrawableObject implements Drawable,EntityInterface {
 		}
 		return false;
 	}
+
+	public SpritesheetCoordinates getSpriteCoordinates() {
+		return spriteCoordinates;
+	}
+
+	public void setSpriteCoordinates(SpritesheetCoordinates spriteCoordinates) {
+		this.spriteCoordinates = spriteCoordinates;
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return name;
+	}
+
+	public void scaleUp(int i) {
+		// TODO Auto-generated method stub
+		this.x *= 4;
+		this.y *= 4;
+		this.width *= 4;
+		this.height *= 4;
+	}
+
 }

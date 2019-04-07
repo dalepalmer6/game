@@ -11,8 +11,13 @@ import canvas.Clickable;
 import canvas.Drawable;
 import canvas.Hoverable;
 import canvas.MainWindow;
+import mapeditor.tools.PremadeTileObjectTool;
+import mapeditor.tools.SingleTile;
 import menu.LeftClickableItem;
 import menu.StartupNew;
+import tiles.MultiInstanceTile;
+import tiles.PremadeTileObject;
+import tiles.SingleInstanceTile;
 
 public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	private int x;
@@ -120,7 +125,7 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	
 	public void getTilesOfInterest() {
 		MainWindow m = state.getMainWindow();
-		m.setTexture("img/tiles.png");
+		m.setTexture(mapPreview.getMap().getTileset());
 		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
 		this.MAX_WIDTH_IN_TILES =  state.getTextureAtlas().getCurrentRectangle().width / 16;
 //		Texture t = m.getTexture();
@@ -146,7 +151,7 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	public void drawTiles() {
 		// read the tileMap and for each tile, draw to the next open spot
 		MainWindow m = state.getMainWindow();
-		Tile.initDrawTiles(m);
+		Tile.initDrawTiles(m,mapPreview.getMap().getTileset());
 		for (int i = 0; i < this.widthInTiles; i++) {
 			for (int j = 0; j < this.heightInTiles; j++) {
 				int drawingX =  (i) * TILE_SIZE;
@@ -224,7 +229,12 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub
-		mapPreview.setTool(hoveredTileId);
+		Tile t = tileMap.getTile(hoveredTileId);
+		if (t instanceof PremadeTileObject) {
+			mapPreview.setTool(new PremadeTileObjectTool(t));
+		} else if (t instanceof SingleInstanceTile || t instanceof MultiInstanceTile) {
+			mapPreview.setTool(new SingleTile(t));
+		}
 		return null;
 	}
 }

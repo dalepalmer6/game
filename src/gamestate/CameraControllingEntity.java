@@ -5,6 +5,10 @@ import menu.StartupNew;
 public class CameraControllingEntity extends Entity {
 	protected Camera camera;
 	
+	public void setCamera(Camera c) {
+		this.camera = c;
+	}
+	
 	public void moveWithCamera(int dx, int dy) {
 		if (dx == 0 && dy == 0) {
 			this.updateActionTaken("idle");
@@ -59,10 +63,13 @@ public class CameraControllingEntity extends Entity {
 		updateFrameTicks();
 	}
 
-	public CameraControllingEntity(String texture,int x, int y, int width, int height, Camera c,StartupNew m) {
-		super(texture,x,y,width,height,m);
+	public CameraControllingEntity(String texture,int x, int y, int width, int height, Camera c, StartupNew m,String name) {
+		super(texture,x,y,width,height,m,name);
 		this.camera = c;
-		c.snapToEntity(x,y);
+		if (c != null) {
+			c.snapToEntity(x,y);
+		}
+		
 	}
 	
 }

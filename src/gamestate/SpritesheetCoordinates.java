@@ -11,6 +11,10 @@ public class SpritesheetCoordinates {
 		this.coordinates = new HashMap<String, Pose>();
 	}
 	
+	public boolean containsKey(String s) {
+		return coordinates.containsKey(s);
+	}
+	
 	public void setPose(String s) {
 		this.coordinates.put(s,new Pose());
 	}

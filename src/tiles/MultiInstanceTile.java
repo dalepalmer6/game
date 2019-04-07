@@ -3,7 +3,7 @@ package tiles;
 import mapeditor.Tile;
 
 public class MultiInstanceTile extends Tile{
-	protected TileGenerator tg;
+	
 	//placeholder for animation coordinates and all that good stuff
 	
 	

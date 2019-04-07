@@ -7,14 +7,13 @@ public class RedrawObject {
 	int x;
 	int y;
 	TileInstance t;
+	Entity e;
 	
 	public void  draw(MainWindow m, MapRenderer mr) {
-		mr.redrawTile(m,x,y,t);
+		e.draw(m);
 	}
 	
-	public RedrawObject(int x, int y, TileInstance t) {
-		this.x = x;
-		this.y = y;
-		this.t = t;
+	public RedrawObject(Entity e) {
+		this.e = e;
 	}
 }

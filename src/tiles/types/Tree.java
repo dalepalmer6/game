@@ -6,47 +6,55 @@ public class Tree extends MultiInstanceTile{
 	public Tree(int id) {
 		super(id);
 		
-		tg.addTileInstance(512,0,28,28);
-		tg.addTileInstance(512,0,28,28, new String[] {	"UNDER","UNDER","UNDER","UNDER",
+		tg.addTileInstance(512,0,32,32);
+		tg.addTileInstance(512,0,32,32, new String[] {	"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER"});
-		tg.addTileInstance(540,0,28,28, new String[] {	"UNDER","UNDER","UNDER","UNDER",
+		tg.addTileInstance(544,0,32,32, new String[] {	"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER"});
-		tg.addTileInstance(568,0,28,28, new String[] {	"UNDER","UNDER","UNDER","UNDER",
+		tg.addTileInstance(576,0,32,32, new String[] {	"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER",
 				"UNDER","UNDER","UNDER","UNDER"});
 		
-		tg.addTileInstance(512,28,28,28,new String[] {	"UNDER","UNDER","STOP","STOP",
-				"UNDER","STOP","STOP","STOP",
-				"UNDER","STOP","STOP","STOP",
-				"UNDER","STOP","STOP","STOP"});
-		tg.addTileInstance(540,28,28,28,new String[] {	"STOP","STOP","STOP","STOP",
+		tg.addTileInstance(512,32,32,32,new String[] {	"UNDER","UNDER","STOP","STOP",
+				"UNDER","UNDER","STOP","STOP",
+				"UNDER","UNDER","STOP","STOP",
+				"UNDER","UNDER","STOP","STOP"});
+		tg.addTileInstance(544,32,32,32,new String[] {	"STOP","STOP","STOP","STOP",
 				"STOP","STOP","STOP","STOP",
 				"STOP","STOP","STOP","STOP",
 				"STOP","STOP","STOP","STOP"});
-		tg.addTileInstance(568,28,28,28,new String[] {	"STOP","STOP","UNDER","UNDER",
-				"STOP","STOP","STOP","UNDER",
-				"STOP","STOP","STOP","UNDER",
-				"STOP","STOP","STOP","UNDER"});
+		tg.addTileInstance(576,32,32,32,new String[] {	"STOP","STOP","UNDER","UNDER",
+				"STOP","STOP","UNDER","UNDER",
+				"STOP","STOP","UNDER","UNDER",
+				"STOP","STOP","UNDER","UNDER"});
 		
-		tg.addTileInstance(512,56,28,28,new String[] {	"UNDER","UNDER","STOP","STOP",
-				"UNDER","STOP","STOP","STOP",
-				"UNDER","STOP","STOP","STOP",
-				"UNDER","UNDER","UNDER","UNDER"});
-		tg.addTileInstance(540,56,28,28,new String[] {	"STOP","STOP","STOP","STOP",
+		tg.addTileInstance(512,64,32,32,new String[] {	"UNDER","UNDER","UNDER","STOP",
+				"UNDER","UNDER","UNDER","STOP",
+				"UNDER","UNDER","UNDER","STOP",
+				"PASS","PASS","PASS","PASS"});
+		tg.addTileInstance(544,64,32,32,new String[] {	"STOP","STOP","STOP","STOP",
 				"STOP","STOP","STOP","STOP",
 				"STOP","STOP","STOP","STOP",
-				"STOP","STOP","STOP","STOP"});
-		tg.addTileInstance(568,56,28,28,new String[] {	"UNDER","UNDER","UNDER","UNDER",
-				"STOP","STOP","STOP","UNDER",
-				"STOP","STOP","STOP","UNDER",
-				"STOP","STOP","STOP","UNDER"});
-		tg.addTileInstance(596,0,28,28);
-		tg.addTileInstance(596,28,28,28);
+				"PASS","PASS","PASS","PASS"});
+		tg.addTileInstance(576,64,32,32,new String[] {	"STOP","STOP","UNDER","UNDER",
+				"STOP","STOP","UNDER","UNDER",
+				"STOP","STOP","UNDER","UNDER",
+				"PASS","PASS","PASS","PASS"});
+		tg.addTileInstance(608,0,32,32,new String[] {	
+				"STOP","STOP","STOP","STOP",
+				"STOP","STOP","STOP","STOP",
+				"STOP","STOP","STOP","STOP",
+				"STOP","STOP","UNDER","UNDER"});
+		tg.addTileInstance(608,32,32,32,new String[] {	
+				"STOP","STOP","STOP","STOP",
+				"STOP","STOP","STOP","STOP",
+				"STOP","STOP","STOP","STOP",
+				"UNDER","UNDER","STOP","STOP"});
 //		
 //		tg.addTileInstance(0,144,16,16);
 //		tg.addTileInstance(0,144,16,16, new String[] {	"UNDER","UNDER","UNDER","UNDER",

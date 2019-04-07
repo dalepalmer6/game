@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
 import canvas.MainWindow;
+import tiles.TileGenerator;
 import tiles.TileInstance;
 
 public class Tile {
@@ -15,9 +16,11 @@ public class Tile {
 	private float dw = 0;
 	private float dh = 0;
 	private Rectangle tileMapBounds;
+	protected TileGenerator tg;
 	
 	public Tile(int id) {
 		this.id = id;
+//		tg = new TileGenerator();
 	}
 	
 //	public String getCollisionInfoAtIndex(int x, int y) {
@@ -72,8 +75,12 @@ public class Tile {
 		dh = 16;
 	}
 	
-	public static void initDrawTiles(MainWindow m) {
-		m.setTexture("img/tiles.png");
+	public int getNumInstances() {
+		return tg.getInstanceCount();
+	}
+	
+	public static void initDrawTiles(MainWindow m, String tileset) {
+		m.setTexture(tileset);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
@@ -81,5 +88,20 @@ public class Tile {
 	public TileInstance getInstance(int i) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int getWidth() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+	
+	public int getHeight() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	public void addTileInstance(int parseInt, int parseInt2, int parseInt3, int parseInt4, int[] collision) {
+		// TODO Auto-generated method stub
+		tg.addTileInstance(parseInt, parseInt2, parseInt3, parseInt4, collision);
 	}
 }

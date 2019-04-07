@@ -3,9 +3,10 @@ package tiles;
 import mapeditor.Tile;
 
 public class SingleInstanceTile extends Tile {
-	protected TileGenerator tg;
 	
-
+//	public void addTileInstance(int x, int y, int width, int height, String[] collision) {
+//		tg.addTileInstance(x,y,width,height,collision);
+//	}
 	
 	public TileInstance getInstance(int inst_id) {
 		return tg.getTileInstance(inst_id);

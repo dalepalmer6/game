@@ -10,19 +10,25 @@ import menu.StartupNew;
 
 public class Player extends CameraControllingEntity implements Controllable{
 	
+private boolean confirmButtonDown = false;
+
+
+
 //	public Entity(String texture, int x, int y, int width, int height,StartupNew m) {
-	public Player(String texture,int x, int y, int width, int height,Camera camera,StartupNew s) {
-		super(texture,x,y,width,height,camera,s);
-		this.width = width;
-		this.height = height;
+//	public Player(String texture,int x, int y, int width, int height,Camera camera,StartupNew s,String name) {
+	public Player(int scale, Entity e, Camera c, StartupNew s) {
+		super(e.getTexture(),scale*e.getX(),scale*e.getY(),scale*e.getWidth(),scale*e.getHeight(),c,s,e.getName());
+		spriteCoordinates = e.getSpriteCoordinates();
 	}
 	
 	public void act() {
-		if (interactables.size() != 0) {
-			SimpleDialogMenu.createDialogBox(state,interactables.get(0).interactText());
-			setDirectionDuringAct(interactables.get(0));
-		} else {
-			SimpleDialogMenu.createDialogBox(state,"Nothing here.");
+		if (confirmButtonDown) {
+			if (interactables.size() != 0) {
+				interactables.get(0).interact();
+				setDirectionDuringAct(interactables.get(0));
+			} else {
+				SimpleDialogMenu.createDialogBox(state,"Nothing here.");
+			}
 		}
 	}
 	
@@ -41,9 +47,23 @@ public class Player extends CameraControllingEntity implements Controllable{
 		} if (input.getSignals().get("LEFT")) {
 			deltaX = -stepSize;
 		}  if (input.getSignals().get("CONFIRM")) {
-			System.out.println("Acting");
-			act();
+			confirmButtonDown  = true;
+		} else {
+			confirmButtonDown = false;
 		}
+		
 }
+
+	@Override
+	public void setFocused(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean getFocused() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

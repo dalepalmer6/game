@@ -1,0 +1,7 @@
+﻿ID,Name,Description,Target,Equippable,Battle,OutofBattle,Action
+0,Cookie,A sweet treat that restores a small amount of HP.,0,FALSE,TRUE,TRUE,0
+1,Bread Roll,A fresh bread roll that restores a modest amount of HP.,0,FALSE,TRUE,TRUE,0
+2,Hamburger,A meat burger that restores a modest amount of HP.,0,FALSE,TRUE,TRUE,0
+3,Brain Food Lunch,A lunch that nourishes one's heart and soul. Restores a massive amount of HP and PP.,0,FALSE,TRUE,TRUE,0
+4,Cracked Bat,A cracked bat that has jagged edges for defense.,0,TRUE,FALSE,FALSE,-1
+5,Tee Ball Bat,A regular bat. Highly durable[COMMA] with no blemishes.,0,TRUE,FALSE,FALSE,-1

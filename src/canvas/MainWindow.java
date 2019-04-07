@@ -9,9 +9,11 @@ import java.util.List;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -19,6 +21,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import global.Shaders;
 import global.TextureAtlas;
 import menu.DrawableObject;
 
@@ -27,7 +30,17 @@ public class MainWindow {
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
 	private TextureAtlas textureAtlas;
+	private int program;
+	private boolean useShader;
 
+	public void setTextureAtlas(TextureAtlas ta) {
+		this.textureAtlas = ta;
+	}
+	
+	public void setUseShader(boolean b) {
+		useShader = b;
+	}
+	
 	public MainWindow(TextureAtlas ta, int sw, int sh) { 
 		textureAtlas = ta;
 		SCREEN_WIDTH = sw;
@@ -67,12 +80,46 @@ public class MainWindow {
 			}
 		}
 	}
-
+	
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
 		renderTile(x,y,width,height,dx,dy,dw,dh,false);
 	}
 	
+	public void renderAnimation(Texture t, int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+		if (useShader) { ARBShaderObjects.glUseProgramObjectARB(program); } 
+		else {ARBShaderObjects.glUseProgramObjectARB(0);}
+        GL11.glPushMatrix();
+        Rectangle rect = textureAtlas.getCurrentRectangle();
+	        float xo = (dx)/t.getTextureWidth();
+	    	float xw = (dx+dw)/t.getTextureWidth();
+	    	float yo = (dy)/t.getTextureHeight();
+	    	float yw = (dy+dh)/t.getTextureHeight();
+	    	float scaleX = 1;
+	    	int correction = 0;
+	    	if (needToFlip) {
+	    		scaleX = -1.0f;
+//	    		GL11.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            	GL11.glScalef(-1.0f, 1.0f, 1.0f);
+            	correction = width;
+            }
+	    	GL11.glBegin(GL11.GL_QUADS);
+            
+			GL11.glTexCoord2f(xo,yo);
+			GL11.glVertex2f(-correction + scaleX*x, y);
+			GL11.glTexCoord2f(xw, yo);
+			GL11.glVertex2f(-correction + scaleX*x + width, y);
+			GL11.glTexCoord2f(xw,yw);
+			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
+			GL11.glTexCoord2f(xo,yw);
+			GL11.glVertex2f(-correction + scaleX*x, y + height);
+            GL11.glEnd();
+        GL11.glPopMatrix();
+
+	}
+	
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+		if (useShader) { ARBShaderObjects.glUseProgramObjectARB(program); } 
+		else {ARBShaderObjects.glUseProgramObjectARB(0);}
         GL11.glPushMatrix();
         Rectangle rect = textureAtlas.getCurrentRectangle();
 	        float xo = (rect.x + dx)/textureAtlas.getTexture().getTextureWidth();
@@ -124,6 +171,7 @@ public class MainWindow {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		setShaders();
 		
 	}
 
@@ -131,6 +179,32 @@ public class MainWindow {
 		initGL();
 	}
 
+	public void setShaders() {
+		int fsid;
+		try {
+			fsid = Shaders.createShader("src/shaders/fragment_textured.glsl", GL20.GL_FRAGMENT_SHADER);
+			 int pId = GL20.glCreateProgram();
+		     GL20.glAttachShader(pId, fsid);
+		     program = ARBShaderObjects.glCreateProgramObjectARB();
+		     ARBShaderObjects.glAttachObjectARB(program, fsid);
+		        
+		     ARBShaderObjects.glLinkProgramARB(program);
+		     if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
+//		     System.err.println(getLogInfo(program));
+		     return;
+		     }
+		        
+		     ARBShaderObjects.glValidateProgramARB(program);
+		     if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE) {
+		    	 return;
+		     }
+		     
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       return;
+	}
 	
 	
 	public void drawDrawables(List<DrawableObject> drawables) {
@@ -142,28 +216,6 @@ public class MainWindow {
 			d.draw(this);
 		}
 	}
-	
-//	public void drawDrawables() {
-//		//GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-////		render(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-//		Point mouse = GlobalVars.mainWindow.getMouseCoordinates();
-//		// draws all the objects that need to be drawn
-//		for (Drawable d : GlobalVars.getDrawables()) {
-//			d.draw();
-//			if (d instanceof Hoverable) {
-//				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
-//					((Hoverable) d).hoveredAction();
-//					if (d instanceof Clickable) {
-//						if (mouseLeft()) {
-//							((Clickable) d).execute();
-//						}
-//					}
-//				} else {
-//					((Hoverable) d).unhoveredAction();
-//				}
-//			}
-//		}
-//	}
 	
 	public Point getMouseCoordinates() {
 		int x = Mouse.getX();

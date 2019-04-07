@@ -12,25 +12,30 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 
 public class LoadMapButton extends MenuItem {
 
 	public LoadMapButton(String t, int x, int y, StartupNew m) {
-		super(t, x, y, m);
+		super(t, x, y,150,50, m);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public void loadMap() {
 		Map m = ((MapEditMenu) this.state.getMenuStack().peek()).getMap();
-		m.parseMap(new File("TestMap.map"));
-		System.out.println("Successfully loaded.");
+		
+//		m.parseMap(1);
+		m.setChangeMap("MID");
+//		System.out.println("Successfully loaded.");
 	}
 	
 	public String execute() {
 		System.out.println("Loading Map");
-		loadMap();
+		LoadMapMenu m = new LoadMapMenu(((MapEditMenu) this.state.getMenuStack().peek()).getMapPreview(),state);
+		m.createMenu(state.getMapNames());
+//		loadMap();
 		return text;
 	}
 

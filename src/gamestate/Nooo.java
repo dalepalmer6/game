@@ -5,11 +5,11 @@ import menu.StartupNew;
 public class Nooo extends Entity {
 	public Nooo(int x, int y, int width, int height, StartupNew m) {
 		super("blanket.png",x,y,width,height,m);
-		spriteCoordinates = new SpritesheetCoordinates();
+		setSpriteCoordinates(new SpritesheetCoordinates());
 		//use an enum 
-		spriteCoordinates.setPose("idle_down");
-		spriteCoordinates.addStateToPose("idle_down",0,0,100,64);
-		spriteCoordinates.addStateToPose("idle_down",109,0,100,64);
+		getSpriteCoordinates().setPose("idle_down");
+		getSpriteCoordinates().addStateToPose("idle_down",0,0,100,64);
+		getSpriteCoordinates().addStateToPose("idle_down",109,0,100,64);
 	}
 	
 	public String interactText() {

@@ -8,7 +8,7 @@ public class TileInstance {
 	private int dh;
 	private TileCollisionMap tileCollisionMap;
 	
-	public String getCollisionInfoAtIndex(int x, int y) {
+	public int getCollisionInfoAtIndex(int x, int y) {
 		return tileCollisionMap.getCollisionData(y*4 + x);
 	}
 	
@@ -28,7 +28,7 @@ public class TileInstance {
 		return dw;
 	}
 	
-	public TileInstance(String id, int dx, int dy, int dw, int dh, String[] colmap) {
+	public TileInstance(String id, int dx, int dy, int dw, int dh, int[] colmap) {
 		this.id = id;
 		this.dx = dx;
 		this.dy = dy;
