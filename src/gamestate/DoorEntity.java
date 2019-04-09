@@ -2,6 +2,9 @@ package gamestate;
 
 import battlesystem.BattleMenu;
 import canvas.MainWindow;
+import menu.Animation;
+import menu.AnimationFadeToBlack;
+import menu.AnimationMenu;
 import menu.StartupNew;
 
 public class DoorEntity extends Entity {
@@ -20,10 +23,17 @@ public class DoorEntity extends Entity {
 	public void act() {
 		for (Entity e : interactables) {
 			if (e instanceof Player) {
-				state.getGameState().setCurrentMap(newMap);
-				e.setCoordinates(destX,destY);
-				state.getGameState().loadMap(1);
-				state.getGameState().getCamera().snapToEntity(destX,destY);
+				if (state.canLoad) {
+					state.canLoad = false;
+					e.setCoordinates(destX,destY);
+					state.getGameState().getCamera().snapToEntity(destX,destY);
+					state.getGameState().setCurrentMap(newMap);
+					state.getGameState().loadMap(1);
+				} else  {
+					AnimationMenu anim = new AnimationMenu(state);
+					anim.createAnimMenu();
+					state.getMenuStack().push(anim);
+				}
 				
 			}
 		}

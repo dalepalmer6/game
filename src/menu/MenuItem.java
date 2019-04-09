@@ -123,6 +123,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		return null;
 	}
 	
+	public void updateAnim() {
+		
+	}
+	
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub

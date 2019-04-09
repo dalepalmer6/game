@@ -1,5 +1,8 @@
 package battlesystem.options;
 
+import java.io.IOException;
+
+import battlesystem.BattleMenu;
 import gamestate.BattleEntity;
 import gamestate.elements.items.Item;
 import gamestate.elements.items.ItemUsableInBattle;
@@ -21,17 +24,33 @@ public class BattleAction {
 		return completed;
 	}
 	
-	public String doAction(StartupNew state) {
+	public void createAnim(StartupNew state) throws IOException {
+		BattleMenu bm = (BattleMenu) state.getMenuStack().peek();
+		switch(usedAction) {
+			case "bash" : 	bm.setGetResultText();
+			bm.getCurrentActiveBattleAction().setComplete();
+							break;
+			case "psi" : //draw anim
+				Animation anim = ((PSIAttack) itemToUse).getAnimation();
+				state.getMenuStack().peek().addToMenuItems(anim);
+				state.setCurrentAnimation(anim.getTexture() + ".png");
+				state.createAtlas();
+				anim.updateAnim();
+				break;
+		}
+		
+		bm.setGetAnimation(false);
+	}
+	
+	public String doAction() {
 		String result = "";
 		switch(usedAction) {
 			case "bash" : 	result += "Bash result text";
 							break;
-			case "psi" : //draw anim
-				Animation anim = new Animation(state,((PSIAttack)itemToUse).getAnimation() +".png");
-				anim.createAnimation();
+			case "psi" : 
 				result += itemToUse.useInBattle(actor,recipient); 
+				break;
 		}
-		completed = true;
 		return result;
 	}
 	
@@ -52,7 +71,6 @@ public class BattleAction {
 								battleString += " dealt ";
 							}
 							battleString += damage + " HP. ";
-							completed = true;
 							break;
 			case "run":		battleString = "Tried to run... but failed!";
 							break;
@@ -127,5 +145,10 @@ public class BattleAction {
 	
 	public String getElement() {
 		return element;
+	}
+
+	public void setComplete() {
+		// TODO Auto-generated method stub
+		completed = true;
 	}
 }

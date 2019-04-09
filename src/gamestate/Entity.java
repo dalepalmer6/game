@@ -175,7 +175,7 @@ public class Entity implements Drawable,EntityInterface {
 	public static void initDrawEntity(MainWindow m, String texture) {
 		m.setTexture("img/" + texture);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+//		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 //	public void stageForRedraw(int x, int y, TileInstance t) {

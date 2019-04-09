@@ -270,7 +270,6 @@ public class Text implements Drawable{
 	public static void initDrawText(MainWindow m) {
 		m.setTexture("img/font.png");
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	

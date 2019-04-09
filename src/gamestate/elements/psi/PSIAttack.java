@@ -3,10 +3,12 @@ package gamestate.elements.psi;
 import gamestate.BattleEntity;
 import gamestate.PartyMember;
 import gamestate.elements.items.Item;
+import menu.Animation;
 
 public class PSIAttack extends Item{
 	private int ppCost;
 	private String animation;
+	private Animation anim;
 	
 	public PSIAttack(int id, String name, String desc, int type, int action, String animation) {
 		super(id,name,desc,type,action);
@@ -16,8 +18,12 @@ public class PSIAttack extends Item{
 		damageUpperBound = 120;
 	}
 	
-	public String getAnimation() {
-		return animation;
+	public Animation getAnimation() {
+		return anim;
+	}
+	
+	public void setAnim(Animation anim) {
+		this.anim = anim;
 	}
 	
 //	public String useOutBattle(PartyMember pm) {

@@ -107,6 +107,10 @@ public class Menu implements MenuInterface {
 			}
 		}
 		
+		for (MenuItem i : menuItems) {
+			i.updateAnim();
+		}
+		
 		update();
 		menuItems.removeAll(needToRemove);
 		menuItems.addAll(needToAdd);
@@ -116,7 +120,6 @@ public class Menu implements MenuInterface {
 	}
 	
 	public void update() {
-		
 	}
 
 	public void setToRemove(MenuItem e) {

@@ -14,6 +14,8 @@ import global.InputController;
 import mapeditor.Map;
 import mapeditor.MapEditMenu;
 import mapeditor.Tile;
+import menu.AnimationMenu;
+import menu.AnimationMenuFadeFromBlack;
 import menu.DrawableObject;
 import menu.StartupNew;
 
@@ -48,8 +50,10 @@ public class GameState {
 	
 	public void loadMap(int scale) {
 		map.parseMap(scale,currentMapName);
-		
 		System.out.println("Successfully loaded.");
+		AnimationMenu m = new AnimationMenuFadeFromBlack(state);
+		m.createAnimMenu();
+		state.getMenuStack().push(m);
 	}
 	
 	public ArrayList<DrawableObject> getDrawables() {
@@ -216,7 +220,7 @@ public class GameState {
 	
 	public void update(InputController input) {
 		sort();
-		if (state.getMenuStack().isEmpty()) {
+		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu) {
 			for (Entity e : entities) {
 				if (e instanceof Controllable) {
 					e.handleInput(input);

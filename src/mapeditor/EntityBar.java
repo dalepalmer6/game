@@ -167,7 +167,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 			if (e != null) {
 				m.setTexture("img/" + e.getTexture());
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
+//				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				int drawingX =  (i++) * TILE_SIZE;
 				int drawingY =  (i/widthInTiles) * TILE_SIZE;
 				Pose pose = e.getSpriteCoordinates().getPose("idle","","down");

@@ -126,6 +126,15 @@ public class Map {
 	}
 	
 	public void parseMap(int scale, String mapId) {
+		ArrayList<Player> players = new ArrayList<Player>();
+		for (Entity e : entitiesInMap) {
+			if (e instanceof Player) {
+				players.add((Player) e);
+			}
+		}
+		
+		this.entitiesInMap = new ArrayList<Entity>();
+		entitiesInMap.addAll(players);
 		this.mapId = mapId;
 		readTileSet();
 		String pathToCurrentMap = pathToMaps + mapId + "/";

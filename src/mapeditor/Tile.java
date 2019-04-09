@@ -82,7 +82,7 @@ public class Tile {
 	public static void initDrawTiles(MainWindow m, String tileset) {
 		m.setTexture(tileset);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+//		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	public TileInstance getInstance(int i) {

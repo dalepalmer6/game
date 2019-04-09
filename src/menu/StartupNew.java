@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.BufferedImageUtil;
@@ -106,6 +107,7 @@ public class StartupNew{
 	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
 	private String currentAnimation = null;
+	public boolean canLoad;
 	
 	public BufferedImage getAnimation(String s) {
 		return animations.get(s);
@@ -172,13 +174,20 @@ public class StartupNew{
 				outBattleUsable = Boolean.parseBoolean(split[5]);
 				action = Integer.parseInt(split[6]);
 				anim = split[7];
+				PSIAttack psiAttack = null;
 				if (inBattleUsable && outBattleUsable) {
-					psi.add(new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim));
+					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim);
+					psi.add(psiAttack);
 				} else if (inBattleUsable){
-					psi.add(new PSIAttackUsableInBattle(id,name,desc,target,action,anim));
+					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim);
+					psi.add(psiAttack);
 				} else if (outBattleUsable) {
-					psi.add(new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim));
+					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim);
+					psi.add(psiAttack);
 				}
+				Animation animate = new Animation(this,anim,0,0,mainWindow.getScreenWidth(),mainWindow.getScreenHeight());
+				animate.createAnimation();
+				psiAttack.setAnim(animate);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -552,7 +561,7 @@ public class StartupNew{
 			}
 		}
 		
-		if (gameState != null && menuStack.isEmpty()) {
+		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
 			gameState.update(input);
 		}
 		
@@ -560,6 +569,15 @@ public class StartupNew{
 		if (c != null) {
 			getMenuStack().push(c);
 			c.updateAll(input);
+		}
+		
+		if (canLoad && gameState == null) {
+			canLoad = false;
+			menuStack.pop();
+			menuStack.pop();
+			needToPop = false;
+			GameState gs = new GameState(this);
+			this.setGameState(gs);
 		}
 	}
 	
@@ -572,6 +590,7 @@ public class StartupNew{
 			gameState.drawGameState();
 		}
 		getMainWindow().drawDrawables(drawables);
+		
 	}
 	
 	public void gameLoop(boolean running) {
@@ -628,9 +647,6 @@ public class StartupNew{
 			menuStack.pop();
 			needToPop = false;
 		}
-//		if (menuStack.peek().getMenuItems().isEmpty()) {
-//			menuStack.pop();
-//		}
 	}
 	
 	public void run(){

@@ -15,25 +15,31 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import battlesystem.BattleMenu;
 import canvas.MainWindow;
 import gamestate.AnimationCoordinates;
 import gamestate.Pose;
 import gamestate.TileMetadata;
 
-public class Animation extends Menu{
+public class Animation extends MenuItem {
 	private String texture;
 	private Texture textureSlick;
 	private AnimationCoordinates coordinates;
-	private double tickCount = 0;
-	private double ticksPerFrame = 0.2;
-	private AnimationItem animItem;
+	protected double tickCount = 0;
+	protected double ticksPerFrame = 0.3;
+	private TileMetadata tm;
 	
 	public String getTexture() {
-		return state.getPathToAnims() + texture;
+		return texture;
 	}
 	
-	public Animation(StartupNew m, String texture) {
-		super(m);
+	public Animation(StartupNew m) {
+		super("",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight(),m);
+		state = m;
+	}
+	
+	public Animation(StartupNew m, String texture, int x, int y, int w, int h) {
+		super("",x,y,w,h,m);
 		this.texture = texture;
 		coordinates = new AnimationCoordinates(texture);
 	}
@@ -47,7 +53,7 @@ public class Animation extends Menu{
 		DocumentBuilder documentBuilder;
 		try {
 			documentBuilder = dbf.newDocumentBuilder();
-			org.w3c.dom.Document doc = documentBuilder.parse(new File(removePNGExtension(getTexture()) + ".sprites"));
+			org.w3c.dom.Document doc = documentBuilder.parse(new File(state.getPathToAnims() + texture + ".sprites"));
 			doc.getDocumentElement().normalize();
 			
 			NodeList nList = doc.getElementsByTagName("spr");
@@ -78,35 +84,45 @@ public class Animation extends Menu{
 	}
 	
 	public void createAnimation() {
-		state.getMenuStack().push(this);
-		state.setCurrentAnimation(texture);
-		try {
-			state.createAtlas();//rather than this, simply use opengl to bind the texture
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		state.setCurrentAnimation(texture);
+//		try {
+//			state.createAtlas();//rather than this, simply use opengl to bind the texture
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		coordinates.setPose(0);
 		parseXMLFile();
-		animItem = new AnimationItem(texture,state,0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
-		addMenuItem(animItem);
+//		tm = coordinates.getPose(0).getStateByNum(0);
+//		animItem = new AnimationItem(texture,state,0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
 	}
 	
-	public void update() {
+	public TileMetadata getStateByNum(int i) {
+		return coordinates.getPose(0).getStateByNum(i);
+	} 
+	
+	public void updateAnim() {
 		System.out.println(tickCount);
 		tickCount += ticksPerFrame;
 		int i = (int) tickCount % coordinates.getPose(0).getNumStates();
 		
 		if (tickCount >= coordinates.getPose(0).getNumStates()-1) {
-			state.needToPop = true;
+			state.getMenuStack().peek().setToRemove(this);
+			((BattleMenu)state.getMenuStack().peek()).setGetResultText();
+			((BattleMenu)state.getMenuStack().peek()).getCurrentActiveBattleAction().setComplete();
+			tickCount = 0;
+//			((BattleMenu)state.getMenuStack().peek()).getCurrentAction().setComplete();
 		}
 		
 		TileMetadata tm = coordinates.getPose(0).getStateByNum(i);
-		animItem.setTileMetadataToDraw(tm);
+		this.tm = tm;
 	}
 	
+	
 	public void draw(MainWindow m) {
-		
+		m.setTexture(state.getPathToAnims() + texture + ".png");
+		m.renderTile(x,y,width,height,tm.getX(),tm.getY(),tm.getWidth(),tm.getHeight());
 	}
+
 
 }

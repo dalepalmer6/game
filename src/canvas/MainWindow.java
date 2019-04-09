@@ -72,13 +72,31 @@ public class MainWindow {
 	//renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh)
 	public void renderBG(String bgImg) {
 		setTexture("img/" +  bgImg);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+//		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		int TILE_SIZE = 100;
 		for (int i = 0; i < SCREEN_WIDTH; i+=TILE_SIZE) {
 			for (int j = 0; j < SCREEN_HEIGHT; j+=TILE_SIZE) {
 				renderTile(i,j,TILE_SIZE,TILE_SIZE,0,0,64,64);
 			}
 		}
+	}
+	
+	public void renderNonTextured(int x, int y, int width, int height, float alpha) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPushMatrix();
+			// set the color of the quad (R,G,B,A)
+			GL11.glColor4f(0f,0f,0f,alpha);
+			
+			// draw quad
+			GL11.glBegin(GL11.GL_QUADS);
+			    GL11.glVertex2f(0,0);
+			    GL11.glVertex2f(width,0);
+			    GL11.glVertex2f(width,height);
+			    GL11.glVertex2f(0,height);
+			GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glColor4f(1f,1f,1f,1f);
 	}
 	
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
@@ -118,6 +136,7 @@ public class MainWindow {
 	}
 	
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+//		GL11.glColor4f(0.0f,0.0f,0.0f,0.0f);
 		if (useShader) { ARBShaderObjects.glUseProgramObjectARB(program); } 
 		else {ARBShaderObjects.glUseProgramObjectARB(0);}
         GL11.glPushMatrix();
@@ -208,7 +227,7 @@ public class MainWindow {
 	
 	
 	public void drawDrawables(List<DrawableObject> drawables) {
-//		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		
 		//sort the list, so that the objects with the lowest y-value are first
 //		drawables = sortDrawables(drawables);
 		// draws all the objects that need to be drawn

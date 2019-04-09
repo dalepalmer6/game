@@ -1,5 +1,6 @@
 package battlesystem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import battlesystem.options.Bash;
 import battlesystem.options.BattleAction;
 import battlesystem.options.BattleMenuSelectionTextWindow;
+import battlesystem.options.BattleSelectionTextWindow;
 import battlesystem.options.BattleTextWindow;
 import battlesystem.options.EnemyOption;
 import battlesystem.options.EnemyOptionPanel;
@@ -20,6 +22,7 @@ import font.SelectionTextWindow;
 import font.TextWindowWithPrompt;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
+import gamestate.EntityStats;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
 import global.InputController;
@@ -48,9 +51,12 @@ public class BattleMenu extends Menu {
 	private HashMap<BattleEntity, BattleAction> battleActions;
 	private Object displayPrompt ;
 	private boolean getNextPrompt;
+	private boolean getAnimation;
+	private boolean getResultText;
 	private boolean waitToStart;
 	private ArrayList<MenuItem> windowStack;
 	private BattleAction currentBattleAction;
+	private boolean pollForActions = false;
 	
 	public ArrayList<PCBattleEntity> getPartyMembers() {
 		return party;
@@ -74,6 +80,10 @@ public class BattleMenu extends Menu {
 	
 	public BattleAction getCurrentAction() {
 		return this.currentAction;
+	}
+	
+	public BattleAction getCurrentActiveBattleAction() {
+		return this.currentBattleAction;
 	}
 	
 	
@@ -101,7 +111,7 @@ public class BattleMenu extends Menu {
 			greeting += " and cohorts";
 		}
 		greeting += ".";
-		setPrompt(greeting);
+		setPromptGreet(greeting);
 		waitToStart = true;
 	}
 	
@@ -164,13 +174,33 @@ public class BattleMenu extends Menu {
 		return partyMember;
 	}
 	
-	public void setPrompt(String s) {
+	public void setPromptGreet(String s) {
 		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		readyToDisplay = true;
+		((BattleTextWindow)prompt).setPollForActionsOnExit();
+	}
+	
+	public void setPromptFirst(String s) {
+		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		readyToDisplay = true;
+		((BattleTextWindow)prompt).loadAnimOnExit();
+	}
+	
+	public void setPromptSecond(String s) {
+		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+//		((BattleTextWindow)prompt).setCompleteOnExit();
+		((BattleTextWindow)prompt).setPollForActionsOnExit();
 		readyToDisplay = true;
 	}
 	
+	public boolean turnStackIsEmpty() {
+		return turnStack.isEmpty();
+	}
+	
 	public void update() {
-		if (turnStack.isEmpty() && getNextPrompt) {
+		if (turnStack.isEmpty() && pollForActions) {
+			battleActions.clear();
+			pollForActions = false;
 			needMenu = true;
 			indexMembers = 0;
 			battleActions = new HashMap<BattleEntity,BattleAction>();
@@ -207,13 +237,32 @@ public class BattleMenu extends Menu {
 		}
 		
 		if (battleActions.size() == enemies.size() + party.size() && getNextPrompt) {
-			if (currentBattleAction == null || currentBattleAction.isComplete() ) {
+			if (currentBattleAction == null || currentBattleAction.isComplete()) {
 				BattleEntity be = turnStack.remove(turnStack.size()-1);
 				currentBattleAction = battleActions.get(be);
 			}
-			setPrompt(currentBattleAction.getBattleActionString());
-			setPrompt(currentBattleAction.doAction(state));
+			setPromptFirst(currentBattleAction.getBattleActionString());
 			getNextPrompt = false;
+		}
+		
+		if (getAnimation) {
+			try {
+				currentBattleAction.createAnim(state);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getAnimation = false;
+		}
+		
+//		for (MenuItem i : menuItems) {
+//			i.updateAnim();
+//		}
+		
+		if (getResultText) {
+			setPromptSecond(currentBattleAction.doAction());
+			getResultText = false;
+//			getNextPrompt = false;
 		}
 		
 		if (readyToDisplay) {
@@ -229,6 +278,7 @@ public class BattleMenu extends Menu {
 				pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5)-32);
 			}
 		}
+		
 	}
 	
 	public void setDoneAction() {
@@ -266,7 +316,25 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setToRemove(MenuItem i) {
-		windowStack.add(i);
+		if (i instanceof BattleSelectionTextWindow) {
+			windowStack.add(i);
+		}
+		
 		needToRemove.add(i);
+	}
+
+	public void setGetAnimation(boolean b) {
+		// TODO Auto-generated method stub
+		getAnimation = b;
+	}
+
+	public void setGetResultText() {
+		// TODO Auto-generated method stub
+		getResultText =  true;
+	}
+
+	public void setPollForActions() {
+		// TODO Auto-generated method stub
+		pollForActions = true;
 	}
 }
