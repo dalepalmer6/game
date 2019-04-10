@@ -17,6 +17,10 @@ public class MapEditMenu extends Menu {
 		return mapPreview;
 	}
 	
+	public void setMapPreview(MapPreview mp) {
+		mapPreview = mp;
+	}
+	
 	public MapEditMenu(StartupNew m, TileHashMap tm) {
 		super(m);
 		this.map = new Map("podunk",34,34, tm, state);
@@ -29,7 +33,7 @@ public class MapEditMenu extends Menu {
 		addMenuItem(new LoadMapButton("Load",300,0,m));
 		addMenuItem(new LayerBGButton("",500,0,150,50,m));
 		addMenuItem(new LayerFGButton("",1000,0,150,50,m));
-		addMenuItem(new DoorEnumerator());
+		addMenuItem(new DoorEnumButton(1500,0,m));
 		addMenuItem(new BackButton(m));
 		addMenuItem(new ScrollLeftButton("L", tilebar.getX()-30, tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
 		addMenuItem(new ScrollRightButton("R", tilebar.getX() + tilebar.getWidth(), tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));

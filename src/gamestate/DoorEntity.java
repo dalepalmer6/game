@@ -12,12 +12,39 @@ public class DoorEntity extends Entity {
 	private int destX;
 	private int destY;
 	private String newMap;
+	private String description;
+	private String text;
 	
-	public DoorEntity(int x, int y, int width, int height, StartupNew m, int destX, int destY, String map) {
-		super("NOTEXTURE", x, y, width, height, m, "door");
+	public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
+		super("door.png", x, y, width, height, m, "door");
 		this.destX = destX;
 		this.destY = destY;
 		this.newMap = map;
+		this.spriteCoordinates = new SpritesheetCoordinates();
+		spriteCoordinates.setPose("idle_down");
+		spriteCoordinates.addStateToPose("idle_down",0,0,12,12);
+		this.description = desc;
+		this.text = text;
+	}
+	
+	public String getDestMap() {
+		return newMap;
+	}
+	
+	public int getDestX() {
+		return destX;
+	}
+	
+	public int getDestY() {
+		return destY;
+	}
+	
+	public String getDesc() {
+		return description;
+	}
+	
+	public String getText() {
+		return text;
 	}
 	
 	public void act() {
@@ -38,8 +65,24 @@ public class DoorEntity extends Entity {
 			}
 		}
 	}
+
+	public void setLocation(int x, int y) {
+		// TODO Auto-generated method stub
+		this.x = x;
+		this.y = y;
+	}
 	
-	@Override
-	public void draw(MainWindow m) {}
+	public void setDestination(String destMap, int destX, int destY) {
+		this.newMap = destMap;
+		this.destX = destX;
+		this.destY = destY;
+	}
+	
+//	@Override
+//	public void draw(MainWindow m) {
+////		m.setTexture("img/door.png");
+////		Pose p = spriteCoordinates.getPose("idle","","down");
+////		m.renderTile(x,y,width,height,,0,12,12);
+//	}
 
 }

@@ -114,14 +114,14 @@ public class GameState {
 //		addPartyMember(new PartyMember("Player2"));
 //		addPartyMember(new PartyMember("Player3"));
 //		addPartyMember(new PartyMember("Player4"));
-		createTestEnemy();
-		createTestDoor();
+//		createTestEnemy();
+//		createTestDoor();
 	}
 	
-	public void createTestDoor() {
-		DoorEntity test = new DoorEntity(300*4,400*4,128,128,state,700,700,"magicant");
-		this.entities.add(test);
-	}
+//	public void createTestDoor() {
+//		DoorEntity test = new DoorEntity(300*4,400*4,128,128,state,700,700,"magicant");
+//		this.entities.add(test);
+//	}
 	
 	public void createTestEnemy() {
 		Enemy test = new Enemy("mook.png","Mook",32,64,30,30);

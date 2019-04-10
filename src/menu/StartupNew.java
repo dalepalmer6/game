@@ -246,7 +246,7 @@ public class StartupNew{
 		loadCoordinatesFromFile("ninten", ness);
 		allEntitiesNames.add("redDressLady");
 		for (String s : allEntitiesNames) {
-			Entity e = new Entity("entities.png",0,0,0,0,this,s);
+			Entity e = new Entity("entities.png",0,0,24,32,this,s);
 			loadCoordinatesFromFile(s, e);
 			allEntities.put(s,e);
 		}

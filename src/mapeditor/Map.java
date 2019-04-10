@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import gamestate.DoorEntity;
 import gamestate.Entity;
 import gamestate.Player;
 import gamestate.SpritesheetCoordinates;
@@ -103,9 +104,21 @@ public class Map {
 			pw = new PrintWriter(new File(pathToMaps + mapId +"/entities.csv"));
 			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME\n";
 			for (Entity e : entitiesInMap) {
-				writeEntities += e.getTexture() + "," + e.getX() + "," + e.getY() + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() +  "," + e.getName() +"\n"; 
+				if (!(e instanceof DoorEntity)) {
+					writeEntities += e.getTexture() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() +  "," + e.getName() +"\n"; 
+				}
 			}
 			pw.write(writeEntities);
+			pw.flush();
+			pw.close();
+			pw = new PrintWriter(new File(pathToMaps + mapId +"/doors.csv"));
+			String writeDoors = "DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT\n";
+			for (Entity e : entitiesInMap) {
+				if ((e instanceof DoorEntity)) {
+					writeDoors += ((DoorEntity)e).getDesc() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + ((DoorEntity)e).getDestMap() + "," + (((DoorEntity)e).getDestX()) + "," + (((DoorEntity)e).getDestY()) + "," + e.getText() +"\n"; 
+				}
+			}
+			pw.write(writeDoors);
 			pw.flush();
 			pw.close();
 		} catch(FileNotFoundException e) {
@@ -141,6 +154,38 @@ public class Map {
 		parseMapFG(new File(pathToCurrentMap + "fg.map"));
 		parseMapBG(new File(pathToCurrentMap + "bg.map"));
 		parseEntities(new File(pathToCurrentMap + "entities.csv"),scale);
+		parseDoors(new File(pathToCurrentMap + "doors.csv"),scale);
+	}
+	
+	public void parseDoors(File ent,int scale) {
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(ent));
+			String row = "";
+			br.readLine();//skip headers
+			while ((row = br.readLine()) != null) {
+				String[] split = row.split(",");
+				String desc = split[0];
+				int x = Integer.parseInt(split[1]);
+				int y = Integer.parseInt(split[2]);
+				int width = Integer.parseInt(split[3]);
+				int height = Integer.parseInt(split[4]);
+				String destMap = split[5];
+				int destX = Integer.parseInt(split[6]);
+				int destY = Integer.parseInt(split[7]);
+				String text = split[8];
+//				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
+//				e.setText(text);
+				DoorEntity e = new DoorEntity(desc,x*scale,y*scale,width*scale,height*scale,state,destX*scale,destY*scale,destMap,text);
+				entitiesInMap.add(e);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void parseEntities(File ent,int scale) {

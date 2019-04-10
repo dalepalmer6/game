@@ -13,7 +13,7 @@ public class SingleEntity extends MapTool {
 	} 
 	
 	public void doActionOnMap(int x, int y, int xMouse, int yMouse) {
-		Entity newEntity = entity.createCopy(x,y,16,24);
+		Entity newEntity = entity.createCopy(x,y,entity.getWidth(),entity.getHeight());
 		MapPreview mp = ((MapEditMenu) entity.getState().getMenuStack().peek()).getMapPreview();
 		int tilesize = mp.getTileSize();
 		
@@ -21,7 +21,7 @@ public class SingleEntity extends MapTool {
 //			|| xMouse < mp.getX() || yMouse < mp.getY()) {
 //			return;
 //		} 
-		newEntity.setCoordinates(x * tilesize + xMouse%tilesize,(y) *tilesize + yMouse%tilesize);
+		newEntity.setCoordinates((x-1) * tilesize + xMouse%tilesize,(y-1) *tilesize + yMouse%tilesize);
 		map.addToEntities(newEntity);
 		mp.setHoldableState(false);
 	}

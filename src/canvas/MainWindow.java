@@ -13,6 +13,7 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.newdawn.slick.Color;
@@ -71,6 +72,11 @@ public class MainWindow {
 	
 	//renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh)
 	public void renderBG(String bgImg) {
+//        ARBShaderObjects.glUseProgramObjectARB(program); 
+//		 int p = GL20.glGetUniformLocation(program, "in_color");
+//	        GL20.glUniform4f(p, 0.0f,1.0f,0.0f,0.0f);
+//	        int p2 = GL20.glGetUniformLocation(program, "in_time");
+//	        GL20.glUniform1f(p2, System.nanoTime());
 		setTexture("img/" +  bgImg);
 //		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		int TILE_SIZE = 100;
@@ -104,7 +110,19 @@ public class MainWindow {
 	}
 	
 	public void renderAnimation(Texture t, int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
-		if (useShader) { ARBShaderObjects.glUseProgramObjectARB(program); } 
+		if (useShader) { 
+//			ARBShaderObjects.glUseProgramObjectARB(program); 
+//			 float timeValue = System.nanoTime();
+//			 float greenValue = (float) (Math.sin(timeValue) / 2.0f + 0.5f);
+//			 int timeLocation = GL20.glGetUniformLocation(program, "in_Time");
+//			 GL20.glUniform1f(timeLocation, timeValue);
+////			 uniform float in_PatternRand;
+//			 int patternLocation = GL20.glGetUniformLocation(program, "in_PatternRand");
+//			 GL20.glUniform1f(patternLocation, 0.0f);
+////			 uniform float in_DistortType;
+//			 int distortLoc = GL20.glGetUniformLocation(program, "in_DistortType");
+//			 GL20.glUniform1f(distortLoc, 0.0f);
+		} 
 		else {ARBShaderObjects.glUseProgramObjectARB(0);}
         GL11.glPushMatrix();
         Rectangle rect = textureAtlas.getCurrentRectangle();
@@ -200,13 +218,16 @@ public class MainWindow {
 
 	public void setShaders() {
 		int fsid;
+		int vsid;
 		try {
+			vsid = Shaders.createShader("src/shaders/vertex_textured.glsl", GL20.GL_VERTEX_SHADER);
 			fsid = Shaders.createShader("src/shaders/fragment_textured.glsl", GL20.GL_FRAGMENT_SHADER);
 			 int pId = GL20.glCreateProgram();
 		     GL20.glAttachShader(pId, fsid);
+		     GL20.glAttachShader(pId, vsid);
 		     program = ARBShaderObjects.glCreateProgramObjectARB();
 		     ARBShaderObjects.glAttachObjectARB(program, fsid);
-		        
+		     ARBShaderObjects.glAttachObjectARB(program, vsid);
 		     ARBShaderObjects.glLinkProgramARB(program);
 		     if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
 //		     System.err.println(getLogInfo(program));

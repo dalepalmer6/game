@@ -43,6 +43,23 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	private TileHashMap tileMap;
 	private boolean holdableState = true;
 	
+	public int getViewX() {
+		return viewX;
+	}
+	
+	public int getViewY() {
+		return viewY;
+	}
+	
+	public void setView(int x, int y) {
+		viewX = x;
+		viewY = y;
+	}
+	
+	public void setMap(Map m) {
+		this.map = m;
+	}
+	
 	public Map getMap() {
 		return map;
 	}
@@ -244,7 +261,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 			Pose pose = e.getSpriteCoordinates().getPose("idle", "","down");
 			TileMetadata tm = pose.getStateByNum(0);
 			e.initDrawEntity(m,e.getTexture());
-			m.renderTile(e.getX()+x-(viewX+1)*TILE_SIZE, e.getY()+y-(viewY+1)*TILE_SIZE, e.getWidth(), e.getHeight(), tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
+			m.renderTile(e.getX()+x-(viewX)*TILE_SIZE, e.getY()+y-(viewY)*TILE_SIZE, e.getWidth(), e.getHeight(), tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
 		}
 	}
 	
@@ -254,9 +271,6 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		map.setChangeMap("BG");
 		getAreaOfInterest();
 		drawTilesBG(m);
-//		map.setChangeMap("MID");
-//		getAreaOfInterest();
-//		drawTiles(m);
 		map.setChangeMap("FG");
 		getAreaOfInterest();
 		drawTiles(m);

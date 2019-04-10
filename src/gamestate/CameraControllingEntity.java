@@ -60,6 +60,7 @@ public class CameraControllingEntity extends Entity {
 		moveWithCamera(deltaX,deltaY);
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
+		camera.snapToEntity(x,y);
 		updateFrameTicks();
 	}
 

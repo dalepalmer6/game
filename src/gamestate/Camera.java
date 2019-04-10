@@ -63,9 +63,6 @@ public class Camera {
 		this.dy = dy;
 		x+=dx;
 		y+=dy;
-		/*
-		 * Hard coded, fix this.
-		 * */
 		x=Math.max(0,this.x);
 		x=Math.min(x,mapRenderer.getTileSize()*state.getGameState().getMap().getMap().size()-getMainWindow().getScreenWidth());
 		y=Math.max(0,this.y);

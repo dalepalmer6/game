@@ -178,52 +178,6 @@ public class Entity implements Drawable,EntityInterface {
 //		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-//	public void stageForRedraw(int x, int y, TileInstance t) {
-//		state.getGameState().addToRedrawing(new RedrawObject(x,y,t));
-//	}
-//	
-//	public void verifyCollisions(TileInstance t1, TileInstance t2, TileInstance t3, TileInstance t4,
-//			String collisionStatet1, String collisionStatet2,
-//			String collisionStatet3, String collisionStatet4,int leftEdge, int rightEdge, 
-//			int upperEdge, int lowerEdge) {
-//		if (collisionStatet1.equals("UNDER")) {
-//			System.out.println("Do a redraw");
-//			stageForRedraw(1+leftEdge,1+upperEdge,t1);
-//		}
-//		if (collisionStatet2.equals("UNDER")) {
-//			System.out.println("Do a redraw");
-//			stageForRedraw(1+rightEdge,1+upperEdge,t2);
-//		}
-//		if (collisionStatet3.equals("UNDER")) {
-//			System.out.println("Do a redraw");
-//			stageForRedraw(1+rightEdge,1+lowerEdge,t3);
-//		}
-//		if (collisionStatet4.equals("UNDER")) {
-//			System.out.println("Do a redraw");
-//			stageForRedraw(1+leftEdge,1+lowerEdge,t4);
-//		}
-//		if (collisionStatet1.equals("STOP")) {
-//			System.out.println("Upper left collision");
-//			deltaX = 0;
-//			deltaY = 0;
-//		}
-//		if (collisionStatet2.equals("STOP")) {
-//			System.out.println("Upper right collision");
-//			deltaX = 0;
-//			deltaY = 0;
-//		}
-//		if (collisionStatet3.equals("STOP")) {
-//			System.out.println("Lower right collision");
-//			deltaX = 0;
-//			deltaY = 0;
-//		}
-//		if (collisionStatet4.equals("STOP")) {
-//			System.out.println("Lower left collision");
-//			deltaX = 0;
-//			deltaY = 0;
-//		}
-//	}
-	
 	public void stageForRedraw() {
 		state.getGameState().addToRedrawing(new RedrawObject(this));
 	}
@@ -279,16 +233,6 @@ public class Entity implements Drawable,EntityInterface {
 		int collisionStatet3FG = t3FG.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
 		int collisionStatet4FG = t4FG.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
 		
-//		TileInstance t1mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(leftEdge);
-//		TileInstance t2mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(upperEdge).get(rightEdge);
-//		TileInstance t3mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(rightEdge);
-//		TileInstance t4mid = state.getGameState().getMapRenderer().getAreaOfInterestTiles().get(lowerEdge).get(leftEdge);
-//		
-//		int collisionStatet1mid = t1mid.getCollisionInfoAtIndex(leftEdgeTest,upperEdgeTest);
-//		int collisionStatet2mid = t2mid.getCollisionInfoAtIndex(rightEdgeTest,upperEdgeTest);
-//		int collisionStatet3mid = t3mid.getCollisionInfoAtIndex(rightEdgeTest,lowerEdgeTest);
-//		int collisionStatet4mid = t4mid.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
-
 		int collisiont1=0,collisiont2=0,collisiont3=0,collisiont4=0;
 		
 		if (t1BG == state.tileMap.getTile(0).getInstance(0)) {
@@ -314,11 +258,7 @@ public class Entity implements Drawable,EntityInterface {
 		} else if (t4FG == state.tileMap.getTile(0).getInstance(0)){
 			collisiont4 = collisionStatet4BG;
 		}
-		
-//		int collisiont1 = collisionStatet1BG | collisionStatet1FG;
-//		int collisiont2 = collisionStatet2BG | collisionStatet2FG;
-//		int collisiont3 = collisionStatet3BG | collisionStatet3FG;
-//		int collisiont4 = collisionStatet4BG | collisionStatet4FG;
+
 		checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
 		checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
 		checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
