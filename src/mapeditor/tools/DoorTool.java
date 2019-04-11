@@ -47,7 +47,7 @@ public class DoorTool extends MapTool {
 			//load in a new map to set the dest
 			String mapName = door.getDestMap();//getthis from somewhere
 			newMap = new Map("locmap",34,34,door.getState().tileMap,door.getState());
-			newMap.parseMap(1,mapName);
+			newMap.parseMap(4,mapName);
 			oldMap = mp.getMap();
 			MapEditMenu mem = ((MapEditMenu) door.getState().getMenuStack().peek());
 			savedViewX = mp.getViewX();

@@ -146,7 +146,7 @@ public class Map {
 			}
 		}
 		
-		this.entitiesInMap = new ArrayList<Entity>();
+		this.entitiesInMap.clear();
 		entitiesInMap.addAll(players);
 		this.mapId = mapId;
 		readTileSet();

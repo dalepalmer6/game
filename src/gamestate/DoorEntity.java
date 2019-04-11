@@ -55,7 +55,7 @@ public class DoorEntity extends Entity {
 					e.setCoordinates(destX,destY);
 					state.getGameState().getCamera().snapToEntity(destX,destY);
 					state.getGameState().setCurrentMap(newMap);
-					state.getGameState().loadMap(1);
+					state.getGameState().loadMap(4);
 				} else  {
 					AnimationMenu anim = new AnimationMenu(state);
 					anim.createAnimMenu();

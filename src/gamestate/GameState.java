@@ -221,7 +221,8 @@ public class GameState {
 	public void update(InputController input) {
 		sort();
 		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu) {
-			for (Entity e : entities) {
+			for (int i = 0; i < entities.size(); i++) {
+				Entity e = entities.get(i);
 				if (e instanceof Controllable) {
 					e.handleInput(input);
 				}
