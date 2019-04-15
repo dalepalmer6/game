@@ -9,13 +9,38 @@ public class PSIAttack extends Item{
 	private int ppCost;
 	private String animation;
 	private Animation anim;
-	
-	public PSIAttack(int id, String name, String desc, int type, int action, String animation) {
-		super(id,name,desc,type,action);
+	private String classification;
+	private String family;
+	private String stage;
+	public PSIAttack(int id, String name, String desc, int type, int action, String animation,String classification,String family,String stage) {
+		super(id,name,desc,type,action,-1,"");
 		ppCost = 0;
 		this.animation = animation;
-		damageLowerBound = 100;
-		damageUpperBound = 120;
+		this.classification = classification;
+		this.family = family;
+		this.stage = stage;
+	}
+	
+	public void setMinMaxDmg(int min, int max) {
+		this.damageUpperBound = max;
+		this.damageLowerBound = min;
+	}
+	
+	public int calculateDamage() {
+		double  damage = damageUpperBound - damageLowerBound;
+		double  range = damage * Math.random();
+		return (int) (damageLowerBound + range);
+	}
+	
+	public String getStage() {
+		return stage;
+	}
+	public String getFamily() {
+		return family;
+	}
+	
+	public String getClassification() {
+		return classification;
 	}
 	
 	public Animation getAnimation() {

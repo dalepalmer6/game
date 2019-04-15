@@ -40,6 +40,15 @@ public class Entity implements Drawable,EntityInterface {
 	protected ArrayList<Entity> interactables;
 	private long delta;
 	private String name;
+	private boolean needsRemove;
+	
+	public void setToRemove() {
+		this.needsRemove = true;
+	}
+	
+	public boolean getNeedToRemoveState() {
+		return needsRemove;
+	}
 	
 	public String getText() {
 		return text;
@@ -92,6 +101,10 @@ public class Entity implements Drawable,EntityInterface {
 		move();
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
+		if (xOnScreen > state.getMainWindow().getScreenWidth() + 1000|| yOnScreen > state.getMainWindow().getScreenHeight() + 1000
+		 || xOnScreen < -1000 || yOnScreen < -1000) {
+			setToRemove();
+		}
 		updateFrameTicks();
 	}
 	
@@ -155,8 +168,8 @@ public class Entity implements Drawable,EntityInterface {
 		}
 	}
 	
-	public void removeFromInteractables(Entity e) {
-		this.interactables.remove(e);
+	public void clearInteractables() {
+		this.interactables.clear();
 	}
 	
 	public void drawEntity(MainWindow m) {

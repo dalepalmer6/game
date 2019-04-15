@@ -27,6 +27,13 @@ public class Text implements Drawable{
 	private boolean freeze;
 	private int saveStart;
 	private boolean done;
+	private boolean dramaticPause;
+	private int lengthToWait;
+	private double tickCount;
+	private double ticksPerFrame = 0.5d;
+	private double oldTicksPerFrame;
+	private boolean differentParseRate;
+	private double textRate = 1;
 	
 	public void setTextChanged(boolean f) {
 		this.textChanged = f;
@@ -229,11 +236,11 @@ public class Text implements Drawable{
 		int curY = y;
 		int scale = 2;
 		char[] chars = parsedString.toCharArray();
-		for (int i = drawStart; i < drawUntil; i++) {
-			char c = chars[i];
-			if (i == 0 && c != '@') {
-//				curX += charList.getCharObjects().get(c).getDw()*scale;
-			}
+		for (int i = drawStart; i < drawUntil+1; i++) {
+			
+//			if (i == 0 && c != '@') {
+////				curX += charList.getCharObjects().get(c).getDw()*scale;
+//			}
 			if (controlCodes.containsKey(i)) {
 				String[] controls = controlCodes.get(i).split(",");
 				String newListOfControlCodes = "";
@@ -250,26 +257,98 @@ public class Text implements Drawable{
 						freeze = true;
 						return;
 					}
+					if (control.startsWith("WAIT")) {
+						dramaticPause = true;
+						lengthToWait = Integer.parseInt(control.substring(4));
+					}
+					if (control.startsWith("SC_")) {
+						//draw the symbol here
+						String specCharName = control.substring(3);
+						CharacterData specChar = charList.getSpecChar(specCharName);
+						m.renderTile(curX,curY,
+								(int) specChar.getDw()*scale,
+								(int) specChar.getDh()*scale,
+								specChar.getDx(),
+								specChar.getDy(),
+								specChar.getDw(),
+								specChar.getDh());
+						curX += scale + specChar.getDw()*scale;
+						newListOfControlCodes += "," + control;
+					}
 					controlCodes.put(i,newListOfControlCodes);
 				}
 			}
-			m.renderTile(curX,curY,
-					(int) charList.getCharObjects().get(c).getDw()*scale,
-					(int) charList.getCharObjects().get(c).getDh()*scale,
-					charList.getCharObjects().get(c).getDx(),
-					charList.getCharObjects().get(c).getDy(),
-					charList.getCharObjects().get(c).getDw(),
-					charList.getCharObjects().get(c).getDh());
-			curX += scale + charList.getCharObjects().get(c).getDw()*scale;
-			if (i >= parsedString.length()-1) {
-				done = true;
+			if (i < drawUntil) {
+				char c = chars[i];
+				m.renderTile(curX,curY,
+						(int) charList.getCharObjects().get(c).getDw()*scale,
+						(int) charList.getCharObjects().get(c).getDh()*scale,
+						charList.getCharObjects().get(c).getDx(),
+						charList.getCharObjects().get(c).getDy(),
+						charList.getCharObjects().get(c).getDw(),
+						charList.getCharObjects().get(c).getDh());
+				curX += scale + charList.getCharObjects().get(c).getDw()*scale;
+				if (i >= parsedString.length()-1) {
+					done = true;
+				}
 			}
+			
 		}
 	}
 	
 	public static void initDrawText(MainWindow m) {
 		m.setTexture("img/font.png");
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+	}
+
+	public void update() {
+		// TODO Auto-generated method stub
+//		if (differentParseRate) {
+//			oldTicksPerFrame = ticksPerFrame;
+//			ticksPerFrame = newTicksPerFrame;
+//		}
+		
+		if (!drawAll && !dramaticPause) {
+			this.tickCount += ticksPerFrame;
+			if (tickCount % textRate == 0) {
+				incrementDrawUntil();
+			}
+		} else if (dramaticPause) {
+			if (lengthToWait > 0) {
+				lengthToWait--;
+			} else {
+				dramaticPause = false;
+			}
+			return;
+		}
+	}
+
+	public void setX(int x) {
+		// TODO Auto-generated method stub
+		this.x = x;
+	}
+	
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getDrawUntil() {
+		// TODO Auto-generated method stub
+		return drawUntil;
+	}
+
+	public boolean getDoneState() {
+		// TODO Auto-generated method stub
+		return done || freeze || dramaticPause;
+	}
+	
+	public boolean getDone() {
+		return done;
+	}
+
+	public void setTextRate(double d) {
+		// TODO Auto-generated method stub
+		this.textRate = d;
 	}
 
 	

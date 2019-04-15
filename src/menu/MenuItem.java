@@ -10,20 +10,18 @@ import canvas.Clickable;
 import canvas.Drawable;
 import canvas.Hoverable;
 import canvas.MainWindow;
+import font.Text;
 import global.InputController;
 import global.MenuStack;
 
 public class MenuItem extends LeftClickableItem implements MenuItemInterface, Hoverable, Drawable, Clickable {
 	protected String text;
+	protected Text textObject;
 	private Color textColor = Color.white;
 	private Color bgColor = Color.black;
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
-	protected int width = 300;
-	protected int height = 100;
-	protected int x;
-	protected int y;
 	protected StartupNew state;
 	
 	public boolean hovered(double mousex, double mousey) {	
@@ -69,9 +67,11 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	}
 	public void setX(int x){
 		this.x = x;
+		this.textObject.setX(x);
 	}
 	public void setY(int y){
 		this.y = y;
+		this.textObject.setY(y);
 	}
 	public void setWidth(int wid){
 		this.width = wid;
@@ -91,6 +91,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		text = t;
 		this.x = x;
 		this.y = y;
+		textObject = new Text(true,t,x,y,1000,1000,state.charList);
 	}
 	
 	public MenuItem(String t, int x, int y, int width, int height, StartupNew m) {
@@ -100,6 +101,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.textObject = new Text(true,t,x,y,1000,1000,m.charList);
 	}
 	
 	public void setText(String t) {
@@ -113,13 +115,14 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	@Override
 	public void draw(MainWindow m) {
 		//for each MenuItem, draw to the canvas
-		m.setTexture("img/" + this.image);
-		m.renderTile(x,y,width,height,0,0,490,234);
+//		m.setTexture("img/" + this.image);
+//		m.renderTile(x,y,width,height,0,0,490,234);
+		textObject.draw(m);
 	}
 
 	public String prepareToExecute() {
 		state.getSelectionStack().push(this);
-		execute();
+		executeButton();
 		return null;
 	}
 	
@@ -127,9 +130,16 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		
 	}
 	
+	public String executeButton() {
+		state.setSFX("curshoriz.wav");
+		state.playSFX();
+		return execute();
+	}
+	
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

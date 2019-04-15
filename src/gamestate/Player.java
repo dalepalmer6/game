@@ -1,5 +1,6 @@
 package gamestate;
 
+import actionmenu.ActionMenu;
 import canvas.Controllable;
 import canvas.Drawable;
 import canvas.MainWindow;
@@ -22,17 +23,27 @@ private boolean confirmButtonDown = false;
 	}
 	
 	public void act() {
-		if (confirmButtonDown) {
+		if (confirmButtonDown && state.getMenuStack().isEmpty()) {
+			ActionMenu am = new ActionMenu(state,state.getGameState().getPartyMembers());
+			am.createMenu();
+		}
+	}
+	
+	public void talkTo() {
 			if (interactables.size() != 0) {
-				interactables.get(0).interact();
+				int i = 0;
+				while (interactables.get(i) instanceof DoorEntity) {
+					if (i >= interactables.size()) {
+						break;
+					}
+					i++;
+				}
+				interactables.get(i).interact();
 				setDirectionDuringAct(interactables.get(0));
 			} else {
 				SimpleDialogMenu.createDialogBox(state,"Nothing here.");
 			}
-		}
 	}
-	
-	
 	
 	@Override
 	public void handleInput(InputController input) {

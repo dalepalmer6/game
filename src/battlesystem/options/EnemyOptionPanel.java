@@ -11,6 +11,8 @@ import menu.StartupNew;
 public class EnemyOptionPanel extends MenuItem {
 	private ArrayList<EnemyOption> enemyOptions;
 	private int allEnemyWidths;
+	private int selected;
+	
 	
 	public EnemyOptionPanel(StartupNew m) {
 		super("", 0, 400, m.getMainWindow().getScreenWidth(), m.getMainWindow().getScreenHeight()-400, m);

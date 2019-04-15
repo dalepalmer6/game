@@ -34,6 +34,10 @@ public class MenuStack {
 		return null;
 	}
 	
+	public ArrayList<Menu> getMenus() {
+		return (ArrayList<Menu>) stack;
+	}
+	
 	public boolean isEmpty() {
 		return stack.isEmpty();
 	}
@@ -43,7 +47,15 @@ public class MenuStack {
 		return m;
 	}
 	
+	public void remove(Menu i) {
+		stack.remove(i);
+	}
+	
 	public int size() {
 		return stack.size();
+	}
+	
+	public void clear() {
+		stack.clear();
 	}
 }

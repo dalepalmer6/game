@@ -99,6 +99,10 @@ public class Menu implements MenuInterface {
 //			}
 //			break;
 //		}
+		if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
+			state.getMenuStack().pop();
+		}
+		
 		needToAdd = new ArrayList<MenuItem>();
 		needToRemove = new ArrayList<MenuItem>();
 		for (DrawableObject e : menuItems) {
@@ -107,15 +111,16 @@ public class Menu implements MenuInterface {
 			}
 		}
 		
-		for (MenuItem i : menuItems) {
-			i.updateAnim();
-		}
+				for (MenuItem i : menuItems) {
+					i.updateAnim();
+				}
 		
 		update();
 		menuItems.removeAll(needToRemove);
 		menuItems.addAll(needToAdd);
 		if (this.menuItems.isEmpty()) {
-			state.needToPop = true;
+//			state.needToPop = true;
+			state.setToRemove(this);
 		}
 	}
 	

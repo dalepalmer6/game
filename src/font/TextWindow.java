@@ -138,12 +138,18 @@ public class TextWindow extends MenuItem implements Drawable{
 				TILE_SIZE,TILE_SIZE);
 	}
 	
+	public void updateAnim() {
+		text.update();
+		tickCount += ticksPerFrame;
+		if (!shouldDrawAll && !text.getDoneState() && tickCount % 2 == 0) {
+			state.setSFX("text.wav");
+			state.playSFX();
+		}
+		
+	}
+	
 	public void drawText(MainWindow m) {
 		Text.initDrawText(m);
-		if (!shouldDrawAll) {
-			this.tickCount += ticksPerFrame;
-			if (tickCount % 1 == 0) this.text.incrementDrawUntil();
-		}
 		text.draw(m);
 	}
 	

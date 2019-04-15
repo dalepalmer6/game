@@ -1,7 +1,11 @@
-﻿ID,Name,Description,Target,Equippable,Battle,OutofBattle,Action
-0,Cookie,A sweet treat that restores a small amount of HP.,0,FALSE,TRUE,TRUE,0
-1,Bread Roll,A fresh bread roll that restores a modest amount of HP.,0,FALSE,TRUE,TRUE,0
-2,Hamburger,A meat burger that restores a modest amount of HP.,0,FALSE,TRUE,TRUE,0
-3,Brain Food Lunch,A lunch that nourishes one's heart and soul. Restores a massive amount of HP and PP.,0,FALSE,TRUE,TRUE,0
-4,Cracked Bat,A cracked bat that has jagged edges for defense.,0,TRUE,FALSE,FALSE,-1
-5,Tee Ball Bat,A regular bat. Highly durable[COMMA] with no blemishes.,0,TRUE,FALSE,FALSE,-1
+﻿ID,Name,Description,Target,Equippable,Battle,OutofBattle,Action,Offense,Defense,Speed,Luck,HP,PP,Resistance,Participle
+0,-Empty-,A whole lot of nothing.,0,15,FALSE,TRUE,0,0,0,0,0,0,0,0,none
+1,Cookie,A sweet treat that restores a small amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a
+2,Bread Roll,A fresh bread roll that restores a modest amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a
+3,Hamburger,A meat burger that restores a modest amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a
+4,Brain Food Lunch,A lunch that nourishes one's heart and soul. Restores a massive amount of HP and PP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a boxed
+5,Cracked Bat,A cracked bat that has jagged edges for defense.,0,1,TRUE,FALSE,-1,4,0,0,0,0,0,0,a
+6,Tee Ball Bat,A regular bat. Highly durable[COMMA] with no blemishes.,0,1,TRUE,FALSE,-1,8,0,0,0,0,0,0,a
+7,HeadgearTest,Headgear that tests the equipment menu.,0,2,TRUE,FALSE,-1,0,5,0,0,0,0,0,a
+8,BodyTest,Tests the body equipper,0,4,TRUE,FALSE,-1,0,4,0,0,0,0,0,a
+9,OtherTest,Tests the other equipper,0,8,TRUE,FALSE,-1,3,3,0,0,0,0,0,an

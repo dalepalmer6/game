@@ -20,12 +20,6 @@ public class BattleEntity {
 		return stats;
 	}
 	
-	public void dealDamage(int x) {
-		int hp = this.stats.getStat("HP");
-		hp -= x;
-		stats.replaceStat("HP",hp);
-	}
-	
 	public SpritesheetCoordinates getSpriteData() {
 		return spriteData;
 	}
@@ -52,7 +46,7 @@ public class BattleEntity {
 		this.spriteData = new SpritesheetCoordinates();
 		spriteData.setPose("front_");
 		spriteData.addStateToPose("front_",0,0,32,64);
-		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0);
+		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0,0,0,0,0,0);
 	}
 	
 	public BattleEntity(String texture, String name, EntityStats es) {
@@ -73,8 +67,11 @@ public class BattleEntity {
 		return texture;
 	}
 
-	public TextWindowWithPrompt performBattleAction(BattleMenu bm, ArrayList<PCBattleEntity> party, ArrayList<Enemy> enemies) {
+	public void takeDamage(int damage) {
 		// TODO Auto-generated method stub
-		return null;
+		int hp = this.stats.getStat("CURHP");
+		hp -= damage;
+		hp = Math.max(0,hp);
+		stats.replaceStat("CURHP",hp);
 	}
 }

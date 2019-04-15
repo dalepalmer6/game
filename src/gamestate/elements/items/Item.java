@@ -12,6 +12,8 @@ public class Item{
 	private int action;
 	protected int damageLowerBound;
 	protected int damageUpperBound;
+	private int equippable; //0b1, wpn; 0b10, head; 0b100, body; 0b1000, other;
+	private String participle;
 	
 	public int getTargetType() {
 		return targetType;
@@ -25,22 +27,38 @@ public class Item{
 		return desc;
 	}
 	
+	public String getEquipmentType() {
+		String returnValue = "";
+		switch (equippable)  {
+			case 0:	returnValue = "NAN";break;
+			case 1: returnValue = "WPN";break;
+			case 2: returnValue = "HED";break;
+			case 4: returnValue = "BDY";break;
+			case 8: returnValue = "OTR";break;
+		}
+		return returnValue;
+	}
 	
+	public String getParticiple() {
+		return participle;
+	}
 	
 	//predefine a bunch of use cases for items that will be assigned to items
 	public String healTarget(BattleEntity user, BattleEntity target) {
-		int hp = target.getStats().getStat("HP");
-		int dhp = (int) ((int) hp * 0.30);
-		
+		int hp = target.getStats().getStat("CURHP");
+		int maxHP = target.getStats().getStat("HP");
+		int dhp = calculateDamage();
 		hp += (dhp);
-		target.getStats().replaceStat("HP",hp);
+		hp = Math.min(maxHP,hp);
+		target.getStats().replaceStat("CURHP",hp);
 		return target.getName() + " recovered " + dhp + "HP!";
 	}
 	
 	public String dealDamage(BattleEntity user, BattleEntity target, String element) {
-		int hp = target.getStats().getStat("HP");
-		
-		return target.getName() + " suffered damage of " + damageLowerBound;
+		int hp = target.getStats().getStat("CURHP");
+		int damage = calculateDamage();
+		target.takeDamage(damage);
+		return target.getName() + " suffered damage of " + damage + "!";
 	}
 	
 	public String fleeBattle(BattleEntity user) {
@@ -76,8 +94,13 @@ public class Item{
 		return result;
 	}
 	
+	public int calculateDamage() {
+		return 0;
+	}
+	
 	public String useInBattle(BattleEntity user, BattleEntity target) {
 		String result = "";
+		calculateDamage();
 		switch (action) {
 			case 0: result += healTarget(user,target); break;
 			case 1: result += dealDamage(user,target,"ice"); break;
@@ -99,16 +122,35 @@ public class Item{
 	
 
 	
-	public Item(int id, String name, String desc, int ttype,int action) {
+	public Item(int id, String name, String desc, int ttype,int action, int equippable, String participle) {
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
 		this.targetType = ttype;
 		this.action = action;
+		this.equippable = equippable;
+		this.participle = participle;
 	}
 
 	public int getId() {
 		// TODO Auto-generated method stub
 		return id;
+	}
+
+	public void healTarget(PartyMember user, PartyMember target) {
+		
+	}
+	
+	public String useOutOfBattle(PartyMember user, PartyMember target) {
+		// TODO Auto-generated method stub
+		String result = "";
+//		if (this instanceof ItemUsableInAndOutOfBattle || this instanceof ItemUsableOutOfBattle) {
+//			System.out.println("Item is usable, using");
+//			switch(action) {
+//				case 0: System.out.println("Healing");
+//						healTarget(user,target);
+//			}
+//		}
+		return result;
 	}
 }

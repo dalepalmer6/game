@@ -15,7 +15,13 @@ public class TextWindowWithPrompt extends TextWindow implements Controllable{
 	public void handleInput(InputController input) {
 		// TODO Auto-generated method stub
 		if (input.getSignals().get("CONFIRM")) {
-			next();
+			if (text.getDoneState()) {
+				next();
+			} else {
+				text.setTextRate(0.5d);
+			} 
+		} else {
+			text.setTextRate(1d);
 		}
 	}
 
@@ -30,4 +36,5 @@ public class TextWindowWithPrompt extends TextWindow implements Controllable{
 		// TODO Auto-generated method stub
 		return focused;
 	}
+
 }

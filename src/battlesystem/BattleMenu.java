@@ -22,6 +22,7 @@ import font.SelectionTextWindow;
 import font.TextWindowWithPrompt;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
+import gamestate.EnemyEntity;
 import gamestate.EntityStats;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
@@ -33,12 +34,13 @@ import menu.StartupNew;
 
 public class BattleMenu extends Menu {
 	private BattleMenuSelectionTextWindow actionMenu;
-	private ArrayList<PCBattleEntity> party;
+	private ArrayList<PartyMember> partyMembers;
+	private ArrayList<BattleEntity> party;
 	private BattleAction currentAction;
 	private int indexMembers;
 	private BattleEntity partyMember;
-	private ArrayList<Enemy> enemies;
-	private TextWindowWithPrompt prompt;
+	private ArrayList<BattleEntity> enemies;
+	private BattleTextWindow prompt;
 	private EnemyOptionPanel eop;
 	private ArrayList<BattleEntity> turnStack; //TODO added in the order of speed lowest to high
 	private ArrayList<BattleEntity> allEntities;
@@ -57,12 +59,24 @@ public class BattleMenu extends Menu {
 	private ArrayList<MenuItem> windowStack;
 	private BattleAction currentBattleAction;
 	private boolean pollForActions = false;
+	private int expPool;
+	private boolean battleSceneEnd;
+	private boolean getNext;
+	private boolean displayRecExp;
+	private boolean doOnce;
+	private boolean ended;
+	private EnemyEntity enemyEntity;
+	private boolean kill;
+	private boolean turnIsDone;
+	private boolean alertDeadEntity;
+	private BattleEntity deadEntity;
+	private boolean locked;
 	
-	public ArrayList<PCBattleEntity> getPartyMembers() {
+	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
 	}
 	
-	public ArrayList<Enemy> getEnemies() {
+	public ArrayList<BattleEntity> getEnemies() {
 		return enemies;
 	}
 	
@@ -115,12 +129,18 @@ public class BattleMenu extends Menu {
 		waitToStart = true;
 	}
 	
-	public void startBattle(ArrayList<Enemy> enemyList) {
+	public void startBattle(EnemyEntity enemyEntity) {
+		//set the state to draw all menus at once, to facilitate the menu system
+		this.enemyEntity = enemyEntity;
+		expPool = 0;
+		state.setDrawAllMenus();
+		state.inBattle = true;
+		state.battleMenu = this;
 		//create a battle menu
 		state.getMenuStack().push(this);
 		MainWindow mainWindow = state.getMainWindow();
 		actionMenu = new BattleMenuSelectionTextWindow(mainWindow.getScreenWidth()/2 - (20/2)*32,100,20,2,state);
-		enemies = enemyList;
+		enemies = enemyEntity.getEnemiesList();
 		generateGreeting();
 		actionMenu.setKillWhenComplete();
 		battleActions = new HashMap<BattleEntity, BattleAction>();
@@ -141,16 +161,15 @@ public class BattleMenu extends Menu {
 		EnemyOptionPanel eop = new EnemyOptionPanel(state);
 		this.eop = eop;
 		int j = 0;
-		for (Enemy e : enemies) {
-			eop.addEnemyOption(new EnemyOption(e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
-					state.getMainWindow().getScreenHeight()/2 -(e.getHeight()),state));
+		for (BattleEntity e : enemies) {
+			eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
+					state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()),state));
 			j++;
 		} 
 		
-//		drawables = new ArrayList<DrawableObject>();
-//		drawables.add(eop);
-		party = new ArrayList<PCBattleEntity>();
-		for (PartyMember pm : state.getGameState().getPartyMembers()) {
+		partyMembers = state.getGameState().getPartyMembers();
+		party = new ArrayList<BattleEntity>();
+		for (PartyMember pm : partyMembers) {
 			party.add(pm.createBattleEntity());
 		}
 		
@@ -187,10 +206,32 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptSecond(String s) {
-		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
 //		((BattleTextWindow)prompt).setCompleteOnExit();
-		((BattleTextWindow)prompt).setPollForActionsOnExit();
+//		if (!s.equals("done")) {
+			prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			((BattleTextWindow)prompt).setGetResultsOnExit();
+//		}
+		if (turnIsDone) {
+			turnIsDone = false;
+			((BattleTextWindow)prompt).setPollForActionsOnExit();
+			getCurrentActiveBattleAction().setComplete();
+			getResultText = false;
+		}
+		
 		readyToDisplay = true;
+	}
+	
+	public void setPromptDead() {
+		prompt = new BattleTextWindow(deadEntity.getName() + " became tame.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		((BattleTextWindow)prompt).setPollForActionsOnExit();
+		prompt.onCompleteKillEntity();
+		getResultText = false;
+		readyToDisplay = true;
+		locked = true;
+	}
+	
+	public void setTurnIsDone() {
+		turnIsDone = true;
 	}
 	
 	public boolean turnStackIsEmpty() {
@@ -198,89 +239,187 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void update() {
-		if (turnStack.isEmpty() && pollForActions) {
-			battleActions.clear();
-			pollForActions = false;
-			needMenu = true;
-			indexMembers = 0;
-			battleActions = new HashMap<BattleEntity,BattleAction>();
-			for (BattleEntity be : allEntities) {
-				turnStack.add(be);
+		if (battleSceneEnd && getNext && !ended) {
+			//create the You Won prompt, then the exp divying screen, then go through anyone's level ups
+			state.setSFX("eb_fanfare.wav");
+			state.playSFX();
+			menuItems.remove(actionMenu);
+			ended = true;
+			getNext = false;
+			prompt = new BattleTextWindow("YOU WON!",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+//			prompt.setPollForActionsOnExit();
+			for (int i = 0; i < partyMembers.size(); i++) {
+				partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
 			}
+			readyToDisplay = true;
+			battleSceneEnd = false;
+			doOnce = false;
+			displayRecExp = true;
 		}
 		
-		if (needMenu) {
-			windowStack.clear();
-			partyMember = party.get(indexMembers);
-			addToMenuItems(actionMenu);
-			needMenu = false;
-			indexMembers++;
+		if (displayRecExp && getNext) {
+			getNext = false;
+			int awardEXP = expPool/party.size();
+			prompt = new BattleTextWindow(party.get(0).getName() + " and co. received " + awardEXP + " experience points.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+//			prompt.setPollForActionsOnExit();
+			for (PartyMember pm : partyMembers) {
+				pm.addExp(awardEXP);
+				//add a check to see if someone is leveling up, if so, then we need to display the level up prompts
+			}
+			readyToDisplay = true;
+			displayRecExp = false;
+			kill = true;
 		}
 		
-		if (doneActionSelect) {
-			doneActionSelect = false;
-			addBattleAction(partyMember,currentAction);
-			if (indexMembers < party.size()) {
-				needMenu = true;
-			}
-			else {
-				//generate battle actions for each enemy
-				for (Enemy e : enemies) {
-					//create stubs
-					BattleAction ba = new BattleAction();
-					ba.setUser(e);
-					ba.setTarget(party.get(0));
-					ba.setAction("bash");
-					addBattleAction(e,ba);
+		if (kill && getNext) {
+			state.getMenuStack().pop();
+			enemyEntity.setToRemove();
+		}
+		
+		else if (!battleSceneEnd && !ended){
+			for (int i = 0; i < allEntities.size(); i++) {
+				BattleEntity e = allEntities.get(i);
+				if (e.getStats().getStat("CURHP") <= 0) {
+					alertDeadEntity = true;
+					locked = true;
+					deadEntity = e;
+					break;
 				}
 			}
-		}
-		
-		if (battleActions.size() == enemies.size() + party.size() && getNextPrompt) {
-			if (currentBattleAction == null || currentBattleAction.isComplete()) {
-				BattleEntity be = turnStack.remove(turnStack.size()-1);
-				currentBattleAction = battleActions.get(be);
+			
+			if (enemies.size() == 0) {
+				endBattleScene();
 			}
-			setPromptFirst(currentBattleAction.getBattleActionString());
-			getNextPrompt = false;
-		}
-		
-		if (getAnimation) {
-			try {
-				currentBattleAction.createAnim(state);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
+			if (turnStack.isEmpty() && pollForActions && !locked) {
+				battleActions.clear();
+				pollForActions = false;
+				needMenu = true;
+				indexMembers = 0;
+				battleActions = new HashMap<BattleEntity,BattleAction>();
+				for (BattleEntity be : allEntities) {
+					turnStack.add(be);
+				}
 			}
-			getAnimation = false;
-		}
-		
-//		for (MenuItem i : menuItems) {
-//			i.updateAnim();
-//		}
-		
-		if (getResultText) {
-			setPromptSecond(currentBattleAction.doAction());
-			getResultText = false;
-//			getNextPrompt = false;
+			
+			if (needMenu) {
+				windowStack.clear();
+				partyMember = party.get(indexMembers);
+				addToMenuItems(actionMenu);
+				needMenu = false;
+				indexMembers++;
+			}
+			
+			if (doneActionSelect) {
+				setToRemove(actionMenu);
+				doneActionSelect = false;
+				addBattleAction(partyMember,currentAction);
+				if (indexMembers < party.size()) {
+					needMenu = true;
+				}
+				else {
+					//generate battle actions for each enemy
+					for (BattleEntity e : enemies) {
+						//create stubs
+						BattleAction ba = new BattleAction(state);
+						ba.setUser(e);
+						ba.setTarget(party.get(0));
+						ba.setAction("bash");
+						addBattleAction(e,ba);
+					}
+				}
+			}
+			
+//			if (getResultText) {
+				
+//			}
+			
+			if (battleActions.size() == enemies.size() + party.size() && getNextPrompt && !alertDeadEntity && enemies.size() > 0) {
+				if (currentBattleAction == null || currentBattleAction.isComplete()) {
+					BattleEntity be = turnStack.remove(turnStack.size()-1);
+					currentBattleAction = battleActions.get(be);
+				}
+				setPromptFirst(currentBattleAction.getBattleActionString());
+				getNextPrompt = false;
+			}
+			
+			if (getAnimation) {
+				try {
+					currentBattleAction.createAnim(state);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				getAnimation = false;
+			}
+			
+//			for (MenuItem i : menuItems) {
+//				i.updateAnim();
+//			}
+			
+			
+			if (getResultText && !alertDeadEntity) {
+				getResultText = false;
+				setPromptSecond(currentBattleAction.doAction());
+			}
+			
+			if (getNextPrompt && alertDeadEntity) {
+				alertDeadEntity = false;
+				getNextPrompt = false;
+				setPromptDead();
+			}
+			
+			for (int i = 0; i < party.size(); i++) {
+				pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5));
+				pswList.get(i).updateStatus(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
+				if (i == indexMembers-1 && i >= 0) {
+					pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5)-32);
+				}
+			}
+			
+			
+			
 		}
 		
 		if (readyToDisplay) {
 			windowStack.clear();
-			addToMenuItems(prompt);
+//			if (!prompt.getText().equals("done")) {
+				addToMenuItems(prompt);
+//			}
 			readyToDisplay = false;
-		}
-		
-		for (int i = 0; i < party.size(); i++) {
-			pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5));
-			pswList.get(i).updateStatus(party.get(i).getStats().getStat("HP"),party.get(i).getStats().getStat("PP"));
-			if (i == indexMembers-1 && i >= 0) {
-				pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5)-32);
-			}
+			prompt.setGetNext();
 		}
 		
 	}
 	
+	public void killDeadEntity() {
+		locked = false;
+		battleActions.remove(deadEntity);
+		party.remove(deadEntity);
+		enemies.remove(deadEntity);
+		allEntities.remove(deadEntity);
+		
+		this.eop = new EnemyOptionPanel(state);
+		int j = 0;
+		for (BattleEntity en : enemies) {
+			eop.addEnemyOption(new EnemyOption((Enemy) en,state.getMainWindow().getScreenWidth()/2  - (en.getWidth())*enemies.size()/2 + (en.getWidth() + 32)*j,
+					state.getMainWindow().getScreenHeight()/2 -(((Enemy) en).getHeight()),state));
+			j++;
+		} 
+		if (deadEntity instanceof Enemy) {
+			expPool += ((Enemy)deadEntity).getExpYield();
+		}
+		deadEntity = null;
+		alertDeadEntity = false;
+	}
+	
+	private void endBattleScene() {
+		// TODO Auto-generated method stub
+		battleSceneEnd = true;
+		getNext = true;
+		doOnce = true;
+	}
+
 	public void setDoneAction() {
 		// TODO Auto-generated method stub
 		doneActionSelect = true;
@@ -337,4 +476,10 @@ public class BattleMenu extends Menu {
 		// TODO Auto-generated method stub
 		pollForActions = true;
 	}
+
+	public void setGetNext() {
+		// TODO Auto-generated method stub
+		getNext=true;
+	}
+
 }

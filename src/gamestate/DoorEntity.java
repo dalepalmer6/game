@@ -27,6 +27,18 @@ public class DoorEntity extends Entity {
 		this.text = text;
 	}
 	
+	public void addToInteractables(Entity e) {
+		if (!interactables.contains(e)) {
+			this.interactables.add(e);
+		}
+	}
+	public void update(GameState gs) {
+		move();
+		xOnScreen = x - gs.getCamera().getX();
+		yOnScreen = y - gs.getCamera().getY();
+		updateFrameTicks();
+	}
+	
 	public String getDestMap() {
 		return newMap;
 	}
@@ -66,6 +78,8 @@ public class DoorEntity extends Entity {
 		}
 	}
 
+	public void interact() {}
+	
 	public void setLocation(int x, int y) {
 		// TODO Auto-generated method stub
 		this.x = x;

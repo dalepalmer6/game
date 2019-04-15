@@ -6,7 +6,7 @@ import battlesystem.BattleMenu;
 import font.TextWindowWithPrompt;
 
 public class PCBattleEntity extends BattleEntity {
-	public PCBattleEntity(String texture, String name,EntityStats stats) {
+	public PCBattleEntity(String texture, String name, EntityStats stats) {
 		super(texture,name,stats);
 	}
 	

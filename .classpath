@@ -21,5 +21,7 @@
 	<classpathentry kind="lib" path="lib/jars/substance-7.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/jars/trident-7.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
+	<classpathentry kind="lib" path="lib/jars/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jars/jorbis-0.0.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

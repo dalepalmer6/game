@@ -12,7 +12,7 @@ public class Status extends MenuItem{
 	}
 	public String execute() {
 		BattleMenu m =  ((BattleMenu) state.getMenuStack().peek());
-		m.setCurrentAction(new BattleAction());
+		m.setCurrentAction(new BattleAction(state));
 		m.getCurrentAction().setAction("status");
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());
 		m.getCurrentAction().setTarget(null);

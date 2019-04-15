@@ -21,6 +21,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.BufferedImageUtil;
@@ -34,18 +36,22 @@ import canvas.Hoverable;
 import canvas.MainWindow;
 import font.CharList;
 import font.SelectionTextWindow;
+import font.SimpleDialogMenu;
 import font.TextWindow;
+import gamestate.Enemy;
 import gamestate.Entity;
+import gamestate.EntityStats;
 import gamestate.GameState;
 import gamestate.PartyMember;
+import gamestate.elements.items.EquipmentItem;
 import gamestate.elements.items.Item;
-import gamestate.elements.items.ItemUsableInAndOutOfBattle;
-import gamestate.elements.items.ItemUsableInBattle;
-import gamestate.elements.items.ItemUsableOutOfBattle;
 import gamestate.elements.psi.PSIAttack;
 import gamestate.elements.psi.PSIAttackUsableInAndOutOfBattle;
 import gamestate.elements.psi.PSIAttackUsableInBattle;
 import gamestate.elements.psi.PSIAttackUsableOutOfBattle;
+import gamestate.psi.PSIClassification;
+import gamestate.psi.PSIClassificationList;
+import gamestate.psi.PSIFamily;
 import global.ImagePacker;
 import global.InputController;
 import global.MenuStack;
@@ -103,11 +109,49 @@ public class StartupNew{
 	public ArrayList<String> mapNames = new ArrayList<String>();
 	public ArrayList<Item> items;
 	public ArrayList<PSIAttack> psi;
+	public PSIClassificationList psiClassList;
+	public ArrayList<Enemy> enemies;
 	private Map<String, BufferedImage> animations = new HashMap<String,BufferedImage>();
 	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
 	private String currentAnimation = null;
 	public boolean canLoad;
+	private Menu removeThisMenu;
+	private boolean clearTheMenuStack;
+	private String resultOfMenuToDisplay;
+	private boolean drawAllMenus;
+	public boolean inBattle;
+	public BattleMenu battleMenu;
+	private Audio bgm;
+	private Audio sfx;
+	
+	public void setBGM(String path) {
+		try {
+			bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("audio/" + path));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void setSFX(String path) {
+		try {
+			sfx = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("audio/" + path));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void playBGM() {
+		bgm.playAsMusic(1.0f, 1.0f, true);
+	}
+	
+	public void playSFX() {
+		sfx.playAsSoundEffect(1.0f,1.0f,false);
+	}
+	
+	
 	
 	public BufferedImage getAnimation(String s) {
 		return animations.get(s);
@@ -164,6 +208,11 @@ public class StartupNew{
 			boolean outBattleUsable;
 			int action = 0;
 			String anim;
+			String classification;
+			String family;
+			String stage;
+			int minDmg;
+			int maxDmg;
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				id = Integer.parseInt(split[0]);
@@ -174,20 +223,62 @@ public class StartupNew{
 				outBattleUsable = Boolean.parseBoolean(split[5]);
 				action = Integer.parseInt(split[6]);
 				anim = split[7];
+				classification = split[8];
+				family = split[9];
+				stage = split[10];
+				minDmg = Integer.parseInt(split[11]);
+				maxDmg = Integer.parseInt(split[12]);
 				PSIAttack psiAttack = null;
 				if (inBattleUsable && outBattleUsable) {
-					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim);
+					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim,classification,family,stage);
 					psi.add(psiAttack);
 				} else if (inBattleUsable){
-					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim);
+					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim,classification,family,stage);
 					psi.add(psiAttack);
 				} else if (outBattleUsable) {
-					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim);
+					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim,classification,family,stage);
 					psi.add(psiAttack);
 				}
+				psiAttack.setMinMaxDmg(minDmg,maxDmg);
 				Animation animate = new Animation(this,anim,0,0,mainWindow.getScreenWidth(),mainWindow.getScreenHeight());
 				animate.createAnimation();
 				psiAttack.setAnim(animate);
+			}
+			//create the classifications ordering now.
+			psiClassList = new PSIClassificationList();
+			ArrayList<PSIClassification> psiClasses = new ArrayList<PSIClassification>();
+			ArrayList<PSIFamily> psiFamilies = new ArrayList<PSIFamily>();
+			ArrayList<String> encounteredFamilies = new ArrayList<String>();
+			ArrayList<String> encounteredClasses = new ArrayList<String>();
+			for (PSIAttack pi : psi) {
+				//pass 1, get all unique families from PSIAttacks, adding the stages to the families
+				//pass 2, get all unique classifications from families, adding the families to the classifications
+				String fam = pi.getFamily();
+				if (!encounteredFamilies.contains(fam)) {
+					encounteredFamilies.add(fam);
+					//for each element that pi != p2, check if p2's family is = fam. if so, add to teh family
+					PSIFamily createdFam = new PSIFamily(fam);
+					for (PSIAttack pi2 : psi) {
+						if (pi2.getFamily().equalsIgnoreCase(fam)) {
+							createdFam.addStage(pi2);
+						}
+					}
+					psiFamilies.add(createdFam);
+				}
+			}
+			for (PSIFamily pf : psiFamilies) {
+				String classif = pf.getStage(0).getClassification();
+				if (!encounteredClasses.contains(classif)) {
+					encounteredClasses.add(classif);
+					PSIClassification psiClass = new PSIClassification(classif);
+					for (PSIFamily pf2 : psiFamilies) {
+						String class2 = pf2.getStage(0).getClassification();
+						if (classif.equalsIgnoreCase(class2)) {
+							psiClass.addFamily(pf2);
+						}
+					}
+					psiClassList.addClassification(psiClass);
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -205,7 +296,7 @@ public class StartupNew{
 			String name;
 			String desc;
 			int target;
-			boolean equippable;
+			int equippable;
 			boolean inBattleUsable;
 			boolean outBattleUsable;
 			int action = 0;
@@ -215,18 +306,34 @@ public class StartupNew{
 				name = split[1];
 				desc = split[2];
 				target = Integer.parseInt(split[3]);
-				equippable = Boolean.parseBoolean(split[4]);
+				equippable = Integer.parseInt(split[4]);
 				inBattleUsable = Boolean.parseBoolean(split[5]);
 				outBattleUsable = Boolean.parseBoolean(split[6]);
 				action = Integer.parseInt(split[7]);
-				Item item;
-				if (inBattleUsable && outBattleUsable) {
-					items.add(new ItemUsableInAndOutOfBattle(id,name,desc,target,action));
-				} else if (inBattleUsable){
-					items.add(new ItemUsableInBattle(id,name,desc,target,action));
-				} else if (outBattleUsable) {
-					items.add(new ItemUsableOutOfBattle(id,name,desc,target,action));
+				int off = Integer.parseInt(split[8]);
+				int def = Integer.parseInt(split[9]);
+				int spd = Integer.parseInt(split[10]);
+				int luck = Integer.parseInt(split[11]);
+				int hp = Integer.parseInt(split[12]);
+				int pp = Integer.parseInt(split[13]);
+				long resists = Long.parseLong(split[14]);
+				String participle = split[15];
+				if ((equippable & 15) != 0) {
+					items.add(new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle));
+				} else {
+					items.add(new Item(id,name,desc,target,action,equippable,participle));
 				}
+				
+//				if (inBattleUsable && outBattleUsable) {
+//					
+//				} else if (inBattleUsable){
+//					items.add(new ItemUsableInBattle(id,name,desc,target,action,equippable));
+//				} else if (outBattleUsable) {
+//					items.add(new ItemUsableOutOfBattle(id,name,desc,target,action,equippable));
+//				} 
+//				else if (equippable != 0) {
+//					items.add(new ItemEquipment(id,name,desc,equippable));
+//				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -467,6 +574,43 @@ public class StartupNew{
 		}
 	}
 	
+	public void loadAllEnemies() {
+		String pathToEntity = "data/enemies.csv";
+		File file = new File(pathToEntity);
+		enemies = new ArrayList<Enemy>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			//skip headers
+			String row = br.readLine();
+			while ((row=br.readLine()) != null) {
+				String[] data = row.split(",");
+				String name=data[0];
+				int hp=Integer.parseInt(data[1]);
+				int pp=Integer.parseInt(data[2]);
+				int off=Integer.parseInt(data[3]);
+				int def=Integer.parseInt(data[4]);
+				int vit=Integer.parseInt(data[5]);
+				int iq=Integer.parseInt(data[6]);
+				int speed=Integer.parseInt(data[7]);
+				int guts=Integer.parseInt(data[8]);
+				int luck=Integer.parseInt(data[9]);
+				int xp = Integer.parseInt(data[10]);
+				String texture = data[11];
+				int width = Integer.parseInt(data[12]);
+				int height = Integer.parseInt(data[13]);
+//				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
+				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
+				enemies.add(new Enemy(texture,name,width,height,stats,xp));
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void createAtlas() throws IOException {
 //		textureAtlas = new TextureAtlas();
 		int squareSize = 2048;
@@ -521,6 +665,7 @@ public class StartupNew{
 		loadAllItems();
 		loadAllPSI();
 		loadAllAnims();
+		loadAllEnemies();
 		textureAtlas.getTexture().bind();
 //		loadAllTiles();
 		selectionStack = new SelectionStack();
@@ -533,6 +678,9 @@ public class StartupNew{
 				STW.add(new MapPreviewTestButton(STW.getX(),STW.getY() + 112,this));
 			m.addMenuItem(STW);
 		menuStack.push(m);
+		//test the music
+//		setBGM("eb_title.wav");
+//		bgm.playAsMusic(1.0f, 1.0f, false);
 	}
 	
 	public Point getMouseCoordinates() {
@@ -561,15 +709,36 @@ public class StartupNew{
 			}
 		}
 		
+		if (drawAllMenus) {
+			for (Menu c : menuStack.getMenus()) {
+				//only update the top one 
+				ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
+				if (c != null) {
+					list.addAll(c.getDrawableObjects());
+					list.addAll(c.getMenuItems());
+					addToDrawables(list);
+				}
+			}
+		} else {
+			
+		}
+		Menu c = getMenuStack().peek();
+		if (c != null) {
+			ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
+			list.addAll(c.getDrawableObjects());
+			list.addAll(c.getMenuItems());
+			addToDrawables(list);
+			c.updateAll(input);
+		}
+		
+		if (gameState != null) {
+			gameState.updatePartyMembers();
+		}
+		
 		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
 			gameState.update(input);
 		}
 		
-		Menu c = getMenuStack().popAndAddMenuItems();
-		if (c != null) {
-			getMenuStack().push(c);
-			c.updateAll(input);
-		}
 		
 		if (canLoad && gameState == null) {
 			canLoad = false;
@@ -602,14 +771,14 @@ public class StartupNew{
 //				addToDrawables(gameState.getDrawables());
 //			}
 			//load current menu
-			Menu c = getMenuStack().popAndAddMenuItems();
-			if (c != null) {
-				ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
-				list.addAll(c.getDrawableObjects());
-				list.addAll(c.getMenuItems());
-				addToDrawables(list);
-				getMenuStack().push(c);
-			}
+//			Menu c = getMenuStack().popAndAddMenuItems();
+//			if (c != null) {
+//				ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
+//				list.addAll(c.getDrawableObjects());
+//				list.addAll(c.getMenuItems());
+//				addToDrawables(list);
+//				getMenuStack().push(c);
+//			}
 			
 			//check for input
 			now = System.nanoTime();
@@ -631,6 +800,11 @@ public class StartupNew{
 				frames = 0;
 			}
 			removeMenu();
+			if (clearTheMenuStack) {
+				menuStack.clear();
+				SimpleDialogMenu.createDialogBox(this,resultOfMenuToDisplay);
+				clearTheMenuStack = false;
+			}
 			Display.update();
 			Display.sync(60);
 
@@ -644,8 +818,12 @@ public class StartupNew{
 	
 	public void removeMenu() {
 		if (needToPop) {
+			
 			menuStack.pop();
 			needToPop = false;
+		} else if (removeThisMenu != null) {
+			menuStack.remove(removeThisMenu);
+			removeThisMenu = null;
 		}
 	}
 	
@@ -700,5 +878,30 @@ public class StartupNew{
 
 	public String getCurrentAnimation() {
 		return currentAnimation;
+	}
+
+	public void setToRemove(Menu menu) {
+		// TODO Auto-generated method stub
+		removeThisMenu = menu;
+	}
+
+	public void setClearMenuStack() {
+		// TODO Auto-generated method stub
+		clearTheMenuStack = true;
+	}
+
+	public void setResultOfMenuToDisplay(String string) {
+		// TODO Auto-generated method stub
+		resultOfMenuToDisplay = string;
+	}
+
+	public void setDrawAllMenus() {
+		// TODO Auto-generated method stub
+		drawAllMenus = true;
+	}
+
+	public void setAudio(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 }

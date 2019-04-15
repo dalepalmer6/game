@@ -11,24 +11,52 @@ import menu.MenuItem;
 import menu.StartupNew;
 
 public class SelectionTextWindow extends TextWindow implements Controllable{
-	private List<List<MenuItem>> selections2D;
+	protected ArrayList<ArrayList<MenuItem>> selections;
+	private boolean drawOnly;
 	private String output = "";
-	private int currentOpenX;
+	protected int currentOpenX;
 	private int currentOpenY;
-	private int spacingXFactor = 1;
-	private int spacingYFactor = 1;
 	protected int stepForwardX = 64;
 	protected int stepForwardY = 32;
-	private int dimX = 1;
+	private int dimX = 0;
 	private int dimY = 0;
-	private List<MenuItem> selections = new ArrayList<MenuItem>();
+//	protected List<MenuItem> selections = new ArrayList<MenuItem>();
 	private String orientation = "vertical";
-	private int overallIndex = 0;
-	private int selectedIndexX = 0;
-	private int selectedIndexY = 0;
 	private String t = "";
 	private boolean focused = false;
 	private boolean killWhenComplete;
+	private int selectedY = 0;
+	private int selectedX = 0;
+	private boolean canPopMenuStack = true;
+	
+	public void setCurrentOpen(int x, int y) {
+		this.currentOpenX = this.x + x;
+		this.currentOpenY = this.y + y;
+	}
+	
+	public void clearSelections() {
+		selections.clear();
+	}
+	
+	public int getSelectedIndex() {
+		return selectedY*dimX + selectedX;
+	}
+	
+	public MenuItem getSelectedItem() {
+		return selections.get(selectedY).get(selectedX);
+	}
+	
+	public int getTextStartX() {
+		return TEXT_START_X;
+	}
+	
+	public int getTextStartY() {
+		return TEXT_START_Y;
+	}
+	
+	public int getStepForwardY() {
+		return stepForwardY;
+	}
 	
 	public void setFocused(boolean b) {
 		focused = b;
@@ -45,158 +73,104 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	public SelectionTextWindow(String orientation, int x, int y, int width, int height, StartupNew m) {
 		super(true,"", x,y,width,height,m);
 		this.orientation = orientation;
-		if (orientation.equals("horizontal")) {
-			dimX = 0;
-			dimY = 1;
-		} else if (orientation.equals("vertical")) {
-			dimX = 1;
-			dimY = 0;
-		}
-		currentOpenX = this.x + this.TEXT_START_X;
+		dimX = 1;
+		dimY = 1;
+		currentOpenX = this.x + this.TEXT_START_X + 16;
 		currentOpenY = this.y+ this.TEXT_START_Y;
+		ArrayList<MenuItem> firstRow = new ArrayList<MenuItem>(1);
+		selections = new ArrayList<ArrayList<MenuItem>>();
+		selections.add(firstRow);
+	}
+	
+	public void createGrid(int x, int y) {
+		selections = new ArrayList<ArrayList<MenuItem>>();
+		ArrayList<MenuItem> row;
+		for (int i = 0; i < y; i++) {
+			row = new ArrayList<MenuItem>();
+			for (int j = 0; j < x; j++) {
+				row.add(null);
+			}
+			selections.add(row);
+		}
+	}
+	
+	public void add(MenuItem m, int x, int y) {
+		//adds a MenuItem at a particular index, to create dynamic STW with different row/col lengths
+		m.setX(currentOpenX);
+		m.setY(currentOpenY);
+		selections.get(y).add(x,m);
 	}
 	
 	public void add(MenuItem m) {
-		
+		m.setX(currentOpenX);
+		m.setY(currentOpenY);
 		switch (orientation) {
-			case "vertical":
-				if (currentOpenY > this.y + this.getHeight()*2) {
-					currentOpenY = this.y + this.TEXT_START_Y;
-					currentOpenX += stepForwardX;
-					dimX++;
-				} 
-					m.setX(currentOpenX);
-					m.setY(currentOpenY);
-					selections.add(m);
-					currentOpenY += stepForwardY;
-					if (dimX == 1) {
-						dimY += 1;
-					}
-				break;
-			case "horizontal" :
-				if (currentOpenX > this.x + this.getWidth()*2) {
-					currentOpenX = this.x + this.TEXT_START_X;
-					currentOpenY += stepForwardY;
-					dimY++;
-				} 
-					m.setX(currentOpenX);
-					m.setY(currentOpenY);
-					selections.add(m);
-					currentOpenX += stepForwardX;
-					if (dimY == 1) {
-						dimX += 1;
-					}
-				break;
-		}
-		
+		case "vertical":
+			if (currentOpenY > this.y + this.getHeight()*2) {
+				currentOpenY = this.y + this.TEXT_START_Y;
+				currentOpenX += stepForwardX;
+//				dimX++;
+			}
+			m.setX(currentOpenX);
+			m.setY(currentOpenY);
+			selections.get(dimY-1).add(m);
+			dimY++;
+			if (selections.size() < dimY) {
+				selections.add(new ArrayList<MenuItem>());
+			}
+			currentOpenY += stepForwardY;
+			break;
+		case "horizontal" :
+			if (currentOpenX > this.x + this.getWidth()*2) {
+				currentOpenX = this.x + this.TEXT_START_X;
+				currentOpenY += stepForwardY;
+				selections.add(new ArrayList<MenuItem>());
+				dimY++;
+			}
+			m.setX(currentOpenX);
+			m.setY(currentOpenY);
+			selections.get(dimY-1).add(m);
+			currentOpenX += stepForwardX;
+			break;
 	}
-	
-	public String generateOptions() {
-		String t = "";
-		for (MenuItem m : selections) {
-			t += m.getText() + "[NEWLINE]";
-		}
-		return t;
+		
 	}
 	
 	public void updateIndex(String direction) {
-		switch (orientation) {
-		case "vertical" : 
-				switch(direction) {
-				case "D" : 
-					selectedIndexY++;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
-					if (selectedIndexY >= dimY) {
-						selectedIndexY = 0;
-						overallIndex = dimY * selectedIndexX + selectedIndexY;
+		switch(direction) {
+		case "D" : 	selectedY++;
+				   if (selectedY >= selections.size()) {
+					   selectedY = 0;
+				   }
+				   while (selections.get(selectedY).size() <= selectedX || selections.get(selectedY).get(selectedX) == null) {
+					   updateIndex("D");
 					}
 					break;
-				case "U" :
-					selectedIndexY--;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
-					if (selectedIndexY < 0) {
-						selectedIndexY = dimY-1;
-						overallIndex = dimY * selectedIndexX + selectedIndexY;
+		case "U" : 	selectedY--;
+					if (selectedY < 0)  {
+						selectedY = selections.size()-1;
+					}
+					while (selections.get(selectedY).size() <= selectedX || selections.get(selectedY).get(selectedX) == null) {
+						updateIndex("U");
+					}
+					break;			
+		case "L" : selectedX--;
+					if (selectedX < 0) {
+						selectedX = selections.get(selectedY).size()-1;
+					}
+					while (selections.get(selectedY).get(selectedX) == null) {
+						updateIndex("L");
 					}
 					break;
-				case "R" :
-					selectedIndexX++;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
-					if (overallIndex >= selections.size()) {
-						selectedIndexX = 0;
-						selectedIndexY = selectedIndexY % dimY;
-						overallIndex = dimY * selectedIndexX + selectedIndexY;
+		case "R" : selectedX++; 
+					if (selectedX >= selections.get(selectedY).size()) {
+						selectedX = 0;
+					}
+					while (selections.get(selectedY).get(selectedX) == null) {
+						updateIndex("R");
 					}
 					break;
-				case "L" :
-					selectedIndexX--;
-					overallIndex = dimY * selectedIndexX + selectedIndexY;
-					if (overallIndex < 0) {
-						selectedIndexX = (selections.size()-1) / dimY;
-						selectedIndexY = selectedIndexY % dimY;
-						overallIndex = dimY * selectedIndexX + selectedIndexY;
-					}
-					break;
-				}
-			if (overallIndex > selections.size()-1) {
-				overallIndex = selections.size()-1;
-				selectedIndexX = overallIndex / dimY;
-				selectedIndexY = overallIndex % dimY;
-			}
-			break;
-			case "horizontal" : 
-				System.out.println(overallIndex);
-				switch(direction) {
-					case "D" : 
-						selectedIndexY++;
-						overallIndex = dimX * selectedIndexY + selectedIndexX;
-						if (overallIndex >= selections.size()) {
-							selectedIndexY = 0;
-							overallIndex = dimX* selectedIndexY + selectedIndexX;
-						}
-						break;
-					case "U" :
-						selectedIndexY--;
-						overallIndex = dimX * selectedIndexY + selectedIndexX;
-						if (selectedIndexY < 0) {
-							selectedIndexY = dimY-1;
-							overallIndex = dimX * selectedIndexY + selectedIndexX;
-							if (overallIndex > selections.size()-1) {
-								selectedIndexY = dimY-2;
-								overallIndex = dimX * selectedIndexY + selectedIndexX;
-							}
-						}
-						break;
-					case "R" :
-						selectedIndexX++;
-						overallIndex = dimX * selectedIndexY + selectedIndexX;
-						if (selectedIndexX > dimX-1) {
-							selectedIndexX = 0;
-							overallIndex = dimX * selectedIndexY + selectedIndexX;
-						}
-						if (overallIndex >= selections.size()) {
-							selectedIndexX = dimX-1;
-							selectedIndexY = dimY-2;
-							overallIndex = dimX * selectedIndexY + selectedIndexX;
-						}
-						break;
-					case "L" :
-						selectedIndexX--;
-						overallIndex = dimX * selectedIndexY + selectedIndexX;
-						if (selectedIndexX < 0) {
-							selectedIndexX = dimX-1;
-							overallIndex = dimX * selectedIndexY + selectedIndexX;
-						}
-						break;
-				}
-				if (overallIndex > selections.size()-1) {
-					overallIndex = selections.size()-1;
-					selectedIndexX = overallIndex % dimX;
-					selectedIndexY = overallIndex / dimX;
-				}
-				break;
 		}
-		
 	}
 	
 	public void appendOutput(String s) {
@@ -217,7 +191,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void update() {
-		String t = selections.get(overallIndex).prepareToExecute();
+		String t = selections.get(selectedY).get(selectedX).prepareToExecute();
 		if (killWhenComplete) {
 			state.getMenuStack().peek().setToRemove(this);
 		}
@@ -237,52 +211,98 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	public void drawSelections(MainWindow mw) {
 		Text.initDrawText(mw);
 		int scale = 2;
-		for (MenuItem m : selections) {
-			int curX =m.getX() + scale * TEXT_START_X;
-			char[] chars = m.getText().toCharArray();
-			for (int i = 0; i < chars.length; i++) {
-				char c = chars[i];
+		for (ArrayList<MenuItem> mis : selections) {
+			for (MenuItem m : mis) {
+				if (m == null) {
+					continue;
+				}
+				m.draw(mw);
 				
-				mw.renderTile(curX,m.getY(),
-						(int) state.charList.getCharObjects().get(c).getDw()*scale,
-						(int) state.charList.getCharObjects().get(c).getDh()*scale,
-						state.charList.getCharObjects().get(c).getDx(),
-						state.charList.getCharObjects().get(c).getDy(),
-						state.charList.getCharObjects().get(c).getDw(),
-						state.charList.getCharObjects().get(c).getDh());
-				curX += 1*scale +  state.charList.getCharObjects().get(c).getDw()*scale;
+//				int curX =m.getX() + scale * TEXT_START_X;
+//				char[] chars = m.getText().toCharArray();
+//				for (int i = 0; i < chars.length; i++) {
+//					char c = chars[i];
+//					
+//					mw.renderTile(curX,m.getY(),
+//							(int) state.charList.getCharObjects().get(c).getDw()*scale,
+//							(int) state.charList.getCharObjects().get(c).getDh()*scale,
+//							state.charList.getCharObjects().get(c).getDx(),
+//							state.charList.getCharObjects().get(c).getDy(),
+//							state.charList.getCharObjects().get(c).getDw(),
+//							state.charList.getCharObjects().get(c).getDh());
+//					curX += 1*scale +  state.charList.getCharObjects().get(c).getDw()*scale;
+//				}
 			}
 		}
+	}
+	
+	public int cursorStartPositionX() {
+		if (selections.size() == 0) {
+			return -100;
+		}
+		return selections.get(0).get(0).getX();
+	}
+	
+	public int cursorStartPositionY() {
+		if (selections.size() == 0) {
+			return -100;
+		}
+		return selections.get(0).get(0).getY();
 	}
 	
 	public void drawCursor(MainWindow m) {
 //		selectedIndexX = overallIndex / dimY;
 //		selectedIndexY = overallIndex % dimY;
-		CharacterData cursor = this.m.charList.getCharObjects().get('@');
-		m.renderTile(this.text.getX() + selectedIndexX*stepForwardX,  this.text.getY() + selectedIndexY*stepForwardY,
-				(int)cursor.getDw()*4,(int)cursor.getDh()*4,
-				cursor.getDx(),cursor.getDy(),
-				cursor.getDw()*2,cursor.getDh()*2);
+		if (!drawOnly) {
+			CharacterData cursor = this.m.charList.getCharObjects().get('@');
+//			m.renderTile(cursorStartPositionX() + selectedIndexX*stepForwardX,  cursorStartPositionY() + selectedIndexY*stepForwardY,
+//					(int)cursor.getDw()*4,(int)cursor.getDh()*4,
+//					cursor.getDx(),cursor.getDy(),
+//					cursor.getDw()*2,cursor.getDh()*2);
+			m.renderTile(selections.get(selectedY).get(selectedX).getX() - 16,  selections.get(selectedY).get(selectedX).getY(),
+					(int)cursor.getDw()*4,(int)cursor.getDh()*4,
+					cursor.getDx(),cursor.getDy(),
+					cursor.getDw()*2,cursor.getDh()*2);
+		}
+		
 	}
 	
 	public String execute() {
-		selections.get(overallIndex).prepareToExecute();
+		selections.get(selectedY).get(selectedX).prepareToExecute();
 		state.getMenuStack().peek().setToRemove(this);
 		return null;
 	}
 	
+	public void setDrawOnly(boolean b) {
+		drawOnly = b;
+	}
+	
 	@Override
 	public void handleInput(InputController input) {
+		if (!drawOnly) {
 			if (input.getSignals().get("UP")) {
 				updateIndex("U");
+				state.setSFX("cursverti.wav");
+				state.playSFX();
 			} else if (input.getSignals().get("DOWN")) {
 				updateIndex("D");
+				state.setSFX("cursverti.wav");
+				state.playSFX();
 			} else if (input.getSignals().get("RIGHT")) {
 				updateIndex("R");
+				state.setSFX("curshoriz.wav");
+				state.playSFX();
 			}else if (input.getSignals().get("LEFT")) {
 				updateIndex("L");
+				state.setSFX("curshoriz.wav");
+				state.playSFX();
 			} else if (input.getSignals().get("CONFIRM")) {
 				update();
-			}
+			} 
+//			else if (input.getSignals().get("BACK")) {
+//				state.getMenuStack().pop();
+//			}
+		}
 	}
+	
 }

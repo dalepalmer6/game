@@ -15,7 +15,11 @@ public class PlayerStatusWindow extends MenuItem {
 	private String name;
 	private int HP;
 	private int PP;
+	private int targetHP;	//target values that the window will scroll gradually to
+	private int targetPP;
 	private String statusCondition;
+	private double tickCount = 0;
+	private double ticksPerFrame = 0.2;
 	
 	public int getX() {
 		return x;
@@ -25,12 +29,20 @@ public class PlayerStatusWindow extends MenuItem {
 		return y;
 	}
 	
+	public void updateAnim() {
+		tickCount += ticksPerFrame;
+		if (tickCount % 2 == 0) {
+			//update the hp/pp bar
+//			updateStatus();
+		}
+	}
+	
 	public PlayerStatusWindow(BattleEntity be, int x, int y,StartupNew state) {
 		super(be.getName(),x,y,0,0,state);
 		textName = new Text(true,be.getName(),this.x+64,this.y+64,100,100,state.charList);
 		this.name = be.getName();
-		this.HP = be.getStats().getStat("HP");
-		this.PP = be.getStats().getStat("PP");
+		this.HP = be.getStats().getStat("CURHP");
+		this.PP = be.getStats().getStat("CURPP");
 		this.x = x;
 		this.y = y;
 	}

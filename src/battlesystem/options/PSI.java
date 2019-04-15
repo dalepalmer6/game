@@ -1,5 +1,8 @@
 package battlesystem.options;
 
+import actionmenu.goodsmenu.GoodsMenu;
+import actionmenu.psimenu.PSIMenuSelectMember;
+import actionmenu.psimenu.PSIPickMenu;
 import battlesystem.BattleMenu;
 import battlesystem.options.itemsmenu.ItemMenuItem;
 import battlesystem.options.psimenu.PSIAttackMenuItem;
@@ -16,17 +19,11 @@ public class PSI extends MenuItem{
 		// TODO Auto-generated constructor stub
 	}
 	public String execute() {
-		//show the PSI attack menu
+//		//show the PSI attack menu
 		BattleMenu m =  ((BattleMenu) state.getMenuStack().peek());
-		PSIAttackSelectionTextWindow stw = new PSIAttackSelectionTextWindow(state);
-		for (PSIAttack i : state.psi) {
-			stw.add(new PSIAttackMenuItem(i,state));
-		}
-		m.addToMenuItems(stw);
-		stw.setKillWhenComplete();
-		m.setCurrentAction(new BattleAction());
-		m.getCurrentAction().setAction("psi");
-		m.getCurrentAction().setUser(m.getCurrentPartyMember());
+		PSIMenuSelectMember gm = new PSIMenuSelectMember(state,state.getGameState().getPartyMembers(),m.getMemberIndex()-1);
+		gm.createMenu();
+		state.getMenuStack().push(gm);
 		return null;
 	}
 	
