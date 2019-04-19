@@ -515,4 +515,17 @@ public class Map {
 		// TODO Auto-generated method stub
 		entitiesInMap.add(newEntity);
 	}
+
+	public ArrayList<Entity> getEntitiesInView(int xLeft, int yTop) {
+		ArrayList<Entity> list = new ArrayList<Entity>();
+		for (Entity e : entitiesInMap) {
+			if (e.getX() < xLeft + state.getMainWindow().getScreenWidth() + 1000 && e.getX() > xLeft - 1000
+					&& e.getY() > yTop - 1000  && e.getY() < yTop + state.getMainWindow().getScreenHeight() + 1000) {
+				list.add(e);
+			}
+		}
+		return list;
+		// TODO Auto-generated method stub
+		
+	}
 }

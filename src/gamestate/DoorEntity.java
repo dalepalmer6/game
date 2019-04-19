@@ -59,6 +59,8 @@ public class DoorEntity extends Entity {
 		return text;
 	}
 	
+	public void checkCollisions() {}
+	
 	public void act() {
 		for (Entity e : interactables) {
 			if (e instanceof Player) {

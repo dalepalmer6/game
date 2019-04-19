@@ -3,12 +3,15 @@ package menu;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.Node;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 import org.w3c.dom.Element;
@@ -121,6 +124,13 @@ public class Animation extends MenuItem {
 	
 	public void draw(MainWindow m) {
 		m.setTexture(state.getPathToAnims() + texture + ".png");
+//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+//		try {
+//			GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferedImageUtil.getTexture("", ImageIO.read(new File(state.getPathToAnims() + texture + ".png"))).getTextureID());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		m.renderTile(x,y,width,height,tm.getX(),tm.getY(),tm.getWidth(),tm.getHeight());
 	}
 

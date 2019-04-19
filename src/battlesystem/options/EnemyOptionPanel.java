@@ -37,7 +37,9 @@ public class EnemyOptionPanel extends MenuItem {
 	public void drawBG(MainWindow m) {
 //		m.setUseShader(true);
 		m.setTexture("img/battlebg.png");
+		m.setUseShader(true);
 		m.renderTile(0,0,m.getScreenWidth(),m.getScreenHeight(),0,0,256,256);
+		m.setUseShader(false);
 //		m.setUseShader(false);
 	}
 	

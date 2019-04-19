@@ -12,11 +12,12 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import menu.ButtonMenuItem;
 import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class LoadMapButton extends MenuItem {
+public class LoadMapButton extends ButtonMenuItem {
 
 	public LoadMapButton(String t, int x, int y, StartupNew m) {
 		super(t, x, y,150,50, m);

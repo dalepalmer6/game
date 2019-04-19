@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import menu.ButtonMenuItem;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class SaveMapButton extends MenuItem {
+public class SaveMapButton extends ButtonMenuItem {
 
 	public SaveMapButton(String t, int x, int y, StartupNew m) {
 		super(t, x, y,150,50, m);

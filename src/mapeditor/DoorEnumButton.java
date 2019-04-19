@@ -1,13 +1,14 @@
 package mapeditor;
 
+import menu.ButtonMenuItem;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class DoorEnumButton extends MenuItem {
+public class DoorEnumButton extends ButtonMenuItem {
 	private DoorEnumerator doorEnum;
 	
 	public DoorEnumButton(int x, int y, StartupNew state) {
-		super("",x,y,150,75,state);
+		super("Door Edit",x,y,175,63,state);
 	}
 	
 	public String execute() {

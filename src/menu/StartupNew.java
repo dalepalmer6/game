@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
@@ -667,7 +668,9 @@ public class StartupNew{
 		loadAllAnims();
 		loadAllEnemies();
 		textureAtlas.getTexture().bind();
-//		loadAllTiles();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureAtlas.getTexture().getTextureID());
+		
 		selectionStack = new SelectionStack();
 		menuStack = new MenuStack();
 			Menu m = new MainMenu(this);
@@ -694,21 +697,6 @@ public class StartupNew{
 	}
 	
 	public void update() {
-		input.setHoldable(false);
-		Point mouse = getMainWindow().getMouseCoordinates();
-		for (Drawable d : getDrawables()) {
-			if (d instanceof Hoverable) {
-				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
-					((Hoverable) d).hoveredAction();
-					if (d instanceof LeftClickableItem) {
-						((LeftClickableItem) d).checkInputs(input);
-					}
-				} else {
-					((Hoverable) d).unhoveredAction();
-				}
-			}
-		}
-		
 		if (drawAllMenus) {
 			for (Menu c : menuStack.getMenus()) {
 				//only update the top one 
@@ -730,6 +718,25 @@ public class StartupNew{
 			addToDrawables(list);
 			c.updateAll(input);
 		}
+		
+		input.setHoldable(false);
+		Point mouse = getMainWindow().getMouseCoordinates();
+		for (Drawable d : getDrawables()) {
+			if (d instanceof Hoverable) {
+				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
+					((Hoverable) d).hoveredAction();
+//					if (d instanceof LeftClickableItem) {
+						input.setHoldable(true);
+						((LeftClickableItem)d).checkInputs(input);
+//						input.setHoldable(false);
+//					}
+				} else {
+					((Hoverable) d).unhoveredAction();
+				}
+			}
+		}
+		
+		
 		
 		if (gameState != null) {
 			gameState.updatePartyMembers();

@@ -11,6 +11,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -28,7 +29,9 @@ public class TheQuadExampleTextured {
     public static void main(String[] args) {
         new TheQuadExampleTextured();
     }
-     
+    
+    private int program;
+    private float time;
     // Setup variables
     private final String WINDOW_TITLE = "The Quad: Textured";
     private final int WIDTH = 320;
@@ -45,6 +48,7 @@ public class TheQuadExampleTextured {
     // Texture variables
     private int[] texIds = new int[] {0, 0};
     private int textureSelector = 0;
+	private float dTime;
      
     public TheQuadExampleTextured() {
         // Initialize OpenGL (Display)
@@ -53,11 +57,12 @@ public class TheQuadExampleTextured {
         this.setupQuad();
         this.setupShaders();
         this.setupTextures();
-         
+        time = System.nanoTime();
         while (!Display.isCloseRequested()) {
             // Do a single loop (logic/render)
+        	dTime = System.nanoTime() - time;
             this.loopCycle();
-             
+           
             // Force a maximum FPS of about 60
             Display.sync(60);
             // Let the CPU synchronize with the GPU if GPU is tagging behind
@@ -69,8 +74,8 @@ public class TheQuadExampleTextured {
     }
  
     private void setupTextures() {
-        texIds[0] = this.loadPNGTexture("img/player.png", GL13.GL_TEXTURE0);
-        texIds[1] = this.loadPNGTexture("img/player.png", GL13.GL_TEXTURE0);
+        texIds[0] = this.loadPNGTexture("img/battlebg.png", GL13.GL_TEXTURE0);
+        texIds[1] = this.loadPNGTexture("img/battlebg.png", GL13.GL_TEXTURE0);
          
         this.exitOnGLError("setupTexture");
     }
@@ -105,9 +110,9 @@ public class TheQuadExampleTextured {
     private void setupQuad() {
         // We'll define our quad using 4 vertices of the custom 'TexturedVertex' class
         TexturedVertex v0 = new TexturedVertex(); 
-        v0.setXYZ(-0.0f, 0.5f, 0); v0.setRGB(1, 0, 0); v0.setST(0, 0);
+        v0.setXYZ(-1.0f, 0.5f, 0); v0.setRGB(1, 0, 0); v0.setST(0, 0);
         TexturedVertex v1 = new TexturedVertex(); 
-        v1.setXYZ(-0.0f, -0.5f, 0); v1.setRGB(0, 1, 0); v1.setST(0, 1);
+        v1.setXYZ(0.0f, -0.5f, 0); v1.setRGB(0, 1, 0); v1.setST(0, 1);
         TexturedVertex v2 = new TexturedVertex(); 
         v2.setXYZ(0.5f, -0.5f, 0); v2.setRGB(0, 0, 1); v2.setST(1, 1);
         TexturedVertex v3 = new TexturedVertex(); 
@@ -175,14 +180,7 @@ public class TheQuadExampleTextured {
         pId = GL20.glCreateProgram();
         GL20.glAttachShader(pId, vsId);
         GL20.glAttachShader(pId, fsId);
- 
-        // Position information will be attribute 0
-        GL20.glBindAttribLocation(pId, 0, "in_Position");
-        // Color information will be attribute 1
-        GL20.glBindAttribLocation(pId, 1, "in_Color");
-        // Textute information will be attribute 2
-        GL20.glBindAttribLocation(pId, 2, "in_TextureCoord");
-         
+
         GL20.glLinkProgram(pId);
         GL20.glValidateProgram(pId);
          
@@ -209,12 +207,12 @@ public class TheQuadExampleTextured {
         // Render
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
          
-        GL20.glUseProgram(pId);
+       
          
         // Bind the texture
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texIds[textureSelector]);
-         
+        
         // Bind to the VAO that has all the information about the vertices
         GL30.glBindVertexArray(vaoId);
         GL20.glEnableVertexAttribArray(0);
@@ -234,8 +232,16 @@ public class TheQuadExampleTextured {
         GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
          
-        GL20.glUseProgram(0);
-         
+        GL20.glUseProgram(pId);
+        int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
+        GL20.glUniform1i(loc,0);
+        loc = GL20.glGetUniformLocation(pId, "time");
+        GL20.glUniform1f(loc,dTime/10e9f);
+        loc = GL20.glGetUniformLocation(pId, "tx");
+        GL20.glUniform1f(loc,(float) Math.sin(dTime /100));
+        loc = GL20.glGetUniformLocation(pId, "ty");
+        GL20.glUniform1f(loc,0);
+        
         this.exitOnGLError("loopCycle");
     }
      

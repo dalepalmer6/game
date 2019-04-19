@@ -42,8 +42,8 @@ public class Entity implements Drawable,EntityInterface {
 	private String name;
 	private boolean needsRemove;
 	
-	public void setToRemove() {
-		this.needsRemove = true;
+	public void setToRemove(boolean b) {
+		this.needsRemove = b;
 	}
 	
 	public boolean getNeedToRemoveState() {
@@ -103,7 +103,7 @@ public class Entity implements Drawable,EntityInterface {
 		yOnScreen = y - gs.getCamera().getY();
 		if (xOnScreen > state.getMainWindow().getScreenWidth() + 1000|| yOnScreen > state.getMainWindow().getScreenHeight() + 1000
 		 || xOnScreen < -1000 || yOnScreen < -1000) {
-			setToRemove();
+			setToRemove(true);
 		}
 		updateFrameTicks();
 	}
@@ -195,23 +195,25 @@ public class Entity implements Drawable,EntityInterface {
 		state.getGameState().addToRedrawing(new RedrawObject(this));
 	}
 	
-	public void checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) {
-		if ((collision & 1) == 1) {
-			deltaX = 0;
-			deltaY = 0;
+	public void checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) { 
+//		if (((collision & 1) & 15) == 1) {
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+		int val = ((collision & 5) & 15);
+		switch(val) {
+			case 1: deltaX = 0; deltaY = 0; break;
+			case 4: break;
+			case 5: break;
 		}
-		if ((collision & 2) == 0) {
-			System.out.println("TEST");
-			
-			//redraw the tile for overlay
-//			stageForRedraw(x+1,y+1,tbg);
-//			stageForRedraw(x+1,y+1,tfg);
-		}
+//		if (val == 1) {
+//			deltaX = 0;
+//			deltaY = 0;
+//		}
+//		if (((collision & 2) & 15) == 2) {
+//			System.out.println("TEST");
+//		}
 	}
-	
-//	public String collisionLogicalOr(String c1, String c2) {
-//		
-//	}
 	
 	public void checkCollisions() {
 		//collisions are cumulative over all layers
@@ -221,6 +223,7 @@ public class Entity implements Drawable,EntityInterface {
 		int upperEdge = (this.y + this.height*3/4 + deltaY)/ts;
 		int lowerEdge = (this.y + this.height + deltaY)/ts;
 		
+				
 		int leftEdgeTest = (this.x + deltaX)%ts / (ts/4);
 		int rightEdgeTest = (this.x + this.width + deltaX)%ts / (ts/4);
 		int upperEdgeTest = (this.y + this.height*3/4 + deltaY)%ts / (ts/4);
@@ -247,37 +250,27 @@ public class Entity implements Drawable,EntityInterface {
 		int collisionStatet4FG = t4FG.getCollisionInfoAtIndex(leftEdgeTest,lowerEdgeTest);
 		
 		int collisiont1=0,collisiont2=0,collisiont3=0,collisiont4=0;
-		
-		if (t1BG == state.tileMap.getTile(0).getInstance(0)) {
-			collisiont1 = collisionStatet1FG;
-		} else if (t1FG == state.tileMap.getTile(0).getInstance(0)){
-			collisiont1 = collisionStatet1BG;
-		}
-		
-		if (t2BG == state.tileMap.getTile(0).getInstance(0)) {
-			collisiont2 = collisionStatet2FG;
-		} else if (t2FG == state.tileMap.getTile(0).getInstance(0)){
-			collisiont2 = collisionStatet2BG;
-		}
-		
-		if (t3BG == state.tileMap.getTile(0).getInstance(0)) {
-			collisiont3 = collisionStatet3FG;
-		} else if (t3FG == state.tileMap.getTile(0).getInstance(0)){
-			collisiont3 = collisionStatet3BG;
-		}
-		
-		if (t4BG == state.tileMap.getTile(0).getInstance(0)) {
-			collisiont4 = collisionStatet4FG;
-		} else if (t4FG == state.tileMap.getTile(0).getInstance(0)){
-			collisiont4 = collisionStatet4BG;
-		}
 
+		collisiont1 = (collisionStatet1FG | collisionStatet1BG);
+		collisiont2 = (collisionStatet2FG | collisionStatet2BG);
+		collisiont3 = (collisionStatet3FG | collisionStatet3BG);
+		collisiont4 = (collisionStatet4FG | collisionStatet4BG);
+		
 		checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
 		checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
 		checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
 		checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG);
 		
-		if ((collisiont1 & 2) == 0 && (collisiont2 & 2) == 0 && (collisiont3 & 2) ==0 && (collisiont4 & 2) == 0) {
+		if (
+				//corners still dont work entirely (see tree corners)
+				(((collisiont1 & 2)&15) ==0 && ((collisiont2 & 2)&15) ==0 &&
+				((collisiont1 & 1)&15) ==0 && ((collisiont2 & 1)&15) ==0) ||
+				
+				(((collisiont3 & 2)&15) ==0 && ((collisiont4 & 2)&15) == 0 && 
+				((collisiont4 & 1)&15) == 0 && ((collisiont4 & 1)&15) == 0) ||
+				
+				(((collisiont1 & 4)&15) == 4 && ((collisiont2 & 4)&15) == 4 &&
+				((collisiont3 & 4)&15) == 4 && ((collisiont4 & 4)&15) == 4)) {
 			stageForRedraw();
 		}
 			

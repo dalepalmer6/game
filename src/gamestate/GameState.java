@@ -112,7 +112,8 @@ public class GameState {
 		loadMap(4);
 		state.setBGM("pollyanna.ogg");
 		state.playBGM();
-		this.entities = map.getEntities();
+		this.entities = new ArrayList<Entity>();
+//		this.entities = map.getEntities();
 		createPlayer(4);
 		this.mapRenderer = new MapRenderer(m,getCamera(),state); 
 		camera.setMapRenderer(mapRenderer);
@@ -174,36 +175,52 @@ public class GameState {
 	
 	
 	public void drawGameState() {
+		boolean redrawPrev = false;
 		ArrayList<ArrayList<Integer>> bg = mapRenderer.getAreaOfInterest(map.tileMapBG);
 		ArrayList<ArrayList<Integer>> fg = mapRenderer.getAreaOfInterest(map.tileMapFG);
 //		ArrayList<ArrayList<Integer>> currentMap = mapRenderer.returnAreaOfInterest();
-		for (int i = 1; i <  mapRenderer.getHeightInTiles()-1; i++) {
+		for (int i = 1; i < mapRenderer.getHeightInTiles()-1; i++) {
 			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) {
 				mapRenderer.drawTileBase(state.getMainWindow(),j,i,state.tileMap.getTile(0),0);
 			}
+		}
+		for (int i = 1; i < mapRenderer.getHeightInTiles()-1; i+=2) {
+			int val;
+			Tile tile;
+			int instance;
+			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) {
+				map.setChangeMap("BG");
+				val = bg.get(i).get(j);
+				tile = state.tileMap.getTile(val);
+				instance  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
+				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
+				val = bg.get(i+1).get(j);
+				tile = state.tileMap.getTile(val);
+				instance  = map.inspectSurroundings(j + camera.getX()/128,(i+1) + camera.getY()/128);
+				mapRenderer.drawTile(state.getMainWindow(),j,i+1,state.tileMap.getTile(val),instance);
+			}
 			for (Entity e : entities) {
-				if ((1+(camera.getY()%128 + e.getYOnScreen() + e.getHeight())/128) == i) {
+				if ((1+(camera.getY()%128 + e.getYOnScreen())/128) == i+1 && (1+(camera.getY()%128 + e.getYOnScreen())/128) == i) {
+					e.draw(state.getMainWindow());
+				}
+				if ((1+(camera.getY()%128 + e.getYOnScreen())/128) == i+1) {
+					e.draw(state.getMainWindow());
+				}
+				if ((1+(camera.getY()%128 + e.getYOnScreen())/128) == i) {
 					e.draw(state.getMainWindow());
 				}
 			}
-			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) {
-				map.setChangeMap("BG");
-				int val = bg.get(i).get(j);
-				Tile tile = state.tileMap.getTile(val);
-				int instance  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
-				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
-				
+			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) { 
 				map.setChangeMap("FG");
 				val = fg.get(i).get(j);
 				tile = state.tileMap.getTile(val);
 				instance  = map.inspectSurroundings(j+ camera.getX()/128,i + camera.getY()/128);
 				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
+				val = fg.get(i+1).get(j);
+				tile = state.tileMap.getTile(val);
+				instance  = map.inspectSurroundings(j + camera.getX()/128,(i+1) + camera.getY()/128);
+				mapRenderer.drawTile(state.getMainWindow(),j,i+1,state.tileMap.getTile(val),instance);
 			}
-//			for (Entity e : entities) {
-//				if ((1+(camera.getY()%128 + e.getYOnScreen())/128) == i+1) {
-//					e.draw(state.getMainWindow());
-//				}
-//			}
 		}
 //		drawMapRenderer();
 //		drawEntities();
@@ -231,10 +248,18 @@ public class GameState {
 	}
 	
 	public void update(InputController input) {
+		//get all entities that belong in the map (in the viewport bounds)
+		for (Entity e : map.getEntitiesInView(camera.getX(), camera.getY())) {
+			if (!entities.contains(e)) {
+				entities.add(e);
+			}
+		}
+		
 		sort();
 		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu) {
 //			if (camera.getDX() != 0 || camera.getDY() != 0) {
 				//try 5 times per frame to spawn
+				canSpawnEnemies =false;
 				if (Math.random() < 0.01 && canSpawnEnemies ) {
 					int spawnCenterX = player.getX();
 					int spawnCenterY = player.getY();
@@ -278,6 +303,7 @@ public class GameState {
 					e.handleInput(input);
 				}
 				if (e.getNeedToRemoveState()) {
+					e.setToRemove(false);
 					entities.remove(e);
 					continue;
 				}

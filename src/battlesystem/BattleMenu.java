@@ -273,7 +273,8 @@ public class BattleMenu extends Menu {
 		
 		if (kill && getNext) {
 			state.getMenuStack().pop();
-			enemyEntity.setToRemove();
+			enemyEntity.setToRemove(true
+					);
 		}
 		
 		else if (!battleSceneEnd && !ended){

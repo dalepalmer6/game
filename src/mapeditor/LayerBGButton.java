@@ -1,12 +1,13 @@
 package mapeditor;
 
+import menu.ButtonMenuItem;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class LayerBGButton extends MenuItem {
+public class LayerBGButton extends ButtonMenuItem {
 
 	public LayerBGButton(String t, int x, int y, int w, int h, StartupNew m) {
-		super(t, x, y,w,h, m);
+		super("Background", x, y,w,h, m);
 		// TODO Auto-generated constructor stub
 	}
 
