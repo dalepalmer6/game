@@ -27,10 +27,10 @@ import gamestate.TileMetadata;
 public class Animation extends MenuItem {
 	private String texture;
 	private Texture textureSlick;
-	private AnimationCoordinates coordinates;
+	protected AnimationCoordinates coordinates;
 	protected double tickCount = 0;
-	protected double ticksPerFrame = 0.3;
-	private TileMetadata tm;
+	protected double ticksPerFrame = 0.34;
+	protected TileMetadata tm;
 	
 	public String getTexture() {
 		return texture;
@@ -44,6 +44,12 @@ public class Animation extends MenuItem {
 	public Animation(StartupNew m, String texture, int x, int y, int w, int h) {
 		super("",x,y,w,h,m);
 		this.texture = texture;
+		try {
+			textureSlick = BufferedImageUtil.getTexture("", ImageIO.read(new File(state.getPathToAnims() + this.texture + ".png")));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		coordinates = new AnimationCoordinates(texture);
 	}
 	
@@ -124,14 +130,17 @@ public class Animation extends MenuItem {
 	
 	public void draw(MainWindow m) {
 		m.setTexture(state.getPathToAnims() + texture + ".png");
-//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-//		try {
-//			GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferedImageUtil.getTexture("", ImageIO.read(new File(state.getPathToAnims() + texture + ".png"))).getTextureID());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		m.renderTile(x,y,width,height,tm.getX(),tm.getY(),tm.getWidth(),tm.getHeight());
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureSlick.getTextureID());
+		m.renderAnimation(textureSlick,x,y,width,height,tm.getX(),tm.getY(),tm.getWidth(),tm.getHeight(),false);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
+//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+	}
+
+	public void bindAnimToTwo() {
+		// TODO Auto-generated method stub
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureSlick.getTextureID());
 	}
 
 

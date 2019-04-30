@@ -45,7 +45,8 @@ public class BattleAction {
 				}
 				state.getMenuStack().peek().addToMenuItems(anim);
 				state.setCurrentAnimation(anim.getTexture() + ".png");
-				state.createAtlas();
+//				state.createAtlas();
+				anim.bindAnimToTwo();
 				anim.updateAnim();
 				break;
 			default : 	bm.setGetResultText();

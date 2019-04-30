@@ -1,5 +1,7 @@
 package gamestate;
 
+import java.util.ArrayList;
+
 import battlesystem.BattleMenu;
 import canvas.MainWindow;
 import menu.Animation;
@@ -67,6 +69,22 @@ public class DoorEntity extends Entity {
 				if (state.canLoad) {
 					state.canLoad = false;
 					e.setCoordinates(destX,destY);
+					((Player)e).resetMovement();
+					for (Entity e2 : state.getGameState().getEntityList()) {
+						if (e2 instanceof FollowingPlayer) {
+							e2.setCoordinates(destX,destY);
+						}
+					}
+					ArrayList<Entity> players = new ArrayList<Entity>();
+					for (Entity et : state.getGameState().getEntityList()) {
+						if (et instanceof Player) {
+							players.add(et);
+						} else if (et instanceof FollowingPlayer) {
+							players.add(et);
+						}
+					}
+					state.getGameState().getEntityList().clear();
+					state.getGameState().getEntityList().addAll(players);
 					state.getGameState().getCamera().snapToEntity(destX,destY);
 					state.getGameState().setCurrentMap(newMap);
 					state.getGameState().loadMap(4);
@@ -75,7 +93,6 @@ public class DoorEntity extends Entity {
 					anim.createAnimMenu();
 					state.getMenuStack().push(anim);
 				}
-				
 			}
 		}
 	}
@@ -93,12 +110,5 @@ public class DoorEntity extends Entity {
 		this.destX = destX;
 		this.destY = destY;
 	}
-	
-//	@Override
-//	public void draw(MainWindow m) {
-////		m.setTexture("img/door.png");
-////		Pose p = spriteCoordinates.getPose("idle","","down");
-////		m.renderTile(x,y,width,height,,0,12,12);
-//	}
 
 }

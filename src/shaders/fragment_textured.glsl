@@ -10,10 +10,19 @@ in vec2 pass_TextureCoord;
 
 vec2 distorsion(vec2 p, float amplitude, float frequency, float speed)
 {	
-	return vec2(p.x + amplitude*4 * sin(p.x*frequency + time*speed),
-				p.y + amplitude * sin(p.y*frequency + time*speed));
+	vec2 res = vec2(0.0,0.0);
+	vec2 r = vec2(floor(gl_FragCoord.x), floor(gl_FragCoord.y));
+	if (mod(r.y,2) == 0.0) {
+		res.x = p.x + amplitude * sin( frequency + time*speed);
+	} else {
+		res.x = p.x - amplitude * sin( frequency + time*speed);
+	}
+	
+	res.y = p.y + amplitude * (frequency + time*speed);
+	
+	return res;
 }
 
 void main(void) {
-	 gl_FragColor = texture2D(texture_diffuse,distorsion(pass_TextureCoord,0.2,4,16.0));
+	 gl_FragColor = texture2D(texture_diffuse,distorsion(pass_TextureCoord,0.1,0.5,8.0));
 }

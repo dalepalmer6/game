@@ -15,6 +15,7 @@ import menu.StartupNew;
 
 public class PartyMember {
 	private String name;
+	private String id;
 	private EntityStats stats;
 	private EntityStats baseStats;//non modified by equipment, serves as a reference
 	private Entity entity;
@@ -22,6 +23,15 @@ public class PartyMember {
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Item> equips = new ArrayList<Item>(4);//in the future, make the index here reference the inventory instead of an item
 	private StartupNew state;
+	private int index;
+	
+	public String getId() {
+		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
 	
 	public void updateStats() {
 		stats = baseStats.createCopy();
@@ -55,8 +65,10 @@ public class PartyMember {
 		return name;
 	}
 	
-	public PartyMember(int number, StartupNew state) {
+	public PartyMember(String id,int number, StartupNew state) {
+		this.index = number;
 		this.state = state;
+		this.id = id;
 		loadStats(number);
 	}
 	

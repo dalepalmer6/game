@@ -39,6 +39,7 @@ import font.CharList;
 import font.SelectionTextWindow;
 import font.SimpleDialogMenu;
 import font.TextWindow;
+import gamestate.Cutscene;
 import gamestate.Enemy;
 import gamestate.Entity;
 import gamestate.EntityStats;
@@ -111,7 +112,7 @@ public class StartupNew{
 	public ArrayList<Item> items;
 	public ArrayList<PSIAttack> psi;
 	public PSIClassificationList psiClassList;
-	public ArrayList<Enemy> enemies;
+	public HashMap<String,Enemy> enemies;
 	private Map<String, BufferedImage> animations = new HashMap<String,BufferedImage>();
 	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
@@ -124,11 +125,20 @@ public class StartupNew{
 	public boolean inBattle;
 	public BattleMenu battleMenu;
 	private Audio bgm;
+	private String curBGM = "";
 	private Audio sfx;
+	private boolean audioOverride; //forces the bgm loading from happening on loading a map
 	
 	public void setBGM(String path) {
+		if (curBGM.equals(path)) {
+			return;
+		}
 		try {
-			bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("audio/" + path));
+			if (!audioOverride) {
+				curBGM = path;
+				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("audio/" + path));
+				bgm.playAsMusic(1.0f, 1.0f, true);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -145,7 +155,7 @@ public class StartupNew{
 	}
 	
 	public void playBGM() {
-		bgm.playAsMusic(1.0f, 1.0f, true);
+		
 	}
 	
 	public void playSFX() {
@@ -348,16 +358,23 @@ public class StartupNew{
 	
 	public void loadAllEntities() {
 		//take these in from external file
-		allEntitiesNames = new ArrayList<String>();
-		Entity ness = new Entity("ninten.png",0,0,0,0,this,"ninten");
-		allEntities.put("ninten",ness);
-		loadCoordinatesFromFile("ninten", ness);
-		allEntitiesNames.add("redDressLady");
-		for (String s : allEntitiesNames) {
-			Entity e = new Entity("entities.png",0,0,24,32,this,s);
-			loadCoordinatesFromFile(s, e);
-			allEntities.put(s,e);
+		File allEntitiesFolder = new File("entities/");
+		Entity e;
+		for (File f : allEntitiesFolder.listFiles()) {
+			e = new Entity(f.getName() + ".png", 0,0,0,0,this,f.getName());
+			loadCoordinatesFromFile(f.getName(),e);
+			allEntities.put(f.getName(),e);
 		}
+//		allEntitiesNames = new ArrayList<String>();
+//		Entity ness = new Entity("ninten.png",0,0,0,0,this,"ninten");
+//		allEntities.put("ninten",ness);
+//		loadCoordinatesFromFile("ninten", ness);
+//		allEntitiesNames.add("redDressLady");
+//		for (String s : allEntitiesNames) {
+//			Entity e = new Entity("entities.png",0,0,24,32,this,s);
+//			loadCoordinatesFromFile(s, e);
+//			allEntities.put(s,e);
+//		}
 	}
 	
 	public void loadCoordinatesFromFile(String fname,Entity e) {
@@ -578,7 +595,7 @@ public class StartupNew{
 	public void loadAllEnemies() {
 		String pathToEntity = "data/enemies.csv";
 		File file = new File(pathToEntity);
-		enemies = new ArrayList<Enemy>();
+		enemies = new HashMap<String,Enemy>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			//skip headers
@@ -601,7 +618,7 @@ public class StartupNew{
 				int height = Integer.parseInt(data[13]);
 //				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				enemies.add(new Enemy(texture,name,width,height,stats,xp));
+				enemies.put(name,new Enemy(texture,name,width,height,stats,xp));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -742,10 +759,13 @@ public class StartupNew{
 			gameState.updatePartyMembers();
 		}
 		
-		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
+		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof Cutscene || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
 			gameState.update(input);
 		}
 		
+		if (gameState != null && !menuStack.isEmpty()) {
+			gameState.updateEntities(input,false);
+		}
 		
 		if (canLoad && gameState == null) {
 			canLoad = false;
@@ -754,6 +774,7 @@ public class StartupNew{
 			needToPop = false;
 			GameState gs = new GameState(this);
 			this.setGameState(gs);
+			gs.loadMapData();
 		}
 	}
 	
@@ -910,5 +931,10 @@ public class StartupNew{
 	public void setAudio(String string) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void setAudioOverride(boolean b) {
+		// TODO Auto-generated method stub
+		audioOverride = b;
 	}
 }

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import gamestate.DoorEntity;
 import gamestate.Entity;
+import gamestate.FollowingPlayer;
+import gamestate.HotSpot;
 import gamestate.Player;
 import gamestate.SpritesheetCoordinates;
 import menu.StartupNew;
@@ -31,6 +33,8 @@ public class Map {
 	
 	public String currentMapLayer;
 	
+	private String bgm;
+	
 	public ArrayList<ArrayList<Integer>> layerMap;
 	public ArrayList<ArrayList<TileInstance>> layerMapTileInstance;
 	
@@ -42,6 +46,10 @@ public class Map {
 	private String tileset;
 	private String pathToMaps;
 	private String pathToTilesets;
+	
+	public String getBGM() {
+		return bgm;
+	}
 	
 	public void setTileset(String s) {
 		tileset = s;
@@ -55,7 +63,7 @@ public class Map {
 		return layerMap;
 	}
 	
-	public void readTileSet() {
+	public void readProperties() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(pathToMaps + mapId + "/properties.csv"));
 			br.readLine();
@@ -63,9 +71,9 @@ public class Map {
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				tileset = pathToTilesets + split[0] + ".png";
+				bgm = split[1];
 			}
 			state.loadAllTiles(tileset);
-//			state.setTileSet(tileset);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,24 +147,31 @@ public class Map {
 	}
 	
 	public void parseMap(int scale, String mapId) {
-		ArrayList<Player> players = new ArrayList<Player>();
+		ArrayList<Entity> players = new ArrayList<Entity>();
 		for (Entity e : entitiesInMap) {
 			if (e instanceof Player) {
-				players.add((Player) e);
+				players.add(e);
+			} else if (e instanceof FollowingPlayer) {
+				players.add(e);
 			}
 		}
 		
 		this.entitiesInMap.clear();
 		entitiesInMap.addAll(players);
 		this.mapId = mapId;
-		readTileSet();
+		readProperties();
 		String pathToCurrentMap = pathToMaps + mapId + "/";
 		parseMapFG(new File(pathToCurrentMap + "fg.map"));
 		parseMapBG(new File(pathToCurrentMap + "bg.map"));
 		parseEntities(new File(pathToCurrentMap + "entities.csv"),scale);
 		parseDoors(new File(pathToCurrentMap + "doors.csv"),scale);
+		parseHotspots(new File(pathToCurrentMap + "hotspots.csv"),scale);
+		state.setBGM(bgm);
+		state.playBGM();
 	}
 	
+	
+
 	public void parseDoors(File ent,int scale) {
 		BufferedReader br;
 		try {
@@ -197,12 +212,13 @@ public class Map {
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				String name = split[6];
+				String texture = split[0];
 				int x = Integer.parseInt(split[1]);
 				int y = Integer.parseInt(split[2]);
 				int width = Integer.parseInt(split[3]);
 				int height = Integer.parseInt(split[4]);
 				String text = split[5];
-				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
+				Entity e = state.getEntityFromEnum(texture).createCopy(scale*x,scale*y,scale*width,scale*height,name);
 				e.setText(text);
 				entitiesInMap.add(e);
 			}
@@ -214,7 +230,36 @@ public class Map {
 			e.printStackTrace();
 		}
 	}
-
+	
+	private void parseHotspots(File file, int scale) {
+		// TODO Auto-generated method stub
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String row = "";
+			br.readLine();//skip headers
+			while ((row = br.readLine()) != null) {
+				String[] split = row.split(",");
+				String name = split[0];
+				int x = Integer.parseInt(split[1]);
+				int y = Integer.parseInt(split[2]);
+				int w = Integer.parseInt(split[3]);
+				int h = Integer.parseInt(split[4]);
+				String csName = split[5];
+				String pathToCurrentMap = pathToMaps + mapId + "/";
+//				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
+//				e.setText(text);
+				HotSpot e = new HotSpot(name,x*scale,y*scale,w*scale,h*scale,state,0,0,"","", pathToCurrentMap + csName);
+				entitiesInMap.add(e);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void parseMapFG(File map)  {
 		

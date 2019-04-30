@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -33,6 +34,16 @@ public class GameState {
 	private final String pathToMaps = "/maps/";
 	private String currentMapName;
 	private boolean canSpawnEnemies = true;
+	private int[] dx = new int[48];
+	private int[] dy = new int[48];
+	private Entity ninten;
+	private Entity ana;
+	private Entity loid;
+	private Entity teddy;
+	private Entity pippi;
+	private int numPartyMembers=0;
+	private HashMap<String,Entity> partyMemberEntities = new HashMap<String,Entity>();
+	private HashMap<String, Boolean> flags;
 	
 	public Player getPlayer() {
 		return player;
@@ -88,10 +99,17 @@ public class GameState {
 				String texture = datasplit[0];
 				int x = Integer.parseInt(datasplit[1]);
 				int y = Integer.parseInt(datasplit[2]);
-				Entity test = state.getEntityFromEnum("ninten").createCopy(x,y,24,32);
-				player = new Player(scale,test,camera,state);
-//				player.scaleUp(4);
-				this.entities.add(player);
+				//create all PartyMember entities
+				ninten = state.getEntityFromEnum(texture).createCopy(x,y,24,32,"ninten");
+				loid = state.getEntityFromEnum("loid").createCopy(x,y,24,32,"loid");
+				ana = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
+				teddy = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
+				pippi = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
+				partyMemberEntities.put("NINTEN",ninten);
+				partyMemberEntities.put("LOID",loid);
+				partyMemberEntities.put("ANA",ana);
+//				partyMemberEntities.put("TEDDY",teddy);
+//				partyMemberEntities.put("PIPPI",pippi);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -101,36 +119,36 @@ public class GameState {
 	
 	public GameState(StartupNew s) {
 		//load in the map name from the external file
-		this(s,new Map("podunk",300,300,s.tileMap,s));
+		this(s,new Map("house - myhome",5,5,s.tileMap,s));
 	}
 	
 	public GameState(StartupNew s, Map m) {
+		this.entities = new ArrayList<Entity>();
 		this.currentMapName = m.getMapId();
 		this.state = s;
 		this.camera = new Camera(state);
 		this.map = m;
+		flags = new HashMap<String,Boolean>();
+	}
+	
+	public void loadMapData() {
 		loadMap(4);
-		state.setBGM("pollyanna.ogg");
+		state.setBGM(map.getBGM());
 		state.playBGM();
-		this.entities = new ArrayList<Entity>();
-//		this.entities = map.getEntities();
+		
 		createPlayer(4);
-		this.mapRenderer = new MapRenderer(m,getCamera(),state); 
+		this.mapRenderer = new MapRenderer(map,getCamera(),state); 
 		camera.setMapRenderer(mapRenderer);
 //		addToDrawables(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
-		addPartyMember(new PartyMember(1,state));
-		addPartyMember(new PartyMember(2,state));
-//		addPartyMember(new PartyMember("Player3"));
-//		addPartyMember(new PartyMember("Player4"));
+		addPartyMember(new PartyMember("NINTEN",1,state));
+		addPartyMember(new PartyMember("ANA",2,state));
+		addPartyMember(new PartyMember("LOID",3,state));
+//		addPartyMember(new PartyMember("TEDDY",4,state));
+//		addPartyMember(new PartyMember("PIPPI",4,state));
 		createTestEnemy();
 //		createTestDoor();
 	}
-	
-//	public void createTestDoor() {
-//		DoorEntity test = new DoorEntity(300*4,400*4,128,128,state,700,700,"magicant");
-//		this.entities.add(test);
-//	}
 	
 	public void createTestEnemy() {
 //		Enemy test = state.enemies.get(0).clone();
@@ -140,11 +158,11 @@ public class GameState {
 //		testList.add(test2);
 		
 		Entity eStatic = state.allEntities.get("redDressLady");
-		Enemy test = state.enemies.get(0).clone();
-		Enemy test2 = state.enemies.get(0).clone();
+		Enemy test = state.enemies.get("Lamp").clone();
+		Enemy test2 = state.enemies.get("Lamp").clone();
 //		testList.add(test);
 		testList.add(test2);
-		EnemyEntity ee = new EnemyEntity("entities.png", 1200, 1200, 24*4,32*4,state,"redDressLady",testList);
+		EnemyEntity ee = new EnemyEntity("entities.png", 1300, 2600, 24*4,32*4,state,"redDressLady",testList);
 		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
 		this.entities.add(ee);
 	}
@@ -249,6 +267,24 @@ public class GameState {
 	
 	public void update(InputController input) {
 		//get all entities that belong in the map (in the viewport bounds)
+		while (numPartyMembers < party.size()) {
+			for (PartyMember m : party) {
+				for (String id : partyMemberEntities.keySet()) {
+					if (m.getId().equals(id)) {
+						if (numPartyMembers == 0) {
+							player = new Player(4,partyMemberEntities.get(id),camera,state);
+							this.entities.add(player);
+						} else if (numPartyMembers < 4) {
+							FollowingPlayer fent = new FollowingPlayer(4,partyMemberEntities.get(id),state,numPartyMembers);
+							this.entities.add(fent);
+						}
+						numPartyMembers++;
+					}
+				}
+			}
+		}
+		
+		
 		for (Entity e : map.getEntitiesInView(camera.getX(), camera.getY())) {
 			if (!entities.contains(e)) {
 				entities.add(e);
@@ -256,7 +292,7 @@ public class GameState {
 		}
 		
 		sort();
-		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu) {
+		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
 //			if (camera.getDX() != 0 || camera.getDY() != 0) {
 				//try 5 times per frame to spawn
 				canSpawnEnemies =false;
@@ -297,19 +333,28 @@ public class GameState {
 //					int downSecondBound = rand.nextInt(spawnCenterY + 1500);
 //				}
 //			}
-			for (int i = 0; i < entities.size(); i++) {
-				Entity e = entities.get(i);
-				if (e instanceof Controllable) {
-					e.handleInput(input);
-				}
-				if (e.getNeedToRemoveState()) {
-					e.setToRemove(false);
-					entities.remove(e);
-					continue;
-				}
-				checkEntityCollisions();
-				e.update(this);
-				e.act();
+			updateEntities(input,true);
+		}
+	}
+	
+	public void updateEntities(InputController input, boolean entitiesCanMove) {
+		for (int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			if (e instanceof Controllable) {
+				e.handleInput(input);
+			}
+			if (e.getNeedToRemoveState()) {
+				e.setToRemove(false);
+				entities.remove(e);
+				continue;
+			}
+			checkEntityCollisions();
+			if (!entitiesCanMove) {
+				e.setDeltaXY(0,0);
+			}
+			e.update(this);
+			if (entitiesCanMove) {
+				e.act();			
 			}
 		}
 	}
@@ -324,7 +369,13 @@ public class GameState {
 		
 		for (Entity e : entities) {
 			e.clearInteractables();
+			if (e instanceof FollowingPlayer) {
+				continue;
+			}
 			for (Entity e2 : entities) {
+				if (e2 instanceof FollowingPlayer) {
+					continue;
+				}
 				if (!(e == e2)) {
 					if (e.checkCollision(e2)) {
 						e.deltaX = 0;
@@ -363,6 +414,19 @@ public class GameState {
 	public void addToRedrawing(RedrawObject redrawObject) {
 		// TODO Auto-generated method stub
 		ro.add(redrawObject);
+	}
+
+	public void setFlag(String flagName) {
+		flags.put(flagName,true);
+		
+	}
+	
+	public boolean getFlag(String flagName) {
+		try {
+			return flags.get(flagName);
+		} catch(NullPointerException e) {
+			return false;
+		}
 	}
 	
 }

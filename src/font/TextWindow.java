@@ -56,6 +56,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		this.width = width * TILE_SIZE;
 		this.height = height * TILE_SIZE;
 		this.text = new Text(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
+		this.text.setState(state);
 		this.m = m;
 		this.shouldDrawAll = shouldDrawAll;
 	}

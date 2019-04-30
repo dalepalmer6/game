@@ -1,15 +1,20 @@
 package font;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
+import battlesystem.BattleMenu;
 import canvas.Controllable;
 import canvas.Drawable;
 import canvas.MainWindow;
+import gamestate.BattleEntity;
+import gamestate.EnemyEntity;
 import global.InputController;
+import menu.StartupNew;
 
 public class Text implements Drawable{
 	private String textString;
@@ -34,13 +39,14 @@ public class Text implements Drawable{
 	private double oldTicksPerFrame;
 	private boolean differentParseRate;
 	private double textRate = 1;
+	private StartupNew state;
 	
 	public void setTextChanged(boolean f) {
 		this.textChanged = f;
 	}
 	
 	public void incrementDrawUntil() {
-		if (parsedString != null && !drawAll && !freeze) {
+		if (parsedString != null && !drawAll) {
 			if (drawUntil < parsedString.length()) {
 				drawUntil++;
 			}
@@ -79,6 +85,7 @@ public class Text implements Drawable{
 	}
 	
 	public void parse() {
+		parseIfs();
 		parseCodes();
 		reparseForWidths();
 		reparseForHeights();
@@ -120,6 +127,9 @@ public class Text implements Drawable{
 	public void setFreeze(boolean c) {
 		freeze = c;
 		drawStart = saveStart;
+		if (!c) {
+			controlCodes.remove(drawStart);
+		}
 	}
 	
 	public int getDrawStart() {
@@ -194,6 +204,10 @@ public class Text implements Drawable{
 			String controlCodesReplace = "";
 			for (int i = 0; i < controlCodesAtKey.length; i++) {
 				String cc = controlCodesAtKey[i];
+				if (cc.equals("PROMPTINPUT")) {
+					//note that currently this clears the text window
+					curY = y;
+				}
 				if (cc.equals("NEWLINE")) {
 					curY+=32;
 					if (curY + 32 > y + (this.height + 16) * 2) {
@@ -275,8 +289,61 @@ public class Text implements Drawable{
 						curX += scale + specChar.getDw()*scale;
 						newListOfControlCodes += "," + control;
 					}
-					controlCodes.put(i,newListOfControlCodes);
+					if (control.startsWith("STARTBATTLE_")) {
+						String enemyListString = control.substring(12);
+						String[] enemyList = enemyListString.split("_");
+						BattleMenu bm = new BattleMenu(state);
+						ArrayList<BattleEntity> battleEnemyList = new ArrayList<BattleEntity>();
+						for (int j = 0; j < enemyList.length; j++) {
+							battleEnemyList.add(state.enemies.get(enemyList[j]));
+						}
+						EnemyEntity test = new EnemyEntity("entities.png", 1200, 1200, 24*4,32*4,state,"redDressLady",battleEnemyList);
+						ArrayList<EnemyEntity> list = new ArrayList<EnemyEntity>();
+						list.add(test);
+						bm.startBattle(list);
+					}
+					if (control.startsWith("SETBGM_")) {
+						String audio = control.substring(7);
+						state.setBGM(audio);
+						state.setAudioOverride(true);
+					}
+					if (control.startsWith("ENDBGM")) {
+						state.setAudioOverride(false);
+					}
+					if (control.startsWith("ADDMEMBER_")) {
+						//if the party member is not in the party, add them play the jingle
+						String partyKey = control.substring(10);
+						state.getGameState();
+					}
+					if (control.startsWith("SETFLAG_")) {
+						String flagName = control.substring(8);
+						state.getGameState().setFlag(flagName);
+					}
+//					if (control.startsWith("FLAGISSET_")) {
+//						String flagName = control.substring(10);
+//						if (!state.getGameState().getFlag(flagName)) {
+//							//goto [ELSE]
+//							for (Integer key : controlCodes.keySet()) {
+//								if (controlCodes.get(key).contains("ELSE")) {
+//									parsedString = parsedString.substring(key);
+//									drawStart = 0;
+//									drawUntil = 0;
+//									break;
+//								}
+//							}
+//						} else {
+//							for (Integer key : controlCodes.keySet()) {
+//								if (controlCodes.get(key).contains("ELSE")) {
+//									parsedString = parsedString.substring(0,key);
+//									drawStart = 0;
+//									drawUntil = 0;
+//									break;
+//								}
+//							}
+//						}
+//					}
 				}
+				controlCodes.put(i,newListOfControlCodes);
 			}
 			if (i < drawUntil) {
 				char c = chars[i];
@@ -295,6 +362,43 @@ public class Text implements Drawable{
 			
 		}
 	}
+	
+	public void parseIfs() {
+		int startPos = 0;
+		int endPos = parsedString.length();
+		char[] stringArray = parsedString.toCharArray();
+		boolean parsingControlCode = false;
+		String controlCode = "";
+		int indexOfCode = 0;
+		for (int i = 0; i < stringArray.length; i++) {
+			if (stringArray[i] == '[') {
+				//start a new control code
+				controlCode = "";
+				indexOfCode = i;
+				parsingControlCode = true;
+				continue;
+			}
+			
+			if (stringArray[i] != ']' && parsingControlCode) {
+				controlCode += stringArray[i];
+			} 
+			if (stringArray[i] == ']' && parsingControlCode) {
+				if (controlCode.startsWith("FLAGISSET_")) {
+					String flagName = controlCode.substring(10);
+					if (!state.getGameState().getFlag(flagName)) {
+						//goto [ELSE]
+						parsedString = parsedString.substring(parsedString.indexOf("[ELSE]")+6);
+					} else {
+						parsedString = parsedString.substring(parsedString.indexOf("]")+1,parsedString.indexOf("[ELSE]"));
+					}
+					parseIfs();
+					break;
+				}
+			}
+		}
+		return;
+	}
+	
 	
 	public static void initDrawText(MainWindow m) {
 		m.setTexture("img/font.png");
@@ -349,6 +453,10 @@ public class Text implements Drawable{
 	public void setTextRate(double d) {
 		// TODO Auto-generated method stub
 		this.textRate = d;
+	}
+
+	public void setState(StartupNew state) {
+		this.state = state;
 	}
 
 	

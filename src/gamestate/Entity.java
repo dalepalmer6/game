@@ -66,7 +66,7 @@ public class Entity implements Drawable,EntityInterface {
 		spriteCoordinates = sc;
 	}
 	
-	public Entity createCopy(int newX, int newY, int width, int height) {
+	public Entity createCopy(int newX, int newY, int width, int height, String name) {
 		Entity copy = new Entity(texture,newX,newY,width,height,state,name);
 		copy.setSpriteCoords(spriteCoordinates);
 		return copy;
@@ -155,7 +155,6 @@ public class Entity implements Drawable,EntityInterface {
 		this.state = m;
 		this.interactables = new ArrayList<Entity>();
 		this.name = name;
-//		scaleUp(4);
 	}
 	
 	public String interactText() {
@@ -338,8 +337,8 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public boolean checkCollision(Entity e2) {
-			if (this.x + deltaX < e2.x + e2.width && this.x + deltaX +this.width > e2.x &&
-				    this.y +deltaY + this.height*3/4 < e2.y + e2.height && this.y +deltaY+ this.height > e2.y + e2.height*3/4) {
+		if (this.x + deltaX < e2.x + e2.width && this.x + deltaX +this.width > e2.x &&
+			this.y +deltaY + this.height*3/4 < e2.y + e2.height && this.y +deltaY+ this.height > e2.y + e2.height*3/4) {
 			return true;
 		}
 		return false;
@@ -364,6 +363,26 @@ public class Entity implements Drawable,EntityInterface {
 		this.y *= 4;
 		this.width *= 4;
 		this.height *= 4;
+	}
+
+	public void applyMovementData(int x, int y, String actionTaken, String dirX, String dirY) {
+		this.deltaX = x;
+		this.deltaY = y;
+		this.actionTaken = actionTaken;
+		this.directionX = dirX;
+		this.directionY = dirY;
+	}
+
+	public void resetMovement() {
+		// TODO Auto-generated method stub
+		deltaX = 0;
+		deltaY = 0;
+	}
+
+	public void setDeltaXY(int x,int y) {
+		// TODO Auto-generated method stub
+		deltaX = x;
+		deltaY = y;
 	}
 
 }

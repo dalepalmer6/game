@@ -11,15 +11,24 @@ import menu.StartupNew;
 
 public class Player extends CameraControllingEntity implements Controllable{
 	
-private boolean confirmButtonDown = false;
+	private boolean confirmButtonDown = false;
+	MovementData[] movementData = new MovementData[64];
+	
+	public void move() {
+		super.move();
+		if (deltaX != 0 || deltaY != 0) {
+			for(int i = movementData.length-1; i > 0; i--){
+				movementData[i] = movementData[i-1];
+		    }
+		    //record new position
+			movementData[0] = new MovementData(x,y,actionTaken,directionX,directionY);
+		}
+	}
 
-
-
-//	public Entity(String texture, int x, int y, int width, int height,StartupNew m) {
-//	public Player(String texture,int x, int y, int width, int height,Camera camera,StartupNew s,String name) {
 	public Player(int scale, Entity e, Camera c, StartupNew s) {
 		super(e.getTexture(),scale*e.getX(),scale*e.getY(),scale*e.getWidth(),scale*e.getHeight(),c,s,e.getName());
 		spriteCoordinates = e.getSpriteCoordinates();
+		resetMovement();
 	}
 	
 	public void act() {
@@ -62,7 +71,6 @@ private boolean confirmButtonDown = false;
 		} else {
 			confirmButtonDown = false;
 		}
-		
 }
 
 	@Override
@@ -75,6 +83,14 @@ private boolean confirmButtonDown = false;
 	public boolean getFocused() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void resetMovement() {
+		// TODO Auto-generated method stub
+		movementData = new MovementData[64];
+		for (int i = 0; i < movementData.length; i++) {
+			movementData[i] = new MovementData(x,y,actionTaken,directionX,directionY);
+		}
 	}
 	
 }

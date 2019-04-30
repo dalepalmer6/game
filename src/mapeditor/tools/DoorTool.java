@@ -10,7 +10,6 @@ public class DoorTool extends MapTool {
 	private DoorEntity door;
 	private boolean otherMapState; // false if in first map, true if in destination map
 	private Map oldMap;
-//	private String oldTileset;
 	private Map newMap;
 	private int savedViewX;
 	private int savedViewY;
@@ -33,7 +32,7 @@ public class DoorTool extends MapTool {
 			door.setDestination(mp.getMap().getMapId(), (x-1) * tilesize + xMouse%tilesize,(y-1) *tilesize + yMouse%tilesize);
 			mp.setMap(oldMap);
 			mp.setView(savedViewX,savedViewY);
-			mp.getMap().readTileSet();
+			mp.getMap().readProperties();
 			System.out.println("Resetting map to old map. Hopefully it worked for you!");
 			otherMapState = false;
 		}

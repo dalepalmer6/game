@@ -137,9 +137,9 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		ArrayList<ArrayList<Entity>> tiles = new ArrayList<ArrayList<Entity>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Entity> row = new ArrayList<Entity>();
-		for (String name : state.allEntitiesNames) {
-			row.add(state.allEntities.get(name));
-		}
+//		for (String name : state.allEntitiesNames) {
+//			row.add(state.allEntities.get(name));
+//		}
 //		for (int j = viewY; j < this.heightInTiles + viewY; j++) {
 //			for (int i = viewX; i < widthInTiles + viewX; i++) {
 //				int curId = i + (j * numTilesX);

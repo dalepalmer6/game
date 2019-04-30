@@ -1,2 +1,2 @@
 ﻿Name,HP,PP,OFF,DEF,VIT,IQ,SPEED,GUTS,LUCK,EXP,Texture,Width,Height
-Mook with Stats of Spiteful Crow,24,0,5,3,0,0,77,0,0,32,mook.png,32,64
+Lamp,24,0,5,3,0,0,77,0,0,32,lamp.png,163,462

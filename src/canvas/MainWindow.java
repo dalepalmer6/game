@@ -47,7 +47,7 @@ public class MainWindow {
 	private int vsId;
 	private int fsId;
 	private int pId;
-	private float time;
+	private float time = System.nanoTime();
 	private int vboid;
 	private int vboiId;
 	private int indicesCount;
@@ -168,14 +168,12 @@ public class MainWindow {
 			e.printStackTrace();
 		}
 //		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
         GL20.glUniform1i(loc,2);
         loc = GL20.glGetUniformLocation(pId, "time");
         GL20.glUniform1f(loc,dTime/10e9f);
-        loc = GL20.glGetUniformLocation(pId, "tx");
-        GL20.glUniform1f(loc,(float) Math.sin(dTime /100));
-        loc = GL20.glGetUniformLocation(pId, "ty");
-        GL20.glUniform1f(loc,0);
         
         TexturedVertex v0 = new TexturedVertex(); 
         v0.setXYZ(-1f, 1f, 0); v0.setRGB(1, 0, 0); v0.setST(0, 0);
@@ -340,6 +338,7 @@ public class MainWindow {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
 		setupShaders();
 		
 	}

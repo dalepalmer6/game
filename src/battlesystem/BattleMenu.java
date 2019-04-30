@@ -65,7 +65,7 @@ public class BattleMenu extends Menu {
 	private boolean displayRecExp;
 	private boolean doOnce;
 	private boolean ended;
-	private EnemyEntity enemyEntity;
+	private ArrayList<EnemyEntity> enemyEntities;
 	private boolean kill;
 	private boolean turnIsDone;
 	private boolean alertDeadEntity;
@@ -129,9 +129,9 @@ public class BattleMenu extends Menu {
 		waitToStart = true;
 	}
 	
-	public void startBattle(EnemyEntity enemyEntity) {
+	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
 		//set the state to draw all menus at once, to facilitate the menu system
-		this.enemyEntity = enemyEntity;
+		this.enemyEntities = enemyEntities;
 		expPool = 0;
 		state.setDrawAllMenus();
 		state.inBattle = true;
@@ -140,7 +140,10 @@ public class BattleMenu extends Menu {
 		state.getMenuStack().push(this);
 		MainWindow mainWindow = state.getMainWindow();
 		actionMenu = new BattleMenuSelectionTextWindow(mainWindow.getScreenWidth()/2 - (20/2)*32,100,20,2,state);
-		enemies = enemyEntity.getEnemiesList();
+		enemies = new ArrayList<BattleEntity>();
+		for (EnemyEntity ee : enemyEntities) {
+			enemies.addAll(ee.getEnemiesList());
+		}
 		generateGreeting();
 		actionMenu.setKillWhenComplete();
 		battleActions = new HashMap<BattleEntity, BattleAction>();
@@ -273,8 +276,10 @@ public class BattleMenu extends Menu {
 		
 		if (kill && getNext) {
 			state.getMenuStack().pop();
-			enemyEntity.setToRemove(true
-					);
+			for (EnemyEntity ee : enemyEntities) {
+				ee.setToRemove(true);
+			}
+			
 		}
 		
 		else if (!battleSceneEnd && !ended){
