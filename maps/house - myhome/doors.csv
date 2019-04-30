@@ -1,0 +1,9 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT
+exit,640,301,32,32,podunk,360,198,text
+doorToHall,0,0,32,32,house - myhome,0,0,text
+Door to Minnie's room,0,0,32,32,house - myhome,0,0,text
+Door to Mimmie,0,0,32,32,house - myhome,0,0,text
+Door to Ninten,272,297,32,32,house - myhome,367,667,text
+Door to Hall from Minnie,0,0,32,32,house - myhome,0,0,text
+Door to Hall from Mimmie,0,0,32,32,house - myhome,0,0,text
+Door to Hall from Ninten,335,641,32,32,house - myhome,309,308,text
