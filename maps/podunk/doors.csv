@@ -1,4 +1,4 @@
 DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT
 zooDoor,1354,99,128,24,zoo,5104,3985,Imagine that this brings you to the zoo
-merrysvilleDoor,4284,2183,32,128,merrysville,381,1922,a
+merrysvilleDoor,4370,2186,32,128,merrysville,395,1896,a
 doorHouse,364,152,32,32,house - myhome,618,322,text
