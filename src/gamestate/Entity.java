@@ -58,6 +58,10 @@ public class Entity implements Drawable,EntityInterface {
 		return texture;
 	}
 	
+	public String getTextureNoExt() {
+		return texture.substring(0,texture.indexOf("."));
+	}
+	
 	public StartupNew getState() {
 		return state;
 	}
@@ -383,6 +387,12 @@ public class Entity implements Drawable,EntityInterface {
 		// TODO Auto-generated method stub
 		deltaX = x;
 		deltaY = y;
+	}
+
+	public String getTextureName() {
+		// TODO Auto-generated method stub
+		String[] name = texture.split(".");
+		return name[0];
 	}
 
 }

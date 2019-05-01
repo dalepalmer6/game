@@ -31,7 +31,8 @@ public class MapEditMenu extends Menu {
 		addMenuItem(new EntityBar(16,8,mapPreview,tilebar,state));
 		addMenuItem(new SaveMapButton("Save",0,0,m));
 		addMenuItem(new LoadMapButton("Load",300,0,m));
-		addMenuItem(new LayerBGButton("",500,0,150,50,m));
+		addMenuItem(new LayerBaseButton("",500,0,150,50,m));
+		addMenuItem(new LayerBGButton("",750,0,150,50,m));
 		addMenuItem(new LayerFGButton("",1000,0,150,50,m));
 		addMenuItem(new DoorEnumButton(1500,0,m));
 		addMenuItem(new BackButton(m));

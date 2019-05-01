@@ -23,11 +23,11 @@ import tiles.types.Tree;
 
 public class Map {
 	private String mapId;
-//	public ArrayList<ArrayList<Integer>> tileMap = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<ArrayList<Integer>> tileMapBase = new ArrayList<ArrayList<Integer>>();
 	public ArrayList<ArrayList<Integer>> tileMapBG = new ArrayList<ArrayList<Integer>>();
 	public ArrayList<ArrayList<Integer>> tileMapFG = new ArrayList<ArrayList<Integer>>();
 	
-//	public ArrayList<ArrayList<TileInstance>> tileInstanceMap = new ArrayList<ArrayList<TileInstance>>();
+	public ArrayList<ArrayList<TileInstance>> tileInstanceMapBase = new ArrayList<ArrayList<TileInstance>>();
 	public ArrayList<ArrayList<TileInstance>> tileInstanceMapBG = new ArrayList<ArrayList<TileInstance>>();
 	public ArrayList<ArrayList<TileInstance>> tileInstanceMapFG = new ArrayList<ArrayList<TileInstance>>();
 	
@@ -85,13 +85,14 @@ public class Map {
 	
 	public void setChangeMap(String layer) {
 		switch (layer) {
+		case "BASE":currentMapLayer = layer;
+					layerMap = tileMapBase;
+					layerMapTileInstance = tileInstanceMapBase;
+					break;
 		case "BG" : currentMapLayer = layer;
 					layerMap = tileMapBG;
 					layerMapTileInstance = tileInstanceMapBG;
 					break;
-//		case "MID" : layerMap = tileMap;
-//					layerMapTileInstance = tileInstanceMap;
-//					break;
 		case "FG" : layerMap = tileMapFG;
 					currentMapLayer = layer;
 					layerMapTileInstance = tileInstanceMapFG;
@@ -101,7 +102,11 @@ public class Map {
 	
 	public void saveMap() {
 		try {
-			PrintWriter pw = new PrintWriter(new File(pathToMaps + mapId + "/fg.map"));
+			PrintWriter pw = new PrintWriter(new File(pathToMaps + mapId + "/base.map"));
+			pw.write(toString(tileMapBase));
+			pw.flush();
+			pw.close();
+			pw = new PrintWriter(new File(pathToMaps + mapId + "/fg.map"));
 			pw.write(toString(tileMapFG));
 			pw.flush();
 			pw.close();
@@ -113,7 +118,7 @@ public class Map {
 			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME\n";
 			for (Entity e : entitiesInMap) {
 				if (!(e instanceof DoorEntity)) {
-					writeEntities += e.getTexture() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() +  "," + e.getName() +"\n"; 
+					writeEntities += e.getTextureNoExt() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() +  "," + e.getName() +"\n"; 
 				}
 			}
 			pw.write(writeEntities);
@@ -161,6 +166,7 @@ public class Map {
 		this.mapId = mapId;
 		readProperties();
 		String pathToCurrentMap = pathToMaps + mapId + "/";
+		parseMapBase(new File(pathToCurrentMap + "base.map"));
 		parseMapFG(new File(pathToCurrentMap + "fg.map"));
 		parseMapBG(new File(pathToCurrentMap + "bg.map"));
 		parseEntities(new File(pathToCurrentMap + "entities.csv"),scale);
@@ -261,6 +267,50 @@ public class Map {
 		}
 	}
 
+	public void parseMapBase(File map)  {
+		
+		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(map));
+			String row = "";
+			try {
+				while ((row = br.readLine()) != null) {
+					String[] split = row.split(",");
+					ArrayList<Integer> rowAsInts = new ArrayList<Integer>();
+					for (String s : split) {
+						rowAsInts.add(Integer.parseInt(s));
+					}
+					rows.add(rowAsInts);
+				}
+				br.close();
+				tileMapBase = rows;
+				this.width = tileMapBase.size();
+				this.height = tileMapBase.get(0).size();
+			}catch (IOException e) {
+				
+			}
+			ArrayList<ArrayList<TileInstance>> rowstiles = new ArrayList<ArrayList<TileInstance>>();
+			ArrayList<TileInstance> rowtiles = new ArrayList<TileInstance>();
+			for (int j = 1; j < tileMapBase.size()-1; j++) {
+				//for every row
+				for (int i = 1; i < tileMapBase.get(0).size()-1; i++) {
+					//for every column
+					int val = this.tileMapBase.get(j).get(i);
+					Tile tile = tilesGlobalMap.getTile(val);
+					layerMap = tileMapBase;
+					int instance = inspectSurroundings(i,j);
+					rowtiles.add(tile.getInstance(instance));
+				}
+				rowstiles.add(rowtiles);
+				rowtiles = new ArrayList<TileInstance>();
+			}
+			tileInstanceMapBase = rowstiles;
+				
+			} catch(FileNotFoundException e) {
+				
+			} 
+		}
+	
 	public void parseMapFG(File map)  {
 		
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
@@ -449,33 +499,36 @@ public class Map {
 	}
 	
 	public void expandMap(int expand) {
+		ArrayList<ArrayList<Integer>> newmapBase = new ArrayList<ArrayList<Integer>>();
 		ArrayList<ArrayList<Integer>> newmapBG = new ArrayList<ArrayList<Integer>>();
 		ArrayList<ArrayList<Integer>> newmapFG = new ArrayList<ArrayList<Integer>>();
 		for (int i = 0; i < tileMapBG.size(); i++) {
 			ArrayList<Integer> rowBG = tileMapBG.get(i);
 			ArrayList<Integer> rowFG = tileMapFG.get(i);
+			ArrayList<Integer> rowBase = tileMapBase.get(i);
 			for (int c = 0; c < expand; c++) {
+				rowBase.add(0);
 				rowBG.add(0);
 				rowFG.add(0);
 			}
-//			newmap.add(row);
+			newmapBase.add(rowBase);
 			newmapBG.add(rowBG);
 			newmapFG.add(rowFG);
 		}
 		for (int i = 0; i < expand; i++) {
-//			ArrayList<Integer> emptyRow = new ArrayList<Integer>();
+			ArrayList<Integer> emptyRowBase = new ArrayList<Integer>();
 			ArrayList<Integer> emptyRowBG = new ArrayList<Integer>();
 			ArrayList<Integer> emptyRowFG = new ArrayList<Integer>();
 			for (int c = 0; c < newmapBG.get(0).size(); c++) {
-//				emptyRow.add(0);
+				emptyRowBase.add(0);
 				emptyRowBG.add(0);
 				emptyRowFG.add(0);
 			}
-//			newmap.add(emptyRow);
+			newmapBase.add(emptyRowBase);
 			newmapBG.add(emptyRowBG);
 			newmapFG.add(emptyRowFG);
 		}
-//		this.tileMap = newmap;
+		this.tileMapBase = newmapBase;
 		this.tileMapBG = newmapBG;
 		this.tileMapFG = newmapFG;
 		setChangeMap(currentMapLayer);
@@ -524,6 +577,13 @@ public class Map {
 		this.height = height;
 		tilesGlobalMap = tm;
 		this.mapId = mId;
+		for (int i = 0; i < height; i++) {
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			for (int j = 0; j < width; j++) {
+				list.add(0);
+			}
+			tileMapBase.add(list);
+		}
 		for (int i = 0; i < height; i++) {
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			for (int j = 0; j < width; j++) {

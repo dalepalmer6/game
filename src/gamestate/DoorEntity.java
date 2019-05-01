@@ -17,6 +17,10 @@ public class DoorEntity extends Entity {
 	private String description;
 	private String text;
 	
+	public void draw(MainWindow m) {
+		
+	}
+	
 	public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
 		super("door.png", x, y, width, height, m, "door");
 		this.destX = destX;

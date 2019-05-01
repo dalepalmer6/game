@@ -196,10 +196,17 @@ public class GameState {
 		boolean redrawPrev = false;
 		ArrayList<ArrayList<Integer>> bg = mapRenderer.getAreaOfInterest(map.tileMapBG);
 		ArrayList<ArrayList<Integer>> fg = mapRenderer.getAreaOfInterest(map.tileMapFG);
+		ArrayList<ArrayList<Integer>> base = mapRenderer.getAreaOfInterest(map.tileMapBase);
 //		ArrayList<ArrayList<Integer>> currentMap = mapRenderer.returnAreaOfInterest();
 		for (int i = 1; i < mapRenderer.getHeightInTiles()-1; i++) {
 			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) {
-				mapRenderer.drawTileBase(state.getMainWindow(),j,i,state.tileMap.getTile(0),0);
+				map.setChangeMap("BASE");
+//				mapRenderer.drawTileBase(state.getMainWindow(),j,i,state.tileMap.getTile(0),0);
+//				map.setChangeMap("BG");
+				int val = base.get(i).get(j);
+				Tile tile = state.tileMap.getTile(val);
+				int instance  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
+				mapRenderer.drawTileBase(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
 		}
 		for (int i = 1; i < mapRenderer.getHeightInTiles()-1; i+=2) {
