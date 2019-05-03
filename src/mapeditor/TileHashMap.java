@@ -10,6 +10,10 @@ public class TileHashMap {
 		tileMap = new HashMap<Integer,Tile>();
 	}
 	
+	public HashMap<Integer, Tile> getTileMap() {
+		return tileMap;
+	}
+	
 	public void addTile(Tile value) {
 		this.tileMap.put(value.getId(),value);
 	}

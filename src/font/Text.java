@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
@@ -13,6 +14,7 @@ import canvas.Drawable;
 import canvas.MainWindow;
 import gamestate.BattleEntity;
 import gamestate.EnemyEntity;
+import gamestate.PartyMember;
 import global.InputController;
 import menu.StartupNew;
 
@@ -40,6 +42,11 @@ public class Text implements Drawable{
 	private boolean differentParseRate;
 	private double textRate = 1;
 	private StartupNew state;
+	private boolean ignoreControlCodes = false;
+	
+	public void setIgnoreCodes() {
+		ignoreControlCodes = true;
+	}
 	
 	public void setTextChanged(boolean f) {
 		this.textChanged = f;
@@ -232,7 +239,10 @@ public class Text implements Drawable{
 		if (parsedString == null || textChanged) {
 			this.parsedString = textString;
 			controlCodes.clear();
-			parse();
+			if (!ignoreControlCodes) {
+				parse();
+			}
+			
 			textChanged = false;
 			
 			if (drawAll) {
@@ -313,7 +323,28 @@ public class Text implements Drawable{
 					if (control.startsWith("ADDMEMBER_")) {
 						//if the party member is not in the party, add them play the jingle
 						String partyKey = control.substring(10);
-						state.getGameState();
+						if (state.getGameState().addPartyMember(partyKey)) {
+							state.setSFX("eb_newchar.wav");
+						};
+					}
+					if (control.startsWith("ADDITEM_")) {
+						int itemId = Integer.parseInt(control.substring(8));
+						for (PartyMember mi : state.getGameState().getPartyMembers()) {
+							int space = mi.getOpenInventorySpace();
+							if (space != -1) {
+								mi.setItem(state.items.get(itemId),space);
+								break;
+							}
+						}
+					}
+					if (control.startsWith("CONSUMEITEM_")) {
+						int itemId = Integer.parseInt(control.substring(12));
+						for (PartyMember mi : state.getGameState().getPartyMembers()) {
+							int index;
+							while ((index = mi.hasItem(itemId)) != -1) {
+								mi.setItem(state.items.get(0),index);
+							}
+						}
 					}
 					if (control.startsWith("SETFLAG_")) {
 						String flagName = control.substring(8);
@@ -347,6 +378,9 @@ public class Text implements Drawable{
 			}
 			if (i < drawUntil) {
 				char c = chars[i];
+				if (charList.getCharObjects().get(c) == null) {
+					continue;
+				}
 				m.renderTile(curX,curY,
 						(int) charList.getCharObjects().get(c).getDw()*scale,
 						(int) charList.getCharObjects().get(c).getDh()*scale,
@@ -364,6 +398,7 @@ public class Text implements Drawable{
 	}
 	
 	public void parseIfs() {
+		String newlyParsed = "";
 		int startPos = 0;
 		int endPos = parsedString.length();
 		char[] stringArray = parsedString.toCharArray();
@@ -371,6 +406,9 @@ public class Text implements Drawable{
 		String controlCode = "";
 		int indexOfCode = 0;
 		for (int i = 0; i < stringArray.length; i++) {
+			if (!parsingControlCode && stringArray[i] != '[' && stringArray[i] != ']') {
+				newlyParsed += stringArray[i];
+			}
 			if (stringArray[i] == '[') {
 				//start a new control code
 				controlCode = "";
@@ -383,16 +421,49 @@ public class Text implements Drawable{
 				controlCode += stringArray[i];
 			} 
 			if (stringArray[i] == ']' && parsingControlCode) {
+				parsingControlCode = false;
+				stringArray = parsedString.toCharArray();
 				if (controlCode.startsWith("FLAGISSET_")) {
 					String flagName = controlCode.substring(10);
 					if (!state.getGameState().getFlag(flagName)) {
 						//goto [ELSE]
-						parsedString = parsedString.substring(parsedString.indexOf("[ELSE]")+6);
+//						int endifIndex = parsedString.indexOf("[ENDIF]");
+//						if (parsedString.indexOf("[ELSE]") > endifIndex) {
+//							//there is no accompanying else to the if
+//							String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ENDIF]")+7);
+//							toRemove = toRemove.replace("[","\\[");
+//							toRemove = toRemove.replace("]","\\]");
+//							i-=controlCode.length()+2;
+//							parsedString = parsedString.replaceFirst(toRemove,"");
+//						} 
+//						else {
+							String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
+//							toRemove = toRemove.replace("[","\\[");
+//							toRemove = toRemove.replace("]","\\]");
+							i-=controlCode.length()+2;
+							parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+//						}
+						parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
+//						parsedString = parsedString.substring(parsedString.lastIndexOf("[ELSE]")+6);
 					} else {
-						parsedString = parsedString.substring(parsedString.indexOf("]")+1,parsedString.indexOf("[ELSE]"));
+//						int endifIndex = parsedString.indexOf("[ENDIF]");
+//						if (parsedString.indexOf("[ELSE]") > endifIndex) {
+//							//there is no accompanying else to the if
+//							parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
+//						} 
+//						else {
+							String toRemove = parsedString.substring(parsedString.indexOf("[ELSE]"),parsedString.indexOf("[ENDIF]")+7);
+//							toRemove = toRemove.replace("[","\\[");
+//							toRemove = toRemove.replace("]","\\]");
+							parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+//						}
+						parsedString = parsedString.replace("[" + controlCode + "]","");
+						i-=controlCode.length()+2;
+//						parsedString = parsedString.substring(parsedString.indexOf("]")+1,parsedString.lastIndexOf("[ELSE]"));
 					}
-					parseIfs();
-					break;
+					stringArray = parsedString.toCharArray();
+//					parseIfs();
+//					break;
 				}
 			}
 		}

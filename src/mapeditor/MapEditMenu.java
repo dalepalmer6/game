@@ -1,5 +1,6 @@
 package mapeditor;
 
+import font.TextWindow;
 import menu.BackButton;
 import menu.Menu;
 import menu.StartupNew;
@@ -8,6 +9,7 @@ public class MapEditMenu extends Menu {
 	private int TILE_SIZE = 32;
 	private Map map;
 	private MapPreview mapPreview;
+	private TextWindow toolInfoWindow;
 	
 	public Map getMap() {
 		return map;
@@ -19,6 +21,12 @@ public class MapEditMenu extends Menu {
 	
 	public void setMapPreview(MapPreview mp) {
 		mapPreview = mp;
+	}
+	
+	public void update() {
+		if (mapPreview.getTool() != null) {
+			toolInfoWindow.setText(mapPreview.getTool().getToolInfo());
+		}
 	}
 	
 	public MapEditMenu(StartupNew m, TileHashMap tm) {
@@ -38,5 +46,8 @@ public class MapEditMenu extends Menu {
 		addMenuItem(new BackButton(m));
 		addMenuItem(new ScrollLeftButton("L", tilebar.getX()-30, tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
 		addMenuItem(new ScrollRightButton("R", tilebar.getX() + tilebar.getWidth(), tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
+		toolInfoWindow = new TextWindow(true,"",1500,700,10,3,state);
+		toolInfoWindow.setIgnoreCodes();
+		addMenuItem(toolInfoWindow);
 	}
 }

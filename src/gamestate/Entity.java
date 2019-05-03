@@ -41,6 +41,16 @@ public class Entity implements Drawable,EntityInterface {
 	private long delta;
 	private String name;
 	private boolean needsRemove;
+	private String appearFlag = " ";
+	private String disappearFlag = " ";
+	
+	public void setAppearFlag(String a) {
+		appearFlag = a;
+	}
+	
+	public void setDisappearFlag(String d) {
+		disappearFlag = d;
+	}
 	
 	public void setToRemove(boolean b) {
 		this.needsRemove = b;
@@ -218,7 +228,7 @@ public class Entity implements Drawable,EntityInterface {
 //		}
 	}
 	
-	public void checkCollisions() {
+	public boolean checkCollisions() {
 		//collisions are cumulative over all layers
 		int ts = state.getGameState().getMapRenderer().getTileSize();
 		int leftEdge = (this.x + deltaX)/ts;
@@ -274,9 +284,14 @@ public class Entity implements Drawable,EntityInterface {
 				
 				(((collisiont1 & 4)&15) == 4 && ((collisiont2 & 4)&15) == 4 &&
 				((collisiont3 & 4)&15) == 4 && ((collisiont4 & 4)&15) == 4)) {
-			stageForRedraw();
+//			stageForRedraw();
 		}
-			
+		
+		if ((collisiont1 & 1 & 15) == 1 || (collisiont2 & 1 & 15) == 1 ||
+				(collisiont3 & 1 & 15) == 1 || (collisiont4 & 1 & 15) == 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	public void handleInput(InputController input) {
@@ -393,6 +408,15 @@ public class Entity implements Drawable,EntityInterface {
 		// TODO Auto-generated method stub
 		String[] name = texture.split(".");
 		return name[0];
+	}
+
+	public String getAppearFlag() {
+		// TODO Auto-generated method stub
+		return appearFlag;
+	}
+	
+	public String getDisappearFlag() {
+		return disappearFlag;
 	}
 
 }

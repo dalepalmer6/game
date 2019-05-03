@@ -24,6 +24,7 @@ import gamestate.BattleEntity;
 import gamestate.Enemy;
 import gamestate.EnemyEntity;
 import gamestate.EntityStats;
+import gamestate.LevelupData;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
 import global.InputController;
@@ -71,6 +72,8 @@ public class BattleMenu extends Menu {
 	private boolean alertDeadEntity;
 	private BattleEntity deadEntity;
 	private boolean locked;
+	private boolean levelupDisplay;
+	private String levelupString;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -265,12 +268,69 @@ public class BattleMenu extends Menu {
 			int awardEXP = expPool/party.size();
 			prompt = new BattleTextWindow(party.get(0).getName() + " and co. received " + awardEXP + " experience points.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
 //			prompt.setPollForActionsOnExit();
+			levelupString = "";
 			for (PartyMember pm : partyMembers) {
 				pm.addExp(awardEXP);
+				int lv = pm.getStats().getStat("LVL");
+				if (pm.getStats().getStat("CURXP") >= LevelupData.getExpToLevel(lv+1)) {
+					EntityStats oldStats = pm.getBaseStats();
+					
+					//generate diffs for all of the stats
+					//int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp
+					int[] growth = {18, 5, 4, 7, 5, 5, 6};
+					int newOff=Math.min(((growth[0] * (lv+1)) - ((oldStats.getStat("ATK") - 2)*10)) * 5/50,0);
+					int newDef=Math.min(((growth[1] * (lv+1)) - ((oldStats.getStat("DEF") - 2)*10)) * 5/50,0);
+					int newSpd=Math.min(((growth[2] * (lv+1)) - ((oldStats.getStat("SPD") - 2)*10)) * 5/50,0);
+					int newGuts=Math.min(((growth[3] * (lv+1)) - ((oldStats.getStat("GUTS") - 2)*10)) * 5/50,0);
+					int newVit=Math.min(((growth[4] * (lv+1)) - ((oldStats.getStat("VIT") - 2)*10)) * 5/50,0);
+					int newIQ =Math.min(((growth[5] * (lv+1)) - ((oldStats.getStat("IQ") - 2)*10)) * 5/50,0);
+					int newLuck=Math.min(((growth[6] * (lv+1)) - ((oldStats.getStat("LUCK") - 2)*10)) * 5/50,0);
+//					int newHP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
+//					int newPP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
+					int newHP = 10;
+					int newPP = 10;
+					EntityStats statIncreases = new EntityStats(1,newHP,newPP,newHP,newPP,newOff,newDef,newIQ,newSpd,newGuts,newLuck,newVit,0);
+					
+					levelupString += pm.getName() + " leveled up![PROMPTINPUT]";
+					if (newOff != 0) 
+					levelupString += "Offense went up by " + newOff + "[PROMPTINPUT]";
+					if (newDef != 0)
+					levelupString += "Defense went up by " + newDef + "[PROMPTINPUT]";
+					if (newDef != 0)
+					levelupString += "Speed went up by " + newSpd + "[PROMPTINPUT]";
+					if (newSpd != 0)
+					levelupString += "Guts went up by " + newGuts + "[PROMPTINPUT]";
+					if (newGuts != 0)
+					levelupString += "Vitality went up by " + newVit + "[PROMPTINPUT]";
+					if (newVit != 0)
+					levelupString += "IQ went up by " + newIQ + "[PROMPTINPUT]";
+					if (newIQ != 0)
+					levelupString += "Luck went up by " + newLuck + "[PROMPTINPUT]";
+					if (newLuck != 0)
+					levelupString += "Max HP went up by " + newHP + "[PROMPTINPUT]";
+					if (newHP != 0)
+					levelupString += "Max PP went up by " + newPP + "[PROMPTINPUT]";
+					if (newPP != 0)
+					pm.addStats(statIncreases);
+					readyToDisplay = true;
+					displayRecExp = false;
+					levelupDisplay = true;
+				}
 				//add a check to see if someone is leveling up, if so, then we need to display the level up prompts
+				
 			}
+			if (levelupString.equals("")) {
+				kill = true;
+				readyToDisplay = true;
+				displayRecExp = false;
+			}
+		}
+		
+		if (levelupDisplay && getNext) {
+			getNext = false;
+			prompt = new BattleTextWindow(levelupString,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			levelupDisplay = false;
 			readyToDisplay = true;
-			displayRecExp = false;
 			kill = true;
 		}
 		

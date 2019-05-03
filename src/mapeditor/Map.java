@@ -47,6 +47,14 @@ public class Map {
 	private String pathToMaps;
 	private String pathToTilesets;
 	
+	public ArrayList<ArrayList<Integer>> getLayerMap() {
+		return layerMap;
+	}
+	
+	public ArrayList<ArrayList<TileInstance>> getLayerInstances() {
+		return layerMapTileInstance;
+	}
+	
 	public String getBGM() {
 		return bgm;
 	}
@@ -115,23 +123,35 @@ public class Map {
 			pw.flush();
 			pw.close();
 			pw = new PrintWriter(new File(pathToMaps + mapId +"/entities.csv"));
-			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME\n";
+			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG\n";
 			for (Entity e : entitiesInMap) {
 				if (!(e instanceof DoorEntity)) {
-					writeEntities += e.getTextureNoExt() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() +  "," + e.getName() +"\n"; 
+					writeEntities += e.getTextureNoExt() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() + "," + e.getName() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
 				}
 			}
 			pw.write(writeEntities);
 			pw.flush();
 			pw.close();
 			pw = new PrintWriter(new File(pathToMaps + mapId +"/doors.csv"));
-			String writeDoors = "DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT\n";
+			String writeDoors = "DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG\n";
 			for (Entity e : entitiesInMap) {
-				if ((e instanceof DoorEntity)) {
-					writeDoors += ((DoorEntity)e).getDesc() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + ((DoorEntity)e).getDestMap() + "," + (((DoorEntity)e).getDestX()) + "," + (((DoorEntity)e).getDestY()) + "," + e.getText() +"\n"; 
+				if ((e instanceof DoorEntity) && !(e instanceof HotSpot)) {
+					writeDoors += ((DoorEntity)e).getDesc() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + ((DoorEntity)e).getDestMap() + "," + (((DoorEntity)e).getDestX()) + "," + (((DoorEntity)e).getDestY()) + "," + e.getText() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
 				}
 			}
 			pw.write(writeDoors);
+			pw.flush();
+			pw.close();
+			pw = new PrintWriter(new File(pathToMaps + mapId + "/hotspots.csv"));
+			String writeHotspots = "Hotspot Name,x,y,width,height,cutscene name,APPEARFLAG,DISAPPEARFLAG\n";
+			for (Entity e : entitiesInMap) {
+				if (e instanceof HotSpot) {
+					String csnameAbsolute = ((HotSpot)e).getCutsceneName();
+					String csName = csnameAbsolute.replaceFirst(pathToMaps + mapId + "/","");
+					writeHotspots += (((HotSpot)e).getDesc() + "," + e.getX() + "," + e.getY() + "," + e.getWidth() + "," + e.getHeight() + "," + csName + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n");
+				}
+			}
+			pw.write(writeHotspots);
 			pw.flush();
 			pw.close();
 		} catch(FileNotFoundException e) {
@@ -195,9 +215,14 @@ public class Map {
 				int destX = Integer.parseInt(split[6]);
 				int destY = Integer.parseInt(split[7]);
 				String text = split[8];
+				String appFlag = split[9];
+				String disFlag = split[10];
+				
 //				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
 //				e.setText(text);
 				DoorEntity e = new DoorEntity(desc,x*scale,y*scale,width*scale,height*scale,state,destX*scale,destY*scale,destMap,text);
+				e.setAppearFlag(appFlag);
+				e.setDisappearFlag(disFlag);
 				entitiesInMap.add(e);
 			}
 		} catch (FileNotFoundException e) {
@@ -224,8 +249,12 @@ public class Map {
 				int width = Integer.parseInt(split[3]);
 				int height = Integer.parseInt(split[4]);
 				String text = split[5];
+				String appFlag = split[7];
+				String disFlag = split[8];
 				Entity e = state.getEntityFromEnum(texture).createCopy(scale*x,scale*y,scale*width,scale*height,name);
 				e.setText(text);
+				e.setAppearFlag(appFlag);
+				e.setDisappearFlag(disFlag);
 				entitiesInMap.add(e);
 			}
 		} catch (FileNotFoundException e) {
@@ -252,10 +281,14 @@ public class Map {
 				int w = Integer.parseInt(split[3]);
 				int h = Integer.parseInt(split[4]);
 				String csName = split[5];
+				String appFlag = split[6];
+				String disFlag = split[7];
 				String pathToCurrentMap = pathToMaps + mapId + "/";
 //				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
 //				e.setText(text);
 				HotSpot e = new HotSpot(name,x*scale,y*scale,w*scale,h*scale,state,0,0,"","", pathToCurrentMap + csName);
+				e.setAppearFlag(appFlag);
+				e.setDisappearFlag(disFlag);
 				entitiesInMap.add(e);
 			}
 		} catch (FileNotFoundException e) {

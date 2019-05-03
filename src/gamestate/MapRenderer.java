@@ -9,6 +9,7 @@ import mapeditor.Tile;
 import mapeditor.TileHashMap;
 import menu.DrawableObject;
 import menu.StartupNew;
+import tiles.ChangeWithFlagTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
 import tiles.TileInstance;
@@ -36,6 +37,10 @@ public class MapRenderer extends DrawableObject implements Drawable{
 	private int scaleUp = 4;
 	private final int TILE_SIZE = 32 * scaleUp;
 	private StartupNew state;
+	
+	public void initDrawTiles(MainWindow m) {
+		Tile.initDrawTiles(m,map.getTileset());
+	}
 	
 	public int getWidthInTiles() {
 		return widthInTiles;
@@ -101,6 +106,12 @@ public class MapRenderer extends DrawableObject implements Drawable{
 			for (int j = 1; j < heightInTiles-1; j++) {
 				int val = this.areaOfInterest.get(j).get(i);
 				tile = tileMap.getTile(val);
+				if (tile instanceof ChangeWithFlagTile) {
+					String flag = ((ChangeWithFlagTile) tile).getFlagName();
+					if (state.getGameState().getFlag(flag)) {
+						tile = tileMap.getTile(((ChangeWithFlagTile) tile).getNewTileId());
+					}
+				}
 				int instance  = map.inspectSurroundings(i + camera.getX()/TILE_SIZE,j + camera.getY()/TILE_SIZE);
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
 				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
@@ -118,16 +129,27 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		if (t == state.tileMap.getTile(0)) {
 			return;
 		}
-		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
+		//split the tile into 4x4 pieces (each is 8px by 8px) (16)
+		for (int i = 0; i < 4; i++) { //y
+			for (int j = 0; j < 4; j++) { //x
+				if (t.getInstance(instance).getCollisionInfoAtIndex(j,i) == 2) {
+					RedrawObject robj = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, t.getDx(instance) + (j*8),t.getDy(instance) + (i*8),8,8);
+					state.getGameState().addToRedrawing(robj);
+					continue;
+				}
+				m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, t.getDx(instance) + (j*8),t.getDy(instance) + (i*8),8,8);
+			}
+		}
+//		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
 	}
 	
 	public void draw(MainWindow m) {
-		map.setChangeMap("BG");
-		getAreaOfInterest();
-		drawTilesBG(m);
-		map.setChangeMap("FG");
-		getAreaOfInterest();
-		drawTiles(m);
+//		map.setChangeMap("BG");
+//		getAreaOfInterest();
+//		drawTilesBG(m);
+//		map.setChangeMap("FG");
+//		getAreaOfInterest();
+//		drawTiles(m);
 	}
 	
 	public void getAreaOfInterest() {

@@ -29,6 +29,10 @@ public class TextWindow extends MenuItem implements Drawable{
 	protected StartupNew m;
 	protected boolean shouldDrawAll;
 	
+	public void setIgnoreCodes() {
+		text.setIgnoreCodes();
+	}
+	
 	public int getWidth() {
 		return width;
 	}

@@ -280,6 +280,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	@Override
 	public void handleInput(InputController input) {
 		if (!drawOnly) {
+//			state.setHoldable(false);
 			if (input.getSignals().get("UP")) {
 				updateIndex("U");
 				state.setSFX("cursverti.wav");

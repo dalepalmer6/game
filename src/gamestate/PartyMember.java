@@ -25,6 +25,30 @@ public class PartyMember {
 	private StartupNew state;
 	private int index;
 	
+	public int hasItem(int id) {
+		for (int i = 0; i < items.size(); i++) {
+			Item item = items.get(i);
+			if (item.getId() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public int getOpenInventorySpace() {
+		for (int j = 0; j < items.size(); j++) {
+			Item i = items.get(j);
+			if (i.getId() == 0) {
+				return j;
+			}
+		}
+		return -1;//no empty space
+	}
+	
+	public void setItem(Item i, int space) {
+		items.set(space,i);
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -49,6 +73,10 @@ public class PartyMember {
 		return stats;
 	}
 	
+	public EntityStats getBaseStats() {
+		return baseStats;
+	}
+	
 	public long getKnownPSI() {
 		return knownPSI;
 	}
@@ -69,10 +97,10 @@ public class PartyMember {
 		this.index = number;
 		this.state = state;
 		this.id = id;
-		loadStats(number);
+		loadStats(id);
 	}
 	
-	public void loadStats(int i) {
+	public void loadStats(String i) {
 		//load from a saved file
 		String pathToEntity = "savedata/players/" + i;
 		File file = new File(pathToEntity);
@@ -143,5 +171,10 @@ public class PartyMember {
 		// TODO Auto-generated method stub
 		this.baseStats.replaceStat("CURHP",stat);
 		this.baseStats.replaceStat("CURPP",stat2);
+	}
+	
+	public void addStats(EntityStats diffs) {
+		this.baseStats.addStats(diffs);
+		this.stats.addStats(diffs);
 	}
 }

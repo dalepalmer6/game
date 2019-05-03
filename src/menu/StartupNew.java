@@ -66,6 +66,7 @@ import menu.mainmenu.MainMenu;
 import menu.mainmenu.MapPreviewTestButton;
 import menu.mainmenu.NewGameMenuItem;
 import menu.mainmenu.OptionsMenuItem;
+import tiles.ChangeWithFlagTile;
 import tiles.MultiInstanceTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
@@ -125,9 +126,12 @@ public class StartupNew{
 	public boolean inBattle;
 	public BattleMenu battleMenu;
 	private Audio bgm;
+	private float bgmStart;
+	private float bgmEnd;
 	private String curBGM = "";
 	private Audio sfx;
 	private boolean audioOverride; //forces the bgm loading from happening on loading a map
+	private String pathToMusic = "audio/music/";
 	
 	public void setBGM(String path) {
 		if (curBGM.equals(path)) {
@@ -136,7 +140,14 @@ public class StartupNew{
 		try {
 			if (!audioOverride) {
 				curBGM = path;
-				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("audio/" + path));
+				String propsFilePath = curBGM.substring(0,curBGM.indexOf("."));
+				BufferedReader br = new BufferedReader(new FileReader(new File(pathToMusic + propsFilePath)));
+				String propsStr = br.readLine();
+				br.close();
+				String[] props = propsStr.split(",");
+				bgmStart = Float.parseFloat(props[0]);
+				bgmEnd = Float.parseFloat(props[1]);
+				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream(pathToMusic + path));
 				bgm.playAsMusic(1.0f, 1.0f, true);
 			}
 		} catch (IOException e) {
@@ -148,6 +159,7 @@ public class StartupNew{
 	public void setSFX(String path) {
 		try {
 			sfx = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("audio/" + path));
+			sfx.playAsSoundEffect(1.0f,1f,false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -451,7 +463,11 @@ public class StartupNew{
 										tileMap.addTile(t);
 //										br.readLine();
 										break;
-										
+						case "flagChange": t = new ChangeWithFlagTile(i++,type[1],Integer.parseInt(type[2]));
+										t.addTileInstance(Integer.parseInt(dims[0]),Integer.parseInt(dims[1]),Integer.parseInt(dims[2]),Integer.parseInt(dims[3]),colArray);
+										tileMap.addTile(t);
+				//						br.readLine();
+										break;
 						case "multi" : 	t = new MultiInstanceTile(i++);
 //										
 //										row = br.readLine();
@@ -714,6 +730,11 @@ public class StartupNew{
 	}
 	
 	public void update() {
+		if (bgm != null) {
+			if (bgm.getPosition() >= bgmEnd) {
+				bgm.setPosition(bgmStart);
+			}
+		}
 		if (drawAllMenus) {
 			for (Menu c : menuStack.getMenus()) {
 				//only update the top one 

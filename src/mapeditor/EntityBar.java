@@ -70,7 +70,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		this.tileBar = tilebar;
 		this.x = mapPreview.getRightEdge() + 3*TILE_SIZE;
 		this.y = tileBar.getY() + tileBar.getHeight() + 3*TILE_SIZE;
-		state.getTextureAtlas().setRectByName("img/entities.png");
+//		state.getTextureAtlas().setRectByName("img/entities.png");
 		this.state= state;
 		this.mapPreview = mapPreview;
 		this.widthInTiles = maxWidthTiles;
@@ -137,21 +137,8 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		ArrayList<ArrayList<Entity>> tiles = new ArrayList<ArrayList<Entity>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Entity> row = new ArrayList<Entity>();
-//		for (String name : state.allEntitiesNames) {
-//			row.add(state.allEntities.get(name));
-//		}
-//		for (int j = viewY; j < this.heightInTiles + viewY; j++) {
-//			for (int i = viewX; i < widthInTiles + viewX; i++) {
-//				int curId = i + (j * numTilesX);
-//				if (curId >= state.allEntitiesNames.size()) {
-//					break;
-//				}
-//				row.add(state.allEntities.get(state.allEntitiesNames.get(curId)));
-//			}
-//			tiles.add(row);
-//			row = new ArrayList<Entity>();
-//		}
-		currentEntitiesOfInterest = row;
+		currentEntitiesOfInterest = mapPreview.getMap().getEntities();
+//		currentEntitiesOfInterest = row;
 	}
 	
 	public Entity getCurrentTileFromInterestList(int x) {
@@ -193,8 +180,8 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	public void draw(MainWindow m) {
 		getTilesOfInterest();
 		drawTiles();
-		drawGrid(m);
-		drawCoordinates();
+//		drawGrid(m);
+//		drawCoordinates();
 	}
 
 	@Override
