@@ -10,7 +10,7 @@ move,-8,0
 move,-8,0
 move,-8,0
 move,-8,0
-text,OH MY SWEET JESUS THE LAMP STARTED TO MOVE!!![STARTBATTLE_Lamp]Battle
+text,The lamp began to move![PROMPTINPUT] [STARTBATTLE_Lamp] [SETFLAG_lampDead] 
 move,-8,0
 move,-8,0
 move,-8,0

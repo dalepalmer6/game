@@ -1,3 +1,7 @@
-TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME
-ninten,424,226,24,32,Jesus[WAIT30] Jesus[WAIT30] Jesus[WAIT30] Jesus.[PROMPTINPUT]I didn't tell you.,entityCutscene
-ninten,364,155,24,32,Did a poltergeist visit your house?[WAIT30] [NEWLINE]One destroyed mine...,ninten
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,319,172,24,32,Bark! (Ninten you have psychic powers.),puppy, , 
+ninten,858,1901,24,32,Did a poltergeist visit your house?[WAIT30] [NEWLINE]One destroyed mine...,poltergeistperson, , 
+ninten,1558,3091,24,32,The dead are coming back to life and wreaking havoc.,townsperson1, , 
+ninten,1227,849,24,32,Oh me![WAIT30] Oh my![WAIT30] [NEWLINE]My poor little Pippi has been abducted![WAIT30] [NEWLINE]Whatever shall I do?,ninten, , 
+ninten,1717,3324,24,32,Have you heard Laura the Canary's singing? [PROMPTINPUT]They say that her voice is absolutely divine.,entityCutscene, , 
+ninten,432,241,24,32,[SETFLAG_zooGateOpen]Eek!,ninten, , 

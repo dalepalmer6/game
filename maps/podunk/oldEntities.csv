@@ -1,0 +1,3 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME
+ninten,424,226,24,32,Jesus[WAIT30] Jesus[WAIT30] Jesus[WAIT30] Jesus.[PROMPTINPUT]I didn't tell you.,entityCutscene
+ninten,364,155,24,32,Did a poltergeist visit your house?[WAIT30] [NEWLINE]One destroyed mine...,ninten

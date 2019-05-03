@@ -9,3 +9,4 @@
 7,HeadgearTest,Headgear that tests the equipment menu.,0,2,TRUE,FALSE,-1,0,5,0,0,0,0,0,a
 8,BodyTest,Tests the body equipper,0,4,TRUE,FALSE,-1,0,4,0,0,0,0,0,a
 9,OtherTest,Tests the other equipper,0,8,TRUE,FALSE,-1,3,3,0,0,0,0,0,an
+10,Hat,A hat that someone appears to have lost at the Reindeer station.,0,0,FALSE,TRUE,0,0,0,0,0,0,0,0,a
