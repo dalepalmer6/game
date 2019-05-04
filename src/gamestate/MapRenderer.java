@@ -38,6 +38,10 @@ public class MapRenderer extends DrawableObject implements Drawable{
 	private final int TILE_SIZE = 32 * scaleUp;
 	private StartupNew state;
 	
+	public Map getMap() {
+		return map;
+	}
+	
 	public void initDrawTiles(MainWindow m) {
 		Tile.initDrawTiles(m,map.getTileset());
 	}
@@ -124,20 +128,36 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
 	}
 	
-	public void drawTile(MainWindow m, int x, int y, Tile t, int instance) {
+	public void drawTile(MainWindow m, int x, int y, Tile tbg, int instancebg, Tile tfg, int instancefg) {
+		boolean drawFG = true;
+		boolean drawBG = true;
 		Tile.initDrawTiles(m,map.getTileset());
-		if (t == state.tileMap.getTile(0)) {
-			return;
+		if (tbg == state.tileMap.getTile(0)) {
+			drawBG = false;
+		} 
+		if (tfg == state.tileMap.getTile(0)) {
+			drawFG = false;
 		}
 		//split the tile into 4x4 pieces (each is 8px by 8px) (16)
 		for (int i = 0; i < 4; i++) { //y
 			for (int j = 0; j < 4; j++) { //x
-				if (t.getInstance(instance).getCollisionInfoAtIndex(j,i) == 2) {
-					RedrawObject robj = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, t.getDx(instance) + (j*8),t.getDy(instance) + (i*8),8,8);
-					state.getGameState().addToRedrawing(robj);
+				if (tbg.getInstance(instancebg).getCollisionInfoAtIndex(j,i) == 2 || tfg.getInstance(instancefg).getCollisionInfoAtIndex(j,i) == 2) {
+					if (drawBG) {
+						RedrawObject robj = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8);
+						state.getGameState().addToRedrawing(robj);
+					}
+					if (drawFG) {
+						RedrawObject robj2 = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8);
+						state.getGameState().addToRedrawing(robj2);
+					}
 					continue;
 				}
-				m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, t.getDx(instance) + (j*8),t.getDy(instance) + (i*8),8,8);
+				if (drawBG) {
+					m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8);
+				}
+				if (drawFG) { 
+					m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8);
+				}
 			}
 		}
 //		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));

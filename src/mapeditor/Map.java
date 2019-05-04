@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import gamestate.DoorEntity;
+import gamestate.EnemySpawnEntity;
 import gamestate.Entity;
 import gamestate.FollowingPlayer;
 import gamestate.HotSpot;
@@ -125,7 +126,7 @@ public class Map {
 			pw = new PrintWriter(new File(pathToMaps + mapId +"/entities.csv"));
 			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG\n";
 			for (Entity e : entitiesInMap) {
-				if (!(e instanceof DoorEntity)) {
+				if (!((e instanceof DoorEntity) || (e instanceof EnemySpawnEntity))) {
 					writeEntities += e.getTextureNoExt() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() + "," + e.getName() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
 				}
 			}
@@ -152,6 +153,16 @@ public class Map {
 				}
 			}
 			pw.write(writeHotspots);
+			pw.flush();
+			pw.close();
+			pw = new PrintWriter(new File(pathToMaps + mapId + "/enemyspawns.data"));
+			String writeEnemyData = "";
+			for (Entity e : entitiesInMap) {
+				if (e instanceof EnemySpawnEntity) {
+					writeEnemyData += e.toString();
+				}
+			}
+			pw.write(writeEnemyData);
 			pw.flush();
 			pw.close();
 		} catch(FileNotFoundException e) {
@@ -192,11 +203,49 @@ public class Map {
 		parseEntities(new File(pathToCurrentMap + "entities.csv"),scale);
 		parseDoors(new File(pathToCurrentMap + "doors.csv"),scale);
 		parseHotspots(new File(pathToCurrentMap + "hotspots.csv"),scale);
+		parseEnemySpawns(new File(pathToCurrentMap + "enemyspawns.data"),scale);
 		state.setBGM(bgm);
 		state.playBGM();
 	}
 	
-	
+	public void parseEnemySpawns(File ent,int scale) {
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(ent));
+			String row = "";
+			while ((row = br.readLine()) != null) {
+				if (row.equals("#")) {
+					//read next four lines
+					row = br.readLine();
+					String name = row;
+					row = br.readLine();
+					String[] mapdata = row.split(",");
+					int x = Integer.parseInt(mapdata[0]);
+					int y = Integer.parseInt(mapdata[1]);
+					int w = Integer.parseInt(mapdata[2]);
+					int h = Integer.parseInt(mapdata[3]);
+					row = br.readLine();
+					String[] names = row.split(",");
+					row = br.readLine();
+					String[] percents = row.split(",");
+					float[] percentsFloats = new float[percents.length];
+					for (int i = 0; i < percents.length; i++) {
+						percentsFloats[i] = Float.parseFloat(percents[i]);
+					}
+					EnemySpawnEntity ese = new EnemySpawnEntity(x*scale,y*scale,w*scale,h*scale,state,name);
+					ese.setRates(percentsFloats);
+					ese.setEnemies(names);
+					entitiesInMap.add(ese);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void parseDoors(File ent,int scale) {
 		BufferedReader br;

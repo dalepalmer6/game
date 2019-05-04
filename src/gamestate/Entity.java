@@ -111,6 +111,10 @@ public class Entity implements Drawable,EntityInterface {
 		y += deltaY;
 	}
 	
+	public void kill() {
+		
+	}
+	
 	public void update(GameState gs) {
 		move();
 		xOnScreen = x - gs.getCamera().getX();
@@ -356,6 +360,9 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public boolean checkCollision(Entity e2) {
+		if (e2 instanceof DoorEntity || e2 instanceof EnemySpawnEntity) {
+			return false;
+		}
 		if (this.x + deltaX < e2.x + e2.width && this.x + deltaX +this.width > e2.x &&
 			this.y +deltaY + this.height*3/4 < e2.y + e2.height && this.y +deltaY+ this.height > e2.y + e2.height*3/4) {
 			return true;

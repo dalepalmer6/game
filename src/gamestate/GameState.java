@@ -47,6 +47,7 @@ public class GameState {
 	private HashMap<String,Entity> partyMemberEntities = new HashMap<String,Entity>();
 	private HashMap<String, Boolean> flags;
 	private HashMap<String, Entity> removed;
+	private ArrayList<Entity> partyMembersInEntities;
 	
 	public Player getPlayer() {
 		return player;
@@ -112,8 +113,8 @@ public class GameState {
 				ninten = state.getEntityFromEnum(texture).createCopy(x,y,24,32,"ninten");
 				loid = state.getEntityFromEnum("loid").createCopy(x,y,24,32,"loid");
 				ana = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
-				teddy = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
-				pippi = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
+				teddy = state.getEntityFromEnum("teddy").createCopy(x,y,24,32,"ana");
+				pippi = state.getEntityFromEnum("pippi").createCopy(x,y,24,32,"ana");
 				partyMemberEntities.put("NINTEN",ninten);
 				partyMemberEntities.put("LOID",loid);
 				partyMemberEntities.put("ANA",ana);
@@ -154,7 +155,7 @@ public class GameState {
 //		addPartyMember("ANA");
 //		addPartyMember(new PartyMember("LOID",state));
 //		addPartyMember(new PartyMember("TEDDY",4,state));
-//		addPartyMember(new PartyMember("PIPPI",4,state));
+//		addPartyMember("PIPPI");
 		createTestEnemy();
 //		createTestDoor();
 	}
@@ -221,17 +222,15 @@ public class GameState {
 			int instance;
 			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) {
 				map.setChangeMap("BG");
-				val = bg.get(i).get(j);
-				tile = state.tileMap.getTile(val);
-				instance  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
-				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
-			}
-			for (int j = 1; j < mapRenderer.getWidthInTiles()-1; j++) { 
+				int valbg = bg.get(i).get(j);
+				Tile tilebg = state.tileMap.getTile(valbg);
+				int instancebg  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
 				map.setChangeMap("FG");
-				val = fg.get(i).get(j);
-				tile = state.tileMap.getTile(val);
-				instance  = map.inspectSurroundings(j+ camera.getX()/128,i + camera.getY()/128);
-				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
+				int valfg = fg.get(i).get(j);
+				Tile tilefg = state.tileMap.getTile(valfg);
+				int instancefg  = map.inspectSurroundings(j+ camera.getX()/128,i + camera.getY()/128);
+				mapRenderer.drawTile(state.getMainWindow(),j,i,tilebg,instancebg,tilefg,instancefg);
+//				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
 			for (Entity e : entities) {
 				e.draw(state.getMainWindow());
@@ -308,8 +307,8 @@ public class GameState {
 		if (flagTiles.isEmpty()) {
 			return;
 		}
-		for (int i = 1; i < map.getHeight(); i++) {
-			for (int j = 1; j < map.getWidth(); j++) {
+		for (int i = 1; i < map.getHeight()-1; i++) {
+			for (int j = 1; j < map.getWidth()-1; j++) {
 				ArrayList<ArrayList<Integer>> cMap;
 				ArrayList<ArrayList<TileInstance>> tiMap;
 				map.setChangeMap("BG");
@@ -335,9 +334,6 @@ public class GameState {
 				tiMap = map.getLayerInstances();
 				val = cMap.get(i).get(j);
 				tile = state.tileMap.getTile(val);
-				if (val == 110) {
-					System.out.println("OK?");
-				}
 				if (tile instanceof ChangeWithFlagTile) {
 					String fName = ((ChangeWithFlagTile) tile).getFlagName();
 					if (getFlag(fName)) {
@@ -384,6 +380,13 @@ public class GameState {
 		for (Entity e : map.getEntitiesInView(camera.getX(), camera.getY())) {
 			if (!entities.contains(e) && entityReady(e)) {
 				entities.add(e);
+			} else if (entities.contains(e) && getFlag(e.getDisappearFlag())) {
+				e.setToRemove(true);
+			}
+			for (Entity entityFromMap : map.getEntities()) {
+				if (!map.getEntitiesInView(camera.getX(), camera.getY()).contains(entityFromMap)) {
+					entityFromMap.setToRemove(true);
+				}
 			}
 		}
 		
@@ -460,6 +463,7 @@ public class GameState {
 			Entity e = entities.get(i);
 			if (e.getNeedToRemoveState()) {
 				e.setToRemove(false);
+				e.kill();
 				entities.remove(e);
 				continue;
 			}
@@ -492,17 +496,19 @@ public class GameState {
 					continue;
 				}
 				if (!(e == e2)) {
-					if (e.checkCollision(e2)) {
-						e.deltaX = 0;
-						e.deltaY = 0;
-						e2.deltaX = 0;
-						e2.deltaY = 0;
+					if (!(e instanceof DoorEntity || e instanceof EnemySpawnEntity)) {
+						if (e.checkCollision(e2)) {
+							e.deltaX = 0;
+							e.deltaY = 0;
+							e2.deltaX = 0;
+							e2.deltaY = 0;
+						}
 					}
-					if (e.checkCollisionWithTolerance(e2,8)) {
-						e.addToInteractables(e2);
-					} else {
-//						e.removeFromInteractables(e2);
-					}
+						if (e.checkCollisionWithTolerance(e2,8)) {
+							e.addToInteractables(e2);
+						} else {
+//							e.removeFromInteractables(e2);
+						}
 				}
 			}
 		}

@@ -278,13 +278,13 @@ public class BattleMenu extends Menu {
 					//generate diffs for all of the stats
 					//int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp
 					int[] growth = {18, 5, 4, 7, 5, 5, 6};
-					int newOff=Math.min(((growth[0] * (lv+1)) - ((oldStats.getStat("ATK") - 2)*10)) * 5/50,0);
-					int newDef=Math.min(((growth[1] * (lv+1)) - ((oldStats.getStat("DEF") - 2)*10)) * 5/50,0);
-					int newSpd=Math.min(((growth[2] * (lv+1)) - ((oldStats.getStat("SPD") - 2)*10)) * 5/50,0);
-					int newGuts=Math.min(((growth[3] * (lv+1)) - ((oldStats.getStat("GUTS") - 2)*10)) * 5/50,0);
-					int newVit=Math.min(((growth[4] * (lv+1)) - ((oldStats.getStat("VIT") - 2)*10)) * 5/50,0);
-					int newIQ =Math.min(((growth[5] * (lv+1)) - ((oldStats.getStat("IQ") - 2)*10)) * 5/50,0);
-					int newLuck=Math.min(((growth[6] * (lv+1)) - ((oldStats.getStat("LUCK") - 2)*10)) * 5/50,0);
+					int newOff=Math.max(((growth[0] * (lv+1)) - ((oldStats.getStat("ATK") - 2)*10)) * 5/50,0);
+					int newDef=Math.max(((growth[1] * (lv+1)) - ((oldStats.getStat("DEF") - 2)*10)) * 5/50,0);
+					int newSpd=Math.max(((growth[2] * (lv+1)) - ((oldStats.getStat("SPD") - 2)*10)) * 5/50,0);
+					int newGuts=Math.max(((growth[3] * (lv+1)) - ((oldStats.getStat("GUTS") - 2)*10)) * 5/50,0);
+					int newVit=Math.max(((growth[4] * (lv+1)) - ((oldStats.getStat("VIT") - 2)*10)) * 5/50,0);
+					int newIQ =Math.max(((growth[5] * (lv+1)) - ((oldStats.getStat("IQ") - 2)*10)) * 5/50,0);
+					int newLuck=Math.max(((growth[6] * (lv+1)) - ((oldStats.getStat("LUCK") - 2)*10)) * 5/50,0);
 //					int newHP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
 //					int newPP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
 					int newHP = 10;

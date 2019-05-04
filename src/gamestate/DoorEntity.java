@@ -65,7 +65,9 @@ public class DoorEntity extends Entity {
 		return text;
 	}
 	
-	public void checkCollisions() {}
+	public boolean checkCollisions() {
+		return false;
+	}
 	
 	public void act() {
 		for (Entity e : interactables) {

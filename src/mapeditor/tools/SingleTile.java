@@ -25,5 +25,6 @@ public class SingleTile extends MapTool {
 	public SingleTile(Tile tile) {
 		super();
 		this.tile = tile;
+		toolInfo = "Tile ID: " + tile.getId();
 	}
 }

@@ -1,0 +1,12 @@
+idle_down,0,0,24,32,false
+idle_up,72,0,24,32,false
+idle_left,24,0,24,32,false
+idle_right,24,0,24,32,true
+walking_left,24,0,24,32,false
+walking_left,24,0,24,32,false
+walking_right,24,0,24,32,false
+walking_right,24,0,24,32,false
+walking_up,72,0,24,32,false
+walking_up,72,0,24,32,true
+walking_down,0,0,24,32,false
+walking_down,0,0,24,32,true
