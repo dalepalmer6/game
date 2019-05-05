@@ -14,11 +14,16 @@ public class SwirlAnimation extends Animation {
 	private float length = 36f;
 	private boolean fadeOut;
 	private boolean readyToStart;
+	
 	public SwirlAnimation(StartupNew m, String texture, int x, int y, int w, int h, EnemyEntity enemyEntity) {
 		super(m,texture,x,y,w,h);
+		state.saveAudio();
+		state.setBGM("swirlgreen.ogg");
 		ticksPerFrame = 0.2d;
 		enemies = new ArrayList<EnemyEntity>();
 		enemies.add(enemyEntity);
+		state.getGameState().setBattleEnemyList(enemies);
+		state.getGameState().setEnemiesCanJoin(true);
 	}
 	
 	@Override
@@ -27,6 +32,7 @@ public class SwirlAnimation extends Animation {
 		
 		if (readyToStart) {
 //			if (((AnimationFadeToBlack)((AnimationMenu) state.getMenuStack().peek()).getAnimation()).isComplete()) {
+				state.getGameState().setEnemiesCanJoin(false);
 				state.getMenuStack().peek().setToRemove(this);
 				BattleMenu m = new BattleMenu(state);
 				m.startBattle(enemies);

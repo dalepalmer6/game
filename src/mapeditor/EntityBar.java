@@ -129,7 +129,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	
 	public void getTilesOfInterest() {
 		MainWindow m = state.getMainWindow();
-		m.setTexture("img/entities.png");
+		m.setTexture("img\\entities.png");
 		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
 		this.MAX_WIDTH_IN_TILES =  state.getTextureAtlas().getCurrentRectangle().width / 16;
 //		Texture t = m.getTexture();
@@ -152,7 +152,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		int i = 0;
 		for (Entity e : currentEntitiesOfInterest) {
 			if (e != null) {
-				m.setTexture("img/" + e.getTexture());
+				m.setTexture("img\\" + e.getTexture());
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 //				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				int drawingX =  (i++) * TILE_SIZE;

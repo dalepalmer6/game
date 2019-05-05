@@ -3,6 +3,7 @@ package actionmenu.goodsmenu.goodsactionmenu;
 import java.util.ArrayList;
 
 import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
+import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
 import battlesystem.SelectTargetMenu;
 import battlesystem.options.BattleAction;
 import gamestate.BattleEntity;
@@ -54,13 +55,15 @@ public class UseMenuItem extends MenuItem {
 			PartyMember target = null;
 			if (party.size() == 1) {
 				target = party.get(0);
+				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,item,user,state);
+				use.execute();
+				state.getMenuStack().pop();
 			} else {
 				//show the list of party members
 				PartyMemberSelectMenu pmsm = new PartyMemberSelectMenu(state,party,item,user);
 				pmsm.createMenu();
 				state.getMenuStack().push(pmsm);
 			}
-//			item.useOutOfBattle(user,target);
 			return null;
 		}
 		return null;

@@ -194,6 +194,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		String t = selections.get(selectedY).get(selectedX).prepareToExecute();
 		if (killWhenComplete) {
 			state.getMenuStack().peek().setToRemove(this);
+			selectedX = 0;
+			selectedY = 0;
 		}
 		if (t != null) {
 			appendOutput(t);

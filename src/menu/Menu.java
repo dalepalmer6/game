@@ -29,6 +29,10 @@ public class Menu implements MenuInterface {
 		return drawables;
 	}
 	
+	public boolean isSwirl() {
+		return false;
+	}
+	
 	public void addToMenuItems(MenuItem m) {
 		// TODO Auto-generated method stub
 		needToAdd.add(m);

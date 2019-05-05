@@ -40,21 +40,18 @@ public class BattleEntity {
 		return width;
 	}
 	
-	public BattleEntity(String texture, String name, int hp, int pp) {
-		this.texture = texture;
-		this.name = name;
-		this.spriteData = new SpritesheetCoordinates();
-		spriteData.setPose("front_");
-		spriteData.addStateToPose("front_",0,0,32,64);
-		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0,0,0,0,0,0);
-	}
-	
+//	public BattleEntity(String texture, String name, int hp, int pp) {
+//		this.texture = texture;
+//		this.name = name;
+//		this.spriteData = new SpritesheetCoordinates();
+//		spriteData.setPose("front_");
+//		spriteData.addStateToPose("front_",0,0,32,64);
+//		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0,0,0,0,0,0);
+//	}
+//	
 	public BattleEntity(String texture, String name, EntityStats es) {
 		this.texture = texture;
 		this.name = name;
-		this.spriteData = new SpritesheetCoordinates();
-		spriteData.setPose("front_");
-		spriteData.addStateToPose("front_",0,0,32,64);
 		this.stats = es;
 	}
 	

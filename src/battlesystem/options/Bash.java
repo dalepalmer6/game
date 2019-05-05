@@ -1,6 +1,7 @@
 package battlesystem.options;
 
 import battlesystem.BattleMenu;
+import battlesystem.SelectTargetMenu;
 import font.SelectionTextWindow;
 import menu.MenuItem;
 import menu.StartupNew;
@@ -18,13 +19,15 @@ public class Bash extends MenuItem{
 		m.setCurrentAction(new BattleAction(state));
 		m.getCurrentAction().setAction("bash");
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());
-		EnemyOptionPanel eop = m.getEnemyOptionPanel();
-		BattleSelectionTextWindow stw = new BattleSelectionTextWindow("vertical",m.getCurrentPlayerStatusWindow().getX(),m.getCurrentPlayerStatusWindow().getY()-3*64,3,3,state);
-			for (EnemyOption eo : eop.getEnemyOptions()) {
-				stw.add(eo);
-			}
-		stw.setKillWhenComplete();
-		m.addToMenuItems(stw);
+		SelectTargetMenu stm = new SelectTargetMenu(state,false,m.getEnemies());
+		state.getMenuStack().push(stm);
+//		EnemyOptionPanel eop = m.getEnemyOptionPanel();
+//		BattleSelectionTextWindow stw = new BattleSelectionTextWindow("vertical",m.getCurrentPlayerStatusWindow().getX(),m.getCurrentPlayerStatusWindow().getY()-3*64,3,3,state);
+//			for (EnemyOption eo : eop.getEnemyOptions()) {
+//				stw.add(eo);
+//			}
+//		stw.setKillWhenComplete();
+//		m.addToMenuItems(stw);
 		return null;
 	}
 

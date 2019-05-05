@@ -98,26 +98,38 @@ public class BattleAction {
 		return actionDone;
 	}
 	
+	public void indexDown() {
+		index--;
+	}
+	
 	public String doAction() {
 		String result = "";
 		index++;
+		if (!targets.contains(recipient)) {
+			recipient = targets.get(0);
+		} 
 		switch(usedAction) {
 			case "bash" : 	state.setSFX("bash.wav");
 							state.playSFX();
 							result += doBash(actor,recipient);
 							state.battleMenu.setTurnIsDone();
+//							state.battleMenu.getCurrentActiveBattleAction().setComplete();
 							break;
 			case "psi" : if (targetAll) {
 //							state.setSFX("bash.wav");
 //							state.playSFX();
-							BattleEntity target = null;
-								target = targets.get(index-1);
-								result += itemToUse.useInBattle(actor,target);
-//								
-							if (index == targets.size()) {
+							if (index-1 >= targets.size()) {
 								state.battleMenu.setTurnIsDone();
 								state.battleMenu.getCurrentActiveBattleAction().setComplete();
-							}
+								break;
+							} 
+							BattleEntity target = null;
+							target = targets.get(index-1);
+							result += itemToUse.useInBattle(actor,target);
+							
+//							else {
+////								state.battleMenu.setGetResultText();
+//							}
 							
 						} else {
 							result += itemToUse.useInBattle(actor,recipient); 
@@ -229,9 +241,10 @@ public class BattleAction {
 		completed = true;
 	}
 
-	public void setTarget(ArrayList<BattleEntity> targets, boolean all) {
+	public void setTargets(ArrayList<BattleEntity> targets, BattleEntity target, boolean all) {
 		// TODO Auto-generated method stub
-		targetAll = true;
+		targetAll = all;
+		this.recipient = target;
 		this.targets = targets;
 	}
 }

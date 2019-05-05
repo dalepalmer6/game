@@ -165,7 +165,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	
 	//can toggle this off!
 	public void drawGrid(MainWindow m) {
-		m.setTexture("img/line.png");
+		m.setTexture("img\\line.png");
 		for (int i = this.x; i <= this.x + width ; i+= TILE_SIZE) {
 			//for every row
 			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {

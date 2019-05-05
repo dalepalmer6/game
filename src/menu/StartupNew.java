@@ -132,8 +132,22 @@ public class StartupNew{
 	private Audio sfx;
 	private boolean audioOverride; //forces the bgm loading from happening on loading a map
 	private String pathToMusic = "audio/music/";
+	private Audio prevAudio;
+	private float prevPos;
+	private boolean playOnce;
+	private boolean savedAudio;
 	
 	public void setBGM(String path) {
+		setBGM(path,false);
+	}
+	
+	public void saveAudio() {
+		prevAudio = bgm;
+		prevPos = bgm.getPosition();
+		savedAudio = true;
+	}
+	
+	public void setBGM(String path, boolean shouldSaveAudio) {
 		if (curBGM.equals(path)) {
 			return;
 		}
@@ -148,11 +162,18 @@ public class StartupNew{
 				bgmStart = Float.parseFloat(props[0]);
 				bgmEnd = Float.parseFloat(props[1]);
 				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream(pathToMusic + path));
-				bgm.playAsMusic(1.0f, 1.0f, true);
+				bgm.playAsMusic(1.0f, 1.0f, false);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream(pathToMusic + path));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			bgm.playAsMusic(1.0f, 1.0f, false);
+			playOnce = true;
 		}
 	}
 	
@@ -557,14 +578,17 @@ public class StartupNew{
 		}
 	}
 	
-	public void loadAllImages()  {
-		File f = new File("img");
+	public void loadAllImages(String s)  {
+		File f = new File("img/" + s);
 		for (File c : f.listFiles()) {
-			imageFileNames.add(c.getName());
+			imageFileNames.add(c.getPath());
 		}
+	}
+	
+	public void loadImageData() {
 		for (String filePath : imageFileNames) {
 			try {
-				filePath = "img/" + filePath;
+//				filePath = "img/" + filePath;
 				//TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(filePath))
 				textures.put(filePath, ImageIO.read(new File(filePath)));
 			} catch (IOException e) {
@@ -632,9 +656,10 @@ public class StartupNew{
 				String texture = data[11];
 				int width = Integer.parseInt(data[12]);
 				int height = Integer.parseInt(data[13]);
+				String entityName = data[14];
 //				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				enemies.put(name,new Enemy(texture,name,width,height,stats,xp));
+				enemies.put(name,new Enemy(texture,name,width,height,stats,xp,entityName));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -694,7 +719,9 @@ public class StartupNew{
 		getMainWindow().start();
 		loadMapNames();
 		loadTileSets();
-		loadAllImages();
+		loadAllImages("");
+		loadAllImages("enemies");
+		loadImageData();
 		loadAllEntities();
 		loadAllItems();
 		loadAllPSI();
@@ -729,10 +756,24 @@ public class StartupNew{
 		input.setHoldable(b);
 	}
 	
+	public void setOldBGM() {
+		if (prevAudio != null) {
+			savedAudio = false;
+			bgm = prevAudio;
+			bgm.setPosition(prevPos);
+			bgm.playAsMusic(1.0f,1f,false);
+			prevAudio = null;
+			prevPos = 0.0f;
+		}
+	}
+	
 	public void update() {
 		if (bgm != null) {
-			if (bgm.getPosition() >= bgmEnd) {
+			if (bgm.getPosition() >= bgmEnd && !playOnce) {
 				bgm.setPosition(bgmStart);
+			}
+			if (!bgm.isPlaying() && savedAudio) {
+				setOldBGM();
 			}
 		}
 		if (drawAllMenus) {

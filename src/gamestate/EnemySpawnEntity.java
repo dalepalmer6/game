@@ -59,9 +59,9 @@ public class EnemySpawnEntity extends Entity {
 						if (rand < rate/100) {
 							int randW = (int) (Math.random()*width);
 							int randH = (int) (Math.random()*height);
-							ArrayList<BattleEntity> picked = new ArrayList<BattleEntity>();
+							ArrayList<Enemy> picked = new ArrayList<Enemy>();
 							picked.add(enemies.get(j));
-							EnemyEntity en = new EnemyEntity("ninten.png",(x+randW),(y+randH),24*4,32*4,state,"enemies",picked);
+							EnemyEntity en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
 							Entity eStatic = state.allEntities.get("redDressLady");
 							en.setSpriteCoords(eStatic.getSpriteCoordinates());
 							spawned.add(en);

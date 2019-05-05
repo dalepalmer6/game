@@ -143,11 +143,11 @@ public class PlayerStatusWindow extends MenuItem {
 	}
 	
 	public void draw(MainWindow m) {
-		m.setTexture("img/battlehud.png");
+		m.setTexture("img\\battlehud.png");
 		drawWindow(m);
 		Text.initDrawText(m);
 		textName.draw(m);
-		m.setTexture("img/battlehud.png");
+		m.setTexture("img\\battlehud.png");
 		drawHealth(m);
 		drawPP(m);
 	}

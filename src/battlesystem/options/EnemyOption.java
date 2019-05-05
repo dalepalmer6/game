@@ -25,7 +25,7 @@ public class EnemyOption extends MenuItem {
 	}
 	
 	public void draw(MainWindow m) {
-		m.setTexture("img/" + enemy.getTexture());
+		m.setTexture("img\\enemies\\" + enemy.getTexture());
 		String pose = "front";
 		Pose p = enemy.getSpriteData().getPose(pose, "", "");
 		m.renderTile(x,y,enemy.getWidth(),enemy.getHeight(),p.getStateByNum(0).getX(),p.getStateByNum(0).getY(),p.getStateByNum(0).getWidth(),p.getStateByNum(0).getHeight());

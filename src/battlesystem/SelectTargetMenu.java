@@ -35,10 +35,10 @@ public class SelectTargetMenu extends Menu {
 	public void update() {
 		if (all) {
 			targetName.setText(onWho + "ALL");
-			state.battleMenu.getCurrentAction().setTarget(targets,true);
+			state.battleMenu.getCurrentAction().setTargets(targets,null,true);
 		} else {
 			targetName.setText(onWho + targets.get(invisMenuItem.getIndex()).getName());
-			state.battleMenu.getCurrentAction().setTarget(targets.get(invisMenuItem.getIndex()));
+			state.battleMenu.getCurrentAction().setTargets(targets,targets.get(invisMenuItem.getIndex()),false);
 		}
 		
 			if (invisMenuItem.getCanLoadInventory()) {

@@ -204,7 +204,7 @@ public class Map {
 		parseDoors(new File(pathToCurrentMap + "doors.csv"),scale);
 		parseHotspots(new File(pathToCurrentMap + "hotspots.csv"),scale);
 		parseEnemySpawns(new File(pathToCurrentMap + "enemyspawns.data"),scale);
-		state.setBGM(bgm);
+		state.setBGM(bgm,true);
 		state.playBGM();
 	}
 	

@@ -3,6 +3,7 @@ package actionmenu.psimenu;
 import java.util.ArrayList;
 
 import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
+import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
 import battlesystem.BattleMenu;
 import battlesystem.SelectTargetMenu;
 import battlesystem.options.BattleAction;
@@ -74,6 +75,9 @@ int index;
 			PartyMember target = null;
 			if (party.size() == 1) {
 				target = party.get(0);
+				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,psi,user,state);
+				use.execute();
+				state.getMenuStack().pop();
 			} else {
 				//show the list of party members
 				PartyMemberSelectMenu pmsm = new PartyMemberSelectMenu(state,party,psi,user);

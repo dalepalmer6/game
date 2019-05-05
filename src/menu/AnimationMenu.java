@@ -7,6 +7,13 @@ public class AnimationMenu extends Menu {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public boolean isSwirl() {
+		if (menuItems.get(0) instanceof SwirlAnimation) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void createAnimMenu(Animation anim) {
 		addMenuItem(anim);
 	}

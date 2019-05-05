@@ -13,6 +13,7 @@ import canvas.Controllable;
 import canvas.Drawable;
 import canvas.MainWindow;
 import gamestate.BattleEntity;
+import gamestate.Enemy;
 import gamestate.EnemyEntity;
 import gamestate.PartyMember;
 import global.InputController;
@@ -303,11 +304,11 @@ public class Text implements Drawable{
 						String enemyListString = control.substring(12);
 						String[] enemyList = enemyListString.split("_");
 						BattleMenu bm = new BattleMenu(state);
-						ArrayList<BattleEntity> battleEnemyList = new ArrayList<BattleEntity>();
+						ArrayList<Enemy> battleEnemyList = new ArrayList<Enemy>();
 						for (int j = 0; j < enemyList.length; j++) {
 							battleEnemyList.add(state.enemies.get(enemyList[j]));
 						}
-						EnemyEntity test = new EnemyEntity("entities.png", 1200, 1200, 24*4,32*4,state,"redDressLady",battleEnemyList);
+						EnemyEntity test = new EnemyEntity(1200, 1200, 24*4,32*4,state,battleEnemyList);
 						ArrayList<EnemyEntity> list = new ArrayList<EnemyEntity>();
 						list.add(test);
 						bm.startBattle(list);
@@ -472,7 +473,7 @@ public class Text implements Drawable{
 	
 	
 	public static void initDrawText(MainWindow m) {
-		m.setTexture("img/font.png");
+		m.setTexture("img\\font.png");
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 	}
 

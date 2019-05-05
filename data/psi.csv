@@ -14,11 +14,11 @@
 12,PK Fire g,A PSI attack that chars a foe in a pillar of flames. Deals between 200 and 220 points of damage to all foes.,3,TRUE,FALSE,2,pkfireg,Offense,PK Fire,[SC_gamma] ,200,220
 13,PK Fire O,A PSI attack that chars a foe in a pillar of flames. Deals between 280 and 320 points of damage to all foes.,3,TRUE,FALSE,2,pkfireo,Offense,PK Fire,[SC_omega] ,280,320
 14,PK Fire pi,An ultimate PSI attack that chars a foe in a pillar of flames. Deals between 450 and 500 points of damage to all foes.,3,TRUE,FALSE,2,undef,Offense,PK Fire,[SC_sigma] ,450,500
-15,PK Thunder a,A PSI attack that generates a shocking jolt of electricity. Deals 100 points of damage to a foe[COMMA] but has a low accuracy.,2,TRUE,FALSE,3,pkthunderab,Offense,PK Thunder,[SC_alpha] ,100,100
-16,PK Thunder b,A PSI attack that generates two shocking jolts of electricity. Each jolt deals 150 points of damage to a foe[COMMA] but have a low accuracy.,2,TRUE,FALSE,3,pkthunderab,Offense,PK Thunder,[SC_beta] ,150,150
-17,PK Thunder g,A PSI attack that generates three shocking jolts of electricity. Each jolt deals 170 points of damage to a foe[COMMA] but have a low accuracy.,2,TRUE,FALSE,3,pkthundergo,Offense,PK Thunder,[SC_gamma] ,170,170
-18,PK Thunder O,A PSI attack that generates four shocking jolts of electricity. Each jolt deals 180 points of damage to a foe[COMMA] but have a low accuracy.,2,TRUE,FALSE,3,pkthundergo,Offense,PK Thunder,[SC_omega] ,180,180
-19,PK Thunder pi,An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,2,TRUE,FALSE,3,undef,Offense,PK Thunder,[SC_sigma] ,200,200
+15,PK Thunder a,A PSI attack that generates a shocking jolt of electricity. Deals 100 points of damage to a foe[COMMA] but has a low accuracy.,4,TRUE,FALSE,3,pkthunderab,Offense,PK Thunder,[SC_alpha] ,100,100
+16,PK Thunder b,A PSI attack that generates two shocking jolts of electricity. Each jolt deals 150 points of damage to a foe[COMMA] but have a low accuracy.,5,TRUE,FALSE,3,pkthunderab,Offense,PK Thunder,[SC_beta] ,150,150
+17,PK Thunder g,A PSI attack that generates three shocking jolts of electricity. Each jolt deals 170 points of damage to a foe[COMMA] but have a low accuracy.,6,TRUE,FALSE,3,pkthundergo,Offense,PK Thunder,[SC_gamma] ,170,170
+18,PK Thunder O,A PSI attack that generates four shocking jolts of electricity. Each jolt deals 180 points of damage to a foe[COMMA] but have a low accuracy.,7,TRUE,FALSE,3,pkthundergo,Offense,PK Thunder,[SC_omega] ,180,180
+19,PK Thunder pi,An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,8,TRUE,FALSE,3,undef,Offense,PK Thunder,[SC_sigma] ,200,200
 20,4th D. Slip,The user creates a rift by which the party can escape from the current battle. Has a higher chance of success than simply running away.,0,TRUE,TRUE,4,undef,Other,4th Dimens. Slip,[SC_alpha] ,0,0
 21,Super Healing,Fully restores a fainted target to full HP.,0,TRUE,TRUE,5,undef,Healing,Super Healing,[SC_alpha] ,0,0
 22,Healing a,A PSI healing technique that cures the body of poison and cold.,0,TRUE,TRUE,6,undef,Healing,Healing,[SC_alpha] ,0,0

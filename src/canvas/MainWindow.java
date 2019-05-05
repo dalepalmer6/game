@@ -91,7 +91,7 @@ public class MainWindow {
 	
 	//renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh)
 	public void renderBG(String bgImg) {
-		setTexture("img/" +  bgImg);
+		setTexture("img\\" +  bgImg);
 //		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		int TILE_SIZE = 100;
 		for (int i = 0; i < SCREEN_WIDTH; i+=TILE_SIZE) {

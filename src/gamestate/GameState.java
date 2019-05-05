@@ -20,6 +20,7 @@ import menu.AnimationMenu;
 import menu.AnimationMenuFadeFromBlack;
 import menu.DrawableObject;
 import menu.StartupNew;
+import menu.SwirlAnimation;
 import tiles.ChangeWithFlagTile;
 import tiles.TileInstance;
 
@@ -48,6 +49,17 @@ public class GameState {
 	private HashMap<String, Boolean> flags;
 	private HashMap<String, Entity> removed;
 	private ArrayList<Entity> partyMembersInEntities;
+	private boolean enemiesCanJoin;
+	private ArrayList<EnemyEntity> enemies;
+	public boolean canEncounter = true;
+	
+	public void setCanEncounter(boolean b) {
+		canEncounter = b;
+	}
+	
+	public boolean getCanEncounter() {
+		return canEncounter;
+	}
 	
 	public Player getPlayer() {
 		return player;
@@ -163,16 +175,19 @@ public class GameState {
 	public void createTestEnemy() {
 //		Enemy test = state.enemies.get(0).clone();
 //		Enemy test2 = state.enemies.get(0).clone();
-		ArrayList<BattleEntity> testList = new ArrayList<BattleEntity>();
+		ArrayList<Enemy> testList = new ArrayList<Enemy>();
 //		testList.add(test);
 //		testList.add(test2);
 		
 		Entity eStatic = state.allEntities.get("redDressLady");
-		Enemy test = state.enemies.get("Lamp").clone();
 		Enemy test2 = state.enemies.get("Lamp").clone();
-//		testList.add(test);
 		testList.add(test2);
-		EnemyEntity ee = new EnemyEntity("entities.png", 1300, 2600, 24*4,32*4,state,"redDressLady",testList);
+		EnemyEntity ee = new EnemyEntity(1300, 2600, 24*4,32*4,state,testList);
+		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
+		this.entities.add(ee);
+		test2 = state.enemies.get("Stray Dog").clone();
+		testList.add(test2);
+		ee = new EnemyEntity(1100, 2600, 24*4,32*4,state,testList);
 		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
 		this.entities.add(ee);
 	}
@@ -392,46 +407,6 @@ public class GameState {
 		
 		sort();
 		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
-//			if (camera.getDX() != 0 || camera.getDY() != 0) {
-				//try 5 times per frame to spawn
-				canSpawnEnemies =false;
-				if (Math.random() < 0.01 && canSpawnEnemies ) {
-					int spawnCenterX = player.getX();
-					int spawnCenterY = player.getY();
-					double posneg = Math.random();
-					double spawnValX = 0d;
-					double spawnValY = 0d;
-					if (posneg < 0.5) {
-						spawnValX = player.getX() + 1000 + (Math.random()*500);
-						spawnValY = player.getY() + 1000 + (Math.random()*500);
-					} 
-					else {
-						spawnValX = Math.max(0,player.getX() - 1000 - (Math.random()*500));
-						spawnValY = Math.max(0,player.getY() - 1000 - (Math.random()*500));
-					}
-					
-//					if (spawnValX > spawnCenterX + 1000 && spawnValX < spawnCenterX + 1500
-//							&& spawnValY > spawnCenterY + 1000 && spawnValY > spawnCenterY + 1500) {
-						ArrayList<BattleEntity> testList = new ArrayList<BattleEntity>();
-						Entity eStatic = state.allEntities.get("redDressLady");
-						Enemy test = state.enemies.get("Lamp").clone();
-						testList.add(test);
-						EnemyEntity ee = new EnemyEntity("entities.png", (int) spawnValX, (int)spawnValY, 24*4,32*4,state,"redDressLady",testList);
-						ee.setSpriteCoords(eStatic.getSpriteCoordinates());
-						this.entities.add(ee);
-//					}
-				}
-//					Random rand = new Random();
-//					int rightFirstBound = rand.nextInt(spawnCenterX + 1000);
-//					int rightSecondBound = rand.nextInt(spawnCenterX + 1500);
-//					int leftFirstBound = rand.nextInt(spawnCenterX - 1000);
-//					int leftSecondBound = rand.nextInt(spawnCenterX - 1500);
-//					int upFirstBound = rand.nextInt(spawnCenterY - 1000);
-//					int upSecondBound = rand.nextInt(spawnCenterY - 1500);
-//					int downFirstBound = rand.nextInt(spawnCenterY + 1000);
-//					int downSecondBound = rand.nextInt(spawnCenterY + 1500);
-//				}
-//			}
 			updatePlayer(input);
 			updateEntities(input,true);
 		}
@@ -471,9 +446,20 @@ public class GameState {
 			if (!entitiesCanMove) {
 				e.setDeltaXY(0,0);
 			}
+
 			e.update(this);
 			if (entitiesCanMove) {
+				e.update();
 				e.act();			
+			}
+			
+			if (state.getMenuStack().peek() instanceof AnimationMenu) {
+//				if (state.getMenuStack().peek().isSwirl()) {
+					if (e instanceof EnemyEntity) {
+						e.update();
+						e.act();
+					}
+//				}
 			}
 		}
 	}
@@ -548,6 +534,29 @@ public class GameState {
 		} catch(NullPointerException e) {
 			return false;
 		}
+	}
+
+	public void setEnemiesCanJoin(boolean b) {
+		// TODO Auto-generated method stub
+		enemiesCanJoin = b;
+	}
+
+	public boolean getEnemiesCanJoin() {
+		// TODO Auto-generated method stub
+		return enemiesCanJoin;
+	}
+
+	public void setBattleEnemyList(ArrayList<EnemyEntity> enemies) {
+		// TODO Auto-generated method stub
+		this.enemies = enemies;
+	}
+
+	public void addEnemyToBattleList(EnemyEntity e) {
+		// TODO Auto-generated method stub
+		if (!enemies.contains(e)) {
+			enemies.add(e);
+		}
+		
 	}
 	
 }
