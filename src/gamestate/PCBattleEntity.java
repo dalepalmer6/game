@@ -6,8 +6,10 @@ import battlesystem.BattleMenu;
 import font.TextWindowWithPrompt;
 
 public class PCBattleEntity extends BattleEntity {
+	
 	public PCBattleEntity(String texture, String name, EntityStats stats) {
 		super(texture,name,stats);
+		state = "normal";
 	}
 	
 	public TextWindowWithPrompt performBattleAction(BattleMenu bm, ArrayList<PCBattleEntity> party, ArrayList<Enemy> enemies) {
@@ -15,4 +17,5 @@ public class PCBattleEntity extends BattleEntity {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

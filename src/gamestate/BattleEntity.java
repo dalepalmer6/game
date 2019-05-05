@@ -9,12 +9,18 @@ import font.TextWindowWithPrompt;
 public class BattleEntity {
 	protected String texture;
 	protected String name;
+	protected String state;
 	protected int width;
 	protected int height;
 	protected EntityStats stats;
 	protected SpritesheetCoordinates spriteData;
 	protected BattleAction actionToPerform;
 	//position to be drawn on screen
+	
+	public void setState(String string) {
+		// TODO Auto-generated method stub
+		state = string;
+	}
 	
 	public EntityStats getStats() {
 		return stats;
@@ -53,6 +59,7 @@ public class BattleEntity {
 		this.texture = texture;
 		this.name = name;
 		this.stats = es;
+		this.state = "normal";
 	}
 	
 	public void ai() {
@@ -70,5 +77,10 @@ public class BattleEntity {
 		hp -= damage;
 		hp = Math.max(0,hp);
 		stats.replaceStat("CURHP",hp);
+	}
+
+	public String getState() {
+		// TODO Auto-generated method stub
+		return state;
 	}
 }

@@ -7,8 +7,6 @@ import menu.MenuItem;
 import menu.StartupNew;
 
 public class PlayerStatusWindow extends MenuItem {
-//	private int x=64;
-//	private int y = 64;
 	private Text textName;
 	private int width=64*4;
 	private int height=64*4;
@@ -19,7 +17,12 @@ public class PlayerStatusWindow extends MenuItem {
 	private int targetPP;
 	private String statusCondition;
 	private double tickCount = 0;
-	private double ticksPerFrame = 0.2;
+	private double ticksPerFrame = 0.25;
+	private int offsetX;
+	private char[] HPdigitsArray = {'0','0','0'};
+	private double counter = 0;
+	private boolean animating;
+	private int editing = 0; // 3 bits, 7 is all three
 	
 	public int getX() {
 		return x;
@@ -31,9 +34,17 @@ public class PlayerStatusWindow extends MenuItem {
 	
 	public void updateAnim() {
 		tickCount += ticksPerFrame;
-		if (tickCount % 2 == 0) {
-			//update the hp/pp bar
-//			updateStatus();
+		if (tickCount % 4 == 0 && !animating) {
+			if (targetHP != HP) {
+				if (targetHP > HP) {
+					HP++;
+				} else {
+					HP--;
+				}
+				counter = 0;
+				editing = 0;
+				animating = true;
+			}
 		}
 	}
 	
@@ -43,13 +54,20 @@ public class PlayerStatusWindow extends MenuItem {
 		this.name = be.getName();
 		this.HP = be.getStats().getStat("CURHP");
 		this.PP = be.getStats().getStat("CURPP");
+		targetHP = HP;
+		targetPP = PP;
 		this.x = x;
 		this.y = y;
 	}
 	
+	public int getHP() {
+		return HP;
+		
+	}
+	
 	public void updateStatus(int hp, int pp) {
-		this.HP = hp;
-		this.PP = pp;
+		this.targetHP = hp;
+		this.targetPP = pp;
 	}
 	
 	public void drawWindow(MainWindow m) {
@@ -83,20 +101,20 @@ public class PlayerStatusWindow extends MenuItem {
 		m.renderTile(this.x+save,this.y + overallY,32,32,16,16,8,8);
 	}
 	
-	public void drawDigit(MainWindow m,int digit, int x, int y) {
+	public void drawDigit(MainWindow m,int digit, int offsetX, int x, int y) {
 		int coordX = 0;
 		int coordY = 0;
 		switch (digit) {
-		case 0: coordX = 0; coordY = 24; break; 
-		case 1: coordX = 32; coordY = 24; break;
-		case 2: coordX = 64; coordY = 24; break;
-		case 3: coordX = 96; coordY = 24; break;
-		case 4: coordX = 0; coordY = 40; break;
-		case 5: coordX = 32; coordY = 40; break;
-		case 6: coordX = 64; coordY = 40; break;
-		case 7: coordX = 96; coordY = 40; break;
-		case 8: coordX = 0; coordY = 56; break;
-		case 9: coordX = 32; coordY = 56; break;
+			case 0: coordX = 0 + offsetX; coordY = 24; break; 
+			case 1: coordX = 32+ offsetX; coordY = 24; break;
+			case 2: coordX = 64+ offsetX; coordY = 24; break;
+			case 3: coordX = 96+ offsetX; coordY = 24; break;
+			case 4: coordX = 0+ offsetX; coordY = 40; break;
+			case 5: coordX = 32+ offsetX; coordY = 40; break;
+			case 6: coordX = 64+ offsetX; coordY = 40; break;
+			case 7: coordX = 96+ offsetX; coordY = 40; break;
+			case 8: coordX = 0+ offsetX; coordY = 56; break;
+			case 9: coordX = 32+ offsetX; coordY = 56; break;
 		}
 		m.renderTile(x,y,9*4,14*4,coordX,coordY,9,14);
 	}
@@ -113,17 +131,64 @@ public class PlayerStatusWindow extends MenuItem {
 	public void drawHealth(MainWindow m) {
 		int hp = HP;
 		drawHPIndicator(m);
-		String digits = String.valueOf(hp);
+		System.out.println(tickCount);
+		
+		String digits = String.valueOf(HP);
 		while (digits.length() < 3) {
 			digits = "0" + digits;
 		}
-		char[] digitsArray = digits.toCharArray();
+		char[] oldDigitsArray = HPdigitsArray;
+		HPdigitsArray = digits.toCharArray();
 		int x = this.x + 112;
 		int y = this.y + 96;
-		for (char c : digitsArray) {
-			drawDigit(m,Integer.parseInt(String.valueOf(c)), x,y);
+		if (editing == 0) {
+			for (int i = 0; i < HPdigitsArray.length; i++) {
+				char c;
+				if((c = HPdigitsArray[i]) !=oldDigitsArray[i]) {
+					if (i == 0) {
+						editing |= 1;
+					}
+					if (i == 1) {
+						editing |= 2;
+					}
+					if (i == 2) {
+						editing |= 4;
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < HPdigitsArray.length; i++) {
+			char c = HPdigitsArray[i];
+			int offsetX = 0;
+			if (((editing & (1 << i)) == (1 << i))) {
+				if (c != oldDigitsArray[i] || animating) {
+					//scroll the digit to the value
+					if (counter %4 == 0) {
+						offsetX = 24;
+					} else if (counter%4 == 1) {
+						offsetX = 16;
+					} else if (counter%4== 2 ) {
+						offsetX = 8;
+					} else if (counter%4== 3 ) {
+						offsetX = 0;
+						editing = 0;
+						animating = false;
+					}
+				}
+				if (animating) {
+					counter+=1;
+				}
+				if (targetHP > HP) {
+					offsetX *= -1;
+				}
+			}
+			
+			drawDigit(m,Integer.parseInt(String.valueOf(c)),offsetX, x,y);
 			x += 8*4;
 		}
+		
+		
 	}
 	
 	public void drawPP(MainWindow m) {
@@ -137,7 +202,7 @@ public class PlayerStatusWindow extends MenuItem {
 		int x = this.x + 112;
 		int y = this.y + 96 + 14*4;
 		for (char c : digitsArray) {
-			drawDigit(m,Integer.parseInt(String.valueOf(c)), x,y);
+			drawDigit(m,Integer.parseInt(String.valueOf(c)),0, x,y);
 			x += 8*4;
 		}
 	}

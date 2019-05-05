@@ -693,7 +693,13 @@ public class StartupNew{
 	}
 	
 	public void addToDrawables(ArrayList<DrawableObject> d) {
-		drawables.addAll(d);
+		for (DrawableObject drawable : d) {
+			if (!drawables.contains(drawable)) {
+				drawables.add(drawable);
+			}
+		}
+		
+//		drawables.addAll(d);
 	}
 	
 	public List<DrawableObject> getDrawables() {
@@ -787,16 +793,21 @@ public class StartupNew{
 				}
 			}
 		} else {
-			
+			Menu c = getMenuStack().peek();
+			if (c != null) {
+				ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
+				list.addAll(c.getDrawableObjects());
+				list.addAll(c.getMenuItems());
+				addToDrawables(list);
+//				c.updateAll(input);
+			}
 		}
+		
 		Menu c = getMenuStack().peek();
 		if (c != null) {
-			ArrayList<DrawableObject> list = new ArrayList<DrawableObject>();
-			list.addAll(c.getDrawableObjects());
-			list.addAll(c.getMenuItems());
-			addToDrawables(list);
 			c.updateAll(input);
 		}
+		
 		
 		input.setHoldable(false);
 		Point mouse = getMainWindow().getMouseCoordinates();

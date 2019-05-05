@@ -105,6 +105,9 @@ public class BattleAction {
 	public String doAction() {
 		String result = "";
 		index++;
+		if (targets.size() == 0) {
+			return result;
+		}
 		if (!targets.contains(recipient)) {
 			recipient = targets.get(0);
 		} 
