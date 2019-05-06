@@ -12,13 +12,20 @@ public class PSIAttack extends Item{
 	private String classification;
 	private String family;
 	private String stage;
-	public PSIAttack(int id, String name, String desc, int type, int action, String animation,String classification,String family,String stage) {
+	private int ppUsed;
+	
+	public PSIAttack(int id, String name, String desc, int type, int action, String animation,String classification,String family,String stage, int ppUsed) {
 		super(id,name,desc,type,action,-1,"");
 		ppCost = 0;
 		this.animation = animation;
 		this.classification = classification;
 		this.family = family;
 		this.stage = stage;
+		this.ppUsed = ppUsed;
+	}
+	
+	public int getPPConsumption() {
+		return ppUsed;
 	}
 	
 	public void setMinMaxDmg(int min, int max) {

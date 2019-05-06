@@ -31,6 +31,12 @@ public class Animation extends MenuItem {
 	protected double tickCount = 0;
 	protected double ticksPerFrame = 0.34;
 	protected TileMetadata tm;
+	protected boolean complete;
+	protected boolean done;
+	
+	public boolean isComplete() {
+		return complete;
+	}
 	
 	public String getTexture() {
 		return texture;

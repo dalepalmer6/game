@@ -27,4 +27,9 @@ public class MapTool {
 	public void doActionOnMapRightClick(int x, int y, int xMouse, int yMouse) {
 		
 	}
+
+	public void update(InputController input) {
+		// TODO Auto-generated method stub
+		
+	}
 }

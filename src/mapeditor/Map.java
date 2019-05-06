@@ -693,11 +693,6 @@ public class Map {
 		return entitiesInMap;
 	}
 	
-//	public ArrayList<Entity> getEntities(int x, int y) {
-//		ArrayList<Entity> entitiesInRegion = new ArrayList<Entity>();
-//		
-//	}
-	
 	public void addToEntities(Entity newEntity) {
 		// TODO Auto-generated method stub
 		entitiesInMap.add(newEntity);

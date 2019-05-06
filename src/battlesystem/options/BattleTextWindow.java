@@ -60,7 +60,6 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 				bm.setGetResultText();
 			}
 		}
-//		
 	}
 
 	public void setPollForActionsOnExit() {

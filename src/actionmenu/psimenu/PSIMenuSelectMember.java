@@ -12,6 +12,7 @@ import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
+import global.InputController;
 import menu.Menu;
 import menu.StartupNew;
 
@@ -38,7 +39,7 @@ public class PSIMenuSelectMember extends Menu {
 		index = 0;
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		this.setToRemove(psiSTW);
 		if (!lockedIn) {
 			index = invisSelectItem.getIndex();

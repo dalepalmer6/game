@@ -2,6 +2,7 @@ package gamestate;
 
 import java.util.ArrayList;
 
+import canvas.MainWindow;
 import menu.StartupNew;
 
 public class EnemySpawnEntity extends Entity {
@@ -9,6 +10,17 @@ public class EnemySpawnEntity extends Entity {
 	private ArrayList<Enemy> enemies;
 	private float[] rates;
 	private boolean done;
+	
+	public void draw(MainWindow m) {}
+	
+	@Override
+	public String getInfoForTool() {
+		String enemyList = "" + x + "," + y + ":";
+		for (Enemy e : enemies) {
+			enemyList += e.getName() + ",";
+		}
+		return enemyList;
+	}
 	
 	public void interact() {
 		
@@ -52,7 +64,7 @@ public class EnemySpawnEntity extends Entity {
 			spawned = new ArrayList<EnemyEntity>(); 
 			for (int i = 0; i < 5; i++) {
 				double rand = Math.random();
-				if (rand < 0.1) {
+				if (rand < 1) {
 					for (int j = 0; j < rates.length; j++) {
 						rand = Math.random();
 						float rate = rates[j];

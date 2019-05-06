@@ -1,13 +1,23 @@
 package menu;
 
-public class AnimationMenu extends Menu {
+import global.InputController;
 
+public class AnimationMenu extends Menu {
+	private boolean complete = false;
+	
 	public AnimationMenu(StartupNew m) {
 		super(m);
 		// TODO Auto-generated constructor stub
 	}
 	
+	public boolean isComplete() {
+		return complete;
+	}
+	
 	public boolean isSwirl() {
+		if (menuItems.isEmpty()) {
+			return false;
+		}
 		if (menuItems.get(0) instanceof SwirlAnimation) {
 			return true;
 		}
@@ -20,6 +30,14 @@ public class AnimationMenu extends Menu {
 	
 	public Animation getAnimation() {
 		return (Animation) menuItems.get(0);
+	}
+	
+	public void update(InputController input) {
+		if (menuItems.isEmpty()) {
+			return;
+		} else {
+			complete = ((Animation)menuItems.get(0)).isComplete();
+		}
 	}
 	
 	public void createAnimMenu() {

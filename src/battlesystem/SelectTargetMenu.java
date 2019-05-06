@@ -6,6 +6,7 @@ import actionmenu.goodsmenu.InvisibleMenuItem;
 import font.TextWindow;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
+import global.InputController;
 import menu.Menu;
 import menu.StartupNew;
 
@@ -32,7 +33,7 @@ public class SelectTargetMenu extends Menu {
 		addMenuItem(targetName);
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		if (all) {
 			targetName.setText(onWho + "ALL");
 			state.battleMenu.getCurrentAction().setTargets(targets,null,true);

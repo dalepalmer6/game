@@ -9,6 +9,7 @@ import gamestate.PartyMember;
 import gamestate.elements.psi.PSIAttack;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
+import global.InputController;
 import menu.Menu;
 import menu.StartupNew;
 
@@ -18,6 +19,7 @@ public class PSIPickMenu extends Menu {
 	private int indexInParty;
 	private SelectionTextWindow psiSTW;
 	private SelectionTextWindow classificationWindow;
+	private TextWindow ppConsumptionWindow;
 	private ArrayList<TextLabel> labels;
 	private TextWindow descWindow;
 	private ArrayList<PartyMember> party;
@@ -46,11 +48,16 @@ public class PSIPickMenu extends Menu {
 	}
 
 
-	public void update() {
+	public void update(InputController input) {
 		this.setToRemove(descWindow);
+		this.setToRemove(ppConsumptionWindow);
 		String desc = ((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription();
-		descWindow = new TextWindow(true,desc,0,256,15,10,state);
+		String ppUse = "Cost: " + ((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getPPConsumption();
+		ppConsumptionWindow = new TextWindow(true,ppUse,classificationWindow.getX(),classificationWindow.getY() + (classificationWindow.getHeight()+32)*2,2,1,state);
+		descWindow = new TextWindow(true,desc,ppConsumptionWindow.getX() + (ppConsumptionWindow.getWidth()+32)*2,classificationWindow.getY()+(classificationWindow.getHeight()+32)*2,(classificationWindow.getWidth() + psiSTW.getWidth() - 32)*2/32 - (ppConsumptionWindow.getWidth()-32)*2/32,2,state);
+		
 		addToMenuItems(descWindow);
+		addToMenuItems(ppConsumptionWindow);
 	}
 	
 	public void createMenu() {

@@ -119,7 +119,7 @@ public class Menu implements MenuInterface {
 					i.updateAnim();
 				}
 		
-		update();
+		update(input);
 		menuItems.removeAll(needToRemove);
 		menuItems.addAll(needToAdd);
 		if (this.menuItems.isEmpty()) {
@@ -128,7 +128,7 @@ public class Menu implements MenuInterface {
 		}
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 	}
 
 	public void setToRemove(MenuItem e) {

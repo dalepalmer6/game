@@ -105,8 +105,39 @@ public class Entity implements Drawable,EntityInterface {
 		this.y = y;
 	}
 	
+	public void checkEntityCollisions() {
+		this.clearInteractables();
+		if (this instanceof FollowingPlayer) {
+			return;
+		}
+		for (Entity e2 : state.getGameState().getEntityList()) {
+			if (this instanceof FollowingPlayer) {
+				continue;
+			}
+			if (this instanceof EnemyEntity && e2 instanceof EnemyEntity) {
+				continue;
+			}
+			if (!(this == e2)) {
+				if (!(this instanceof DoorEntity || this instanceof EnemySpawnEntity)) {
+					if (this.checkCollision(e2)) {
+						this.deltaX = 0;
+						this.deltaY = 0;
+						e2.deltaX = 0;
+						e2.deltaY = 0;
+					}
+				}
+					if (this.checkCollisionWithTolerance(e2,8)) {
+						this.addToInteractables(e2);
+					} else {
+//						e.removeFromInteractables(e2);
+					}
+			}
+		}
+	}
+	
 	public void move() {
 		checkCollisions();
+		checkEntityCollisions();
 		x += deltaX;
 		y += deltaY;
 	}
@@ -119,8 +150,8 @@ public class Entity implements Drawable,EntityInterface {
 		move();
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
-		if (xOnScreen > state.getMainWindow().getScreenWidth() + 1000|| yOnScreen > state.getMainWindow().getScreenHeight() + 1000
-		 || xOnScreen < -1000 || yOnScreen < -1000) {
+		if (xOnScreen > state.getMainWindow().getScreenWidth() + 512|| yOnScreen > state.getMainWindow().getScreenHeight() + 512
+		 || xOnScreen < -512 || yOnScreen < -512) {
 			setToRemove(true);
 		}
 		updateFrameTicks();
@@ -353,7 +384,7 @@ public class Entity implements Drawable,EntityInterface {
 	public boolean checkCollisionWithTolerance(Entity e2, int tol) {
 		if (this.x -tol < e2.x + e2.width && this.x + tol +this.width > e2.x &&
 			    this.y +tol + this.height*1/4 < e2.y + e2.height && this.y +tol+ this.height > e2.y + e2.height*3/4) {
-			System.out.println("Detected a collide");
+//			System.out.println("Detected a collide");
 			return true;
 	}
 	return false;
@@ -424,6 +455,23 @@ public class Entity implements Drawable,EntityInterface {
 	
 	public String getDisappearFlag() {
 		return disappearFlag;
+	}
+
+	public void increaseSize(int i, int j) {
+		// TODO Auto-generated method stub
+		width += i;
+		height += j;
+		if (width < 1) {
+			width = 1;
+		}
+		if (height < 1) {
+			height = 1;
+		}
+	}
+
+	public String getInfoForTool() {
+		// TODO Auto-generated method stub
+		return text;
 	}
 
 }

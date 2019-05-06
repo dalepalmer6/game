@@ -25,7 +25,7 @@ public class StatusMenu extends Menu {
 		this.party = party;
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		this.setToRemove(statuses.get(index));
 		index = invisSelectItem.getIndex();
 		this.addToMenuItems(statuses.get(index));

@@ -8,7 +8,6 @@ import gamestate.TileMetadata;
 
 public class AnimationFadeToBlack extends Animation {
 	private float alpha;
-	private boolean complete;
 	private double ticksPerFrame = 0.5;
 	
 	public AnimationFadeToBlack(StartupNew m) {
@@ -20,23 +19,26 @@ public class AnimationFadeToBlack extends Animation {
 		
 	}
 	
-	public boolean isComplete() {
-		return complete;
-	}
+	
 	
 	public void updateAnim() {
 		System.out.println(tickCount);
-		tickCount += ticksPerFrame;
+		if (!complete) {
+			tickCount += ticksPerFrame;
+		} else if (!done){
+//			state.getMenuStack().peek().setToRemove(this);
+			state.setFadeOutDone();
+			done = true;
+		}
 		
-		if (tickCount > 12) {
-			state.getMenuStack().peek().setToRemove(this);
-			tickCount = 0;
-			state.canLoad = true;
+		
+		if (tickCount >= 12) {
+//			tickCount = 0;
 			complete = true;
 			return;
 		}
 		
-		alpha = (float) ((float) (tickCount/12));
+		alpha = (float) (tickCount/12);
 	}
 	
 	

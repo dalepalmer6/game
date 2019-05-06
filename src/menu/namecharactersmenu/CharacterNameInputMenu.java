@@ -2,6 +2,7 @@ package menu.namecharactersmenu;
 
 import font.SelectionTextWindow;
 import font.TextWindow;
+import global.InputController;
 import menu.BackButton;
 import menu.Menu;
 import menu.MenuItem;
@@ -28,7 +29,7 @@ public class CharacterNameInputMenu extends Menu {
 		super(m);
 	}
 	
-	public void update() {
+	public void update(InputController inputC) {
 		TW.setText(input);
 	}
 	

@@ -25,6 +25,7 @@ public class AnimationFadeFromBlack extends Animation {
 	
 	public void updateAnim() {
 		System.out.println(tickCount);
+		state.setHoldable(true);
 		tickCount += ticksPerFrame;
 		
 		if (tickCount > 12) {

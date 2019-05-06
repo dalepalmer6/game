@@ -14,6 +14,7 @@ public class SwirlAnimation extends Animation {
 	private float length = 36f;
 	private boolean fadeOut;
 	private boolean readyToStart;
+	private AnimationFadeToBlack ftb;
 	
 	public SwirlAnimation(StartupNew m, String texture, int x, int y, int w, int h, EnemyEntity enemyEntity) {
 		super(m,texture,x,y,w,h);
@@ -31,16 +32,12 @@ public class SwirlAnimation extends Animation {
 		System.out.println(tickCount);
 		
 		if (readyToStart) {
-//			if (((AnimationFadeToBlack)((AnimationMenu) state.getMenuStack().peek()).getAnimation()).isComplete()) {
-				state.getGameState().setEnemiesCanJoin(false);
-				state.getMenuStack().peek().setToRemove(this);
-				BattleMenu m = new BattleMenu(state);
-				m.startBattle(enemies);
-				state.getMenuStack().push(m);
-				AnimationMenu ffb = new AnimationMenu(state);
-				ffb.createAnimMenu(new AnimationFadeFromBlack(state));
-				state.getMenuStack().push(ffb);
-//			}
+			state.getMenuStack().peek().setToRemove(this);
+			state.getGameState().setEnemiesCanJoin(false);
+			BattleMenu m = new BattleMenu(state);
+			m.startBattle(enemies);
+//			state.getMenuStack().push(m);
+			state.setShouldFadeIn();
 		}
 		
 		int i = (int) Math.min(coordinates.getPose(0).getNumStates(),tickCount % coordinates.getPose(0).getNumStates());
@@ -58,12 +55,15 @@ public class SwirlAnimation extends Animation {
 		
 		if (fadeOut) {
 			fadeOut = false;
-			Animation ftb = new AnimationFadeToBlack(state);
-			AnimationMenu animMenu = new AnimationMenu(state);
-			animMenu.createAnimMenu(ftb);
-			state.getMenuStack().push(animMenu);
-			tickCount = 0;
-			readyToStart = true;
+			ftb = new AnimationFadeToBlack(state);
+			state.getMenuStack().peek().addToMenuItems(ftb);
+		}
+		
+		if (ftb != null) {
+			if (ftb.isComplete()) {
+				complete = true;
+				readyToStart = true;
+			}
 		}
 		
 		TileMetadata tm = coordinates.getPose(0).getStateByNum(i);

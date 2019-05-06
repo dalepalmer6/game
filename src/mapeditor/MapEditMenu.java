@@ -1,6 +1,7 @@
 package mapeditor;
 
 import font.TextWindow;
+import global.InputController;
 import menu.BackButton;
 import menu.Menu;
 import menu.StartupNew;
@@ -23,10 +24,12 @@ public class MapEditMenu extends Menu {
 		mapPreview = mp;
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		if (mapPreview.getTool() != null) {
 			toolInfoWindow.setText(mapPreview.getTool().getToolInfo());
+			mapPreview.getTool().update(input);
 		}
+		
 	}
 	
 	public MapEditMenu(StartupNew m, TileHashMap tm) {

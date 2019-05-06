@@ -52,6 +52,11 @@ public class GameState {
 	private boolean enemiesCanJoin;
 	private ArrayList<EnemyEntity> enemies;
 	public boolean canEncounter = true;
+	private Map lastSavedMap;
+	private int[] savedCoordinates;
+	private int startX;
+	private int startY;
+	private int invincibleCounter;
 	
 	public void setCanEncounter(boolean b) {
 		canEncounter = b;
@@ -87,6 +92,25 @@ public class GameState {
 		currentMapName = s;
 	}
 	
+	public void reloadInitialMap() {
+		createStartPosition();
+		ArrayList<Entity> players = new ArrayList<Entity>();
+		for (Entity e : entities) {
+			if (e instanceof Player) {
+				e.setCoordinates(startX,startY);
+				players.add(e);
+			} else if (e instanceof FollowingPlayer) {
+				e.setCoordinates(startX,startY);
+				players.add(e);
+			}
+		}
+		state.getGameState().getEntityList().clear();
+		state.getGameState().getEntityList().addAll(players);
+		state.getGameState().getCamera().snapToEntity(startX,startY);
+		state.getGameState().setCurrentMap("house - myhome");
+		state.getGameState().loadMap(4);
+	}
+	
 	public void loadMap(int scale) {
 		map.parseMap(scale,currentMapName);
 		System.out.println("Successfully loaded.");
@@ -111,11 +135,25 @@ public class GameState {
 		return entities;
 	}
 	
+	public void createStartPosition() {
+		String data;
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(new File("savedata/mapinfo")));
+			while ((data = br.readLine()) != null) {
+				String[] datasplit = data.split(",");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void createPlayer(int scale) {
 		BufferedReader br;
 		String data;
 		try {
-			br = new BufferedReader(new FileReader(new File("mapinfo")));
+			br = new BufferedReader(new FileReader(new File("savedata/mapinfo")));
 			while ((data = br.readLine()) != null) {
 				String[] datasplit = data.split(",");
 				String texture = datasplit[0];
@@ -141,10 +179,12 @@ public class GameState {
 	
 	public GameState(StartupNew s) {
 		//load in the map name from the external file
+		//should be loaded from the save data if using a continue
 		this(s,new Map("house - myhome",5,5,s.tileMap,s));
 	}
 	
 	public GameState(StartupNew s, Map m) {
+		lastSavedMap = m;
 		this.entities = new ArrayList<Entity>();
 		this.currentMapName = m.getMapId();
 		this.state = s;
@@ -158,27 +198,16 @@ public class GameState {
 		loadMap(4);
 		state.setBGM(map.getBGM());
 		state.playBGM();
-		
 		createPlayer(4);
 		this.mapRenderer = new MapRenderer(map,getCamera(),state); 
 		camera.setMapRenderer(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
 		addPartyMember("NINTEN");
-//		addPartyMember("ANA");
-//		addPartyMember(new PartyMember("LOID",state));
-//		addPartyMember(new PartyMember("TEDDY",4,state));
-//		addPartyMember("PIPPI");
 		createTestEnemy();
-//		createTestDoor();
 	}
 	
 	public void createTestEnemy() {
-//		Enemy test = state.enemies.get(0).clone();
-//		Enemy test2 = state.enemies.get(0).clone();
 		ArrayList<Enemy> testList = new ArrayList<Enemy>();
-//		testList.add(test);
-//		testList.add(test2);
-		
 		Entity eStatic = state.allEntities.get("redDressLady");
 		Enemy test2 = state.enemies.get("Lamp").clone();
 		testList.add(test2);
@@ -365,7 +394,24 @@ public class GameState {
 		}
 	}
 	
+	public void setInvincibleCounter() {
+		invincibleCounter = 180; //3 secs
+	}
+	
+	public boolean isInvincible() {
+		if (invincibleCounter > 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void update(InputController input) {
+		if (invincibleCounter > 0) {
+			invincibleCounter--;
+			canEncounter = false;
+		} else {
+			canEncounter = true;
+		}
 		updateSystemFlags();
 		updateTiles();
 		//get all entities that belong in the map (in the viewport bounds)
@@ -442,24 +488,28 @@ public class GameState {
 				entities.remove(e);
 				continue;
 			}
-			checkEntityCollisions();
+//			checkEntityCollisions();
 			if (!entitiesCanMove) {
 				e.setDeltaXY(0,0);
 			}
 
-			e.update(this);
+//			e.update(this);
 			if (entitiesCanMove) {
-				e.update();
+				e.update(this);
 				e.act();			
 			}
 			
 			if (state.getMenuStack().peek() instanceof AnimationMenu) {
-//				if (state.getMenuStack().peek().isSwirl()) {
+				if (state.getMenuStack().peek().isSwirl()) {
 					if (e instanceof EnemyEntity) {
-						e.update();
+						e.update(this);
 						e.act();
 					}
-//				}
+				}	
+				if (e instanceof DoorEntity) {
+					e.update(this);
+					e.act();
+				}
 			}
 		}
 	}

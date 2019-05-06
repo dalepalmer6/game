@@ -139,6 +139,7 @@ public class BattleMenu extends Menu {
 	
 	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
 		//set the state to draw all menus at once, to facilitate the menu system
+		state.getMenuStack().pop();
 		state.setBGM("dangerous foe.ogg");
 		this.enemyEntities = enemyEntities;
 		expPool = 0;
@@ -220,8 +221,10 @@ public class BattleMenu extends Menu {
 	
 	public void setPromptSecond(String s) {
 		if (!s.equals("")) {
+			readyToDisplay = true;
 			prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
 		} else {
+			readyToDisplay = false;
 			turnIsDone = true;
 		}
 		((BattleTextWindow)prompt).setGetResultsOnExit();
@@ -231,7 +234,6 @@ public class BattleMenu extends Menu {
 			getCurrentActiveBattleAction().setComplete();
 			getResultText = false;
 		}
-		readyToDisplay = true;
 	}
 	
 	public void setPromptDead() {
@@ -263,7 +265,7 @@ public class BattleMenu extends Menu {
 		return turnStack.isEmpty();
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		if (battleSceneEnd && getNext && !ended) {
 			//create the You Won prompt, then the exp divying screen, then go through anyone's level ups
 			state.setBGM("you win.ogg");
@@ -284,15 +286,13 @@ public class BattleMenu extends Menu {
 		if (displayRecExp && getNext) {
 			getNext = false;
 			int awardEXP = expPool/party.size();
-			prompt = new BattleTextWindow(party.get(0).getName() + " and co. received " + awardEXP + " experience points.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
-//			prompt.setPollForActionsOnExit();
+			prompt = new BattleTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
 			levelupString = "";
 			for (PartyMember pm : partyMembers) {
 				pm.addExp(awardEXP);
 				int lv = pm.getStats().getStat("LVL");
-				if (pm.getStats().getStat("CURXP") >= LevelupData.getExpToLevel(lv+1)) {
+				if (pm.getStats().getStat("CURXP") >= LevelupData.getExpToLevel(lv)) {
 					EntityStats oldStats = pm.getBaseStats();
-					
 					//generate diffs for all of the stats
 					//int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp
 					int[] growth = {18, 5, 4, 7, 5, 5, 6};
@@ -345,6 +345,7 @@ public class BattleMenu extends Menu {
 		}
 		
 		if (levelupDisplay && getNext) {
+			state.setBGM("levelup.ogg");
 			getNext = false;
 			prompt = new BattleTextWindow(levelupString,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
 			levelupDisplay = false;
@@ -358,7 +359,8 @@ public class BattleMenu extends Menu {
 			for (EnemyEntity ee : enemyEntities) {
 				ee.setToRemove(true);
 			}
-			state.getGameState().setCanEncounter(true);
+//			state.getGameState().setCanEncounter(true);
+			state.getGameState().setInvincibleCounter();
 		}
 		
 		else if (!battleSceneEnd && !ended){
@@ -409,6 +411,12 @@ public class BattleMenu extends Menu {
 			
 			if (endBattleSceneGameOver && getNext) {
 				state.getMenuStack().pop();
+//				state.getGameState().setCurrentMap("house - myhome");//get the savedmap
+//				state.getGameState().createStartPosition();
+//				state.getGameState().loadMapData();
+//				state.getGameState().getEntityList().clear();
+				state.getGameState().reloadInitialMap();
+				state.getGameState().setCanEncounter(true);
 			}
 			
 //			if (partyIsDead && getNext) {
@@ -421,7 +429,7 @@ public class BattleMenu extends Menu {
 				endBattleScene();
 			}
 			
-			if (turnStack.isEmpty() && pollForActions && !locked) {
+			if (turnStack.isEmpty() && pollForActions && !locked && !battleSceneEnd) {
 				battleActions.clear();
 				pollForActions = false;
 				needMenu = true;
@@ -461,6 +469,7 @@ public class BattleMenu extends Menu {
 					needMenu = true;
 				}
 				else {
+					indexMembers = 0;
 					//generate battle actions for each enemy
 					for (BattleEntity e : enemies) {
 						//create stubs
@@ -481,6 +490,15 @@ public class BattleMenu extends Menu {
 				if (currentBattleAction == null || currentBattleAction.isComplete()) {
 					BattleEntity be = turnStack.remove(turnStack.size()-1);
 					currentBattleAction = battleActions.get(be);
+					if (be instanceof PCBattleEntity) {
+						for (BattleEntity pbe : party) {
+							if (pbe == be) {
+								indexMembers =  party.indexOf(pbe)+1;
+							}
+						}
+					} else {
+						indexMembers = 0;
+					}
 				}
 				setPromptFirst(currentBattleAction.getBattleActionString());
 				getNextPrompt = false;
@@ -581,10 +599,10 @@ public class BattleMenu extends Menu {
 			getResultText = true;
 		}
 		locked = false;
-		currentBattleAction.indexDown();
 		turnStack.remove(deadEntity);
 		battleActions.remove(deadEntity);
 		if (deadEntity instanceof Enemy) {
+			currentBattleAction.indexDown();
 			enemies.remove(deadEntity);
 			allEntities.remove(deadEntity);
 			this.eop = new EnemyOptionPanel(state);

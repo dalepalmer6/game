@@ -22,7 +22,7 @@ public class EnemyEntity extends Entity {
 		this.enemys = clones;
 	}
 	
-	public void update() {
+	public void update(GameState gs) {
 		Player player = state.getGameState().getPlayer();
 		if (x - player.getX() < 0) {
 			deltaX = 4;
@@ -50,6 +50,7 @@ public class EnemyEntity extends Entity {
 			directionY = "";
 			actionTaken = "idle";
 		}
+		super.update(gs);
 	}
 
 	public ArrayList<Enemy> getEnemiesList() {
@@ -59,10 +60,10 @@ public class EnemyEntity extends Entity {
 	@Override
 	public void act() {
 		for (Entity e : interactables) {
-			if (state.getGameState().getEnemiesCanJoin()) {
-				state.getGameState().addEnemyToBattleList(this);
-			} else if (state.getGameState().getCanEncounter()){
-				if (e instanceof Player) {
+			if (e instanceof Player && !state.getGameState().isInvincible()) {
+				if (state.getGameState().getEnemiesCanJoin()) {
+					state.getGameState().addEnemyToBattleList(this);
+				} else if (state.getGameState().getCanEncounter()) {
 					state.getGameState().setCanEncounter(false);
 					//if the player has already been hit, allow any colliding enemies to join
 					SwirlAnimation anim = new SwirlAnimation(state, "swirl", 0, 0, state.getMainWindow().getScreenWidth(),
@@ -71,10 +72,14 @@ public class EnemyEntity extends Entity {
 					animMenu.createAnimMenu(anim);
 					anim.createAnimation();
 					state.getMenuStack().push(animMenu);
-//					BattleMenu m = new BattleMenu(state);
-//					m.startBattle(this);
 				}
+				
+//				BattleMenu m = new BattleMenu(state);
+//				m.startBattle(this);
 			}
+//			 else if (state.getGameState().getCanEncounter()){
+//				
+//			}
 		}
 	}
 

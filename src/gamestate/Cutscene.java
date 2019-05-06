@@ -1,6 +1,7 @@
 package gamestate;
 
 import font.SimpleDialogMenu;
+import global.InputController;
 import menu.Menu;
 import menu.StartupNew;
 
@@ -22,7 +23,7 @@ public class Cutscene extends Menu {
 		cutsceneData.loadEntity();
 	}
 	
-	public void update() {
+	public void update(InputController input) {
 		doCutscene();
 	}
 	

@@ -39,6 +39,7 @@ import font.CharList;
 import font.SelectionTextWindow;
 import font.SimpleDialogMenu;
 import font.TextWindow;
+import font.TextWindowWithPrompt;
 import gamestate.Cutscene;
 import gamestate.Enemy;
 import gamestate.Entity;
@@ -136,6 +137,9 @@ public class StartupNew{
 	private float prevPos;
 	private boolean playOnce;
 	private boolean savedAudio;
+	private boolean fadeOutIsDone;
+	private boolean shouldFadeIn;
+	private Menu fadeOutMenu;
 	
 	public void setBGM(String path) {
 		setBGM(path,false);
@@ -257,6 +261,7 @@ public class StartupNew{
 			String stage;
 			int minDmg;
 			int maxDmg;
+			int ppUse;
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				id = Integer.parseInt(split[0]);
@@ -272,15 +277,16 @@ public class StartupNew{
 				stage = split[10];
 				minDmg = Integer.parseInt(split[11]);
 				maxDmg = Integer.parseInt(split[12]);
+				ppUse = Integer.parseInt(split[13]);
 				PSIAttack psiAttack = null;
 				if (inBattleUsable && outBattleUsable) {
-					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim,classification,family,stage);
+					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
 					psi.add(psiAttack);
 				} else if (inBattleUsable){
-					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim,classification,family,stage);
+					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
 					psi.add(psiAttack);
 				} else if (outBattleUsable) {
-					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim,classification,family,stage);
+					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
 					psi.add(psiAttack);
 				}
 				psiAttack.setMinMaxDmg(minDmg,maxDmg);
@@ -766,14 +772,29 @@ public class StartupNew{
 		if (prevAudio != null) {
 			savedAudio = false;
 			bgm = prevAudio;
-			bgm.setPosition(prevPos);
+//			bgm.setPosition(prevPos);
 			bgm.playAsMusic(1.0f,1f,false);
-			prevAudio = null;
-			prevPos = 0.0f;
+//			prevAudio = null;
+//			prevPos = 0.0f;
 		}
 	}
 	
+	public void setShouldFadeIn()  {
+		shouldFadeIn = true;
+	}
+	
 	public void update() {
+		if (fadeOutIsDone) {
+//			fadeOutMenu = menuStack.peek();
+			fadeOutIsDone = false;
+		}
+		if (shouldFadeIn) {
+//			menuStack.pop();
+			shouldFadeIn = false;
+			AnimationMenu ffb = new AnimationMenu(this);
+			ffb.createAnimMenu(new AnimationFadeFromBlack(this));
+			getMenuStack().push(ffb);
+		}
 		if (bgm != null) {
 			if (bgm.getPosition() >= bgmEnd && !playOnce) {
 				bgm.setPosition(bgmStart);
@@ -809,7 +830,7 @@ public class StartupNew{
 		}
 		
 		
-		input.setHoldable(false);
+//		input.setHoldable(false);
 		Point mouse = getMainWindow().getMouseCoordinates();
 		for (Drawable d : getDrawables()) {
 			if (d instanceof Hoverable) {
@@ -829,25 +850,36 @@ public class StartupNew{
 		
 		
 		if (gameState != null) {
+			input.setHoldable(true);
 			gameState.updatePartyMembers();
 		}
 		
 		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof Cutscene || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
+//			input.setHoldable(true);
 			gameState.update(input);
 		}
 		
-		if (gameState != null && !menuStack.isEmpty()) {
-			gameState.updateEntities(input,false);
+		for (DrawableObject d : drawables) {
+			if (d instanceof SelectionTextWindow) {
+				input.setHoldable(false);
+			}
 		}
 		
-		if (canLoad && gameState == null) {
-			canLoad = false;
-			menuStack.pop();
-			menuStack.pop();
-			needToPop = false;
-			GameState gs = new GameState(this);
-			this.setGameState(gs);
-			gs.loadMapData();
+		if (gameState != null && menuStack.peek() instanceof AnimationMenu) {
+//			if (menuStack.peek().isSwirl()) {
+				gameState.updateEntities(input,false);
+//			}
+		}
+		
+		if (menuStack.peek() instanceof AnimationMenu && gameState == null) {
+			if (((AnimationMenu)menuStack.peek()).isComplete()) {
+				menuStack.pop();
+				menuStack.pop();
+				needToPop = false;
+				GameState gs = new GameState(this);
+				this.setGameState(gs);
+				gs.loadMapData();
+			}
 		}
 	}
 	
@@ -919,7 +951,6 @@ public class StartupNew{
 	
 	public void removeMenu() {
 		if (needToPop) {
-			
 			menuStack.pop();
 			needToPop = false;
 		} else if (removeThisMenu != null) {
@@ -1009,5 +1040,10 @@ public class StartupNew{
 	public void setAudioOverride(boolean b) {
 		// TODO Auto-generated method stub
 		audioOverride = b;
+	}
+
+	public void setFadeOutDone() {
+		// TODO Auto-generated method stub
+		fadeOutIsDone = true;
 	}
 }

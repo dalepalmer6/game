@@ -22,7 +22,7 @@ public class InventorySelectionTextWindows extends Menu implements Controllable 
 		this.party=party;
 	}
 
-	public void update() {
+	public void update(InputController input) {
 		this.setToRemove(inventories.get(index));
 		index = invisSelectItem.getIndex();
 		this.addToMenuItems(inventories.get(index));

@@ -18,6 +18,10 @@ public class InputController {
 	public boolean DOWN = false;
 	public boolean RIGHT = false;
 	public boolean holdable = false;
+	private boolean KEY_NUMPAD8 = false;
+	private boolean KEY_NUMPAD4= false;
+	private boolean KEY_NUMPAD2= false;
+	private boolean KEY_NUMPAD6= false;
 	
 	
 	public InputController() {
@@ -30,6 +34,10 @@ public class InputController {
 		controllerSignals.put("LEFT", LEFT);
 		controllerSignals.put("DOWN", DOWN);
 		controllerSignals.put("RIGHT", RIGHT);
+		controllerSignals.put("KEY_NUMPAD8",KEY_NUMPAD8);
+		controllerSignals.put("KEY_NUMPAD6",KEY_NUMPAD6);
+		controllerSignals.put("KEY_NUMPAD4",KEY_NUMPAD4);
+		controllerSignals.put("KEY_NUMPAD2",KEY_NUMPAD2);
 	}
 	
 	public void pollKeyConfirm() {
@@ -132,6 +140,78 @@ public class InputController {
 		}
 	}
 	
+	public void pollKeyNum8() {
+		//up
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8) && !KEY_NUMPAD8) {
+			System.out.println("Keydown: KEY_NUMPAD8");
+			setSignal("KEY_NUMPAD8", true);
+			KEY_NUMPAD8 = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8) && KEY_NUMPAD8) {
+			System.out.println("Keyup: KEY_NUMPAD8");
+			setSignal("KEY_NUMPAD8", false);
+			KEY_NUMPAD8 = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8) && !holdable) {
+			setSignal("KEY_NUMPAD8",false);
+		}
+	}
+	
+	public void pollKeyNum4() {
+		//left
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4) && !KEY_NUMPAD4) {
+			System.out.println("Keydown: KEY_NUMPAD4");
+			setSignal("KEY_NUMPAD4", true);
+			KEY_NUMPAD4 = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4) && KEY_NUMPAD4) {
+			System.out.println("Keyup: KEY_NUMPAD4");
+			setSignal("KEY_NUMPAD4", false);
+			KEY_NUMPAD4 = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4) && !holdable) {
+			setSignal("KEY_NUMPAD4",false);
+		}
+	}
+	
+	public void pollKeyNum6() {
+		//right
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6) && !KEY_NUMPAD6) {
+			System.out.println("Keydown: KEY_NUMPAD6");
+			setSignal("KEY_NUMPAD6", true);
+			KEY_NUMPAD6 = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6) && KEY_NUMPAD6) {
+			System.out.println("Keyup: KEY_NUMPAD6");
+			setSignal("KEY_NUMPAD6", false);
+			KEY_NUMPAD6 = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6) && !holdable) {
+			setSignal("KEY_NUMPAD6",false);
+		}
+	}
+	
+	public void pollKeyNum2() {
+		//down
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2) && !KEY_NUMPAD2) {
+			System.out.println("Keydown: KEY_NUMPAD2");
+			setSignal("KEY_NUMPAD2", true);
+			KEY_NUMPAD2 = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2) && KEY_NUMPAD2) {
+			System.out.println("Keyup: KEY_NUMPAD2");
+			setSignal("KEY_NUMPAD2", false);
+			KEY_NUMPAD2 = false;
+			holdable = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2) && !holdable) {
+			setSignal("KEY_NUMPAD2",false);
+		}
+	}
+	
 	public void pollMouseLeft() {
 		if (mouseLeft() && !MOUSE_LEFT_DOWN) {
 			System.out.println("Clicking Mouse Left");
@@ -176,6 +256,10 @@ public class InputController {
 		pollKeyUp();
 		pollKeyConfirm();
 		pollKeyBack();
+		pollKeyNum8();
+		pollKeyNum6();
+		pollKeyNum4();
+		pollKeyNum2();
 	}
 	
 	public boolean mouseRight() {

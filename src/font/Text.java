@@ -38,12 +38,22 @@ public class Text implements Drawable{
 	private boolean dramaticPause;
 	private int lengthToWait;
 	private double tickCount;
-	private double ticksPerFrame = 0.5d;
+	private double ticksPerFrame = 1d;
 	private double oldTicksPerFrame;
 	private boolean differentParseRate;
-	private double textRate = 1;
+	private double textRate =2d;
 	private StartupNew state;
 	private boolean ignoreControlCodes = false;
+	private TextWindow renderWindow;
+	private int targetY;
+	
+	public void append(String s) {
+		parsedString += s;
+	}
+	
+	public void setRenderWindow(TextWindow tw) {
+		renderWindow = tw;
+	}
 	
 	public void setIgnoreCodes() {
 		ignoreControlCodes = true;
@@ -68,6 +78,7 @@ public class Text implements Drawable{
 		this.textString = s;
 		this.x = x;
 		this.y = y;
+		this.targetY = y;
 		this.width = width;
 		this.height = height;
 		this.charList = cd;
@@ -128,7 +139,6 @@ public class Text implements Drawable{
 				parsingControlCode = false;
 				continue;
 			}
-			
 		}
 	}
 	
@@ -136,7 +146,10 @@ public class Text implements Drawable{
 		freeze = c;
 		drawStart = saveStart;
 		if (!c) {
-			controlCodes.remove(drawStart);
+			if (controlCodes.get(drawStart) != null) {
+				controlCodes.put(drawStart,controlCodes.get(drawStart).replace("PROMPTINPUT","NEWLINE"));
+				
+			}
 		}
 	}
 	
@@ -212,15 +225,15 @@ public class Text implements Drawable{
 			String controlCodesReplace = "";
 			for (int i = 0; i < controlCodesAtKey.length; i++) {
 				String cc = controlCodesAtKey[i];
-				if (cc.equals("PROMPTINPUT")) {
-					//note that currently this clears the text window
-					curY = y;
-				}
-				if (cc.equals("NEWLINE")) {
+//				if (cc.equals("PROMPTINPUT")) {
+//					//note that currently this clears the text window
+//					curY = y;
+//				}
+				if (cc.equals("NEWLINE") || cc.equals("PROMPTINPUT")) {
 					curY+=32;
 					if (curY + 32 > y + (this.height + 16) * 2) {
-						cc = "PROMPTINPUT";
-						curY = y;
+						cc = cc + ",SHIFTTEXTUP";
+						curY -= 32;
 					}
 				}
 				controlCodesReplace = controlCodesReplace + "," +cc;
@@ -261,7 +274,7 @@ public class Text implements Drawable{
 		int curY = y;
 		int scale = 2;
 		char[] chars = parsedString.toCharArray();
-		for (int i = drawStart; i < drawUntil+1; i++) {
+		for (int i = 0; i < drawUntil+1; i++) {
 			
 //			if (i == 0 && c != '@') {
 ////				curX += charList.getCharObjects().get(c).getDw()*scale;
@@ -351,6 +364,9 @@ public class Text implements Drawable{
 						String flagName = control.substring(8);
 						state.getGameState().setFlag(flagName);
 					}
+					if (control.startsWith("SHIFTTEXTUP")) {
+						targetY -= 32;
+					}
 //					if (control.startsWith("FLAGISSET_")) {
 //						String flagName = control.substring(10);
 //						if (!state.getGameState().getFlag(flagName)) {
@@ -382,6 +398,12 @@ public class Text implements Drawable{
 				if (charList.getCharObjects().get(c) == null) {
 					continue;
 				}
+				if (renderWindow != null) {
+					if (curY < renderWindow.getY()) {
+						continue;
+					}
+				}
+				
 				m.renderTile(curX,curY,
 						(int) charList.getCharObjects().get(c).getDw()*scale,
 						(int) charList.getCharObjects().get(c).getDh()*scale,
@@ -481,9 +503,11 @@ public class Text implements Drawable{
 		// TODO Auto-generated method stub
 //		if (differentParseRate) {
 //			oldTicksPerFrame = ticksPerFrame;
-//			ticksPerFrame = newTicksPerFrame;
+//			ticksPerFrame *= 2;
 //		}
-		
+		if (y > targetY) {
+			y-=8;
+		}
 		if (!drawAll && !dramaticPause) {
 			this.tickCount += ticksPerFrame;
 			if (tickCount % textRate == 0) {

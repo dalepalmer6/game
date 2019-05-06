@@ -1,17 +1,33 @@
 package mapeditor.tools;
 
 import gamestate.Entity;
+import global.InputController;
 import mapeditor.MapEditMenu;
 import mapeditor.MapPreview;
 
 public class SingleEntity extends MapTool {
 	private Entity entity;
 	
+	public void update(InputController input) {
+		if (input.getSignals().get("KEY_NUMPAD8")) {
+			entity.increaseSize(0,4);
+		}
+		if (input.getSignals().get("KEY_NUMPAD6")) {
+			entity.increaseSize(4,0);
+		}
+		if (input.getSignals().get("KEY_NUMPAD4")) {
+			entity.increaseSize(-4,0);
+		}
+		if (input.getSignals().get("KEY_NUMPAD2")) {
+			entity.increaseSize(0,-4);
+		}
+	}
+	
 	public SingleEntity(Entity e) {
 		super();
 		this.entity = e;
-		this.toolInfo = entity.getText();
-	} 
+		this.toolInfo = entity.getInfoForTool();
+	}
 	
 	/*
 	 * Old method only creates a new entity with the current face/sprite

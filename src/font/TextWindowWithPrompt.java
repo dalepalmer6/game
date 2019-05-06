@@ -18,10 +18,10 @@ public class TextWindowWithPrompt extends TextWindow implements Controllable{
 			if (text.getDoneState()) {
 				next();
 			} else {
-				text.setTextRate(0.5d);
+				text.setTextRate(1d);
 			} 
 		} else {
-			text.setTextRate(1d);
+			text.setTextRate(2d);
 		}
 	}
 

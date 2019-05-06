@@ -12,6 +12,6 @@ public class LevelupData {
 					56,
 			};
 	public static int getExpToLevel(int level) {
-		return expTable[level];
+		return expTable[level-1];
 	}
 }

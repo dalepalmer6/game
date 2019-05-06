@@ -28,7 +28,7 @@ public class EquipmentSelectionTextWindows extends Menu {
 		this.party=party;
 	}
 
-	public void update() {
+	public void update(InputController input) {
 		this.setToRemove(inventories.get(index));
 		index = invisSelectItem.getIndex();
 		addToMenuItems(inventories.get(index));

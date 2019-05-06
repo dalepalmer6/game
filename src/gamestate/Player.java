@@ -14,6 +14,16 @@ public class Player extends CameraControllingEntity implements Controllable{
 	private boolean confirmButtonDown = false;
 	MovementData[] movementData = new MovementData[64];
 	
+	public void draw(MainWindow m) {
+		if (state.getGameState().isInvincible()) {
+			if (tickCount % (2*ticksPerFrame) == 0) {
+				super.draw(m);
+			}
+		} else {
+			super.draw(m);
+		} 
+	}
+	
 	public void move() {
 		super.move();
 		if (deltaX != 0 || deltaY != 0) {
@@ -56,7 +66,7 @@ public class Player extends CameraControllingEntity implements Controllable{
 	
 	@Override
 	public void handleInput(InputController input) {
-		input.setHoldable(true);
+//		input.setHoldable(true);
 		deltaX = 0; deltaY = 0;
 		if (input.getSignals().get("UP")) {
 			deltaY = -stepSize;

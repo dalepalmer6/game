@@ -16,8 +16,8 @@ public class TextWindow extends MenuItem implements Drawable{
 	public Text text;
 	private double tickCount;
 	private double ticksPerFrame = 0.5;
-	protected int TEXT_START_X = 16;
-	protected int TEXT_START_Y = 16;
+	protected int TEXT_START_X = 24;
+	protected int TEXT_START_Y = 24;
 	protected long createdAt;
 	protected long lastTime;
 	protected long now;
@@ -60,6 +60,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		this.width = width * TILE_SIZE;
 		this.height = height * TILE_SIZE;
 		this.text = new Text(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
+		this.text.setRenderWindow(this);
 		this.text.setState(state);
 		this.m = m;
 		this.shouldDrawAll = shouldDrawAll;
@@ -75,21 +76,21 @@ public class TextWindow extends MenuItem implements Drawable{
 		int yPos = y;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
-				32,32,
+				64,64,
 				xCoord,yCoord,
 				TILE_SIZE,TILE_SIZE);
 		xCoord += TILE_SIZE;
 		for (int i = 0; i < tileWidth; i++) {
 			xPos+=32;
 			m.renderTile(xPos,yPos,
-						32,32,
+						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 		}
 		xPos += 32;
 		xCoord += TILE_SIZE;
 		m.renderTile(xPos,yPos,
-				32,32,
+				64,64,
 				xCoord,yCoord,
 				TILE_SIZE,TILE_SIZE);
 		for (int i = 0; i < tileHeight; i++) {
@@ -98,7 +99,7 @@ public class TextWindow extends MenuItem implements Drawable{
 			xCoord = 0;
 			yCoord = TILE_SIZE;
 			m.renderTile(xPos,yPos,
-					32,32,
+					64,64,
 					xCoord,yCoord,
 					TILE_SIZE,TILE_SIZE);
 			xCoord += TILE_SIZE;
@@ -106,14 +107,14 @@ public class TextWindow extends MenuItem implements Drawable{
 				//draw the centers
 				xPos += 32;
 				m.renderTile(xPos,yPos,
-						32,32,
+						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 			}
 			xPos += 32;
 			xCoord +=TILE_SIZE;
 			m.renderTile(xPos,yPos,
-					32,32,
+					64,64,
 					xCoord,yCoord,
 					TILE_SIZE,TILE_SIZE);
 			
@@ -124,21 +125,21 @@ public class TextWindow extends MenuItem implements Drawable{
 		yPos += 2*TILE_SIZE;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
-				32,32,
+				64,64,
 				xCoord,yCoord,
 				TILE_SIZE,TILE_SIZE);
 		xCoord += TILE_SIZE;
 		for (int i = 0; i < tileWidth; i++) {
 			xPos+=32;
 			m.renderTile(xPos,yPos,
-						32,32,
+						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 		}
 		xPos += 32;
 		xCoord += TILE_SIZE;
 		m.renderTile(xPos,yPos,
-				32,32,
+				64,64,
 				xCoord,yCoord,
 				TILE_SIZE,TILE_SIZE);
 	}

@@ -7,6 +7,7 @@ import canvas.MainWindow;
 import menu.Animation;
 import menu.AnimationFadeToBlack;
 import menu.AnimationMenu;
+import menu.Menu;
 import menu.StartupNew;
 
 public class DoorEntity extends Entity {
@@ -69,36 +70,49 @@ public class DoorEntity extends Entity {
 		return false;
 	}
 	
+	@Override
+	public String getInfoForTool() {
+		return "" + x + "," + y + ": to " + newMap;
+	}
+	
 	public void act() {
 		for (Entity e : interactables) {
 			if (e instanceof Player) {
-				if (state.canLoad) {
-					state.canLoad = false;
-					e.setCoordinates(destX,destY);
-					((Player)e).resetMovement();
-					for (Entity e2 : state.getGameState().getEntityList()) {
-						if (e2 instanceof FollowingPlayer) {
-							e2.setCoordinates(destX,destY);
+				//remove the door from the gamestate
+//				state.getGameState().getEntityList().remove(this);
+				System.out.println("Door Collide");
+				if (state.getMenuStack().peek() != null) {
+					if (state.getMenuStack().peek() instanceof AnimationMenu) {
+						if (((AnimationMenu)state.getMenuStack().peek()).isComplete()) {
+							e.setCoordinates(destX,destY);
+							((Player)e).resetMovement();
+							for (Entity e2 : state.getGameState().getEntityList()) {
+								if (e2 instanceof FollowingPlayer) {
+									e2.setCoordinates(destX,destY);
+								}
+							}
+							ArrayList<Entity> players = new ArrayList<Entity>();
+							for (Entity et : state.getGameState().getEntityList()) {
+								if (et instanceof Player) {
+									players.add(et);
+								} else if (et instanceof FollowingPlayer) {
+									players.add(et);
+								}
+							}
+							state.getGameState().getEntityList().clear();
+							state.getGameState().getEntityList().addAll(players);
+							state.getGameState().getCamera().snapToEntity(destX,destY);
+							state.getGameState().setCurrentMap(newMap);
+							state.getMenuStack().pop();
+							state.getGameState().loadMap(4);
+//							state.setShouldFadeIn();
 						}
 					}
-					ArrayList<Entity> players = new ArrayList<Entity>();
-					for (Entity et : state.getGameState().getEntityList()) {
-						if (et instanceof Player) {
-							players.add(et);
-						} else if (et instanceof FollowingPlayer) {
-							players.add(et);
-						}
-					}
-					state.getGameState().getEntityList().clear();
-					state.getGameState().getEntityList().addAll(players);
-					state.getGameState().getCamera().snapToEntity(destX,destY);
-					state.getGameState().setCurrentMap(newMap);
-					state.getGameState().loadMap(4);
 				} else  {
 					AnimationMenu anim = new AnimationMenu(state);
 					anim.createAnimMenu();
 					state.getMenuStack().push(anim);
-				}
+				}	
 			}
 		}
 	}
