@@ -1,0 +1,2 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,3916,813,24,32,Bark! (Ninten you have psychic powers.)[SETFLAG_train][SET_TRAIN_RIDE_6:0] ,puppy, , 
