@@ -22,7 +22,7 @@ public class TextWindow extends MenuItem implements Drawable{
 	protected long lastTime;
 	protected long now;
 	private int TILE_SIZE = 16;
-	private int width;
+	protected int width;
 	private int height;
 	protected int x;
 	protected int y;
@@ -81,13 +81,13 @@ public class TextWindow extends MenuItem implements Drawable{
 				TILE_SIZE,TILE_SIZE);
 		xCoord += TILE_SIZE;
 		for (int i = 0; i < tileWidth; i++) {
-			xPos+=32;
+			xPos+=64;
 			m.renderTile(xPos,yPos,
 						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 		}
-		xPos += 32;
+		xPos += 64;
 		xCoord += TILE_SIZE;
 		m.renderTile(xPos,yPos,
 				64,64,
@@ -95,7 +95,7 @@ public class TextWindow extends MenuItem implements Drawable{
 				TILE_SIZE,TILE_SIZE);
 		for (int i = 0; i < tileHeight; i++) {
 			xPos = x;
-			yPos += 32;
+			yPos += 64;
 			xCoord = 0;
 			yCoord = TILE_SIZE;
 			m.renderTile(xPos,yPos,
@@ -105,13 +105,13 @@ public class TextWindow extends MenuItem implements Drawable{
 			xCoord += TILE_SIZE;
 			for (int j = 0; j < tileWidth; j++) {
 				//draw the centers
-				xPos += 32;
+				xPos += 64;
 				m.renderTile(xPos,yPos,
 						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 			}
-			xPos += 32;
+			xPos += 64;
 			xCoord +=TILE_SIZE;
 			m.renderTile(xPos,yPos,
 					64,64,
@@ -122,7 +122,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		xCoord = 0;
 		yCoord = 2*TILE_SIZE;
 		xPos = x;
-		yPos += 2*TILE_SIZE;
+		yPos += 64;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
 				64,64,
@@ -130,13 +130,13 @@ public class TextWindow extends MenuItem implements Drawable{
 				TILE_SIZE,TILE_SIZE);
 		xCoord += TILE_SIZE;
 		for (int i = 0; i < tileWidth; i++) {
-			xPos+=32;
+			xPos+=64;
 			m.renderTile(xPos,yPos,
 						64,64,
 						xCoord,yCoord,
 						TILE_SIZE,TILE_SIZE);
 		}
-		xPos += 32;
+		xPos += 64;
 		xCoord += TILE_SIZE;
 		m.renderTile(xPos,yPos,
 				64,64,

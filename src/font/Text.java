@@ -17,6 +17,8 @@ import gamestate.Enemy;
 import gamestate.EnemyEntity;
 import gamestate.PartyMember;
 import global.InputController;
+import menu.MenuItem;
+import menu.ShopMenu;
 import menu.StartupNew;
 
 public class Text implements Drawable{
@@ -46,6 +48,11 @@ public class Text implements Drawable{
 	private boolean ignoreControlCodes = false;
 	private TextWindow renderWindow;
 	private int targetY;
+	private boolean waitingForDecision;
+	private int choice;
+	private String[] choices;
+	private SelectionTextWindow choiceWindow;
+	private boolean isSingleString;
 	
 	public void append(String s) {
 		parsedString += s;
@@ -65,6 +72,9 @@ public class Text implements Drawable{
 	
 	public void incrementDrawUntil() {
 		if (parsedString != null && !drawAll) {
+			if (waitingForDecision) {
+				return;
+			}
 			if (drawUntil < parsedString.length()) {
 				drawUntil++;
 			}
@@ -153,6 +163,10 @@ public class Text implements Drawable{
 		}
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	
 	public int getDrawStart() {
 		return drawStart;
 	}
@@ -178,7 +192,10 @@ public class Text implements Drawable{
 				currentWordWidth = 0;
 				indexOfLastSpace = i;
 			}  
-			if (currentWidth + currentWordWidth > this.width) {
+			if (isSingleString) {
+				this.width = currentWidth + currentWordWidth;
+			}
+			else if (currentWidth + currentWordWidth > this.width) {
 				String controlCode = "NEWLINE";
 				if (controlCodes.containsKey(indexOfLastSpace)) {
 					controlCode = "NEWLINE," + controlCodes.get(indexOfLastSpace);
@@ -230,10 +247,10 @@ public class Text implements Drawable{
 //					curY = y;
 //				}
 				if (cc.equals("NEWLINE") || cc.equals("PROMPTINPUT")) {
-					curY+=32;
-					if (curY + 32 > y + (this.height + 16) * 2) {
+					curY+=64;
+					if (curY + 64 > y + (this.height + 16) * 4) {
 						cc = cc + ",SHIFTTEXTUP";
-						curY -= 32;
+						curY -= 64;
 					}
 				}
 				controlCodesReplace = controlCodesReplace + "," +cc;
@@ -272,7 +289,7 @@ public class Text implements Drawable{
 		}
 		int curX = x;
 		int curY = y;
-		int scale = 2;
+		int scale = 4;
 		char[] chars = parsedString.toCharArray();
 		for (int i = 0; i < drawUntil+1; i++) {
 			
@@ -286,7 +303,7 @@ public class Text implements Drawable{
 					if (control.equalsIgnoreCase("NEWLINE")) {
 //						curX = x + (int) charList.getCharObjects().get('@').getDw() + 2;
 						curX = x;
-						curY +=32;
+						curY +=64;
 						newListOfControlCodes += ",NEWLINE";
 					}
 					if (control.equalsIgnoreCase("PROMPTINPUT")) {
@@ -364,32 +381,42 @@ public class Text implements Drawable{
 						String flagName = control.substring(8);
 						state.getGameState().setFlag(flagName);
 					}
-					if (control.startsWith("SHIFTTEXTUP")) {
-						targetY -= 32;
+					if (control.startsWith("SET_TRAIN_RIDE_")) {
+						String[] xy = control.substring(15).split(":");
+						int x = Integer.parseInt(xy[0]);
+						int y = Integer.parseInt(xy[1]);
+						state.getGameState().setTrainRide(x,y);
 					}
-//					if (control.startsWith("FLAGISSET_")) {
-//						String flagName = control.substring(10);
-//						if (!state.getGameState().getFlag(flagName)) {
-//							//goto [ELSE]
-//							for (Integer key : controlCodes.keySet()) {
-//								if (controlCodes.get(key).contains("ELSE")) {
-//									parsedString = parsedString.substring(key);
-//									drawStart = 0;
-//									drawUntil = 0;
-//									break;
-//								}
-//							}
-//						} else {
-//							for (Integer key : controlCodes.keySet()) {
-//								if (controlCodes.get(key).contains("ELSE")) {
-//									parsedString = parsedString.substring(0,key);
-//									drawStart = 0;
-//									drawUntil = 0;
-//									break;
-//								}
-//							}
-//						}
-//					}
+					if (control.startsWith("SHIFTTEXTUP")) {
+						targetY -= 64;
+					}
+					if (control.startsWith("CHOOSE")) {
+						waitingForDecision = true;
+						String[] split = textString.split(Pattern.quote("[CHOOSE]"));
+						choices = split[1].split(Pattern.quote("[CHOICE]"));
+						String[] choiceLabels;
+//						drawUntil-=1;
+						choiceWindow = new SelectionTextWindow(500,500,2,choices.length,state);
+						for (int s = 1; s < choices.length; s++) {
+							choiceLabels = choices[s].split(Pattern.quote("[TEXT]"));
+							DecisionMenuItem mi = new DecisionMenuItem(choiceLabels[0],s,state);
+							choiceWindow.add(mi);
+						}
+						state.getMenuStack().peek().addMenuItem(choiceWindow);
+					}
+					if (control.startsWith("SHOP_")) {
+						state.getMenuStack().pop();
+						ShopMenu sm = new ShopMenu(state, control.substring(5));
+						sm.loadShopItems();
+						state.getMenuStack().push(sm);
+					}
+					if (control.startsWith("SET_ITEM_TO_BUY_")) {
+						int id = Integer.parseInt(control.substring(16));
+						state.setItemToBuy(state.items.get(id));
+					}
+					if (control.startsWith("SAVE_PROGRESS")) {
+						state.getGameState().setFlag("saveGame");
+					}
 				}
 				controlCodes.put(i,newListOfControlCodes);
 			}
@@ -510,6 +537,21 @@ public class Text implements Drawable{
 		}
 		if (!drawAll && !dramaticPause) {
 			this.tickCount += ticksPerFrame;
+			MenuItem it;
+			if ((it = state.getSelectionStack().peek()) instanceof DecisionMenuItem) {
+				waitingForDecision = false;
+				state.getSelectionStack().pop();
+				state.getMenuStack().peek().removeMenuItem(choiceWindow);
+				choice =  ((DecisionMenuItem) it).getIndex();
+				parsedString = "";
+				String splitString[] = choices[choice].split(Pattern.quote("[TEXT]"));
+				textString = splitString[1];
+				parsedString = textString;
+				controlCodes = new HashMap<Integer,String>();
+				parse();
+				drawUntil = 0;
+				
+			}
 			if (tickCount % textRate == 0) {
 				incrementDrawUntil();
 			}
@@ -539,7 +581,7 @@ public class Text implements Drawable{
 
 	public boolean getDoneState() {
 		// TODO Auto-generated method stub
-		return done || freeze || dramaticPause;
+		return done || freeze || dramaticPause || waitingForDecision;
 	}
 	
 	public boolean getDone() {
@@ -553,6 +595,11 @@ public class Text implements Drawable{
 
 	public void setState(StartupNew state) {
 		this.state = state;
+	}
+
+	public void setAsSingleString() {
+		// TODO Auto-generated method stub
+		isSingleString = true;
 	}
 
 	

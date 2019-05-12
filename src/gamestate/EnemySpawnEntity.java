@@ -22,10 +22,6 @@ public class EnemySpawnEntity extends Entity {
 		return enemyList;
 	}
 	
-	public void interact() {
-		
-	}
-	
 	public boolean checkCollisions() {
 		return false;
 	}
@@ -64,11 +60,11 @@ public class EnemySpawnEntity extends Entity {
 			spawned = new ArrayList<EnemyEntity>(); 
 			for (int i = 0; i < 5; i++) {
 				double rand = Math.random();
-				if (rand < 1) {
+				if (rand < 0.3) {//base rate
 					for (int j = 0; j < rates.length; j++) {
 						rand = Math.random();
 						float rate = rates[j];
-						if (rand < rate/100) {
+						if (rand < rate/100 && state.getGameState().getNumEnemies() < 10) {
 							int randW = (int) (Math.random()*width);
 							int randH = (int) (Math.random()*height);
 							ArrayList<Enemy> picked = new ArrayList<Enemy>();
@@ -85,7 +81,9 @@ public class EnemySpawnEntity extends Entity {
 				state.getGameState().getEntityList().add(spawned.get(0));
 				state.getGameState().getEntityList().add(spawned.get(1));
 				state.getGameState().getEntityList().add(spawned.get(2));
+				state.getGameState().addNumEntities(3);
 			} else {
+				state.getGameState().addNumEntities(spawned.size());
 				state.getGameState().getEntityList().addAll(spawned);
 			}
 			done = true;

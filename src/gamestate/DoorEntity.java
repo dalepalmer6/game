@@ -70,6 +70,7 @@ public class DoorEntity extends Entity {
 		return false;
 	}
 	
+	
 	@Override
 	public String getInfoForTool() {
 		return "" + x + "," + y + ": to " + newMap;
@@ -77,30 +78,46 @@ public class DoorEntity extends Entity {
 	
 	public void act() {
 		for (Entity e : interactables) {
-			if (e instanceof Player) {
+			if (e instanceof Player || e instanceof TrainEntity) {
 				//remove the door from the gamestate
 //				state.getGameState().getEntityList().remove(this);
-				System.out.println("Door Collide");
-				if (state.getMenuStack().peek() != null) {
+				if (!(state.getMenuStack().peek() instanceof AnimationMenu)) {
+					System.out.println("Door Collide");
+					AnimationMenu anim = new AnimationMenu(state);
+					anim.createAnimMenu();
+					state.getMenuStack().push(anim);
+				}
+//				if (state.getMenuStack().peek() != null || state.getMenuStack().peek() instanceof TrainCutscene) {
 					if (state.getMenuStack().peek() instanceof AnimationMenu) {
 						if (((AnimationMenu)state.getMenuStack().peek()).isComplete()) {
-							e.setCoordinates(destX,destY);
-							((Player)e).resetMovement();
-							for (Entity e2 : state.getGameState().getEntityList()) {
-								if (e2 instanceof FollowingPlayer) {
-									e2.setCoordinates(destX,destY);
+							if (e instanceof Player) {
+								e.setCoordinates(destX,destY);
+								if (e instanceof Player)  {
+									((Player)e).resetMovement();
 								}
-							}
-							ArrayList<Entity> players = new ArrayList<Entity>();
-							for (Entity et : state.getGameState().getEntityList()) {
-								if (et instanceof Player) {
-									players.add(et);
-								} else if (et instanceof FollowingPlayer) {
-									players.add(et);
+							
+								for (Entity e2 : state.getGameState().getEntityList()) {
+									if (e2 instanceof FollowingPlayer) {
+										e2.setCoordinates(destX,destY);
+									}
 								}
+								ArrayList<Entity> players = new ArrayList<Entity>();
+								for (Entity et : state.getGameState().getEntityList()) {
+									if (et instanceof Player) {
+										players.add(et);
+									} else if (et instanceof FollowingPlayer) {
+										players.add(et);
+									}
+								}
+								state.getGameState().getEntityList().clear();
+								state.getGameState().getEntityList().addAll(players);
+							} else if (e instanceof TrainEntity) {
+								e.setCoordinates(destX, destY);
+								e.setAtTargetPoint();
+								state.getGameState().getEntityList().clear();
+								state.getGameState().getEntityList().add(e);
 							}
-							state.getGameState().getEntityList().clear();
-							state.getGameState().getEntityList().addAll(players);
+							
 							state.getGameState().getCamera().snapToEntity(destX,destY);
 							state.getGameState().setCurrentMap(newMap);
 							state.getMenuStack().pop();
@@ -108,16 +125,16 @@ public class DoorEntity extends Entity {
 //							state.setShouldFadeIn();
 						}
 					}
-				} else  {
-					AnimationMenu anim = new AnimationMenu(state);
-					anim.createAnimMenu();
-					state.getMenuStack().push(anim);
-				}	
+//				} else  {
+//					AnimationMenu anim = new AnimationMenu(state);
+//					anim.createAnimMenu();
+//					state.getMenuStack().push(anim);
+//				}	
 			}
 		}
 	}
-
-	public void interact() {}
+	
+//	public void move() {}
 	
 	public void setLocation(int x, int y) {
 		// TODO Auto-generated method stub

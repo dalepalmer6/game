@@ -140,6 +140,7 @@ public class StartupNew{
 	private boolean fadeOutIsDone;
 	private boolean shouldFadeIn;
 	private Menu fadeOutMenu;
+	private Item itemToBuy;
 	
 	public void setBGM(String path) {
 		setBGM(path,false);
@@ -368,10 +369,11 @@ public class StartupNew{
 				int pp = Integer.parseInt(split[13]);
 				long resists = Long.parseLong(split[14]);
 				String participle = split[15];
+				int value = Integer.parseInt(split[16]);
 				if ((equippable & 15) != 0) {
-					items.add(new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle));
+					items.add(new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle,value));
 				} else {
-					items.add(new Item(id,name,desc,target,action,equippable,participle));
+					items.add(new Item(id,name,desc,target,action,equippable,participle,value));
 				}
 				
 //				if (inBattleUsable && outBattleUsable) {
@@ -847,11 +849,32 @@ public class StartupNew{
 			}
 		}
 		
-		
-		
 		if (gameState != null) {
 			input.setHoldable(true);
 			gameState.updatePartyMembers();
+			if (gameState.getFlag("buyingItem") && itemToBuy != null) {
+				menuStack.pop();
+				if (gameState.getFundsOnHand() < itemToBuy.getValue()) {
+					SimpleDialogMenu.createDialogBox(this,"Well[WAIT60] this is embarassing.[WAIT30][NEWLINE]You don't appear to have the funds to buy this.");
+				} else {
+					SimpleDialogMenu.createDialogBox(this,"Alright, it's all yours![ADDITEM_" + itemToBuy.getId() +"] ");
+					gameState.spendFunds(itemToBuy.getValue());
+				}
+				gameState.setFlag("buyingItem",false);
+				itemToBuy = null;
+			}
+			if (gameState.getFlag("saveGame")) {
+				try {
+					gameState.saveData();
+					gameState.setFlag("saveGame",false);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof Cutscene || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
@@ -1045,5 +1068,10 @@ public class StartupNew{
 	public void setFadeOutDone() {
 		// TODO Auto-generated method stub
 		fadeOutIsDone = true;
+	}
+
+	public void setItemToBuy(Item item) {
+		// TODO Auto-generated method stub
+		itemToBuy = item;
 	}
 }

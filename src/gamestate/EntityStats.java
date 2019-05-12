@@ -22,6 +22,22 @@ public class EntityStats {
 		stats.put("CURXP",curxp);
 	}
 	
+	public String toString() {
+		return stats.get("LVL") + "," +
+				stats.get("CURHP") + "," +
+				stats.get("CURPP") + "," +
+				stats.get("HP") + "," +
+				stats.get("PP") + "," +
+				stats.get("ATK") + "," +
+				stats.get("DEF") + "," +
+				stats.get("IQ") + "," +
+				stats.get("VIT") + "," +
+				stats.get("SPD") + "," +
+				stats.get("GUTS") + "," +
+				stats.get("LUCK") + "," +
+				stats.get("CURXP");
+	}
+	
 	public void addStats(EntityStats es) {
 		for (String key : stats.keySet()) {
 			this.replaceStat(key,this.getStat(key)+es.getStat(key));

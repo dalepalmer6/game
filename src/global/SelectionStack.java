@@ -21,6 +21,13 @@ public class SelectionStack {
 		return stack.remove(stack.size()-1);
 	}
 	
+	public MenuItem peek() {
+		if (stack.size() == 0) {
+			return null;
+		}
+		return stack.get(stack.size()-1);
+	}
+	
 	public MenuItem popAndAddMenuItems() {
 		MenuItem m = pop();
 		return m;

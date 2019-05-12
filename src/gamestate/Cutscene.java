@@ -6,9 +6,11 @@ import menu.Menu;
 import menu.StartupNew;
 
 public class Cutscene extends Menu {
-	private CutsceneData cutsceneData;
-	private MovementData curMovement;
+	protected CutsceneData cutsceneData;
+	protected MovementData curMovement;
 	private CutsceneMenuItem csMenuItem;
+	private String text;
+	protected boolean reverseOrder;
 	
 	public Cutscene(StartupNew m,CutsceneData cd) {
 		super(m);
@@ -19,6 +21,10 @@ public class Cutscene extends Menu {
 	}
 
 	
+	public void setReverse() {
+		reverseOrder = true;
+	}
+	
 	public void loadEntityToCutsceneData() {
 		cutsceneData.loadEntity();
 	}
@@ -28,22 +34,32 @@ public class Cutscene extends Menu {
 	}
 	
 	public void doCutscene() {
-		String text = cutsceneData.getString();
-		curMovement = cutsceneData.getNextMovementData();
-		
-		if (text != null) {
-			SimpleDialogMenu.createDialogBox(state,text);
+		if (cutsceneData.getEntity().getAtTargetPoint()) {
+			curMovement = cutsceneData.getMovementData();
+			text = cutsceneData.getString();
+			if (text != null) {
+				SimpleDialogMenu.createDialogBox(state,text);
+			} 
+			else if (curMovement != null){
+				applyMovementToEntity();
+			}
+			else if (curMovement == null && text == null) {
+				end();
+				return;
+			}
+			cutsceneData.step(reverseOrder);
 		}
-		
-		if (curMovement == null) {
-			menuItems.remove(csMenuItem);
-			cutsceneData.getEntity().resetMovement();
-			return;
-		}
-		applyMovementToEntity();
-//		killThis();
+	}
+	
+	public void end() {
+		menuItems.remove(csMenuItem);
+		cutsceneData.getEntity().resetMovement();
+		onEndAction();
 	}
 
+	public void onEndAction() {
+		cutsceneData.removeHotSpot();
+	}
 
 	private void applyMovementToEntity() {
 		Entity e = cutsceneData.getEntity();

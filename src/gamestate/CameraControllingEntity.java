@@ -9,7 +9,7 @@ public class CameraControllingEntity extends Entity {
 		this.camera = c;
 	}
 	
-	public void moveWithCamera(int dx, int dy) {
+	public void moveWithCamera(double dx, double dy) {
 		if (dx == 0 && dy == 0) {
 			this.updateActionTaken("idle");
 		} else {
@@ -49,10 +49,10 @@ public class CameraControllingEntity extends Entity {
 		}
 		move();
 		if (x > camera.getState().getMainWindow().getScreenWidth()/2) {
-			camera.updateCamera(deltaX, 0);
+			camera.updateCamera((int)deltaX, 0);
 		}
 		if (y > camera.getState().getMainWindow().getScreenHeight()/2) {
-			camera.updateCamera(0, deltaY);
+			camera.updateCamera(0, (int)deltaY);
 		}
 	}
 	

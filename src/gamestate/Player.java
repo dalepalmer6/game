@@ -10,13 +10,22 @@ import global.InputController;
 import menu.StartupNew;
 
 public class Player extends CameraControllingEntity implements Controllable{
-	
+	private double invincibilityFrameCount = 0;
+	private double invincibilityTicks = 0.5;
 	private boolean confirmButtonDown = false;
 	MovementData[] movementData = new MovementData[64];
 	
+	public void update(GameState gs) {
+		super.update(gs);
+		if (state.getGameState().isInvincible()) {
+			invincibilityFrameCount += invincibilityTicks;
+		}
+		
+	}
+	
 	public void draw(MainWindow m) {
 		if (state.getGameState().isInvincible()) {
-			if (tickCount % (2*ticksPerFrame) == 0) {
+			if ((int)invincibilityFrameCount % 2 == 0) {
 				super.draw(m);
 			}
 		} else {
@@ -68,14 +77,31 @@ public class Player extends CameraControllingEntity implements Controllable{
 	public void handleInput(InputController input) {
 //		input.setHoldable(true);
 		deltaX = 0; deltaY = 0;
+//		int angle;
 		if (input.getSignals().get("UP")) {
 			deltaY = -stepSize;
+//			angleDirection = Math.PI/2;
+//			deltaX += 1 * Math.cos(angleDirection);
+//			deltaY += 1 * Math.sin(angleDirection);
+			directionY = "up";
 		} if (input.getSignals().get("DOWN")) {
+//			angleDirection = Math.PI*3/2;
+//			deltaX += 1 * Math.cos(angleDirection);
+//			deltaY += 1 * Math.sin(angleDirection);
 			deltaY = stepSize;
+			directionY = "down";
 		}if (input.getSignals().get("RIGHT")) {
+//			angleDirection = 0;
+//			deltaX += 1 * Math.cos(angleDirection);
+//			deltaY += 1 * Math.sin(angleDirection);
 			deltaX = stepSize;
+			directionX = "right";
 		} if (input.getSignals().get("LEFT")) {
+//			angleDirection = Math.PI;
+//			deltaX += 1 * Math.cos(angleDirection);
+//			deltaY += 1 * Math.sin(angleDirection);
 			deltaX = -stepSize;
+			directionX = "left";
 		}  if (input.getSignals().get("CONFIRM")) {
 			confirmButtonDown  = true;
 		} else {

@@ -17,7 +17,7 @@ public class DoorMenuItem extends MenuItem {
 	public String execute() {
 		state.getMenuStack().pop();
 		MapEditMenu mem = (MapEditMenu) state.getMenuStack().peek();
-		mem.getMapPreview().setTool(new DoorTool(door));
+		mem.getMapPreview().setTool(new DoorTool(door,state));
 		return null;
 	}
 }

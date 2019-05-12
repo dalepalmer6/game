@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 import canvas.Controllable;
 import canvas.Drawable;
+import gamestate.elements.items.Item;
 import global.InputController;
 import mapeditor.Map;
 import mapeditor.MapEditMenu;
@@ -57,6 +59,22 @@ public class GameState {
 	private int startX;
 	private int startY;
 	private int invincibleCounter;
+	private int numEnemies;
+	private long timeCreated;
+	private long timeNow;
+	private long timeLast = 0;
+	private ArrayList<Entity> savedParty;
+	private boolean trainNotAdded;
+	private boolean trainAdded;
+	private TrainEntity train;
+	private int trainStartIndex = 0;
+	private int trainEndIndex = 0;
+	private Item itemToBuy;
+	private int funds = 20;
+	
+	public long getDeltaTime() {
+		return (long) ((System.nanoTime() - timeNow) / 1e9);
+	}
 	
 	public void setCanEncounter(boolean b) {
 		canEncounter = b;
@@ -184,6 +202,7 @@ public class GameState {
 	}
 	
 	public GameState(StartupNew s, Map m) {
+		this.timeCreated = System.nanoTime();
 		lastSavedMap = m;
 		this.entities = new ArrayList<Entity>();
 		this.currentMapName = m.getMapId();
@@ -203,7 +222,7 @@ public class GameState {
 		camera.setMapRenderer(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
 		addPartyMember("NINTEN");
-		createTestEnemy();
+//		createTestEnemy();
 	}
 	
 	public void createTestEnemy() {
@@ -406,6 +425,24 @@ public class GameState {
 	}
 	
 	public void update(InputController input) {
+		if (getFlag("train") && !trainAdded) {
+			//replace the party with a single train entity which extends the CameraControllingEntity
+			entities.removeAll(savedParty);
+			Entity e = state.getEntityFromEnum("bus").createCopy(player.getX(),player.getY(),64*4,48*4,"train");
+			train = new TrainEntity(e, camera, state);
+			entities.add(train);
+			TrainCutscene trainCutscene = new TrainCutscene(state,trainStartIndex,trainEndIndex);
+			trainCutscene.loadEntityToCutsceneData();
+			state.getMenuStack().push(trainCutscene);
+			trainAdded = true;
+			
+		} else if (!getFlag("train") && trainAdded) {
+			entities.remove(train);
+			entities.addAll(savedParty);
+			player.setXY(train.getX(),train.getY());
+			trainAdded = false;
+		}
+		timeNow = System.nanoTime();
 		if (invincibleCounter > 0) {
 			invincibleCounter--;
 			canEncounter = false;
@@ -415,18 +452,21 @@ public class GameState {
 		updateSystemFlags();
 		updateTiles();
 		//get all entities that belong in the map (in the viewport bounds)
-		while (numPartyMembers < party.size()) {
+		while (numPartyMembers < party.size() && !getFlag("train")) {
+			savedParty = new ArrayList<Entity>();
 			for (PartyMember m : party) {
 				for (String id : partyMemberEntities.keySet()) {
 					if (m.getId().equals(id)) {
 						if (numPartyMembers == 0) {
 							player = new Player(4,partyMemberEntities.get(id),camera,state);
 							removed.put(id,partyMemberEntities.get(id));
+							savedParty.add(player);
 							this.entities.add(player);
 						} else if (numPartyMembers < 4) {
 							FollowingPlayer fent = new FollowingPlayer(4,partyMemberEntities.get(id),state,numPartyMembers);
 							removed.put(id,partyMemberEntities.get(id));
 							this.entities.add(fent);
+							savedParty.add(fent);
 						}
 						numPartyMembers++;
 					}
@@ -540,7 +580,7 @@ public class GameState {
 							e2.deltaY = 0;
 						}
 					}
-						if (e.checkCollisionWithTolerance(e2,8)) {
+						if (e.checkCollisionWithTolerance(e2,32)) {
 							e.addToInteractables(e2);
 						} else {
 //							e.removeFromInteractables(e2);
@@ -578,6 +618,10 @@ public class GameState {
 		
 	}
 	
+	public void setFlag(String flagName, boolean state) {
+		flags.put(flagName, state);
+	}
+	
 	public boolean getFlag(String flagName) {
 		try {
 			return flags.get(flagName);
@@ -607,6 +651,85 @@ public class GameState {
 			enemies.add(e);
 		}
 		
+	}
+
+	public void addNumEntities(int size) {
+		// TODO Auto-generated method stub
+		numEnemies += size;
+	}
+
+	public int getNumEnemies() {
+		// TODO Auto-generated method stub
+		return numEnemies;
+	}
+
+	public TrainEntity getTrain() {
+		// TODO Auto-generated method stub
+		return train;
+	}
+
+	public void setTrainRide(int x, int y) {
+		// TODO Auto-generated method stub
+		trainStartIndex = x;
+		trainEndIndex = y;
+	}
+
+	public void setItemToBuy(Item item) {
+		// TODO Auto-generated method stub
+		itemToBuy = item;
+	}
+
+	public int getFundsOnHand() {
+		// TODO Auto-generated method stub
+		return funds ;
+	}
+	
+	public void spendFunds(int amt) {
+		funds -= amt;
+	}
+
+	public void saveData() throws IOException {
+		//write all flags to a file
+		File file;
+		String savedataLoc = "savedata/test/";
+		file = new File(savedataLoc);
+		file.mkdirs();
+		file = new File(savedataLoc + "flags");
+		file.createNewFile();
+		PrintWriter flagsOut = new PrintWriter(file);
+		for (String flagName : flags.keySet()) {
+			flagsOut.println(flagName + "," + getFlag(flagName));
+		}
+		flagsOut.flush();
+		flagsOut.close();
+		//write all party members to their respective files
+		for (PartyMember pm : party) {
+			file = new File(savedataLoc + pm.getId());
+			file.createNewFile();
+			PrintWriter pw = new PrintWriter(file);
+			pw.println(pm.getName() + "," + pm.getStats().toString());
+			String items = "";
+			for (Item i : pm.getItemsList()) {
+				items += i.getId() + ",";
+			}
+			pw.println(items);
+			pw.println(Long.toBinaryString(pm.getKnownPSI()));
+			String equips="";
+			for (Item i : pm.getEquips()) {
+				equips += i.getId() +  ",";
+			}
+			pw.println(equips);
+			pw.flush();
+			pw.close();
+		}
+		
+		//write all system info, money on hand, in bank, x,y, map name
+		file = new File(savedataLoc + "sys");
+		file.createNewFile();
+		PrintWriter pw = new PrintWriter(file);
+		pw.println(currentMapName + "," + player.getX() + "," + player.getY() + "," + funds);
+		pw.flush();
+		pw.close();
 	}
 	
 }

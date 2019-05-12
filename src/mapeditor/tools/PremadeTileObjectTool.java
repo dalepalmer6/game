@@ -2,6 +2,7 @@ package mapeditor.tools;
 
 import global.InputController;
 import mapeditor.Tile;
+import menu.StartupNew;
 import tiles.PremadeTileObject;
 
 public class PremadeTileObjectTool extends SingleTile {
@@ -16,8 +17,8 @@ public class PremadeTileObjectTool extends SingleTile {
 		}
 	}
 	
-	public PremadeTileObjectTool(Tile t) {
-		super(t);
+	public PremadeTileObjectTool(Tile t, StartupNew state) {
+		super(t,state);
 	}
 		
 }

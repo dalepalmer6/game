@@ -11,7 +11,11 @@ import menu.SwirlAnimation;
 
 public class EnemyEntity extends Entity {
 	private ArrayList<Enemy> enemys;//should only have one
-
+	public void setToRemove(boolean b) {
+		super.setToRemove(b);
+		state.getGameState().addNumEntities(-1);
+	}
+	
 	public EnemyEntity(int x, int y, int width, int height, StartupNew m,
 			ArrayList<Enemy> enemy) {
 		super(enemy.get(0).getEntityId() + ".png", x, y, width, height, m, "enemy_" + enemy.get(0).getName());
@@ -20,39 +24,18 @@ public class EnemyEntity extends Entity {
 			clones.add(((Enemy)e).clone());
 		}
 		this.enemys = clones;
+		stepSize =4;
 	}
 	
 	public void update(GameState gs) {
 		Player player = state.getGameState().getPlayer();
-		if (x - player.getX() < 0) {
-			deltaX = 4;
-			actionTaken="walking";
-			directionX = "right";
-		} else if (x - player.getX() > 0){
-			deltaX = -4;
-			actionTaken="walking";
-			directionX = "left";
-		} else {
-			deltaX = 0;
-//			directionX = "";
-			actionTaken="idle";
-		}
-		if (y - player.getY() < 0) {
-			deltaY = 4;
-			actionTaken="walking";
-			directionY = "down";
-		} else if (y - player.getY() > 0){
-			deltaY = -4;
-			actionTaken="walking";
-			directionY = "up";
-		} else {
-			deltaY = 0;
-			directionY = "";
-			actionTaken = "idle";
-		}
+		targetX = player.getX();
+		targetY = player.getY();
 		super.update(gs);
 	}
 
+	public void interact() {}
+	
 	public ArrayList<Enemy> getEnemiesList() {
 		return enemys;
 	}

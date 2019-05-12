@@ -69,7 +69,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		//set location
 		this.tileBar = tilebar;
 		this.x = mapPreview.getRightEdge() + 3*TILE_SIZE;
-		this.y = tileBar.getY() + tileBar.getHeight() + 3*TILE_SIZE;
+		this.y = mapPreview.getY() + 3*TILE_SIZE;
 //		state.getTextureAtlas().setRectByName("img/entities.png");
 		this.state= state;
 		this.mapPreview = mapPreview;
@@ -242,7 +242,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	public String execute() {
 		// TODO Auto-generated method stub
 		Entity e = hoveredEntity;
-		mapPreview.setTool(new SingleEntity(e));
+		mapPreview.setTool(new SingleEntity(e,state));
 		return null;
 	}
 }

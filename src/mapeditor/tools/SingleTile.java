@@ -1,13 +1,21 @@
 package mapeditor.tools;
 
 import global.InputController;
+import mapeditor.LayerBGButton;
+import mapeditor.LayerBaseButton;
+import mapeditor.LayerFGButton;
 import mapeditor.MapEditMenu;
 import mapeditor.MapPreview;
 import mapeditor.Tile;
+import menu.StartupNew;
 import tiles.PremadeTileObject;
 
 public class SingleTile extends MapTool {
 	protected Tile tile;
+	
+//	public void draw(MainWindow m, int x, int y) {
+//		tile.getInstance(0).draw(m);
+//	}
 	
 	public Tile getTile() {
 		return tile;
@@ -22,9 +30,16 @@ public class SingleTile extends MapTool {
 		this.map.setTile(0,x,y);
 	}
 	
-	public SingleTile(Tile tile) {
-		super();
+	public void setButtons(StartupNew state) {
+		
+	}
+	
+	public SingleTile(Tile tile, StartupNew state) {
+		super(state);
 		this.tile = tile;
 		toolInfo = "Tile ID: " + tile.getId();
+		associatedButtons.add(new LayerBaseButton("",500,0,159,31,state));
+		associatedButtons.add(new LayerBGButton("",750,0,159,31,state));
+		associatedButtons.add(new LayerFGButton("",1000,0,159,31,state));
 	}
 }

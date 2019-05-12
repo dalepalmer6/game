@@ -149,7 +149,8 @@ public class BattleMenu extends Menu {
 		//create a battle menu
 		state.getMenuStack().push(this);
 		MainWindow mainWindow = state.getMainWindow();
-		actionMenu = new BattleMenuSelectionTextWindow(mainWindow.getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		actionMenu = new BattleMenuSelectionTextWindow(mainWindow.getScreenWidth()/2 - (10/2)*72,32,10,2,state);
+		actionMenu.setSteps(160,0);
 		enemies = new ArrayList<BattleEntity>();
 		for (EnemyEntity ee : enemyEntities) {
 			enemies.addAll(ee.getEnemiesList());
@@ -208,13 +209,13 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptGreet(String s) {
-		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		prompt = createTextWindow(s);
 		readyToDisplay = true;
 		((BattleTextWindow)prompt).setPollForActionsOnExit();
 	}
 	
 	public void setPromptFirst(String s) {
-		prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		prompt = createTextWindow(s);
 		readyToDisplay = true;
 		((BattleTextWindow)prompt).loadAnimOnExit();
 	}
@@ -222,7 +223,7 @@ public class BattleMenu extends Menu {
 	public void setPromptSecond(String s) {
 		if (!s.equals("")) {
 			readyToDisplay = true;
-			prompt = new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			prompt = createTextWindow(s);
 		} else {
 			readyToDisplay = false;
 			turnIsDone = true;
@@ -237,7 +238,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptDead() {
-		prompt = new BattleTextWindow(deadEntity.getName() + " became tame.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		prompt = createTextWindow(deadEntity.getName() + " became tame.");
 		if (needNextPrompt) {
 			needNextPrompt = false;
 			((BattleTextWindow)prompt).setPollForActionsOnExit();
@@ -250,11 +251,15 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptPartyDead() {
-		prompt = new BattleTextWindow("You lost the battle.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+		prompt = createTextWindow("You lost the battle.");
 		getResultText = false;
 		getNextPrompt = false;
 		readyToDisplay = true;
 		locked = true;
+	}
+	
+	public BattleTextWindow createTextWindow(String s) {
+		return new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (10/2)*72,32,10,2,state);
 	}
 	
 	public void setTurnIsDone() {
@@ -272,7 +277,7 @@ public class BattleMenu extends Menu {
 			menuItems.remove(actionMenu);
 			ended = true;
 			getNext = false;
-			prompt = new BattleTextWindow("YOU WON!",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			prompt = createTextWindow("YOU WON!");
 //			prompt.setPollForActionsOnExit();
 			for (int i = 0; i < partyMembers.size(); i++) {
 				partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
@@ -286,7 +291,7 @@ public class BattleMenu extends Menu {
 		if (displayRecExp && getNext) {
 			getNext = false;
 			int awardEXP = expPool/party.size();
-			prompt = new BattleTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.",state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			prompt = createTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.");
 			levelupString = "";
 			for (PartyMember pm : partyMembers) {
 				pm.addExp(awardEXP);
@@ -347,7 +352,7 @@ public class BattleMenu extends Menu {
 		if (levelupDisplay && getNext) {
 			state.setBGM("levelup.ogg");
 			getNext = false;
-			prompt = new BattleTextWindow(levelupString,state.getMainWindow().getScreenWidth()/2 - (20/2)*32,100,20,2,state);
+			prompt = createTextWindow(levelupString);
 			levelupDisplay = false;
 			readyToDisplay = true;
 			kill = true;
@@ -473,9 +478,10 @@ public class BattleMenu extends Menu {
 					//generate battle actions for each enemy
 					for (BattleEntity e : enemies) {
 						//create stubs
+						int val = (int) Math.floor(Math.random() * party.size());
 						BattleAction ba = new BattleAction(state);
 						ba.setUser(e);
-						ba.setTargets(party,party.get(0),false);
+						ba.setTargets(party,party.get(val),false);
 						ba.setAction("bash");
 						addBattleAction(e,ba);
 					}

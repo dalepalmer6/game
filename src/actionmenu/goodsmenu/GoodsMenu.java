@@ -20,6 +20,7 @@ public class GoodsMenu extends Menu {
 
 	public void createMenu() {
 		SelectionTextWindow stw = new SelectionTextWindow(0,0,15,15,state);
+		stw.setSteps(480,0);
 		for (Item i : party.get(index).getItemsList()) {
 			stw.add(new GoodsSelectMenuItem(i,index,state,party));
 		}

@@ -701,8 +701,8 @@ public class Map {
 	public ArrayList<Entity> getEntitiesInView(int xLeft, int yTop) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		for (Entity e : entitiesInMap) {
-			if (e.getX() < xLeft + state.getMainWindow().getScreenWidth() + 1000 && e.getX() > xLeft - 1000
-					&& e.getY() > yTop - 1000  && e.getY() < yTop + state.getMainWindow().getScreenHeight() + 1000) {
+			if (e.getX() < xLeft + state.getMainWindow().getScreenWidth() + 512 && e.getX() > xLeft - 512
+					&& e.getY() > yTop - 512  && e.getY() < yTop + state.getMainWindow().getScreenHeight() + 5) {
 				list.add(e);
 			}
 		}

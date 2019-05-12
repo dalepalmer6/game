@@ -28,8 +28,8 @@ public class Entity implements Drawable,EntityInterface {
 	protected int y;
 	private boolean doNotMove;
 	protected int boundingBoxHeight;
-	protected int deltaX;
-	protected int deltaY;
+	protected double deltaX;
+	protected double deltaY;
 	protected int xOnScreen;
 	protected int yOnScreen;
 	private String texture;
@@ -43,6 +43,11 @@ public class Entity implements Drawable,EntityInterface {
 	private boolean needsRemove;
 	private String appearFlag = " ";
 	private String disappearFlag = " ";
+	private double moveSpeedThisFrame;
+	protected double angleDirection;
+	protected int targetX = -1;
+	protected int targetY = -1;
+	protected boolean atTargetPoint = true;
 	
 	public void setAppearFlag(String a) {
 		appearFlag = a;
@@ -111,8 +116,13 @@ public class Entity implements Drawable,EntityInterface {
 			return;
 		}
 		for (Entity e2 : state.getGameState().getEntityList()) {
-			if (this instanceof FollowingPlayer) {
+			if (e2 instanceof FollowingPlayer) {
 				continue;
+			}
+			if ((this instanceof EnemyEntity && e2 instanceof Player) || (this instanceof Player && e2 instanceof EnemyEntity)) {
+				if (state.getGameState().isInvincible()) {
+					continue;
+				}
 			}
 			if (this instanceof EnemyEntity && e2 instanceof EnemyEntity) {
 				continue;
@@ -135,23 +145,126 @@ public class Entity implements Drawable,EntityInterface {
 		}
 	}
 	
+	public void setXY(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
 	public void move() {
 		checkCollisions();
 		checkEntityCollisions();
+		if (targetX != -1 && targetY != -1) {
+			if (x - targetX < 0) {
+				deltaX = stepSize;
+				while (x + deltaX > targetX) {
+					deltaX--;
+				}
+				actionTaken="walking";
+				directionX = "right";
+			} else if (x - targetX > 0){
+				deltaX = -stepSize;
+				while (x + deltaX < targetX) {
+					deltaX++;
+				}
+				
+				actionTaken="walking";
+				directionX = "left";
+			} else {
+				deltaX = 0;
+//				directionX = "";
+				actionTaken="idle";
+			}
+			if (y - targetY < 0) {
+				deltaY = stepSize;
+				while (y + deltaY > targetY) {
+					deltaY--;
+				}
+				
+				actionTaken="walking";
+				directionY = "down";
+			} else if (y - targetY > 0){
+				deltaY = -stepSize;
+				while (y + deltaY < targetY) {
+					deltaY++;
+				}
+				
+				actionTaken="walking";
+				directionY = "up";
+			} else {
+				deltaY = 0;
+//				directionY = "";
+				actionTaken = "idle";
+			}
+			if (deltaX == 0 && deltaY == 0) {
+				atTargetPoint = true;
+			}
+		} 
 		x += deltaX;
 		y += deltaY;
 	}
+	
+	public void setAtTargetPoint() {
+		atTargetPoint = true;
+		targetX = -1;
+		targetY = -1;
+	}
+	
+	public boolean getAtTargetPoint() {
+		return atTargetPoint;
+	}
+	
+//	public void move() {
+//		int colmask;
+//		if (((colmask = checkTileCollision())&15) != 0) {
+//			int sweepInterval = 10;
+//			boolean exit = false;
+//			double savedDeltaX = deltaX;
+//			double savedDeltaY = deltaY;
+//			double vectorLength = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+//			double angleOfInitialMovement = Math.acos(deltaX/vectorLength);
+//			for (int angle = sweepInterval; angle < 80; angle+=sweepInterval) {
+//				for (int mult = -1; mult <= 1; mult +=2) {
+//					deltaX = savedDeltaX;
+//					deltaY = savedDeltaY;
+//					double angleToCheck = angleOfInitialMovement + Math.toRadians(angle*mult);
+//					if (this instanceof Player)
+//					System.out.println("Trying to find new movement vector.");
+//					deltaX = (int) (vectorLength * Math.cos(angleToCheck));
+//					deltaY = (int) (vectorLength * Math.sin(angleToCheck));
+////					x += deltaX;
+////					y += deltaY;
+//					if (((colmask = checkTileCollision())&15) == 0) {
+//						System.out.println("Suitable found " + deltaX + "," + deltaY);
+//						exit = true;
+//						break;
+//					} else {
+//						deltaX = 0;
+//						deltaY = 0;
+//					}
+//				}
+//				if (exit) {
+//					break;
+//				}
+//			}
+//		} 
+////		checkCollisions();
+//		checkEntityCollisions();
+//		x += deltaX;
+//		y += deltaY;
+//		
+//	}
 	
 	public void kill() {
 		
 	}
 	
 	public void update(GameState gs) {
+		moveSpeedThisFrame = (int) (stepSize * state.getGameState().getDeltaTime());
 		move();
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
-		if (xOnScreen > state.getMainWindow().getScreenWidth() + 512|| yOnScreen > state.getMainWindow().getScreenHeight() + 512
-		 || xOnScreen < -512 || yOnScreen < -512) {
+		if (xOnScreen > state.getMainWindow().getScreenWidth() + 768|| yOnScreen > state.getMainWindow().getScreenHeight() + 768
+		 || xOnScreen < -768 || yOnScreen < -768) {
 			setToRemove(true);
 		}
 		updateFrameTicks();
@@ -228,6 +341,14 @@ public class Entity implements Drawable,EntityInterface {
 		m.renderTile(xOnScreen, yOnScreen, width, height, tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
 	}
 	
+	public void drawEntity(MainWindow m, int x, int y) {
+		initDrawEntity(m,texture);
+		Pose pose = getSpriteCoordinates().getPose(actionTaken, directionX,directionY);
+		int i = (int) tickCount % pose.getNumStates();
+		TileMetadata tm = pose.getStateByNum(i);
+		m.renderTile(x, y, width, height, tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
+	}
+	
 	public void draw(MainWindow m) {
 		// TODO Auto-generated method stub
 		drawEntity(m);
@@ -243,17 +364,23 @@ public class Entity implements Drawable,EntityInterface {
 		state.getGameState().addToRedrawing(new RedrawObject(this));
 	}
 	
-	public void checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) { 
+	public boolean checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) { 
 //		if (((collision & 1) & 15) == 1) {
 //			deltaX = 0;
 //			deltaY = 0;
 //		}
+		boolean collided = false;
 		int val = ((collision & 5) & 15);
 		switch(val) {
-			case 1: deltaX = 0; deltaY = 0; break;
+			case 1: 
+				deltaX = 0; 
+				deltaY = 0; 
+				collided = true; break;
 			case 4: break;
 			case 5: break;
 		}
+		
+		return collided;
 //		if (val == 1) {
 //			deltaX = 0;
 //			deltaY = 0;
@@ -263,19 +390,17 @@ public class Entity implements Drawable,EntityInterface {
 //		}
 	}
 	
-	public boolean checkCollisions() {
-		//collisions are cumulative over all layers
+	public int checkTileCollision() {
 		int ts = state.getGameState().getMapRenderer().getTileSize();
-		int leftEdge = (this.x + deltaX)/ts;
-		int rightEdge = (this.x + this.width + deltaX)/ts;
-		int upperEdge = (this.y + this.height*3/4 + deltaY)/ts;
-		int lowerEdge = (this.y + this.height + deltaY)/ts;
-		
+		int leftEdge = (int) ((this.x +deltaX)/ts);
+		int rightEdge = (int) ((this.x + this.width +deltaX)/ts);
+		int upperEdge = (int) ((this.y + this.height*3/4 +deltaY)/ts);
+		int lowerEdge = (int) ((this.y + this.height +deltaY)/ts);
 				
-		int leftEdgeTest = (this.x + deltaX)%ts / (ts/4);
-		int rightEdgeTest = (this.x + this.width + deltaX)%ts / (ts/4);
-		int upperEdgeTest = (this.y + this.height*3/4 + deltaY)%ts / (ts/4);
-		int lowerEdgeTest = (this.y + this.height + deltaY)%ts / (ts/4);
+		int leftEdgeTest = (int) ((this.x +deltaX)%ts / (ts/4));
+		int rightEdgeTest = (int) ((this.x + this.width +deltaX)%ts / (ts/4));
+		int upperEdgeTest = (int) ((this.y + this.height*3/4 +deltaY)%ts / (ts/4));
+		int lowerEdgeTest = (int) ((this.y + this.height +deltaY)%ts / (ts/4));
 		
 		TileInstance t1BG = state.getGameState().getMap().tileInstanceMapBG.get(upperEdge).get(leftEdge);
 		TileInstance t2BG = state.getGameState().getMap().tileInstanceMapBG.get(upperEdge).get(rightEdge);
@@ -304,26 +429,90 @@ public class Entity implements Drawable,EntityInterface {
 		collisiont3 = (collisionStatet3FG | collisionStatet3BG);
 		collisiont4 = (collisionStatet4FG | collisionStatet4BG);
 		
-		checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
-		checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
-		checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
-		checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG);
+		boolean tl = checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
+		boolean tr = checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
+		boolean bl = checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
+		boolean br = checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG);
 		
-		if (
-				//corners still dont work entirely (see tree corners)
-				(((collisiont1 & 2)&15) ==0 && ((collisiont2 & 2)&15) ==0 &&
-				((collisiont1 & 1)&15) ==0 && ((collisiont2 & 1)&15) ==0) ||
-				
-				(((collisiont3 & 2)&15) ==0 && ((collisiont4 & 2)&15) == 0 && 
-				((collisiont4 & 1)&15) == 0 && ((collisiont4 & 1)&15) == 0) ||
-				
-				(((collisiont1 & 4)&15) == 4 && ((collisiont2 & 4)&15) == 4 &&
-				((collisiont3 & 4)&15) == 4 && ((collisiont4 & 4)&15) == 4)) {
-//			stageForRedraw();
+		int colmask = 0;
+		if (tl) {
+			colmask |= 8;
+		}
+		if (tr) {
+			colmask |= 4;
+		}
+		if (bl) {
+			colmask |= 2;
+		}
+		if (br) {
+			colmask |= 1;
+		}
+		return colmask;
+	}
+	
+	public boolean checkCollisions() {
+		//collisions are cumulative over all layers
+		
+		int colmask = checkTileCollision();
+		
+		if (colmask == 8 && directionX.equals("left")) {
+			deltaX = 0;
+			deltaY = 8;
+			checkTileCollision();
+		}
+		if (colmask == 8 && directionY.equals("up")) {
+			deltaX = 8;
+			deltaY = 0;
+			checkTileCollision();
 		}
 		
-		if ((collisiont1 & 1 & 15) == 1 || (collisiont2 & 1 & 15) == 1 ||
-				(collisiont3 & 1 & 15) == 1 || (collisiont4 & 1 & 15) == 1) {
+		if (colmask == 1 && directionX.equals("right")) {
+			deltaX = 0;
+			deltaY = -8;
+			checkTileCollision();
+		}
+		if (colmask == 1 && directionY.equals("down")) {
+			deltaX = -8;
+			deltaY = 0;
+			checkTileCollision();
+		}
+		
+		if (colmask == 4 && directionX.equals("right")) {
+			deltaX = 0;
+			deltaY = 8;
+			checkTileCollision();
+		}
+		if (colmask == 4 && directionY.equals("up")) {
+			deltaX = -8;
+			deltaY = 0;
+			checkTileCollision();
+		}
+		
+		if (colmask == 2 && directionX.equals("left")) {
+			deltaX = 0;
+			deltaY = -8;
+			checkTileCollision();
+		}
+		if (colmask == 2 && directionY.equals("down")) {
+			deltaX = 8;
+			deltaY = 0;
+			checkTileCollision();
+		}
+		
+//		if (
+//				//corners still dont work entirely (see tree corners)
+//				(((collisiont1 & 2)&15) ==0 && ((collisiont2 & 2)&15) ==0 &&
+//				((collisiont1 & 1)&15) ==0 && ((collisiont2 & 1)&15) ==0) ||
+//				
+//				(((collisiont3 & 2)&15) ==0 && ((collisiont4 & 2)&15) == 0 && 
+//				((collisiont4 & 1)&15) == 0 && ((collisiont4 & 1)&15) == 0) ||
+//				
+//				(((collisiont1 & 4)&15) == 4 && ((collisiont2 & 4)&15) == 4 &&
+//				((collisiont3 & 4)&15) == 4 && ((collisiont4 & 4)&15) == 4)) {
+////			stageForRedraw();
+//		}
+//		
+		if ((colmask & 15) != 0) {
 			return true;
 		}
 		return false;
@@ -333,21 +522,25 @@ public class Entity implements Drawable,EntityInterface {
 		
 	} 
 	
-	public boolean checkCollisionsWithEntity(Entity e) {
-		int leftEdge = this.x + deltaX;
-		int rightEdge = this.x + this.width + deltaX;
-		int upperEdge = this.y + this.height*3/4 + deltaY;
-		int lowerEdge = this.y + this.height + deltaY;
-		boolean collision = false;
-		if ((rightEdge >= e.x + e.deltaX)) {
-			System.out.println(this.toString() + " is col w/ " + e.toString());
-			collision = true;
-		}
-		return collision;
-	}
+//	public boolean checkCollisionsWithEntity(Entity e) {
+//		int leftEdge = this.x + deltaX;
+//		int rightEdge = this.x + this.width + deltaX;
+//		int upperEdge = this.y + this.height*3/4 + deltaY;
+//		int lowerEdge = this.y + this.height + deltaY;
+//		boolean collision = false;
+//		if ((rightEdge >= e.x + e.deltaX)) {
+//			System.out.println(this.toString() + " is col w/ " + e.toString());
+//			collision = true;
+//		}
+//		return collision;
+//	}
 
 	public void interact() {
-		SimpleDialogMenu.createDialogBox(state,this.text);
+		if (this.text != null) {
+			SimpleDialogMenu.createDialogBox(state,this.text);
+		} else {
+			
+		}
 	}
 	
 	@Override
@@ -423,17 +616,18 @@ public class Entity implements Drawable,EntityInterface {
 	}
 
 	public void applyMovementData(int x, int y, String actionTaken, String dirX, String dirY) {
-		this.deltaX = x;
-		this.deltaY = y;
-		this.actionTaken = actionTaken;
-		this.directionX = dirX;
-		this.directionY = dirY;
+		this.targetX = x;
+		this.targetY = y;
+		atTargetPoint = false;
+//		this.actionTaken = actionTaken;
+//		this.directionX = dirX;
+//		this.directionY = dirY;
 	}
 
 	public void resetMovement() {
 		// TODO Auto-generated method stub
-		deltaX = 0;
-		deltaY = 0;
+		targetX = -1;
+		targetY = -1;
 	}
 
 	public void setDeltaXY(int x,int y) {

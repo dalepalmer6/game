@@ -14,6 +14,7 @@ public class Item{
 	protected int damageUpperBound;
 	private int equippable; //0b1, wpn; 0b10, head; 0b100, body; 0b1000, other;
 	private String participle;
+	private int value;
 	
 	public int getTargetType() {
 		return targetType;
@@ -122,7 +123,7 @@ public class Item{
 	
 
 	
-	public Item(int id, String name, String desc, int ttype,int action, int equippable, String participle) {
+	public Item(int id, String name, String desc, int ttype,int action, int equippable, String participle, int value) {
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
@@ -130,6 +131,7 @@ public class Item{
 		this.action = action;
 		this.equippable = equippable;
 		this.participle = participle;
+		this.value = value;
 	}
 
 	public int getId() {
@@ -152,5 +154,10 @@ public class Item{
 //			}
 //		}
 		return result;
+	}
+
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return value;
 	}
 }

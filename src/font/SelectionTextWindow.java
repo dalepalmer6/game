@@ -16,8 +16,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private String output = "";
 	protected int currentOpenX;
 	private int currentOpenY;
-	protected int stepForwardX = 64;
-	protected int stepForwardY = 32;
+	protected int stepForwardX = 128;
+	protected int stepForwardY = 64;
 	private int dimX = 0;
 	private int dimY = 0;
 //	protected List<MenuItem> selections = new ArrayList<MenuItem>();
@@ -28,6 +28,28 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private int selectedY = 0;
 	private int selectedX = 0;
 	private boolean canPopMenuStack = true;
+	private boolean maxDimYReached;
+	private int index = 0;
+	
+	public void updateAnim() {
+		super.updateAnim();
+		for (ArrayList<MenuItem> list : selections) {
+			for (MenuItem i : list) {
+				if (i.getWidthOfText() > width) {
+					width = i.getWidthOfText();
+				}
+			}
+		}
+	}
+	
+	public void setSteps(int dx, int dy) {
+		if (dx != 0) {
+			stepForwardX = dx;
+		}
+		if (dy != 0) {
+			stepForwardY = dy;
+		}
+	}
 	
 	public void setCurrentOpen(int x, int y) {
 		this.currentOpenX = this.x + x;
@@ -76,7 +98,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		dimX = 1;
 		dimY = 1;
 		currentOpenX = this.x + this.TEXT_START_X + 16;
-		currentOpenY = this.y+ this.TEXT_START_Y;
+		currentOpenY = this.y + this.TEXT_START_Y;
 		ArrayList<MenuItem> firstRow = new ArrayList<MenuItem>(1);
 		selections = new ArrayList<ArrayList<MenuItem>>();
 		selections.add(firstRow);
@@ -106,22 +128,27 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		m.setY(currentOpenY);
 		switch (orientation) {
 		case "vertical":
-			if (currentOpenY > this.y + this.getHeight()*2) {
+			if (currentOpenY > this.y + this.getHeight()*4) {
 				currentOpenY = this.y + this.TEXT_START_Y;
 				currentOpenX += stepForwardX;
-//				dimX++;
+				dimX++;
+				index = 0;
+				maxDimYReached = true;
 			}
 			m.setX(currentOpenX);
 			m.setY(currentOpenY);
-			selections.get(dimY-1).add(m);
-			dimY++;
+			selections.get(index++).add(m);
+			if (!maxDimYReached) {
+				dimY++;
+			}
+			
 			if (selections.size() < dimY) {
 				selections.add(new ArrayList<MenuItem>());
 			}
 			currentOpenY += stepForwardY;
 			break;
 		case "horizontal" :
-			if (currentOpenX > this.x + this.getWidth()*2) {
+			if (currentOpenX > this.x + this.getWidth()*4) {
 				currentOpenX = this.x + this.TEXT_START_X;
 				currentOpenY += stepForwardY;
 				selections.add(new ArrayList<MenuItem>());
@@ -192,6 +219,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	
 	public void update() {
 		String t = selections.get(selectedY).get(selectedX).prepareToExecute();
+		
 		if (killWhenComplete) {
 			state.getMenuStack().peek().setToRemove(this);
 			selectedX = 0;
@@ -262,7 +290,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 //					cursor.getDx(),cursor.getDy(),
 //					cursor.getDw()*2,cursor.getDh()*2);
 			m.renderTile(selections.get(selectedY).get(selectedX).getX() - 16,  selections.get(selectedY).get(selectedX).getY(),
-					(int)cursor.getDw()*4,(int)cursor.getDh()*4,
+					(int)cursor.getDw()*8,(int)cursor.getDh()*8,
 					cursor.getDx(),cursor.getDy(),
 					cursor.getDw()*2,cursor.getDh()*2);
 		}
@@ -273,6 +301,10 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		selections.get(selectedY).get(selectedX).prepareToExecute();
 		state.getMenuStack().peek().setToRemove(this);
 		return null;
+	}
+	
+	public void killMe() {
+		state.getMenuStack().peek().removeMenuItem(this);
 	}
 	
 	public void setDrawOnly(boolean b) {
@@ -306,6 +338,11 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 //				state.getMenuStack().pop();
 //			}
 		}
+	}
+
+	public int getCurrentOpenY() {
+		// TODO Auto-generated method stub
+		return currentOpenY;
 	}
 	
 }

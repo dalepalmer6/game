@@ -1,0 +1,3 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+pippi,1043,280,24,32,[SETFLAG_pippiSaved]My name is Pippi.[ADDMEMBER_PIPPI] ,pippi, ,pippiInParty
+ninten,430,248,24,32,New Entity,NewEntityName, , 

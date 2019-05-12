@@ -68,6 +68,10 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		return x + widthInTiles * TILE_SIZE;
 	}
 	
+	public int getLowerEdge() {
+		return y + heightInTiles * TILE_SIZE;
+	}
+	
 	public int getHeight() {
 		return height;
 	}
@@ -157,10 +161,11 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		this.x = x;
 		this.y = y;
 		this.widthInTiles = 30+2;
-		this.heightInTiles = 30+2;
+		this.heightInTiles = 20+2;
 		this.width = (-2 + this.widthInTiles) * TILE_SIZE;
 		this.height = (-2 + this.heightInTiles) * TILE_SIZE;
 		this.tileMap = tm;
+		this.tileTool = new MapTool(state);
 	}
 	
 	//can toggle this off!

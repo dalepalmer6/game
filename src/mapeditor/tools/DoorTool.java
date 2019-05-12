@@ -5,6 +5,7 @@ import gamestate.Entity;
 import mapeditor.Map;
 import mapeditor.MapEditMenu;
 import mapeditor.MapPreview;
+import menu.StartupNew;
 
 public class DoorTool extends MapTool {
 	private DoorEntity door;
@@ -14,8 +15,8 @@ public class DoorTool extends MapTool {
 	private int savedViewX;
 	private int savedViewY;
 
-	public DoorTool(DoorEntity door) {
-		super();
+	public DoorTool(DoorEntity door, StartupNew state) {
+		super(state);
 		this.door = door;
 	}
 	

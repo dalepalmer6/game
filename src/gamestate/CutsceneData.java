@@ -12,26 +12,48 @@ import menu.StartupNew;
 public class CutsceneData {
 	private StartupNew state;
 	private Entity entity;
-	private ArrayList<MovementData> movements;
+	private HashMap<Integer,MovementData> movements;
 	private HashMap<Integer,String> strings;
 	private int indexOfMovements;
 	private String entityName;
+	private HotSpot hotspot;
+	
+	public void removeHotSpot() {
+		state.getGameState().getEntityList().remove(hotspot);
+	}
 	
 	public MovementData getNextMovementData() {
 		if (indexOfMovements >= movements.size()) {
+			indexOfMovements++;
 			return null;
 		}
 		return movements.get(indexOfMovements++);
+	}
+	
+	public MovementData getMovementData() {
+//		if (indexOfMovements > movements.size()) {
+//			return null;
+//		}
+		return movements.get(indexOfMovements);
 	}
 	
 	public Entity getEntity() {
 		return entity;
 	}
 	
-	public CutsceneData(StartupNew state, String cutsceneFileName) {
+	public int getIndex() {
+		return indexOfMovements;
+	}
+	
+	public void setIndex(int i) {
+		indexOfMovements = i;
+	}
+	
+	public CutsceneData(StartupNew state, String cutsceneFileName, HotSpot hs) {
+		hotspot = hs;
 		indexOfMovements = 0;
 		this.state = state;
-		movements = new ArrayList<MovementData>();
+		movements = new HashMap<Integer,MovementData>();
 		strings = new HashMap<Integer,String>();
 		BufferedReader br;
 		String relEntities = "";
@@ -43,8 +65,8 @@ public class CutsceneData {
 			while ((row = br.readLine())!=null) {
 				String[] controls = row.split(",");
 				if (controls[0].equals("move")) {
-					int x = Integer.parseInt(controls[1]);
-					int y = Integer.parseInt(controls[2]);
+					int x = Integer.parseInt(controls[1])*4;
+					int y = Integer.parseInt(controls[2])*4;
 					String actionTaken = "";
 					String directionX = "";
 					String directionY = "";
@@ -63,11 +85,11 @@ public class CutsceneData {
 					} else {
 						directionY = "down";
 					}
-					movements.add(new MovementData(x,y,actionTaken,directionX,directionY));
-					index++;
+					movements.put(index,new MovementData(x,y,actionTaken,directionX,directionY));
 				} else if (controls[0].equals("text")) {
 					strings.put(index,controls[1]);
 				}
+				index++;
 			}
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -107,5 +129,19 @@ public class CutsceneData {
 	public String getString() {
 		// TODO Auto-generated method stub
 		return strings.get(indexOfMovements);
+	}
+
+	public void step() {
+		// TODO Auto-generated method stub
+		indexOfMovements++;
+	}
+	
+	public void step(boolean reversed) {
+		if (reversed) {
+			indexOfMovements--;
+		}
+		else {
+			indexOfMovements++;
+		}
 	}
 }

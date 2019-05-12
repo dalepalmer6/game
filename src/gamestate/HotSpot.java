@@ -10,7 +10,6 @@ public class HotSpot extends DoorEntity {
 		return cutsceneName;
 	}
 	
-	
 	@Override
 	public String getInfoForTool() {
 		return cutsceneName + ": " + x + "," + y;
@@ -20,7 +19,7 @@ public class HotSpot extends DoorEntity {
 		super(desc, x, y, width, height, m, destX, destY, map, text);
 		// TODO Auto-generated constructor stub
 		cutsceneName = csname;
-		CutsceneData cd = new CutsceneData(state, csname);
+		CutsceneData cd = new CutsceneData(state, csname,this);
 		cutscene = new Cutscene(state,cd);
 	}
 	

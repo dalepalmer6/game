@@ -8,7 +8,7 @@ public class TalkToMenuItem extends MenuItem {
 	private SelectionTextWindow stw;
 	
 	public TalkToMenuItem(StartupNew state, SelectionTextWindow stw) {
-		super("Talk",0,0,0,0,state);
+		super("Talk",0,0,state);
 		this.stw = stw;
 	}
 	

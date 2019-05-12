@@ -24,6 +24,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private String image = this.imageNeutral;
 	protected StartupNew state;
 	
+	public int getWidthOfText() {
+		return textObject.getWidth();
+	}
+	
 	public boolean hovered(double mousex, double mousey) {	
 		if (mousex >= x && mousex <= x + width && mousey >= y && mousey <=y + height) {
 			return true;
@@ -91,7 +95,8 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		text = t;
 		this.x = x;
 		this.y = y;
-		textObject = new Text(true,t,x,y,1000,1000,state.charList);
+		textObject = new Text(true,t,x,y,0,0,state.charList);
+		textObject.setAsSingleString();
 	}
 	
 	public MenuItem(String t, int x, int y, int width, int height, StartupNew m) {
@@ -101,7 +106,8 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.textObject = new Text(true,t,x,y,1000,1000,m.charList);
+		this.textObject = new Text(true,t,width,height,width,height,m.charList);
+		
 	}
 	
 	public void setText(String t) {

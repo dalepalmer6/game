@@ -39,6 +39,7 @@ public class InventorySelectionTextWindows extends Menu implements Controllable 
 		for (int i = 0; i < party.size(); i++) {
 			PartyMember pm = party.get(i);
 			stw = new SelectionTextWindow(0,0,15,15,state);
+			stw.setSteps(480,0);
 			stw.setDrawOnly(true);
 			for (Item item : pm.getItemsList()) {
 				stw.add(new GoodsSelectMenuItem(item,index,state,party));

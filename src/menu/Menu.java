@@ -9,6 +9,7 @@ import java.util.List;
 import battlesystem.options.EnemyOption;
 import canvas.Controllable;
 import canvas.Drawable;
+import font.SelectionTextWindow;
 import font.TextWindow;
 import global.InputController;
 import global.MenuStack;
@@ -134,6 +135,11 @@ public class Menu implements MenuInterface {
 	public void setToRemove(MenuItem e) {
 		// TODO Auto-generated method stub
 		needToRemove.add(e);
+	}
+
+	public void removeMenuItem(SelectionTextWindow stw) {
+		// TODO Auto-generated method stub
+		menuItems.remove(stw);
 	}
 
 }
