@@ -58,15 +58,8 @@ public class PSIAttack extends Item{
 		this.anim = anim;
 	}
 	
-//	public String useOutBattle(PartyMember pm) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	
-//	public String useInBattle(BattleEntity user, BattleEntity target) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public void use() {
+		
+	}
 
-	
 }

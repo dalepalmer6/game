@@ -78,11 +78,19 @@ int index;
 				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,psi,user,state);
 				use.execute();
 				state.getMenuStack().pop();
-			} else {
+			} else if (psi.getTargetType() == 0) {
 				//show the list of party members
 				PartyMemberSelectMenu pmsm = new PartyMemberSelectMenu(state,party,psi,user);
 				pmsm.createMenu();
 				state.getMenuStack().push(pmsm);
+			} else if (psi.getTargetType() == 1) {
+				//use on the whole party
+				String result = "";
+				result += user.getName() + " tried " + psi.getName() + ".[PROMPTINPUT]";
+				result += psi.useOutOfBattle(user,party) + "[PROMPTINPUT]";
+				state.setResultOfMenuToDisplay(result);
+				state.setClearMenuStack();
+				
 			}
 //			item.useOutOfBattle(user,target);
 			return null;

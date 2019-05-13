@@ -1,5 +1,7 @@
 package gamestate.elements.items;
 
+import java.util.ArrayList;
+
 import gamestate.BattleEntity;
 import gamestate.PartyMember;
 import gamestate.elements.Usable;
@@ -99,9 +101,8 @@ public class Item{
 		return 0;
 	}
 	
-	public String useInBattle(BattleEntity user, BattleEntity target) {
+	public String determineAction(BattleEntity user,BattleEntity target) {
 		String result = "";
-		calculateDamage();
 		switch (action) {
 			case 0: result += healTarget(user,target); break;
 			case 1: result += dealDamage(user,target,"ice"); break;
@@ -113,6 +114,13 @@ public class Item{
 			case 7: result += shield(user,target); break;
 			case 8: result += psiShield(user,target); break;
 		}
+		return result;
+	}
+	
+	public String useInBattle(BattleEntity user, BattleEntity target) {
+		String result = "";
+		calculateDamage();
+		result += determineAction(user,target) + "[PROMPTINPUT]";
 		return result;
 	}
 	
@@ -143,16 +151,16 @@ public class Item{
 		
 	}
 	
-	public String useOutOfBattle(PartyMember user, PartyMember target) {
+	public String useOutOfBattle(PartyMember user, ArrayList<PartyMember> target) {
 		// TODO Auto-generated method stub
 		String result = "";
-//		if (this instanceof ItemUsableInAndOutOfBattle || this instanceof ItemUsableOutOfBattle) {
-//			System.out.println("Item is usable, using");
-//			switch(action) {
-//				case 0: System.out.println("Healing");
-//						healTarget(user,target);
-//			}
-//		}
+//		calculateDamage();
+		for (PartyMember pm : target) {
+			BattleEntity targetBE = pm.createBattleEntity();
+			result += determineAction(user.createBattleEntity(),targetBE);
+			pm.setStats(targetBE.getStats().getStat("CURHP"),targetBE.getStats().getStat("CURPP"));
+		}
+		
 		return result;
 	}
 
