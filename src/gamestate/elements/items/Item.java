@@ -17,6 +17,11 @@ public class Item{
 	private int equippable; //0b1, wpn; 0b10, head; 0b100, body; 0b1000, other;
 	private String participle;
 	private int value;
+	private String usedString;
+	
+	public int getActionType() {
+		return action;
+	}
 	
 	public int getTargetType() {
 		return targetType;
@@ -47,21 +52,22 @@ public class Item{
 	}
 	
 	//predefine a bunch of use cases for items that will be assigned to items
-	public String healTarget(BattleEntity user, BattleEntity target) {
+	public int healTarget(BattleEntity user, BattleEntity target) {
 		int hp = target.getStats().getStat("CURHP");
 		int maxHP = target.getStats().getStat("HP");
 		int dhp = calculateDamage();
 		hp += (dhp);
 		hp = Math.min(maxHP,hp);
 		target.getStats().replaceStat("CURHP",hp);
-		return target.getName() + " recovered " + dhp + "HP!";
+//		return target.getName() + " recovered " + dhp + "HP!";
+		return dhp;
 	}
 	
-	public String dealDamage(BattleEntity user, BattleEntity target, String element) {
+	public int dealDamage(BattleEntity user, BattleEntity target, String element) {
 		int hp = target.getStats().getStat("CURHP");
 		int damage = calculateDamage();
 		target.takeDamage(damage);
-		return target.getName() + " suffered damage of " + damage + "!";
+		return damage;
 	}
 	
 	public String fleeBattle(BattleEntity user) {
@@ -101,26 +107,27 @@ public class Item{
 		return 0;
 	}
 	
-	public String determineAction(BattleEntity user,BattleEntity target) {
-		String result = "";
+	public int determineAction(BattleEntity user,BattleEntity target) {
+		int result = 0;
 		switch (action) {
-			case 0: result += healTarget(user,target); break;
+			case 0: result += healTarget(user,target); 
+							  usedString = target.getName() + " recovered " + result + "HP.[PROMPTINPUT]";
+							  break;
 			case 1: result += dealDamage(user,target,"ice"); break;
 			case 2: result += dealDamage(user,target,"fire"); break;
 			case 3: result += dealDamage(user,target,"thunder"); break;
-			case 4: result += fleeBattle(user); break;
-			case 5: result += superHeal(user,target); break;
-			case 6: result += healStatus(user,target); break;
-			case 7: result += shield(user,target); break;
-			case 8: result += psiShield(user,target); break;
+//			case 4: result += fleeBattle(user); break;
+//			case 5: result += superHeal(user,target); break;
+//			case 6: result += healStatus(user,target); break;
+//			case 7: result += shield(user,target); break;
+//			case 8: result += psiShield(user,target); break;
 		}
 		return result;
 	}
 	
-	public String useInBattle(BattleEntity user, BattleEntity target) {
-		String result = "";
-		calculateDamage();
-		result += determineAction(user,target) + "[PROMPTINPUT]";
+	public int useInBattle(BattleEntity user, BattleEntity target) {
+		int result = 0;
+		result = determineAction(user,target);
 		return result;
 	}
 	
@@ -157,10 +164,10 @@ public class Item{
 //		calculateDamage();
 		for (PartyMember pm : target) {
 			BattleEntity targetBE = pm.createBattleEntity();
-			result += determineAction(user.createBattleEntity(),targetBE);
+			determineAction(user.createBattleEntity(),targetBE);
+			result += usedString;
 			pm.setStats(targetBE.getStats().getStat("CURHP"),targetBE.getStats().getStat("CURPP"));
 		}
-		
 		return result;
 	}
 

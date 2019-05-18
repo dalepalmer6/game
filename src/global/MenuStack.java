@@ -17,7 +17,9 @@ public class MenuStack {
 	}
 
 	public void push(Menu m) {
-		stack.add(m);
+		if (!stack.contains(m)) {
+			stack.add(m);
+		}
 	}
 	
 	public Menu pop() {

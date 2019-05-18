@@ -54,7 +54,8 @@ public class MapEditMenu extends Menu {
 		addMenuItem(tilebar);
 		addMenuItem(new EntityBar(16,8,mapPreview,tilebar,state));
 		addMenuItem(new SaveMapButton("Save",0,0,m));
-		addMenuItem(new LoadMapButton("Load",300,0,m));
+		addMenuItem(new LoadMapButton("Load",70*4,0,m));
+		addMenuItem(new GridToggleButton("Grid",140*4,0,m));
 		addMenuItem(new DoorEnumButton(1500,0,m));
 		addMenuItem(new BackButton(m));
 		addMenuItem(new ScrollLeftButton("L", tilebar.getX()-30, tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));

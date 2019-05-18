@@ -53,6 +53,8 @@ public class Text implements Drawable{
 	private String[] choices;
 	private SelectionTextWindow choiceWindow;
 	private boolean isSingleString;
+	private double shakeApplyY = 0;
+	private int drawingY;
 	
 	public void append(String s) {
 		parsedString += s;
@@ -76,7 +78,10 @@ public class Text implements Drawable{
 				return;
 			}
 			if (drawUntil < parsedString.length()) {
-				drawUntil++;
+				drawUntil+=2;
+				if (drawUntil >= parsedString.length() || controlCodes.get(drawUntil-1) != null) {
+					drawUntil--;
+				}
 			}
 		}
 	}
@@ -88,6 +93,7 @@ public class Text implements Drawable{
 		this.textString = s;
 		this.x = x;
 		this.y = y;
+		this.drawingY = y;
 		this.targetY = y;
 		this.width = width;
 		this.height = height;
@@ -263,8 +269,8 @@ public class Text implements Drawable{
 		return done;
 	}
 	
-	@Override
-	public void draw(MainWindow m) {
+	public void draw(MainWindow m, int r, int g, int b) {
+		GL11.glColor3f(r,g,b);
 		initDrawText(m);
 		// TODO Auto-generated method stub
 		if (parsedString == null || textChanged) {
@@ -288,7 +294,7 @@ public class Text implements Drawable{
 			}
 		}
 		int curX = x;
-		int curY = y;
+		int curY = drawingY;
 		int scale = 4;
 		char[] chars = parsedString.toCharArray();
 		for (int i = 0; i < drawUntil+1; i++) {
@@ -331,6 +337,7 @@ public class Text implements Drawable{
 						newListOfControlCodes += "," + control;
 					}
 					if (control.startsWith("STARTBATTLE_")) {
+						state.saveAudio();
 						String enemyListString = control.substring(12);
 						String[] enemyList = enemyListString.split("_");
 						BattleMenu bm = new BattleMenu(state);
@@ -346,6 +353,7 @@ public class Text implements Drawable{
 					if (control.startsWith("SETBGM_")) {
 						String audio = control.substring(7);
 						state.setBGM(audio);
+						state.saveAudio();
 						state.setAudioOverride(true);
 					}
 					if (control.startsWith("ENDBGM")) {
@@ -445,6 +453,7 @@ public class Text implements Drawable{
 			}
 			
 		}
+		GL11.glColor3f(255,255,255);
 	}
 	
 	public void parseIfs() {
@@ -532,8 +541,8 @@ public class Text implements Drawable{
 //			oldTicksPerFrame = ticksPerFrame;
 //			ticksPerFrame *= 2;
 //		}
-		if (y > targetY) {
-			y-=8;
+		if (drawingY > targetY) {
+			drawingY-=8;
 		}
 		if (!drawAll && !dramaticPause) {
 			this.tickCount += ticksPerFrame;
@@ -549,8 +558,9 @@ public class Text implements Drawable{
 				parsedString = textString;
 				controlCodes = new HashMap<Integer,String>();
 				parse();
-				drawUntil = 0;
-				
+				drawUntil = -2;
+				drawingY = y;
+				targetY = y;
 			}
 			if (tickCount % textRate == 0) {
 				incrementDrawUntil();
@@ -572,6 +582,7 @@ public class Text implements Drawable{
 	
 	public void setY(int y) {
 		this.y = y;
+		drawingY = y;
 	}
 
 	public int getDrawUntil() {
@@ -602,6 +613,16 @@ public class Text implements Drawable{
 		isSingleString = true;
 	}
 
+	public void setShakingY(double applyShake) {
+		// TODO Auto-generated method stub
+		drawingY = (int) (shakeApplyY + y);
+		shakeApplyY = applyShake;
+	}
+
+	public void draw(MainWindow m) {
+		// TODO Auto-generated method stub
+		draw(m,0,0,0);
+	}
 	
 	
 	

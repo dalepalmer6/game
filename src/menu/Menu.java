@@ -25,6 +25,9 @@ public class Menu implements MenuInterface {
 	private Controllable focused;
 	protected ArrayList<MenuItem> needToAdd = new ArrayList<MenuItem>();
 	protected ArrayList<MenuItem> needToRemove = new ArrayList<MenuItem>();
+	protected boolean backShouldExit = true;
+//	private int targetX;
+//	private int targetY;
 	
 	public List<DrawableObject> getDrawableObjects() {
 		return drawables;
@@ -36,7 +39,8 @@ public class Menu implements MenuInterface {
 	
 	public void addToMenuItems(MenuItem m) {
 		// TODO Auto-generated method stub
-		needToAdd.add(m);
+//		if (!menuItems.contains(m))
+			needToAdd.add(m);
 	}
 	
 	public void setInput(String s) {
@@ -104,9 +108,12 @@ public class Menu implements MenuInterface {
 //			}
 //			break;
 //		}
-		if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
-			state.getMenuStack().pop();
+		if (backShouldExit ) {
+			if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
+				state.getMenuStack().pop();
+			}
 		}
+		
 		
 		needToAdd = new ArrayList<MenuItem>();
 		needToRemove = new ArrayList<MenuItem>();
@@ -116,9 +123,9 @@ public class Menu implements MenuInterface {
 			}
 		}
 		
-				for (MenuItem i : menuItems) {
-					i.updateAnim();
-				}
+		for (MenuItem i : menuItems) {
+			i.updateAnim();
+		}
 		
 		update(input);
 		menuItems.removeAll(needToRemove);

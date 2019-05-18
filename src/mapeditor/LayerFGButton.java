@@ -7,7 +7,7 @@ import menu.StartupNew;
 public class LayerFGButton extends ButtonMenuItem {
 
 	public LayerFGButton(String t, int x, int y, int w, int h, StartupNew m) {
-		super("Foreground", x, y,w,h, m);
+		super("FG", x, y,w,h, m);
 		// TODO Auto-generated constructor stub
 	}
 

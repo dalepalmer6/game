@@ -22,6 +22,7 @@ public class InputController {
 	private boolean KEY_NUMPAD4= false;
 	private boolean KEY_NUMPAD2= false;
 	private boolean KEY_NUMPAD6= false;
+	private boolean ENTER = false;
 	
 	
 	public InputController() {
@@ -38,6 +39,23 @@ public class InputController {
 		controllerSignals.put("KEY_NUMPAD6",KEY_NUMPAD6);
 		controllerSignals.put("KEY_NUMPAD4",KEY_NUMPAD4);
 		controllerSignals.put("KEY_NUMPAD2",KEY_NUMPAD2);
+		controllerSignals.put("ENTER",ENTER);
+	}
+	
+	public void pollKeyEnter() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !ENTER) {
+			System.out.println("Keydown: return");
+			setSignal("ENTER", true);
+			ENTER = true;
+			return;
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_RETURN) && ENTER) {
+			System.out.println("Keyup: return");
+			setSignal("ENTER", false);
+			ENTER = false;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+			setSignal("ENTER",false);
+		}
 	}
 	
 	public void pollKeyConfirm() {
@@ -260,6 +278,7 @@ public class InputController {
 		pollKeyNum6();
 		pollKeyNum4();
 		pollKeyNum2();
+		pollKeyEnter();
 	}
 	
 	public boolean mouseRight() {

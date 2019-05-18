@@ -17,6 +17,22 @@ public class EnemyOption extends MenuItem {
 		return enemy;
 	}
 	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public int getWidth() {
+		return enemy.getWidth();
+	}
+	
+	public int getHeight() {
+		return enemy.getHeight();
+	}
+	
 	public EnemyOption(Enemy enemy,int x,int y, StartupNew s) {
 		super(enemy.getName(),0,0,0,0,s);
 		this.enemy = enemy;

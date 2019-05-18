@@ -11,7 +11,7 @@ import menu.StartupNew;
 public class SaveMapButton extends ButtonMenuItem {
 
 	public SaveMapButton(String t, int x, int y, StartupNew m) {
-		super(t, x, y,150,50, m);
+		super(t, x, y,64,16, m);
 		// TODO Auto-generated constructor stub
 	}
 	

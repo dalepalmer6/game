@@ -48,6 +48,8 @@ public class EnemySpawnEntity extends Entity {
 		spriteCoordinates.addStateToPose("idle_down",0,0,12,12);
 	}
 	
+	public void interact() {}
+	
 	@Override
 	public void kill() {
 		done = false;

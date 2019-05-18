@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.newdawn.slick.opengl.Texture;
 
 import canvas.Clickable;
@@ -128,9 +130,9 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 
 	public void getTilesOfInterest() {
 		MainWindow m = state.getMainWindow();
-		m.setTexture(mapPreview.getMap().getTileset());
-		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
-		this.MAX_WIDTH_IN_TILES = state.getTextureAtlas().getCurrentRectangle().width / 16;
+//		m.setTexture(mapPreview.getMap().getTileset());
+		this.MAX_HEIGHT_IN_TILES = state.tilesetTexture.getTextureHeight() / 16;
+		this.MAX_WIDTH_IN_TILES = state.tilesetTexture.getTextureWidth() / 16;
 //		Texture t = m.getTexture();
 		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 16;
 		ArrayList<ArrayList<Tile>> tiles = new ArrayList<ArrayList<Tile>>();
@@ -155,18 +157,22 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	public void drawTiles() {
 		// read the tileMap and for each tile, draw to the next open spot
 		MainWindow m = state.getMainWindow();
-		Tile.initDrawTiles(m, mapPreview.getMap().getTileset());
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,state.tilesetTexture.getTextureID());
+//		Tile.initDrawTiles(m, mapPreview.getMap().getTileset());
 		for (int i = 0; i < this.widthInTiles; i++) {
 			for (int j = 0; j < this.heightInTiles; j++) {
 				int drawingX = (i) * TILE_SIZE;
 				int drawingY = (j) * TILE_SIZE;
 				Tile tile = getCurrentTileFromInterestList(i, j);
 				if (tile != null) {
-					m.renderTile(drawingX + this.x, drawingY + this.y, mapPreview.getTileSize(),
-							mapPreview.getTileSize(), tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0));
+					m.renderTiles(drawingX + this.x, drawingY + this.y, mapPreview.getTileSize(),
+							mapPreview.getTileSize(), tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0),false);
 				}
 			}
 		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,state.getTextureAtlas().getTexture().getTextureID());
 	}
 
 	@Override

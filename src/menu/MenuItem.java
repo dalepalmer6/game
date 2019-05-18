@@ -23,6 +23,13 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
 	protected StartupNew state;
+	private int savedX;
+	private int savedY;
+	protected double shakeApplyY = 0;
+	protected int drawingY = y;
+	protected boolean hovered;
+	protected int targetX;
+	protected int targetY;
 	
 	public int getWidthOfText() {
 		return textObject.getWidth();
@@ -95,6 +102,8 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		text = t;
 		this.x = x;
 		this.y = y;
+		targetX = x;
+		targetY = y;
 		textObject = new Text(true,t,x,y,0,0,state.charList);
 		textObject.setAsSingleString();
 	}
@@ -126,6 +135,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		textObject.draw(m);
 	}
 
+	public void setHovered(boolean b) {
+		hovered = b;
+	}
+
 	public String prepareToExecute() {
 		state.getSelectionStack().push(this);
 		executeButton();
@@ -133,7 +146,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	}
 	
 	public void updateAnim() {
-		
+		drawingY = (int) (y + shakeApplyY);
 	}
 	
 	public String executeButton() {
@@ -147,6 +160,27 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		// TODO Auto-generated method stub
 		
 		return null;
+	}
+
+	public void setShakingY(double applyShake) {
+		// TODO Auto-generated method stub
+		shakeApplyY = applyShake;
+	}
+
+	public void approachTargetPos() {
+		// TODO Auto-generated method stub
+		if (targetY > y) {
+			y+=8;
+			textObject.setY(textObject.getY()+8);
+		} else if (targetY < y) {
+			y-=8;
+			textObject.setY(textObject.getY()-8);
+		}
+	}
+
+	public void setTargetPosY(int i) {
+		// TODO Auto-generated method stub
+		targetY = i;
 	}
 
 }

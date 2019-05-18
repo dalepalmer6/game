@@ -21,6 +21,10 @@ public class GoodsSelectMenuItem extends MenuItem {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public Item getItem() {
+		return i;
+	}
+	
 	public String execute() {
 		//create the menu "Use/Drop/Give/Help"
 		GoodsActionMenu gam = new GoodsActionMenu(state,partyIndex,i,party);

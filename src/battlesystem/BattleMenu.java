@@ -225,15 +225,38 @@ public class BattleMenu extends Menu {
 			readyToDisplay = true;
 			prompt = createTextWindow(s);
 		} else {
+			//the prompt is empty, so show the damage dealt on the entity
 			readyToDisplay = false;
-			turnIsDone = true;
+//			turnIsDone = true;
+			if (currentBattleAction.isComplete() || enemies.size() == 0) {
+				return;
+			} else {
+				//get the x y coordinates to put the damage
+				int x = 0;
+				int y = 0;
+				if (currentBattleAction.getTarget() instanceof PCBattleEntity) {
+					int index = party.indexOf(currentBattleAction.getTarget());
+					PlayerStatusWindow psw = pswList.get(index);
+					x = psw.getX() + psw.getWidth()/2;
+					y = psw.getY() + psw.getHeight()/2;
+				} else {
+					int index = enemies.indexOf(currentBattleAction.getTarget());
+					EnemyOption eo = eop.getEnemyOptions().get(index);
+					x = eo.getX() + eo.getWidth()/2;
+					y = eo.getY() + eo.getHeight()/2;
+				}
+				DamageMenuItem mi = new DamageMenuItem(currentBattleAction.getDamageDealt(),x,y,state);
+				addMenuItem(mi);
+			}
 		}
+		
 		((BattleTextWindow)prompt).setGetResultsOnExit();
 		if (turnIsDone) {
 			turnIsDone = false;
 			((BattleTextWindow)prompt).setPollForActionsOnExit();
-			getCurrentActiveBattleAction().setComplete();
+			currentBattleAction.setComplete();
 			getResultText = false;
+			return;
 		}
 	}
 	
@@ -394,6 +417,7 @@ public class BattleMenu extends Menu {
 						}
 					}
 				}
+				
 				for (BattleEntity be : party) {
 					if (!be.getState().equals("dead")) {
 						numAliveParty++;
@@ -431,6 +455,9 @@ public class BattleMenu extends Menu {
 //			}
 			
 			if (enemies.size() == 0) {
+				for (PlayerStatusWindow psw : pswList) {
+					psw.stopScrolling();
+				}
 				endBattleScene();
 			}
 			
@@ -530,7 +557,7 @@ public class BattleMenu extends Menu {
 				setPromptDead();
 			}
 			
-			if (getResultText && !alertDeadEntity) {
+			if (getResultText && !alertDeadEntity && !currentBattleAction.isComplete()) {
 				getResultText = false;
 				setPromptSecond(currentBattleAction.doAction());
 			}
@@ -543,10 +570,11 @@ public class BattleMenu extends Menu {
 			}
 			
 			for (int i = 0; i < party.size(); i++) {
-				pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5));
+				pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5));
 				pswList.get(i).updateStatus(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
 				if (i == indexMembers-1 && i >= 0) {
-					pswList.get(i).setY(state.getMainWindow().getScreenHeight()-(64*5)-32);
+					pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5)-32);
+					
 				}
 			}
 			

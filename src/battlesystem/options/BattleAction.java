@@ -25,6 +25,7 @@ public class BattleAction {
 	private ArrayList<BattleEntity> targets;
 	private int index = 0;
 	private boolean actionDone;
+	private int damageDealt;
 	
 	public boolean isComplete() {
 		return completed;
@@ -38,7 +39,7 @@ public class BattleAction {
 				if (anim.getTexture().equals("undef")) {
 					bm.setGetResultText();
 					if (!targetAll) {
-						bm.getCurrentActiveBattleAction().setComplete();
+//						bm.getCurrentActiveBattleAction().setComplete();
 					}
 //					
 					break;
@@ -50,7 +51,7 @@ public class BattleAction {
 				anim.updateAnim();
 				break;
 			default : 	bm.setGetResultText();
-				bm.getCurrentActiveBattleAction().setComplete();
+//				bm.getCurrentActiveBattleAction().setComplete();
 				break;
 		}
 		
@@ -91,7 +92,12 @@ public class BattleAction {
 		damage = Math.max(1,damage);
 		result += target.getName() + " suffered damage of " + damage + "!";
 		target.takeDamage(damage);
+		damageDealt = damage;
 		return result;
+	}
+	
+	public int getDamageDealt() {
+		return damageDealt;
 	}
 	
 	public boolean isActionDone() {
@@ -114,28 +120,28 @@ public class BattleAction {
 		switch(usedAction) {
 			case "bash" : 	state.setSFX("bash.wav");
 							state.playSFX();
-							result += doBash(actor,recipient);
+							doBash(actor,recipient);
 							state.battleMenu.setTurnIsDone();
 //							state.battleMenu.getCurrentActiveBattleAction().setComplete();
 							break;
 			case "psi" : if (targetAll) {
 //							state.setSFX("bash.wav");
 //							state.playSFX();
-							if (index-1 >= targets.size()) {
+							if (index > targets.size()) {
 								state.battleMenu.setTurnIsDone();
 								state.battleMenu.getCurrentActiveBattleAction().setComplete();
 								break;
 							} 
 							BattleEntity target = null;
 							target = targets.get(index-1);
-							result += itemToUse.useInBattle(actor,target);
-							
+							damageDealt = itemToUse.useInBattle(actor,target);
 //							else {
 ////								state.battleMenu.setGetResultText();
 //							}
 							
 						} else {
-							result += itemToUse.useInBattle(actor,recipient); 
+//							result += itemToUse.useInBattle(actor,recipient); 
+							damageDealt = itemToUse.useInBattle(actor,recipient);
 							state.battleMenu.setTurnIsDone();
 						}
 						break;
@@ -210,6 +216,10 @@ public class BattleAction {
 	
 	public void setDamage(int d) {
 		damage = d;
+	}
+	
+	public void setDamageDealt(int d) {
+		damageDealt = d;
 	}
 	
 	public void setElement(String elem) {

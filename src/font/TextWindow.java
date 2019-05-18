@@ -21,16 +21,27 @@ public class TextWindow extends MenuItem implements Drawable{
 	protected long createdAt;
 	protected long lastTime;
 	protected long now;
-	private int TILE_SIZE = 16;
+	protected int TILE_SIZE = 16;
 	protected int width;
-	private int height;
-	protected int x;
-	protected int y;
+	protected int height;
+//	protected int x;
+//	protected int y;
 	protected StartupNew m;
 	protected boolean shouldDrawAll;
+	private int drawingY = y;
 	
 	public void setIgnoreCodes() {
 		text.setIgnoreCodes();
+	}
+	
+	public void setX(int dx) {
+		text.setX(dx + TEXT_START_X);
+		super.setX(dx);
+	}
+	
+	public void setY(int dy) {
+		text.setY(dy + TEXT_START_Y);
+		super.setY(dy);
 	}
 	
 	public int getWidth() {
@@ -73,7 +84,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		int xCoord = 0;
 		int yCoord = 0;
 		int xPos = x;
-		int yPos = y;
+		int yPos = drawingY;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
 				64,64,
@@ -122,7 +133,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		xCoord = 0;
 		yCoord = 2*TILE_SIZE;
 		xPos = x;
-		yPos += 64;
+		yPos += 32;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
 				64,64,
@@ -145,6 +156,7 @@ public class TextWindow extends MenuItem implements Drawable{
 	}
 	
 	public void updateAnim() {
+//		super.updateAnim();
 		text.update();
 		tickCount += ticksPerFrame;
 		if (!shouldDrawAll && !text.getDoneState() && tickCount % 2 == 0) {
@@ -182,4 +194,13 @@ public class TextWindow extends MenuItem implements Drawable{
 		}
 //		
 	}
+	
+	@Override
+	public void setShakingY(double applyShake) {
+		// TODO Auto-generated method stub
+		drawingY = (int) (y + applyShake);
+		text.setShakingY(applyShake);
+		super.setShakingY(applyShake);
+	}
+	
 }

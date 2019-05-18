@@ -35,7 +35,7 @@ public class ShopMenu extends Menu {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			SimpleDialogMenu.createDialogBox(state, "ERROR: FILE NOT FOUND, " + shopName + ".csv");
+			SimpleDialogMenu.createDialogBox(state, "ERROR: FILE NOT FOUND, " + shopName + ".csv","System Error");
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

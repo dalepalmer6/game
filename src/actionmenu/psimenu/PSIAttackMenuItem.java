@@ -9,13 +9,16 @@ import battlesystem.SelectTargetMenu;
 import battlesystem.options.BattleAction;
 import battlesystem.options.BattleSelectionTextWindow;
 import battlesystem.options.itemsmenu.BattleEntitySelectItem;
+import font.SelectionTextWindow;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
 import gamestate.elements.psi.PSIAttack;
+import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
+import menu.TeleportDestinationMenuItem;
 
 public class PSIAttackMenuItem extends MenuItem {
 private PSIAttack psi;
@@ -73,24 +76,46 @@ int index;
 		} else {
 			PartyMember user = party.get(index);
 			PartyMember target = null;
-			if (party.size() == 1) {
-				target = party.get(0);
-				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,psi,user,state);
-				use.execute();
-				state.getMenuStack().pop();
-			} else if (psi.getTargetType() == 0) {
-				//show the list of party members
-				PartyMemberSelectMenu pmsm = new PartyMemberSelectMenu(state,party,psi,user);
-				pmsm.createMenu();
-				state.getMenuStack().push(pmsm);
-			} else if (psi.getTargetType() == 1) {
-				//use on the whole party
-				String result = "";
-				result += user.getName() + " tried " + psi.getName() + ".[PROMPTINPUT]";
-				result += psi.useOutOfBattle(user,party) + "[PROMPTINPUT]";
-				state.setResultOfMenuToDisplay(result);
-				state.setClearMenuStack();
-				
+			if (psi.getTargetType() != -1) {
+				if (party.size() == 1) {
+					target = party.get(0);
+					PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,psi,user,state);
+					use.execute();
+					state.getMenuStack().pop();
+				} else if (psi.getTargetType() == 0) {
+					//show the list of party members
+					PartyMemberSelectMenu pmsm = new PartyMemberSelectMenu(state,party,psi,user);
+					pmsm.createMenu();
+					state.getMenuStack().push(pmsm);
+				} else if (psi.getTargetType() == 1) {
+					//use on the whole party
+					String result = "";
+					result += user.getName() + " tried " + psi.getName() + ".[PROMPTINPUT]";
+					result += psi.useOutOfBattle(user,party);
+					state.setResultOfMenuToDisplay(result);
+					state.setClearMenuStack();
+				}
+			} else {
+				switch(psi.getActionType()) {
+					case 20: 
+						//teleport a
+						Menu m = new Menu(state);
+						SelectionTextWindow stw = new SelectionTextWindow(0,0,10,10,state);
+						/*make this its own method and get the destinations from a different place*/
+						stw.add(new TeleportDestinationMenuItem("Podunk",200,200,"podunk",state));
+						stw.add(new TeleportDestinationMenuItem("Merrysville",200,200,"merrysville",state));
+						stw.add(new TeleportDestinationMenuItem("Snowman",200,200,"snowman",state));
+						stw.add(new TeleportDestinationMenuItem("Reindeer",200,200,"reindeer",state));
+						m.addMenuItem(stw);
+						state.getMenuStack().push(m);
+						break;
+					case 21:
+						//teleport b
+						break;
+					case 22: 
+						//telepathy
+						break;
+				}
 			}
 //			item.useOutOfBattle(user,target);
 			return null;

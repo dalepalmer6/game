@@ -15,12 +15,11 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private boolean drawOnly;
 	private String output = "";
 	protected int currentOpenX;
-	private int currentOpenY;
+	protected int currentOpenY;
 	protected int stepForwardX = 128;
 	protected int stepForwardY = 64;
 	private int dimX = 0;
 	private int dimY = 0;
-//	protected List<MenuItem> selections = new ArrayList<MenuItem>();
 	private String orientation = "vertical";
 	private String t = "";
 	private boolean focused = false;
@@ -35,11 +34,21 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		super.updateAnim();
 		for (ArrayList<MenuItem> list : selections) {
 			for (MenuItem i : list) {
+				if (getSelectedItem() == i) {
+					i.setHovered(true);
+				} else {
+					i.setHovered(false);
+				}
 				if (i.getWidthOfText() > width) {
 					width = i.getWidthOfText();
 				}
 			}
 		}
+	}
+	
+	public void setTextStart(int x, int y) {
+		TEXT_START_X = x;
+		TEXT_START_Y = y;
 	}
 	
 	public void setSteps(int dx, int dy) {
@@ -56,8 +65,19 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		this.currentOpenY = this.y + y;
 	}
 	
+	public void resetIndex() {
+		selectedX = 0;
+		selectedY = 0;
+	}
+	
 	public void clearSelections() {
 		selections.clear();
+		index = 0;
+		dimX = 1;
+		dimY = 1;
+		ArrayList<MenuItem> firstRow = new ArrayList<MenuItem>(1);
+		selections = new ArrayList<ArrayList<MenuItem>>();
+		selections.add(firstRow);
 	}
 	
 	public int getSelectedIndex() {
@@ -65,6 +85,16 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public MenuItem getSelectedItem() {
+		if (selections.get(selectedY).get(selectedX) == null) {
+			selectedY = 0;
+			selectedX = 0;
+		}
+		try {
+			return selections.get(selectedY).get(selectedX);
+		} catch(ArrayIndexOutOfBoundsException e) {
+			selectedY = 0;
+			selectedX = 0;
+		}
 		return selections.get(selectedY).get(selectedX);
 	}
 	
@@ -128,7 +158,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		m.setY(currentOpenY);
 		switch (orientation) {
 		case "vertical":
-			if (currentOpenY > this.y + this.getHeight()*4) {
+			if (currentOpenY > this.y + this.getHeight()*4 + (2*TILE_SIZE)) {
 				currentOpenY = this.y + this.TEXT_START_Y;
 				currentOpenX += stepForwardX;
 				dimX++;
@@ -289,7 +319,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 //					(int)cursor.getDw()*4,(int)cursor.getDh()*4,
 //					cursor.getDx(),cursor.getDy(),
 //					cursor.getDw()*2,cursor.getDh()*2);
-			m.renderTile(selections.get(selectedY).get(selectedX).getX() - 16,  selections.get(selectedY).get(selectedX).getY(),
+			m.renderTile(getSelectedItem().getX() - 16,  getSelectedItem().getY(),
 					(int)cursor.getDw()*8,(int)cursor.getDh()*8,
 					cursor.getDx(),cursor.getDy(),
 					cursor.getDw()*2,cursor.getDh()*2);

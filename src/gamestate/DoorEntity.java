@@ -81,14 +81,8 @@ public class DoorEntity extends Entity {
 			if (e instanceof Player || e instanceof TrainEntity) {
 				//remove the door from the gamestate
 //				state.getGameState().getEntityList().remove(this);
-				if (!(state.getMenuStack().peek() instanceof AnimationMenu)) {
-					System.out.println("Door Collide");
-					AnimationMenu anim = new AnimationMenu(state);
-					anim.createAnimMenu();
-					state.getMenuStack().push(anim);
-				}
 //				if (state.getMenuStack().peek() != null || state.getMenuStack().peek() instanceof TrainCutscene) {
-					if (state.getMenuStack().peek() instanceof AnimationMenu) {
+					if (state.getDoorCollided()) {
 						if (((AnimationMenu)state.getMenuStack().peek()).isComplete()) {
 							if (e instanceof Player) {
 								e.setCoordinates(destX,destY);
@@ -121,9 +115,19 @@ public class DoorEntity extends Entity {
 							state.getGameState().getCamera().snapToEntity(destX,destY);
 							state.getGameState().setCurrentMap(newMap);
 							state.getMenuStack().pop();
+							state.setDoorCollided(false);
+							
 							state.getGameState().loadMap(4);
+							return;
 //							state.setShouldFadeIn();
 						}
+					}
+					if (!state.getDoorCollided()) {
+						state.setDoorCollided(true);
+						System.out.println("Door Collide");
+						AnimationMenu anim = new AnimationMenu(state);
+						anim.createAnimMenu();
+						state.getMenuStack().push(anim);
 					}
 //				} else  {
 //					AnimationMenu anim = new AnimationMenu(state);

@@ -10,40 +10,41 @@ public class CameraControllingEntity extends Entity {
 	}
 	
 	public void moveWithCamera(double dx, double dy) {
-		if (dx == 0 && dy == 0) {
+		double THRESHOLD = 0.0001d;
+		if (Math.abs(dy-0) < THRESHOLD && Math.abs(dx-0) < THRESHOLD) {
 			this.updateActionTaken("idle");
 		} else {
 			this.updateActionTaken("walking");
 		}
-		if (dy < 0 && dx == 0) {
+		if (dy < 0 && Math.abs(dx-0) < THRESHOLD) {
 			directionX = "";
 			directionY = "up";
 		}
-		if (dy > 0 && dx == 0) {
+		else if (dy > 0 && Math.abs(dx-0) < THRESHOLD) {
 			directionX = "";
 			directionY = "down";
 		}
-		if (dx > 0 && dy == 0) {
+		else if (dx > 0 && Math.abs(dy-0) < THRESHOLD) {
 			directionY = "";
 			directionX = "right";
 		}
-		if (dx < 0 && dy == 0) {
+		else if (dx < 0 && Math.abs(dy-0) < THRESHOLD) {
 			directionY = "";
 			directionX = "left";
 		}
-		if (dy < 0 && dx < 0) {
+		else if (dy < 0 && dx < 0) {
 			directionY = "up";
 			directionX = "left";
 		}
-		if (dy > 0 && dx > 0) {
+		else if (dy > 0 && dx > 0) {
 			directionY = "down";
 			directionX = "right";
 		}
-		if (dx > 0 && dy < 0) {
+		else if (dx > 0 && dy < 0) {
 			directionX = "right";
 			directionY = "up";
 		}
-		if (dx < 0 && dy > 0) {
+		else if (dx < 0 && dy > 0) {
 			directionY = "down";
 			directionX = "left";
 		}

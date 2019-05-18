@@ -52,10 +52,15 @@ public class MainWindow {
 	private int vboiId;
 	private int indicesCount;
 	private int vaoId;
+	private Texture tilesetTexture;
 	
 	public void setTextureAtlas(TextureAtlas ta) {
 		this.textureAtlas = ta;
 	}
+	
+	public void setTilesetTexture(Texture t) {
+		tilesetTexture = t;
+	} 
 	
 	public void setUseShader(boolean b) {
 		useShader = b;
@@ -293,6 +298,41 @@ public class MainWindow {
 	    	float xw = (rect.x + dx+dw)/textureAtlas.getTexture().getTextureWidth();
 	    	float yo = (rect.y + dy)/textureAtlas.getTexture().getTextureHeight();
 	    	float yw = (rect.y + dy+dh)/textureAtlas.getTexture().getTextureHeight();
+	    	float scaleX = 1;
+	    	int correction = 0;
+	    	if (needToFlip) {
+	    		scaleX = -1.0f;
+//	    		GL11.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            	GL11.glScalef(-1.0f, 1.0f, 1.0f);
+            	correction = width;
+            }
+	    	GL11.glBegin(GL11.GL_QUADS);
+            
+			GL11.glTexCoord2f(xo,yo);
+			GL11.glVertex2f(-correction + scaleX*x, y);
+			GL11.glTexCoord2f(xw, yo);
+			GL11.glVertex2f(-correction + scaleX*x + width, y);
+			GL11.glTexCoord2f(xw,yw);
+			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
+			GL11.glTexCoord2f(xo,yw);
+			GL11.glVertex2f(-correction + scaleX*x, y + height);
+            GL11.glEnd();
+        GL11.glPopMatrix();
+        
+	}
+	
+	public void renderTiles(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+//		GL11.glColor4f(0.0f,0.0f,0.0f,0.0f);
+		if (useShader) { 
+			useShader();
+			return;
+		} 
+		else {GL20.glUseProgram(0);}
+			float xo = (dx)/tilesetTexture.getTextureWidth();
+	    	float xw = (dx+dw)/tilesetTexture.getTextureWidth();
+	    	float yo = (dy)/tilesetTexture.getTextureHeight();
+	    	float yw = (dy+dh)/tilesetTexture.getTextureHeight();
+        GL11.glPushMatrix();
 	    	float scaleX = 1;
 	    	int correction = 0;
 	    	if (needToFlip) {

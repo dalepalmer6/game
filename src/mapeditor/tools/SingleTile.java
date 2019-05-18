@@ -38,8 +38,8 @@ public class SingleTile extends MapTool {
 		super(state);
 		this.tile = tile;
 		toolInfo = "Tile ID: " + tile.getId();
-		associatedButtons.add(new LayerBaseButton("",500,0,159,31,state));
-		associatedButtons.add(new LayerBGButton("",750,0,159,31,state));
-		associatedButtons.add(new LayerFGButton("",1000,0,159,31,state));
+		associatedButtons.add(new LayerBaseButton("",800,0,64,16,state));
+		associatedButtons.add(new LayerBGButton("",1000,0,64,16,state));
+		associatedButtons.add(new LayerFGButton("",1200,0,64,16,state));
 	}
 }

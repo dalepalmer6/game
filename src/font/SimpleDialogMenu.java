@@ -15,7 +15,15 @@ public class SimpleDialogMenu extends Menu {
 	public static void createDialogBox(StartupNew state, String s) {
 		// TODO Auto-generated method stub
 		SimpleDialogMenu sdm = new SimpleDialogMenu(state);
-			TextWindowWithPrompt m = new TextWindowWithPrompt(s,30,30,10,5,state);
+			DialogTextWindow m = new DialogTextWindow(s,state);
+			sdm.addMenuItem(m);
+		state.getMenuStack().push(sdm);
+	}
+	
+	public static void createDialogBox(StartupNew state, String s, String name) {
+		// TODO Auto-generated method stub
+		SimpleDialogMenu sdm = new SimpleDialogMenu(state);
+		DialogTextWindow m = new DialogTextWindow(s,name,state);
 			sdm.addMenuItem(m);
 		state.getMenuStack().push(sdm);
 	}

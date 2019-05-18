@@ -29,6 +29,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.BufferedImageUtil;
 import org.newdawn.slick.util.ResourceLoader;
 
+import actionmenu.goodsmenu.InvisibleMenuItem;
 import battlesystem.BattleMenu;
 import battlesystem.options.PSI;
 import canvas.Controllable;
@@ -60,6 +61,7 @@ import global.InputController;
 import global.MenuStack;
 import global.SelectionStack;
 import global.TextureAtlas;
+import mapeditor.MapPreview;
 import mapeditor.Tile;
 import mapeditor.TileHashMap;
 import menu.mainmenu.ContinueMenuItem;
@@ -141,6 +143,29 @@ public class StartupNew{
 	private boolean shouldFadeIn;
 	private Menu fadeOutMenu;
 	private Item itemToBuy;
+	private String teleportDest;
+	private int teleportDestX;
+	private int teleportDestY;
+	private boolean doTeleportRoutine;
+	private boolean doShakeScreen;
+	private double shakeFactor;
+	private double shakeTimer;
+	public Texture tilesetTexture;
+	private boolean doorCollided;
+	private float oldBGMStart;
+	private float oldBGMEnd;
+	
+	public boolean getDoorCollided() {
+		return doorCollided;
+	}
+	
+	public void setDoorCollided(boolean  b) {
+		doorCollided = b;
+	}
+	
+	public boolean getFadeOutIsDone() {
+		return fadeOutIsDone;
+	}
 	
 	public void setBGM(String path) {
 		setBGM(path,false);
@@ -148,6 +173,8 @@ public class StartupNew{
 	
 	public void saveAudio() {
 		prevAudio = bgm;
+		oldBGMStart = bgmStart;
+		oldBGMEnd = bgmEnd;
 		prevPos = bgm.getPosition();
 		savedAudio = true;
 	}
@@ -178,7 +205,7 @@ public class StartupNew{
 				e1.printStackTrace();
 			}
 			bgm.playAsMusic(1.0f, 1.0f, false);
-			playOnce = true;
+			playOnce = false;
 		}
 	}
 	
@@ -459,13 +486,17 @@ public class StartupNew{
 	public void loadAllTiles(String tileset) {
 		try {
 			this.currentTileset = tileset;
-			createAtlas();
+			tilesetTexture = BufferedImageUtil.getTexture("", tilesets.get(currentTileset));
+			mainWindow.setTilesetTexture(tilesetTexture);
+			GL13.glActiveTexture(GL13.GL_TEXTURE2);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tilesetTexture.getTextureID());
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		textureAtlas.setRectByName(tileset);
-		Rectangle tileBounds = textureAtlas.getCurrentRectangle();
+//		textureAtlas.setRectByName(tileset);
+//		Rectangle tileBounds = textureAtlas.getCurrentRectangle();
 		int i = 0;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(tileset.substring(0,tileset.length()-4) + ".ts"));//"tilesets/onett.ts"));
@@ -667,7 +698,7 @@ public class StartupNew{
 				String entityName = data[14];
 //				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				enemies.put(name,new Enemy(texture,name,width,height,stats,xp,entityName));
+				enemies.put(name,new Enemy(texture,name,width,height,stats,xp,entityName,this));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -689,9 +720,9 @@ public class StartupNew{
 			BufferedImage t = textures.get(key);
 			packer.insertImage(key,t);
 		}
-		if (currentTileset != null) {
-			packer.insertImage(currentTileset,tilesets.get(currentTileset));
-		}
+//		if (currentTileset != null) {
+//			packer.insertImage(currentTileset,tilesets.get(currentTileset));
+//		}
 		if (getCurrentAnimation() != null) {
 			packer.insertImage(getCurrentAnimation(),animations.get(getCurrentAnimation()));
 		}
@@ -774,6 +805,8 @@ public class StartupNew{
 		if (prevAudio != null) {
 			savedAudio = false;
 			bgm = prevAudio;
+			bgmStart = oldBGMStart;
+			bgmEnd = oldBGMEnd;
 //			bgm.setPosition(prevPos);
 			bgm.playAsMusic(1.0f,1f,false);
 //			prevAudio = null;
@@ -829,6 +862,17 @@ public class StartupNew{
 		Menu c = getMenuStack().peek();
 		if (c != null) {
 			c.updateAll(input);
+			if (doShakeScreen) {
+//				factor;
+				if (shakeTimer >= 60) {
+					doShakeScreen = false;
+				}
+				shakeTimer++;
+				for (MenuItem i : c.getMenuItems()) {
+					double applyShake = shakeFactor * (1/(4*shakeTimer)) * Math.sin(shakeTimer*Math.PI/4) ;
+					i.setShakingY(applyShake);
+				}
+			}
 		}
 		
 		
@@ -839,8 +883,12 @@ public class StartupNew{
 				if (((Hoverable) d).hovered(mouse.getX(), mouse.getY())) {
 					((Hoverable) d).hoveredAction();
 //					if (d instanceof LeftClickableItem) {
-						input.setHoldable(true);
+						input.setHoldable(false);
+						if (d instanceof MapPreview) {
+							input.setHoldable(true);
+						}
 						((LeftClickableItem)d).checkInputs(input);
+						
 //						input.setHoldable(false);
 //					}
 				} else {
@@ -848,6 +896,10 @@ public class StartupNew{
 				}
 			}
 		}
+		
+//		if (menuStack.isEmpty()) {
+//			
+//		}
 		
 		if (gameState != null) {
 			input.setHoldable(true);
@@ -875,6 +927,10 @@ public class StartupNew{
 					e.printStackTrace();
 				}
 			}
+			if (doTeleportRoutine)  {
+				doTeleportRoutine = false;
+				gameState.setFlag("teleporting");
+			}
 		}
 		
 		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof Cutscene || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
@@ -883,7 +939,7 @@ public class StartupNew{
 		}
 		
 		for (DrawableObject d : drawables) {
-			if (d instanceof SelectionTextWindow) {
+			if (d instanceof SelectionTextWindow || d instanceof InvisibleMenuItem) {
 				input.setHoldable(false);
 			}
 		}
@@ -1073,5 +1129,21 @@ public class StartupNew{
 	public void setItemToBuy(Item item) {
 		// TODO Auto-generated method stub
 		itemToBuy = item;
+	}
+
+	public void setTeleportVariables(String newMapName, int newX, int newY, boolean b) {
+		// TODO Auto-generated method stub
+		teleportDest = newMapName;
+		teleportDestX = newX;
+		teleportDestY = newY;
+		gameState.setTeleportVariables(newMapName,newX,newY);
+		doTeleportRoutine = b;
+	}
+
+	public void setShakeVariables(int damage, boolean b) {
+		// TODO Auto-generated method stub
+		shakeTimer = 0;
+		doShakeScreen = b;
+		shakeFactor = damage;
 	}
 }

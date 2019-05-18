@@ -2,6 +2,7 @@ package actionmenu.psimenu;
 
 import java.util.ArrayList;
 
+import actionmenu.PlayerInfoWindow;
 import actionmenu.equipmenu.TextLabel;
 import font.SelectionTextWindow;
 import font.TextWindow;

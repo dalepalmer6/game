@@ -125,7 +125,7 @@ public class MapRenderer extends DrawableObject implements Drawable{
 	
 	public void drawTileBase(MainWindow m, int x, int y, Tile t, int instance) {
 		Tile.initDrawTiles(m,map.getTileset());
-		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));
+		m.renderTiles(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance),false);
 	}
 	
 	public void drawTile(MainWindow m, int x, int y, Tile tbg, int instancebg, Tile tfg, int instancefg) {
@@ -153,9 +153,9 @@ public class MapRenderer extends DrawableObject implements Drawable{
 						state.getGameState().addToRedrawing(robj2);
 				}
 				if (drawBG)
-					m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8);
+					m.renderTiles(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8,false);
 				if (drawFG)
-					m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8);
+					m.renderTiles(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8,false);
 			}
 		}
 //		m.renderTile(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, t.getDx(instance),t.getDy(instance),t.getDw(instance),t.getDh(instance));

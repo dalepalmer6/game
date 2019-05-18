@@ -3,17 +3,20 @@ package actionmenu;
 import java.util.ArrayList;
 
 import actionmenu.goodsmenu.GoodsMenu;
+import actionmenu.goodsmenu.GoodsMenuOutOfBattle;
 import actionmenu.goodsmenu.InventorySelectionTextWindows;
 import gamestate.PartyMember;
 import menu.MenuItem;
 import menu.StartupNew;
+import menu.TexturedMenuItem;
 
-public class GoodsMenuItem extends MenuItem {
+public class GoodsMenuItem extends TexturedMenuItem {
 	private ArrayList<PartyMember> party;
 	
-	public GoodsMenuItem(StartupNew state, ArrayList<PartyMember> party) {
-		super("Goods",0,0,state);
+	public GoodsMenuItem(StartupNew state, ArrayList<PartyMember> party, int ty) {
+		super("Goods",32,ty,96,96,state,"menu.png",32,0,14,14);
 		this.party = party;
+		targetY = 0;
 	}
 
 	public String execute() {
@@ -22,9 +25,13 @@ public class GoodsMenuItem extends MenuItem {
 //		gm.createMenu();
 		state.setSFX("window.wav");
 		state.playSFX();
-		InventorySelectionTextWindows istws = new InventorySelectionTextWindows(state,party);
-		istws.createMenu();
-		state.getMenuStack().push(istws);
+		
+		GoodsMenuOutOfBattle piw = new GoodsMenuOutOfBattle(state,party);
+		state.getMenuStack().push(piw);
+		
+//		InventorySelectionTextWindows istws = new InventorySelectionTextWindows(state,party);
+//		istws.createMenu();
+//		state.getMenuStack().push(istws);
 		return null;
 	}
 	

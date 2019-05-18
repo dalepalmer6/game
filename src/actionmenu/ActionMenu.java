@@ -1,14 +1,19 @@
 package actionmenu;
 import java.util.ArrayList;
 
+import actionmenu.equipmenu.TextLabel;
 import font.SelectionTextWindow;
+import font.TextWindow;
 import gamestate.PartyMember;
+import global.InputController;
 import menu.Menu;
 import menu.StartupNew;
 
 public class ActionMenu extends Menu {
-	private SelectionTextWindow stw;
+	private PauseMenuSelectionWindow stw;
 	private ArrayList<PartyMember> party;
+	private TextLabel moneyLabel;
+	private TextWindow buttonLabel;
 	
 	public ActionMenu(StartupNew m, ArrayList<PartyMember> party) {
 		super(m);
@@ -19,15 +24,18 @@ public class ActionMenu extends Menu {
 	public void createMenu() {
 		state.setSFX("window.wav");
 		state.playSFX();
-		stw = new SelectionTextWindow(0,0,8,5,state);
-			stw.add(new TalkToMenuItem(state,stw));
-			stw.add(new GoodsMenuItem(state,party));
-			stw.add(new EquipMenuItem(state,party));
-			stw.add(new PSIMenuItem(state,party));
-			stw.add(new StatusMenuItem(state,party));
-			stw.add(new CheckMenuItem(state));
+		stw = new PauseMenuSelectionWindow(state,party);
 		addMenuItem(stw);
 		state.getMenuStack().push(this);
+		moneyLabel = new TextLabel("$" + state.getGameState().getFundsOnHand(),832,24,state);
+		addMenuItem(moneyLabel);
+		buttonLabel = new TextWindow(true,"Test",state.getMainWindow().getScreenWidth() - 400,0,2,0,state);
+		addMenuItem(buttonLabel);
+	}
+	
+	public void update(InputController input) {
+		moneyLabel.setText("$" + state.getGameState().getFundsOnHand());
+		buttonLabel.setText(stw.getSelectedItem().getText()); 
 	}
 	
 }

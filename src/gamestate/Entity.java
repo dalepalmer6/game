@@ -48,6 +48,20 @@ public class Entity implements Drawable,EntityInterface {
 	protected int targetX = -1;
 	protected int targetY = -1;
 	protected boolean atTargetPoint = true;
+	private boolean ignoreCollisions;
+	
+	public void setIgnoreCollisions(boolean b) {
+		// TODO Auto-generated method stub
+		ignoreCollisions = b;
+	}
+	
+	public String getDirectionX() {
+		return directionX;
+	}
+	
+	public String getDirectionY() {
+		return directionY;
+	}
 	
 	public void setAppearFlag(String a) {
 		appearFlag = a;
@@ -151,8 +165,6 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public void move() {
-		checkCollisions();
-		checkEntityCollisions();
 		if (targetX != -1 && targetY != -1) {
 			if (x - targetX < 0) {
 				deltaX = stepSize;
@@ -199,6 +211,10 @@ public class Entity implements Drawable,EntityInterface {
 				atTargetPoint = true;
 			}
 		} 
+		if (!ignoreCollisions) {
+			checkCollisions();
+			checkEntityCollisions();
+		}
 		x += deltaX;
 		y += deltaY;
 	}
@@ -537,7 +553,7 @@ public class Entity implements Drawable,EntityInterface {
 
 	public void interact() {
 		if (this.text != null) {
-			SimpleDialogMenu.createDialogBox(state,this.text);
+			SimpleDialogMenu.createDialogBox(state,this.text,this.name);
 		} else {
 			
 		}
@@ -668,4 +684,15 @@ public class Entity implements Drawable,EntityInterface {
 		return text;
 	}
 
+	public void setXYOnScreen(int x2, int y2) {
+		// TODO Auto-generated method stub
+		xOnScreen = x2;
+		yOnScreen = y2;
+	}
+
+	public void moveOnScreen(int arg0, int arg1) {
+		xOnScreen += arg0;
+		yOnScreen += arg1;
+	}
+	
 }

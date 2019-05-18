@@ -10,13 +10,13 @@ public class InvisibleMenuItem extends MenuItem implements Controllable {
 	private int index;
 	private int maxIndex;
 	private boolean canLoadInventory = false;
-	
 	public InvisibleMenuItem(StartupNew m,int max) {
 		super("",0,0, m);
 		maxIndex = max;
+		index = 0;
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public void draw(MainWindow m) {}
 	
 	@Override
@@ -46,6 +46,10 @@ public class InvisibleMenuItem extends MenuItem implements Controllable {
 	
 	public int getIndex() {
 		return index;
+	}
+	
+	public void setCanLoadInventory(boolean b) {
+		canLoadInventory = b;
 	}
 	
 	public boolean getCanLoadInventory() {

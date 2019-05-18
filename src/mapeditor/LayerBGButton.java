@@ -7,7 +7,7 @@ import menu.StartupNew;
 public class LayerBGButton extends ButtonMenuItem {
 
 	public LayerBGButton(String t, int x, int y, int w, int h, StartupNew m) {
-		super("Background", x, y,w,h, m);
+		super("BG", x, y,w,h, m);
 		// TODO Auto-generated constructor stub
 	}
 

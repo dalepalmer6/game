@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import battlesystem.BattleMenu;
 import battlesystem.options.BattleAction;
 import font.TextWindowWithPrompt;
+import menu.StartupNew;
 
 public class BattleEntity {
 	protected String texture;
@@ -16,6 +17,7 @@ public class BattleEntity {
 	protected SpritesheetCoordinates spriteData;
 	protected BattleAction actionToPerform;
 	//position to be drawn on screen
+	protected StartupNew systemState;
 	
 	public void setState(String string) {
 		// TODO Auto-generated method stub
@@ -55,8 +57,9 @@ public class BattleEntity {
 //		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0,0,0,0,0,0);
 //	}
 //	
-	public BattleEntity(String texture, String name, EntityStats es) {
+	public BattleEntity(String texture, String name, EntityStats es, StartupNew systemState) {
 		this.texture = texture;
+		this.systemState=systemState;
 		this.name = name;
 		this.stats = es;
 		this.state = "normal";

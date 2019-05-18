@@ -1,5 +1,7 @@
 package gamestate;
 
+import java.util.Map;
+
 import actionmenu.ActionMenu;
 import canvas.Controllable;
 import canvas.Drawable;
@@ -13,7 +15,9 @@ public class Player extends CameraControllingEntity implements Controllable{
 	private double invincibilityFrameCount = 0;
 	private double invincibilityTicks = 0.5;
 	private boolean confirmButtonDown = false;
+	
 	MovementData[] movementData = new MovementData[64];
+	private boolean enterButtonDown;
 	
 	public void update(GameState gs) {
 		super.update(gs);
@@ -51,26 +55,27 @@ public class Player extends CameraControllingEntity implements Controllable{
 	}
 	
 	public void act() {
-		if (confirmButtonDown && state.getMenuStack().isEmpty()) {
+		if (enterButtonDown && state.getMenuStack().isEmpty()) {
 			ActionMenu am = new ActionMenu(state,state.getGameState().getPartyMembers());
 			am.createMenu();
 		}
 	}
 	
-	public void talkTo() {
+	public void check() {
 			if (interactables.size() != 0) {
 				int i = 0;
-				while (interactables.get(i) instanceof DoorEntity) {
-					if (i >= interactables.size()) {
+				while (interactables.get(i) instanceof DoorEntity || interactables.get(i) instanceof EnemySpawnEntity) {
+					if (i+1 >= interactables.size()) {
 						break;
 					}
 					i++;
 				}
 				interactables.get(i).interact();
 				setDirectionDuringAct(interactables.get(0));
-			} else {
-				SimpleDialogMenu.createDialogBox(state,"Nothing here.");
-			}
+			} 
+//			else {
+//				SimpleDialogMenu.createDialogBox(state,"Nothing here.");
+//			}
 	}
 	
 	@Override
@@ -79,33 +84,45 @@ public class Player extends CameraControllingEntity implements Controllable{
 		deltaX = 0; deltaY = 0;
 //		int angle;
 		if (input.getSignals().get("UP")) {
-			deltaY = -stepSize;
-//			angleDirection = Math.PI/2;
-//			deltaX += 1 * Math.cos(angleDirection);
-//			deltaY += 1 * Math.sin(angleDirection);
+			angleDirection = 3*Math.PI/2;
+			deltaX += stepSize * Math.cos(angleDirection);
+			deltaY += stepSize * Math.sin(angleDirection);
 			directionY = "up";
-		} if (input.getSignals().get("DOWN")) {
-//			angleDirection = Math.PI*3/2;
-//			deltaX += 1 * Math.cos(angleDirection);
-//			deltaY += 1 * Math.sin(angleDirection);
-			deltaY = stepSize;
+		} else if (input.getSignals().get("DOWN")) {
+			angleDirection = Math.PI/2;
+			deltaX += stepSize * Math.cos(angleDirection);
+			deltaY += stepSize * Math.sin(angleDirection);
 			directionY = "down";
-		}if (input.getSignals().get("RIGHT")) {
-//			angleDirection = 0;
-//			deltaX += 1 * Math.cos(angleDirection);
-//			deltaY += 1 * Math.sin(angleDirection);
-			deltaX = stepSize;
-			directionX = "right";
-		} if (input.getSignals().get("LEFT")) {
-//			angleDirection = Math.PI;
-//			deltaX += 1 * Math.cos(angleDirection);
-//			deltaY += 1 * Math.sin(angleDirection);
-			deltaX = -stepSize;
-			directionX = "left";
-		}  if (input.getSignals().get("CONFIRM")) {
-			confirmButtonDown  = true;
 		} else {
-			confirmButtonDown = false;
+			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("LEFT") || input.getSignals().get("RIGHT"))) {
+				directionY = "";
+			}
+		} 
+		
+		if (input.getSignals().get("RIGHT")) {
+			angleDirection = 0;
+			deltaX += stepSize * Math.cos(angleDirection);
+			deltaY += stepSize * Math.sin(angleDirection);
+			directionX = "right";
+		} else if (input.getSignals().get("LEFT")) {
+			angleDirection = Math.PI;
+			deltaX += stepSize * Math.cos(angleDirection);
+			deltaY += stepSize * Math.sin(angleDirection);
+			directionX = "left";
+		} else {
+			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("UP") || input.getSignals().get("DOWN"))) {
+				directionX = "";
+			}
+		}  
+		
+		if (input.getSignals().get("ENTER")) {
+			enterButtonDown = true;
+		} else {
+			enterButtonDown = false;
+		}
+		
+		if (input.getSignals().get("CONFIRM")) {
+			check();
 		}
 }
 
@@ -127,6 +144,15 @@ public class Player extends CameraControllingEntity implements Controllable{
 		for (int i = 0; i < movementData.length; i++) {
 			movementData[i] = new MovementData(x,y,actionTaken,directionX,directionY);
 		}
+	}
+
+	public void setDeltaX(double dx) {
+		// TODO Auto-generated method stub
+		deltaX = dx;
+	}
+	
+	public void setDeltaY(double dy) {
+		deltaY = dy;
 	}
 	
 }

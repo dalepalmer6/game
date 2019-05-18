@@ -64,15 +64,34 @@ public class PartyMember {
 		}
 	}
 	
+	public EntityStats seeStatDiffs(EquipmentItem i) {
+		stats = baseStats.createCopy();
+		for (Item item : equips) {
+			if (item.getEquipmentType().equals(i.getEquipmentType())) {
+				//use i instead
+				stats.addStats(i.getStats());
+				continue;
+			}
+			stats.addStats(((EquipmentItem)item).getStats());
+		}
+		return stats;
+	}
+	
 	public ArrayList<Item> getEquips() {
 		//0 weapon; 1 head; 2 body; 3 other
 		return equips;
 	}
 	
+	/*
+	 * Current stats with equipment
+	 * */
 	public EntityStats getStats() {
 		return stats;
 	}
 	
+	/*
+	 * Current stats without equipment
+	 */
 	public EntityStats getBaseStats() {
 		return baseStats;
 	}
@@ -153,7 +172,7 @@ public class PartyMember {
 	}
 	
 	public PCBattleEntity createBattleEntity() {
-		return new PCBattleEntity("",name,stats);
+		return new PCBattleEntity("",name,id,stats,state);
 	}
 
 	public void addExp(int awardEXP) {

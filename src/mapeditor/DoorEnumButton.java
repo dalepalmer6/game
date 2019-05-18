@@ -8,7 +8,7 @@ public class DoorEnumButton extends ButtonMenuItem {
 	private DoorEnumerator doorEnum;
 	
 	public DoorEnumButton(int x, int y, StartupNew state) {
-		super("Door Edit",x,y,175,31,state);
+		super("EditDoor",x,y,64,31,state);
 	}
 	
 	public String execute() {

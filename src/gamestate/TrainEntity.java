@@ -10,6 +10,7 @@ public class TrainEntity extends CameraControllingEntity {
 		spriteCoordinates = e.getSpriteCoordinates();
 		resetMovement();
 		stepSize = 26;
+		setIgnoreCollisions(true);
 	}
 	
 	public void act() {}

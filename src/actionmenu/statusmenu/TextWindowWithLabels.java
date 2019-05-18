@@ -12,7 +12,7 @@ import menu.StartupNew;
 public class TextWindowWithLabels extends TextWindow implements Controllable {
 	private ArrayList<TextLabel> labels;
 	public TextWindowWithLabels(StartupNew state) {
-		super(true,"Test",0,0,15,8,state);
+		super(true,"Status",256,128,20,9,state);
 		labels = new ArrayList<TextLabel>();
 	}
 	
@@ -38,8 +38,14 @@ public class TextWindowWithLabels extends TextWindow implements Controllable {
 	}
 	
 	public void drawLabels(MainWindow m) {
+		int i = 0;
 		for (TextLabel label : labels) {
-			label.draw(m);
+			if (i % 2 == 1 && i > 0) {
+				label.draw(m,215,215,227);
+			} else {
+				label.draw(m);
+			}
+			i++;
 		}
 	}
 

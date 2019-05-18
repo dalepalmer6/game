@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.newdawn.slick.opengl.Texture;
 
 import canvas.Clickable;
@@ -42,6 +44,11 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	private int instance = 0;
 	private TileHashMap tileMap;
 	private boolean holdableState = true;
+	private boolean drawGrid = true;
+	
+	public void toggleDrawGrid() {
+		drawGrid = !drawGrid;
+	}
 	
 	public int getViewX() {
 		return viewX;
@@ -216,7 +223,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 					continue;
 				}
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
 			}
 		}
 	}
@@ -235,7 +242,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 				}
 				int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
 			}
 		}
 }
@@ -254,13 +261,13 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 					}
 					int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //					m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-					m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+					m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
 				}
 			}
 	}
 	
 	public void drawTilesBase(MainWindow m) {
-		Tile.initDrawTiles(m,map.getTileset());
+//		Tile.initDrawTiles(m,map.getTileset());
 		Tile tile;
 		for (int i = 1; i < widthInTiles-1; i++) {
 			//for every row
@@ -273,10 +280,10 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 //				}
 				int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
+				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
 			}
 		}
-}
+	}
 	
 	public void drawCoordinates(MainWindow m) {
 		Point xy = getTilePosition();
@@ -295,6 +302,8 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	@Override
 	public void draw(MainWindow m) {
 		ArrayList<ArrayList<Integer>> saved = map.layerMap;
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,state.tilesetTexture.getTextureID());
 		map.setChangeMap("BASE");
 		getAreaOfInterest();
 		drawTilesBase(m);
@@ -305,10 +314,15 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		getAreaOfInterest();
 		drawTiles(m);
 		map.layerMap = saved;
-		
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,state.getTextureAtlas().getTexture().getTextureID());
+
 		drawEntitiesFromMap(m);
 		
-		drawGrid(m);
+		if (drawGrid ) {
+			drawGrid(m);
+		}
+		
 		drawCoordinates(m);
 	}
 

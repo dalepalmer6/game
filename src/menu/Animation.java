@@ -124,7 +124,7 @@ public class Animation extends MenuItem {
 		if (tickCount >= coordinates.getPose(0).getNumStates()-1) {
 			state.getMenuStack().peek().setToRemove(this);
 			((BattleMenu)state.getMenuStack().peek()).setGetResultText();
-			((BattleMenu)state.getMenuStack().peek()).getCurrentActiveBattleAction().setComplete();
+//			((BattleMenu)state.getMenuStack().peek()).getCurrentActiveBattleAction().setComplete();
 			tickCount = 0;
 //			((BattleMenu)state.getMenuStack().peek()).getCurrentAction().setComplete();
 		}

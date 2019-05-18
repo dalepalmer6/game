@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import battlesystem.BattleMenu;
 import font.TextWindowWithPrompt;
+import menu.StartupNew;
 
 public class Enemy extends BattleEntity {
 	private int width;
@@ -17,12 +18,12 @@ public class Enemy extends BattleEntity {
 	
 	@Override
 	public Enemy clone() {
-		Enemy enemyCopy = new Enemy(texture,name,width/4,height/4,stats.createCopy(),expYield,entityId);
+		Enemy enemyCopy = new Enemy(texture,name,width/4,height/4,stats.createCopy(),expYield,entityId,systemState);
 		return enemyCopy;
 	}
 	
-	public Enemy(String texture, String name, int width, int height, EntityStats es, int xp, String entityName) {
-		super(texture,name,es);
+	public Enemy(String texture, String name, int width, int height, EntityStats es, int xp, String entityName, StartupNew systemState) {
+		super(texture,name,es, systemState);
 		this.width = width*4;
 		this.height = height*4;
 		expYield = xp;

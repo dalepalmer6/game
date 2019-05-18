@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+
 import canvas.Controllable;
 import canvas.Drawable;
 import gamestate.elements.items.Item;
@@ -71,6 +74,19 @@ public class GameState {
 	private int trainEndIndex = 0;
 	private Item itemToBuy;
 	private int funds = 20;
+	private int teleportCounter = 0;
+	private int teleportTimer;
+	private String teleportDest;
+	private int teleportDestX;
+	private int teleportDestY;
+	private double counter;
+	
+	public void teleportRoutine() {
+		//during the teleport routine, increase the counter by 1 per frame, increasing movement
+		// speed by some acceleration amt per frame. - after 240 frames, (4 sec),
+		//stop the camera from following the player and run off screen. when this happens, load the destination.
+		
+	}
 	
 	public long getDeltaTime() {
 		return (long) ((System.nanoTime() - timeNow) / 1e9);
@@ -130,6 +146,7 @@ public class GameState {
 	}
 	
 	public void loadMap(int scale) {
+		camera.setStop(false);
 		map.parseMap(scale,currentMapName);
 		System.out.println("Successfully loaded.");
 		AnimationMenu m = new AnimationMenuFadeFromBlack(state);
@@ -230,7 +247,7 @@ public class GameState {
 		Entity eStatic = state.allEntities.get("redDressLady");
 		Enemy test2 = state.enemies.get("Lamp").clone();
 		testList.add(test2);
-		EnemyEntity ee = new EnemyEntity(1300, 2600, 24*4,32*4,state,testList);
+		EnemyEntity ee = new EnemyEntity(1500, 2600, 24*4,32*4,state,testList);
 		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
 		this.entities.add(ee);
 		test2 = state.enemies.get("Stray Dog").clone();
@@ -266,6 +283,8 @@ public class GameState {
 	
 	
 	public void drawGameState() {
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.tilesetTexture.getTextureID());
 		boolean redrawPrev = false;
 		ArrayList<ArrayList<Integer>> bg = mapRenderer.getAreaOfInterest(map.tileMapBG);
 		ArrayList<ArrayList<Integer>> fg = mapRenderer.getAreaOfInterest(map.tileMapFG);
@@ -295,13 +314,19 @@ public class GameState {
 				mapRenderer.drawTile(state.getMainWindow(),j,i,tilebg,instancebg,tilefg,instancefg);
 //				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
-			for (Entity e : entities) {
-				e.draw(state.getMainWindow());
-			}
 		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
+		for (Entity e : entities) {
+			e.draw(state.getMainWindow());
+		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.tilesetTexture.getTextureID());
 		for (RedrawObject robj : ro) {
 			robj.draw(state.getMainWindow(),mapRenderer);
 		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
 		ro = new ArrayList<RedrawObject>();
 	}
 	
@@ -425,6 +450,7 @@ public class GameState {
 	}
 	
 	public void update(InputController input) {
+		boolean entitiesCanMove = true;
 		if (getFlag("train") && !trainAdded) {
 			//replace the party with a single train entity which extends the CameraControllingEntity
 			entities.removeAll(savedParty);
@@ -435,12 +461,66 @@ public class GameState {
 			trainCutscene.loadEntityToCutsceneData();
 			state.getMenuStack().push(trainCutscene);
 			trainAdded = true;
-			
 		} else if (!getFlag("train") && trainAdded) {
 			entities.remove(train);
 			entities.addAll(savedParty);
 			player.setXY(train.getX(),train.getY());
 			trainAdded = false;
+		}
+		if (getFlag("teleportingIn") && getFlag("teleporting")) {
+			setFlag("teleporting",false);
+			player.setXY(teleportDestX + 1000, teleportDestY);
+			state.setBGM("teleportend.ogg");
+		}
+		if (getFlag("teleportingIn")) {
+			entitiesCanMove = false;
+			player.setDeltaX(-250*(Math.pow(2,-counter++/2d)));
+			teleportTimer-=160/60;
+			player.update(this);
+			player.setIgnoreCollisions(true);
+			if (teleportTimer <= 0) {
+				state.setBGM(map.getBGM());
+				setFlag("teleportingIn",false);
+				player.setIgnoreCollisions(false);
+				entitiesCanMove = true;
+				canEncounter = true;
+			}
+		}
+		if (getFlag("teleporting")) {
+			state.setBGM("teleport.ogg");
+			//do teleport actions
+			entitiesCanMove = false;
+			canEncounter = false;
+			if (player.getDirectionX().equals("left"))  {
+				player.setDeltaX(-1*teleportTimer/2);
+			} else if (player.getDirectionX().equals("right")) {
+				player.setDeltaX(1*teleportTimer/2);
+			} else if (player.getDirectionX().equals("")) {
+				player.setDeltaX(0);
+			}
+			if (player.getDirectionY().equals("up")) {
+				player.setDeltaY(-1*teleportTimer/2);
+			} else if (player.getDirectionY().equals("down")) {
+				player.setDeltaY(1*teleportTimer/2);
+			} else if (player.getDirectionY().equals("")) {
+				player.setDeltaY(0);
+			}
+			player.update(this);
+			//increase a timer from 0 to 240
+			if (teleportTimer >= 120) {
+				camera.setStop(true);
+				player.setIgnoreCollisions(true);
+			}
+			if (teleportTimer >= 160) {
+				setFlag("teleportingIn",true);
+				entitiesCanMove = true;
+//				teleportTimer = -1;
+				//create a door at the x,y of the player to send him to the destination!
+//				DoorEntity e = new DoorEntity("",state.getGameState().getTrain().getX(),state.getGameState().getTrain().getY(),256,256,state,curMovement.getX(),curMovement.getY(),mapName,"");
+				Entity testTeleport = new DoorEntity("",player.getX(),player.getY(),300,300,state,teleportDestX,teleportDestY,teleportDest,"");
+				entities.add(testTeleport);
+			}
+			teleportTimer++;
 		}
 		timeNow = System.nanoTime();
 		if (invincibleCounter > 0) {
@@ -494,7 +574,7 @@ public class GameState {
 		sort();
 		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
 			updatePlayer(input);
-			updateEntities(input,true);
+			updateEntities(input,entitiesCanMove);
 		}
 	}
 	
@@ -730,6 +810,13 @@ public class GameState {
 		pw.println(currentMapName + "," + player.getX() + "," + player.getY() + "," + funds);
 		pw.flush();
 		pw.close();
+	}
+
+	public void setTeleportVariables(String newMapName, int newX, int newY) {
+		// TODO Auto-generated method stub
+		teleportDest = newMapName;
+		teleportDestX = newX;
+		teleportDestY = newY;
 	}
 	
 }

@@ -20,7 +20,7 @@ public class SwirlAnimation extends Animation {
 		super(m,texture,x,y,w,h);
 		state.saveAudio();
 		state.setBGM("swirlgreen.ogg");
-		ticksPerFrame = 0.2d;
+		ticksPerFrame = 0.5d;
 		enemies = new ArrayList<EnemyEntity>();
 		enemies.add(enemyEntity);
 		state.getGameState().setBattleEnemyList(enemies);

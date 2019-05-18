@@ -3,6 +3,6 @@ ninten,319,172,24,32,Bark! (Ninten you have psychic powers.)[SETFLAG_train] ,pup
 ninten,858,1901,24,32,Did a poltergeist visit your house?[WAIT30] [NEWLINE]One destroyed mine...,poltergeistperson, , 
 ninten,1558,3091,24,32,The dead are coming back to life and wreaking havoc.,townsperson1, , 
 ninten,1227,849,24,32,Oh me![WAIT30] Oh my![WAIT30] [NEWLINE]My poor little Pippi has been abducted![WAIT30] [NEWLINE]Whatever shall I do?,ninten, , 
-ninten,1744,3347,24,32,Have you heard Laura the Canary's singing? [PROMPTINPUT]They say that her voice is absolutely divine.,entityCutscene, , 
+ninten,1656,3388,24,32,Have you heard Laura the Canary's singing? [PROMPTINPUT]They say that her voice is absolutely divine.,entityCutscene, , 
 ninten,1403,3136,24,32,[FLAGISSET_haveCanary]Just take it to its mother in Canary Village.[ELSE]Will you please just take this canary off my hands?[PROMPTINPUT]It hasn't shut up since I found it.[PROMPTINPUT]Here just take it![SETFLAG_haveCanary] [ENDIF],canaryGiver, , 
 ninten,1076,3358,24,32,[FLAGISSET_pippiSaved]You saved her![PROMPTINPUT]I'll be...[WAIT30] Er--[WAIT30] You will be the talk of the town![PROMPTINPUT].[WAIT20].[WAIT20].[WAIT20]What? You think I'll take all the credit?[PROMPTINPUT]Nonsense![PROMPTINPUT]Eh... take this key in exchange for your silence.[PROMPTINPUT]Ok?[SETFLAG_haveZooKey][ELSE]A girl has been kidnapped.[PROMPTINPUT]If you would - could you look for her in the graveyard to the south?[PROMPTINPUT]If you do I will reward you handsomely![ENDIF] ,mayor, ,haveZooKey

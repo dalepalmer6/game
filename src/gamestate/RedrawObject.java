@@ -18,7 +18,7 @@ public class RedrawObject {
 	
 	public void draw(MainWindow m, MapRenderer mr) {
 		mr.initDrawTiles(m);
-		m.renderTile(x,y,width,height,dx,dy,dw,dh);
+		m.renderTiles(x,y,width,height,dx,dy,dw,dh,false);
 	}
 	
 	
