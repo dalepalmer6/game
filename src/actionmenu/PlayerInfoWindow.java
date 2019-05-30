@@ -41,13 +41,16 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	
 	public PlayerInfoWindow(StartupNew state, ArrayList<PartyMember> party) {
 		super(state);
-		this.party = party;
-		reload();
-		for(MenuItem m : partyIcons) {
-			addMenuItem(m);
+		if (!state.inBattle) {
+			this.party = party;
+			reload();
+			for(MenuItem m : partyIcons) {
+				addMenuItem(m);
+			}
+			addMenuItem(menuTitle);
+			addMenuItem(invisSelectItem);
 		}
-		addMenuItem(menuTitle);
-		addMenuItem(invisSelectItem);
+		
 	}
 	
 	public void reload() {

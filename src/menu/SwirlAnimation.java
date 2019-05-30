@@ -16,8 +16,19 @@ public class SwirlAnimation extends Animation {
 	private boolean readyToStart;
 	private AnimationFadeToBlack ftb;
 	
-	public SwirlAnimation(StartupNew m, String texture, int x, int y, int w, int h, EnemyEntity enemyEntity) {
-		super(m,texture,x,y,w,h);
+	public SwirlAnimation(StartupNew m, ArrayList<EnemyEntity> enemyEntities) {
+		super(m,"swirl",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight());
+		state.saveAudio();
+		state.setBGM("swirlgreen.ogg");
+		ticksPerFrame = 0.5d;
+//		enemies = new ArrayList<EnemyEntity>();
+		enemies = enemyEntities;
+		state.getGameState().setBattleEnemyList(enemies);
+//		state.getGameState().setEnemiesCanJoin(true);
+	}
+	
+	public SwirlAnimation(StartupNew m, EnemyEntity enemyEntity) {
+		super(m,"swirl",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight());
 		state.saveAudio();
 		state.setBGM("swirlgreen.ogg");
 		ticksPerFrame = 0.5d;
@@ -27,18 +38,27 @@ public class SwirlAnimation extends Animation {
 		state.getGameState().setEnemiesCanJoin(true);
 	}
 	
+	public void startBattle() {
+		state.getMenuStack().peek().setToRemove(this);
+		state.getGameState().setEnemiesCanJoin(false);
+		BattleMenu m = new BattleMenu(state);
+		m.startBattle(enemies);
+//		state.getMenuStack().push(m);
+		state.setShouldFadeIn(m);
+	}	
+	
 	@Override
 	public void updateAnim() {
 		System.out.println(tickCount);
 		
-		if (readyToStart) {
-			state.getMenuStack().peek().setToRemove(this);
-			state.getGameState().setEnemiesCanJoin(false);
-			BattleMenu m = new BattleMenu(state);
-			m.startBattle(enemies);
-//			state.getMenuStack().push(m);
-			state.setShouldFadeIn();
-		}
+//		if (readyToStart) {
+//			state.getMenuStack().peek().setToRemove(this);
+//			state.getGameState().setEnemiesCanJoin(false);
+//			BattleMenu m = new BattleMenu(state);
+//			m.startBattle(enemies);
+////			state.getMenuStack().push(m);
+//			state.setShouldFadeIn();
+//		}
 		
 		int i = (int) Math.min(coordinates.getPose(0).getNumStates(),tickCount % coordinates.getPose(0).getNumStates());
 		if (timer < length) {
@@ -55,8 +75,10 @@ public class SwirlAnimation extends Animation {
 		
 		if (fadeOut) {
 			fadeOut = false;
-			ftb = new AnimationFadeToBlack(state);
-			state.getMenuStack().peek().addToMenuItems(ftb);
+//			ftb = new AnimationFadeToBlack(state);
+			AnimationMenu m = new AnimationMenu(state);
+			m.createAnimMenu();
+			state.getMenuStack().push(m);
 		}
 		
 		if (ftb != null) {

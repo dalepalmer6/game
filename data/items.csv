@@ -1,12 +1,90 @@
-﻿ID,Name,Description,Target,Equippable,Battle,OutofBattle,Action,Offense,Defense,Speed,Luck,HP,PP,Resistance,Participle,Value
-0,-Empty-,A whole lot of nothing.,0,15,FALSE,TRUE,0,0,0,0,0,0,0,0,none,0
-1,Cookie,A sweet treat that restores a small amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,6
-2,Bread Roll,A fresh bread roll that restores a modest amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,10
-3,Hamburger,A meat burger that restores a modest amount of HP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,12
-4,Brain Food Lunch,A lunch that nourishes one's heart and soul. Restores a massive amount of HP and PP.,0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a boxed,36
-5,Cracked Bat,A cracked bat that has jagged edges for defense.,0,1,TRUE,FALSE,-1,4,0,0,0,0,0,0,a,10
-6,Tee Ball Bat,A regular bat. Highly durable[COMMA] with no blemishes.,0,1,TRUE,FALSE,-1,8,0,0,0,0,0,0,a,98
-7,HeadgearTest,Headgear that tests the equipment menu.,0,2,TRUE,FALSE,-1,0,5,0,0,0,0,0,a,25
-8,BodyTest,Tests the body equipper,0,4,TRUE,FALSE,-1,0,4,0,0,0,0,0,a,24
-9,OtherTest,Tests the other equipper,0,8,TRUE,FALSE,-1,3,3,0,0,0,0,0,an,20
-10,Hat,A hat that someone appears to have lost at the Reindeer station.,0,0,FALSE,TRUE,0,0,0,0,0,0,0,0,a,0
+﻿ID,Name,Description,Target,Equippable,Battle,OutofBattle,Action,Offense,Defense,Speed,Luck,HP,PP,Resistance,Participle,Value,Use Variable
+0,-Empty-,Nothing at all.,0,15,FALSE,TRUE,0,0,0,0,0,0,0,0,none,0,0
+1,Knife,[_712],-1,81,FALSE,FALSE,-1,15,0,0,0,0,0,0,a,580,0
+2,Survival Knife,[_713],-1,81,FALSE,FALSE,-1,38,0,0,0,0,0,0,a,1200,0
+3,Basic Sword,[_714],-1,81,FALSE,FALSE,-1,46,0,0,0,0,0,0,a,1280,0
+4,Katana,[_715],-1,81,FALSE,FALSE,-1,58,0,0,0,0,0,0,a,1360,0
+5,Stun Gun,[_716],-1,41,FALSE,FALSE,-1,15,0,0,0,0,0,0,a,300,0
+6,Toy Air Gun,[_717],-1,41,FALSE,FALSE,-1,54,0,0,0,0,0,0,a,1400,0
+7,Cracked Bat,[_718],-1,11,FALSE,FALSE,-1,3,0,0,0,0,0,0,a,80,0
+8,Teeball Bat,[_719],-1,11,FALSE,FALSE,-1,12,0,0,0,0,0,0,a,500,0
+9,Sandlot Bat,[_71A],-1,11,FALSE,FALSE,-1,30,0,0,0,0,0,0,a,1000,0
+10,Hall of Fame Bat,[_71B],-1,11,FALSE,FALSE,-1,48,0,0,0,0,0,0,a,1400,0
+11,Frying Pan,[_71C],-1,21,FALSE,FALSE,-1,8,0,0,0,0,0,0,a,300,0
+12,Deluxe Frying Pan,[_71D],-1,21,FALSE,FALSE,-1,16,0,0,0,0,0,0,a,700,0
+13,Best Frying Pan,[_71E],-1,21,FALSE,FALSE,-1,36,0,0,0,0,0,0,a,1120,0
+14,Slingshot,[_71F],-1,F1,FALSE,FALSE,-1,7,0,0,0,0,0,0,a,120,0
+15,Boomerang,[_720],-1,F1,FALSE,FALSE,-1,32,0,0,0,0,0,0,a,1100,0
+16,Bug Spray,[_721],3,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,300,0
+17,Super Spray,[_722],3,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,1500,0
+18,Flea Bomb,[_723],3,0,TRUE,FALSE,3,0,0,0,0,0,0,0,a,400,0
+19,Words of Love,[_724],1,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,0,0
+20,Curse Words,[_725],1,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,0,0
+21,Slime Generator,[_726],3,0,TRUE,FALSE,4,0,0,0,0,0,0,0,the,3200,0
+22,Flashdark,[_727],1,0,TRUE,FALSE,3,0,0,0,0,0,0,0,the,180,0
+23,Stone Spray,No desc,1,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,0,0
+24,Stinger,No desc,1,0,TRUE,FALSE,3,0,0,0,0,0,0,0,a,0,0
+25,Flamethrower,[_72A],3,0,TRUE,FALSE,8,0,0,0,0,0,0,0,the,3000,100
+26,Bomb,[_72B],2,0,TRUE,FALSE,8,0,0,0,0,0,0,0,the,300,30
+27,Super Bomb,[_72C],3,0,TRUE,FALSE,8,0,0,0,0,0,0,0,the,800,50
+28,Laser Beam,[_72d],2,0,TRUE,FALSE,10,0,0,0,0,0,0,0,the,0,40
+29,Death Beam,[_72E],3,0,TRUE,FALSE,10,0,0,0,0,0,0,0,the,0,80
+30,Rope,[_730],2,0,TRUE,FALSE,3,0,0,0,0,0,0,0,some,600,0
+31,Peace Coin,[_735],-1,F4,FALSE,FALSE,-1,0,5,0,0,0,0,0,the,260,0
+32,Protect Coin,[_736],-1,F4,FALSE,FALSE,-1,0,8,0,0,0,0,0,the,648,0
+33,Magic Coin,[_737],-1,F4,FALSE,FALSE,-1,0,11,0,0,0,0,0,the,1200,0
+34,Fairy Bracelet,[_738],-1,F2,FALSE,FALSE,-1,0,14,0,0,0,0,0,the,460,0
+35,Angel Bracelet,[_739],-1,F2,FALSE,FALSE,-1,0,20,0,0,0,0,0,the,825,0
+36,Goddess Bracelet,[_73A],-1,F2,FALSE,FALSE,-1,0,28,0,0,0,0,0,the,1510,0
+37,Rain Pendant,[_73B],-1,F8,FALSE,FALSE,-1,0,10,0,0,0,0,2,the,700,0
+38,Flame Pendant,[_73C],-1,F8,FALSE,FALSE,-1,0,10,0,0,0,0,1,the,700,0
+39,Earth Pendant,[_73D],-1,F8,FALSE,FALSE,-1,0,10,0,0,0,0,4,the,700,0
+40,Sea Pendant,[_73E],-1,F8,FALSE,FALSE,-1,0,30,0,0,0,0,15,the,2860,0
+41,Easy Ring,[_73F],-1,F8,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+42,Orange Juice,[_744],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,some,5,12
+43,French Fries,[_745],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,some,15,15
+44,Magic Herb,[_746],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,30,26
+45,Hamburger,[_747],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,25,60
+46,Sports Drink,[_748],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,75,120
+47,Medicine,[_749],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,some,194,999
+48,Asthma Spray,[_74a],0,0,TRUE,FALSE,2,0,0,0,0,0,0,0,some,148,4
+49,Antidote,[_74b],0,0,TRUE,TRUE,2,0,0,0,0,0,0,0,an,20,0
+50,Mouthwash,[_74c],0,0,TRUE,TRUE,2,0,0,0,0,0,0,0,some,100,0
+51,Strawberry Tofu,[_74d],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,some,975,999
+52,Bread,[_74f],0,0,FALSE,TRUE,11,0,0,0,0,0,0,0,the,30,0
+53,Angel Seed,[_750],0,0,TRUE,TRUE,2,0,0,0,0,0,0,0,the,500,0
+54,PSI Stone,[_751],0,0,TRUE,TRUE,1,0,0,0,0,0,0,0,the,1500,20
+55,Magic Ribbon,[_753],0,0,FALSE,TRUE,12,0,0,0,0,0,0,0,a,0,5
+56,Magic Candy,[_754],0,0,FALSE,TRUE,12,0,0,0,0,0,0,0,a,0,5
+57,Speed Capsule,[_756],0,0,FALSE,TRUE,15,0,0,0,0,0,0,0,a,0,5
+58,IQ Capsule,[_757],0,0,FALSE,TRUE,14,0,0,0,0,0,0,0,an,0,5
+59,Vitality Capsule,[_758],0,0,FALSE,TRUE,13,0,0,0,0,0,0,0,a,0,5
+60,Guts Capsule,[_759],0,0,FALSE,TRUE,12,0,0,0,0,0,0,0,a,0,5
+61,Offense Capsule,[_75A],0,0,FALSE,TRUE,16,0,0,0,0,0,0,0,an,0,5
+62,Basement Key,[_75D],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+63,Zoo Key,[_75e],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+64,Haunted Key,[_75f],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+65,Great Grandfather's Diary,[_760],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+66,Pass,[_761],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+67,Show Ticket,[_762],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+68,Baby Canary,[_767],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,85,0
+69,Bottle Rocket,[_769],0,0,TRUE,FALSE,8,0,0,0,0,0,0,0,the,500,30
+70,Hat,[_76A],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+71,Dentures,[_76B],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+72,Ticket Stub,[_76C],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+73,IC Chip,[_76D],0,0,FALSE,FALSE,20,0,0,0,0,0,0,0,the,0,0
+74,Ocarina of Hope,[_76E],0,0,FALSE,TRUE,-1,0,0,0,0,0,0,0,the,0,0
+75,Franklin Badge,[_770],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+76,Friend Ring,[_770],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+77,Onyx Hook,[_773],0,0,FALSE,TRUE,21,0,0,0,0,0,0,0,the,0,0
+78,Ultimate Weapon,[_774],0,0,TRUE,FALSE,17,0,0,0,0,0,0,0,the,1048,0
+79,Ruler,[_775],0,0,TRUE,FALSE,3,0,0,0,0,0,0,0,the,22,0
+80,ATM Card,[_776],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+81,Red Weed,[_777],0,0,TRUE,TRUE,0,0,0,0,0,0,0,0,a,0,20
+82,Megaphone,[_778],0,0,FALSE,FALSE,5,0,0,0,0,0,0,0,the,0,0
+83,Map,[_778],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+84,Big Bag,[_709],0,0,FALSE,FALSE,18,0,0,0,0,0,0,0,the,0,32
+85,Phone Card,[_70a],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+86,Bread Crumbs,[_70b],0,0,FALSE,TRUE,19,0,0,0,0,0,0,0,the,0,0
+87,Repel Ring,[_70c],0,0,FALSE,FALSE,-1,0,0,0,0,0,0,0,the,0,0
+88,Memory Chip,[_70e],0,0,FALSE,FALSE,20,0,0,0,0,0,0,0,the,0,0

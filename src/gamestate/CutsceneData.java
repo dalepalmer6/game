@@ -106,6 +106,7 @@ public class CutsceneData {
 		for (Entity e : state.getGameState().getEntityList()) {
 			if (e.getName().equals(entityName)) {
 				entity = e;
+				break;
 			}
 		}
 		int x = entity.getX();

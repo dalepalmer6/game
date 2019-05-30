@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import font.SimpleDialogMenu;
 import font.TextWindow;
 import font.TextWindowWithPrompt;
 import gamestate.Cutscene;
+import gamestate.DoorEntity;
 import gamestate.Enemy;
 import gamestate.Entity;
 import gamestate.EntityStats;
@@ -116,7 +118,7 @@ public class StartupNew{
 	public ArrayList<Item> items;
 	public ArrayList<PSIAttack> psi;
 	public PSIClassificationList psiClassList;
-	public HashMap<String,Enemy> enemies;
+	public HashMap<Integer,Enemy> enemies;
 	private Map<String, BufferedImage> animations = new HashMap<String,BufferedImage>();
 	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
@@ -154,6 +156,38 @@ public class StartupNew{
 	private boolean doorCollided;
 	private float oldBGMStart;
 	private float oldBGMEnd;
+	private Cutscene currentCutscene;
+	public ArrayList<String> textData;
+	private int savedXPos;
+	private int savedYPos;
+	private String savedMapName;
+	public String[] defaultNames = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
+	public String[] namesOfCharacters = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
+	public String[] characterNamingStrings = {"Name this boy.", "And this girl.", "Name your friend.", "Name this macho guy.", "What's your favorite food?"};
+	private boolean keepThreadOnExit;
+	private boolean textEditor;
+	public HashMap<Integer,EnemyAction> enemyActions;
+	private Menu needToAddMenu;
+	
+	
+	public static enum Characters {
+		NINTEN("ninten"),
+		ANA("ana"),
+		LOID("loid"),
+		TEDDY("teddy"),
+		FAVFOOD("favfood");
+		
+		private String id;
+		
+		public String getId() {
+			return id;
+		}
+		
+		private Characters(String s) {
+			this.id = s;
+		}
+		
+	}
 	
 	public boolean getDoorCollided() {
 		return doorCollided;
@@ -270,6 +304,10 @@ public class StartupNew{
 		return mapNames;
 	}
 	
+	public mapeditor.Map loadMap(String mapname) { 
+		return new mapeditor.Map(mapname,34,34, null, this,true);
+	}
+	
 	public void loadAllPSI() {
 		psi = new ArrayList<PSIAttack>();
 		try {
@@ -384,7 +422,7 @@ public class StartupNew{
 				name = split[1];
 				desc = split[2];
 				target = Integer.parseInt(split[3]);
-				equippable = Integer.parseInt(split[4]);
+				equippable = Integer.parseInt(split[4],16);
 				inBattleUsable = Boolean.parseBoolean(split[5]);
 				outBattleUsable = Boolean.parseBoolean(split[6]);
 				action = Integer.parseInt(split[7]);
@@ -397,22 +435,16 @@ public class StartupNew{
 				long resists = Long.parseLong(split[14]);
 				String participle = split[15];
 				int value = Integer.parseInt(split[16]);
+				int useVariable = Integer.parseInt(split[17]);
 				if ((equippable & 15) != 0) {
-					items.add(new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle,value));
+					EquipmentItem newItem = new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle,value);
+					newItem.setUsage(false,false);
+					items.add(newItem);
 				} else {
-					items.add(new Item(id,name,desc,target,action,equippable,participle,value));
+					Item newItem = new Item(id,name,desc,target,action,equippable,participle,value,useVariable);
+					newItem.setUsage(inBattleUsable,outBattleUsable);
+					items.add(newItem);
 				}
-				
-//				if (inBattleUsable && outBattleUsable) {
-//					
-//				} else if (inBattleUsable){
-//					items.add(new ItemUsableInBattle(id,name,desc,target,action,equippable));
-//				} else if (outBattleUsable) {
-//					items.add(new ItemUsableOutOfBattle(id,name,desc,target,action,equippable));
-//				} 
-//				else if (equippable != 0) {
-//					items.add(new ItemEquipment(id,name,desc,equippable));
-//				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -674,31 +706,44 @@ public class StartupNew{
 	public void loadAllEnemies() {
 		String pathToEntity = "data/enemies.csv";
 		File file = new File(pathToEntity);
-		enemies = new HashMap<String,Enemy>();
+		enemies = new HashMap<Integer,Enemy>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			//skip headers
 			String row = br.readLine();
+			int i = 0;
 			while ((row=br.readLine()) != null) {
 				String[] data = row.split(",");
-				String name=data[0];
-				int hp=Integer.parseInt(data[1]);
-				int pp=Integer.parseInt(data[2]);
-				int off=Integer.parseInt(data[3]);
-				int def=Integer.parseInt(data[4]);
-				int vit=Integer.parseInt(data[5]);
-				int iq=Integer.parseInt(data[6]);
-				int speed=Integer.parseInt(data[7]);
-				int guts=Integer.parseInt(data[8]);
-				int luck=Integer.parseInt(data[9]);
-				int xp = Integer.parseInt(data[10]);
-				String texture = data[11];
-				int width = Integer.parseInt(data[12]);
-				int height = Integer.parseInt(data[13]);
+				String name=data[1];
+				int hp=Integer.parseInt(data[2]);
+				int pp=Integer.parseInt(data[3]);
+				int off=Integer.parseInt(data[4]);
+				int def=Integer.parseInt(data[5]);
+				int vit=Integer.parseInt(data[6]);
+				int iq=Integer.parseInt(data[7]);
+				int speed=Integer.parseInt(data[8]);
+				int guts=Integer.parseInt(data[9]);
+				int luck=Integer.parseInt(data[10]);
+				int xp = Integer.parseInt(data[11]);
+				int money = Integer.parseInt(data[12]);
+				String texture = data[13];
+//				int width = Integer.parseInt(data[13]);
+//				int height = Integer.parseInt(data[14]);
 				String entityName = data[14];
+				String[] potentialEnemyActions = data[17].split("_");
+				String bgm = data[18];
+				String battleBG = data[19];
+				EnemyAction[] enemyActions = new EnemyAction[potentialEnemyActions.length];
+				for (int x = 0; x < potentialEnemyActions.length; x++) {
+					enemyActions[x] = this.enemyActions.get(Integer.parseInt(potentialEnemyActions[x]));
+				}
 //				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				enemies.put(name,new Enemy(texture,name,width,height,stats,xp,entityName,this));
+				Enemy e = new Enemy(i++,texture,name,stats,xp,money,entityName,this);
+				e.setActions(enemyActions);
+				e.setBGM(bgm);
+				e.setBattleBG(battleBG);
+				enemies.put(i,e);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -758,39 +803,111 @@ public class StartupNew{
 		return drawables.get(i);
 	}
 	
-	public void init() {
-		charList = new CharList();
-		setMainWindow(new MainWindow(textureAtlas,SCREEN_WIDTH,SCREEN_HEIGHT));
-		getMainWindow().start();
-		loadMapNames();
-		loadTileSets();
-		loadAllImages("");
-		loadAllImages("enemies");
-		loadImageData();
-		loadAllEntities();
-		loadAllItems();
-		loadAllPSI();
-		loadAllAnims();
-		loadAllEnemies();
-		textureAtlas.getTexture().bind();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureAtlas.getTexture().getTextureID());
-		
-		selectionStack = new SelectionStack();
-		menuStack = new MenuStack();
-			Menu m = new MainMenu(this);
-				SelectionTextWindow STW = new SelectionTextWindow(300,300,10,5,this);
-				STW.add(new NewGameMenuItem(STW.getX(),STW.getY() + 16,this));
-				STW.add(new ContinueMenuItem(STW.getX(),STW.getY() + 48,this));
-				STW.add(new OptionsMenuItem(STW.getX(),STW.getY() + 80,this));
-				STW.add(new MapPreviewTestButton(STW.getX(),STW.getY() + 112,this));
-			m.addMenuItem(STW);
-		menuStack.push(m);
-		//test the music
-//		setBGM("eb_title.wav");
-//		bgm.playAsMusic(1.0f, 1.0f, false);
+	public void loadAllStrings() {
+		textData = new ArrayList<String>();
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader("data/text.txt"));
+			String line = "";
+			while ((line = br.readLine())!=null) {
+				textData.add(line.substring(5));
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
+	public void init() {
+		init(false);
+	}
+	
+	public void createContext() {
+		setMainWindow(new MainWindow(textureAtlas,SCREEN_WIDTH,SCREEN_HEIGHT));
+		getMainWindow().start();
+	}
+	
+	public void init(boolean justTextData) {
+		if (justTextData) {
+			textEditor = true;
+			namesOfCharacters=defaultNames;
+			charList = new CharList();
+			gameState = new GameState();
+			loadMapNames();
+			loadAllStrings();
+			loadAllEntities();
+			loadAllItems();
+			menuStack = new MenuStack();
+			selectionStack = new SelectionStack();
+		} else {
+			charList = new CharList();
+			createContext();
+			loadMapNames();
+			loadTileSets();
+			loadAllImages("");
+			loadAllImages("enemies");
+			loadImageData();
+			loadAllEntities();
+			loadAllItems();
+			loadAllPSI();
+			loadAllAnims();
+			loadAllEnemyActions();
+			loadAllEnemies();
+			loadAllStrings();
+			
+			setBGM("motherearth.ogg");
+			textureAtlas.getTexture().bind();
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureAtlas.getTexture().getTextureID());
+			
+			selectionStack = new SelectionStack();
+			menuStack = new MenuStack();
+				Menu m = new MainMenu(this);
+					SelectionTextWindow STW = new SelectionTextWindow(mainWindow.getScreenWidth()/2 - (2*64),mainWindow.getScreenHeight()-(7*64),4,3,this);
+					STW.add(new NewGameMenuItem(STW.getX(),STW.getY() + 16,this));
+					STW.add(new ContinueMenuItem(STW.getX(),STW.getY() + 48,this));
+					STW.add(new OptionsMenuItem(STW.getX(),STW.getY() + 80,this));
+					STW.add(new MapPreviewTestButton(STW.getX(),STW.getY() + 112,this));
+				m.addMenuItem(STW);
+			menuStack.push(m);
+			//test the music
+//			setBGM("eb_title.wav");
+//			bgm.playAsMusic(1.0f, 1.0f, false);
+		}
+		
+	}
+	
+	private void loadAllEnemyActions() {
+		// TODO Auto-generated method stub
+		String pathToEntity = "data/enemyactions.csv";
+		File file = new File(pathToEntity);
+		enemyActions = new HashMap<Integer,EnemyAction>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			//skip headers
+			String row = br.readLine();
+			int i = 0;
+			while ((row=br.readLine()) != null) {
+				String[] data = row.split(",");
+				String text = data[1];
+				int action = Integer.parseInt(data[2]);
+				int useVar = Integer.parseInt(data[3]);
+				int target = Integer.parseInt(data[4]);
+				EnemyAction ea = new EnemyAction(text,action,useVar,target);
+				enemyActions.put(i++,ea);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public Point getMouseCoordinates() {
 		int x = Mouse.getX();
 		int y = getMainWindow().getScreenHeight() - Mouse.getY();
@@ -815,23 +932,46 @@ public class StartupNew{
 	}
 	
 	public void setShouldFadeIn()  {
-		shouldFadeIn = true;
+		setShouldFadeIn(null);
 	}
 	
 	public void update() {
+		if (textEditor && menuStack.isEmpty()) {
+			Display.destroy();
+		}
+		if (currentCutscene != null) {
+			if (currentCutscene.needToRemove()) {
+				currentCutscene = null;
+			} else {
+				currentCutscene.doCutscene();
+			}
+			
+		}
 		if (fadeOutIsDone) {
-//			fadeOutMenu = menuStack.peek();
+			Menu savedMenu = menuStack.pop();
+			if (menuStack.peek() != null) {
+				menuStack.peek().doDoneFadeOutAction();
+			} 
+//			else {
+//				savedMenu.doDoneFadeOutAction();
+//				menuStack.push(savedMenu);
+//			}
+			
 			fadeOutIsDone = false;
 		}
 		if (shouldFadeIn) {
-//			menuStack.pop();
+			menuStack.pop();
+			if (needToAddMenu!=null) {
+				menuStack.push(needToAddMenu);
+			}
+			
 			shouldFadeIn = false;
 			AnimationMenu ffb = new AnimationMenu(this);
 			ffb.createAnimMenu(new AnimationFadeFromBlack(this));
 			getMenuStack().push(ffb);
 		}
 		if (bgm != null) {
-			if (bgm.getPosition() >= bgmEnd && !playOnce) {
+			if (bgm.isPlaying() && bgm.getPosition() >= bgmEnd && !playOnce) {
 				bgm.setPosition(bgmStart);
 			}
 			if (!bgm.isPlaying() && savedAudio) {
@@ -869,7 +1009,7 @@ public class StartupNew{
 				}
 				shakeTimer++;
 				for (MenuItem i : c.getMenuItems()) {
-					double applyShake = shakeFactor * (1/(4*shakeTimer)) * Math.sin(shakeTimer*Math.PI/4) ;
+					double applyShake = 50*shakeFactor * (1/(4*shakeTimer)) * Math.sin(shakeTimer*Math.PI/4) ;
 					i.setShakingY(applyShake);
 				}
 			}
@@ -933,7 +1073,7 @@ public class StartupNew{
 			}
 		}
 		
-		if (gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof Cutscene || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
+		if (!textEditor && gameState != null && (menuStack.isEmpty() || menuStack.peek() instanceof AnimationMenuFadeFromBlack)) {
 //			input.setHoldable(true);
 			gameState.update(input);
 		}
@@ -967,7 +1107,7 @@ public class StartupNew{
 	public void render() {
 //		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		getMainWindow().renderBG("bg.png");
-		if (gameState != null) {
+		if (gameState != null && gameState.shouldDraw()) {
 			gameState.drawGameState();
 		}
 		getMainWindow().drawDrawables(drawables);
@@ -1022,7 +1162,10 @@ public class StartupNew{
 
 			if (Display.isCloseRequested()) {
 				Display.destroy();
-				System.exit(0);
+				if (!textEditor) {
+					System.exit(0);
+				}
+				
 			}
 			frameCount++;
 		}
@@ -1106,9 +1249,9 @@ public class StartupNew{
 		resultOfMenuToDisplay = string;
 	}
 
-	public void setDrawAllMenus() {
+	public void setDrawAllMenus(boolean b) {
 		// TODO Auto-generated method stub
-		drawAllMenus = true;
+		drawAllMenus = b;
 	}
 
 	public void setAudio(String string) {
@@ -1145,5 +1288,45 @@ public class StartupNew{
 		shakeTimer = 0;
 		doShakeScreen = b;
 		shakeFactor = damage;
+	}
+
+	public void setCutscene(Cutscene cutscene) {
+		// TODO Auto-generated method stub
+		currentCutscene = cutscene;
+	}
+
+	public Cutscene getCutscene() {
+		// TODO Auto-generated method stub
+		return currentCutscene;
+	}
+
+	public void saveCoordinates() {
+		// TODO Auto-generated method stub
+		savedXPos = gameState.getPlayer().getX();
+		savedYPos = gameState.getPlayer().getY();
+		savedMapName = gameState.getMap().getMapId();
+	}
+	
+	public DoorEntity createWarpDoor() {
+		//public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
+		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,savedXPos,savedYPos,savedMapName,"");
+	}
+
+	public DoorEntity createMagicantWarp() {
+		// TODO Auto-generated method stub
+		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,1000,1000,"magicant","");
+	}
+
+	public void stopBGM() {
+		// TODO Auto-generated method stub
+		bgm.stop();
+	}
+
+	public void setShouldFadeIn(Menu m) {
+		// TODO Auto-generated method stub
+		if (m != null) {
+			needToAddMenu = m;
+		}
+		shouldFadeIn = true;
 	}
 }

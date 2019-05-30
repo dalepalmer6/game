@@ -5,12 +5,21 @@ import java.util.ArrayList;
 import battlesystem.BattleMenu;
 import battlesystem.options.BattleAction;
 import font.TextWindowWithPrompt;
+import menu.EnemyAction;
 import menu.StartupNew;
 
 public class BattleEntity {
 	protected String texture;
 	protected String name;
-	protected String state;
+	protected int status = 0;
+	//0 - normal
+	//1 - cold
+	//2 - blind
+	//4 - asthma
+	//8 - stone
+	//16 - dead 
+	//32 - 
+	protected int turnsAsleep = 0;
 	protected int width;
 	protected int height;
 	protected EntityStats stats;
@@ -18,10 +27,30 @@ public class BattleEntity {
 	protected BattleAction actionToPerform;
 	//position to be drawn on screen
 	protected StartupNew systemState;
+	private boolean defending;
+	private int resistances;
+	//0 - none
+	//1 - freeze
+	//2 - fire
+	//4 - thunder
+	//8 - null
+	private int shieldStatus; //
+	//0 - none
+	//1 - shield
+	//2 - psi
+	//3 - power shield
+	private int shieldCharge; //num hits the shield will endure
 	
-	public void setState(String string) {
-		// TODO Auto-generated method stub
-		state = string;
+//	public void setState(String string) {
+//		// TODO Auto-generated method stub
+//		state = string;
+//	}
+	public EnemyAction getRandomAction() {
+		return null;
+	}
+	
+	public StartupNew getSystemState() {
+		return systemState;
 	}
 	
 	public EntityStats getStats() {
@@ -62,7 +91,6 @@ public class BattleEntity {
 		this.systemState=systemState;
 		this.name = name;
 		this.stats = es;
-		this.state = "normal";
 	}
 	
 	public void ai() {
@@ -74,16 +102,84 @@ public class BattleEntity {
 		return texture;
 	}
 
-	public void takeDamage(int damage) {
+	public int takeDamage(int damage, int element) {
 		// TODO Auto-generated method stub
+		if (element != 0 && (resistances & element) == element) {
+			damage /= 2;
+		}
+		if (damage > 0 && defending) {
+			//this halves all damage currently, add in checks for what type of damage, PSI or Phys
+			//also check the status of shields such as PSI Shield or Power Shield when implemented
+			damage /= 2;
+		}
 		int hp = this.stats.getStat("CURHP");
 		hp -= damage;
 		hp = Math.max(0,hp);
 		stats.replaceStat("CURHP",hp);
+		return damage;
 	}
 
-	public String getState() {
+	public int getState() {
 		// TODO Auto-generated method stub
-		return state;
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}	
+	
+	public void setDefend(boolean b) {
+		// TODO Auto-generated method stub
+		defending = b;
+	}
+	
+	public boolean addStatus(int status) {
+		int oldStatus = this.status;
+		this.status |= status;
+		return oldStatus != this.status;
+	}
+	
+	public boolean removeStatus(int status) {
+		this.status ^= status;
+		return true;
+	}
+	
+	public boolean getDefending()  {
+		return defending;
+	}
+	
+	public void setShield(int type) {
+		this.shieldStatus = type;
+		this.shieldCharge = 3;
+	}
+	
+	public int getShieldType() {
+		return shieldStatus;
+	}
+	
+	public int getShieldCharge() {
+		return shieldCharge;
+	}
+
+	public boolean decreaseShieldCharge() {
+		// TODO Auto-generated method stub
+		shieldCharge--;
+		if (shieldCharge == 0) {
+			shieldStatus = 0;
+			return false;
+		}
+		return true;
+	}
+	
+	public void incrementSleepTimer() {
+		turnsAsleep++;
+	}
+	
+	public int getSleepTimer() {
+		return turnsAsleep;
+	}
+	
+	public void resetSleepTimer() {
+		turnsAsleep = 0;
 	}
 }

@@ -1,0 +1,123 @@
+1: @Did a poltergeist attack[BREAK]your house?[BREAK][PAUSE]It tore mine apart.[BREAK]
+
+2: @You didn't come from the[BREAK]cemetery to the south, did[BREAK]you?[BREAK][PAUSE]Please tell me you didn't![BREAK]
+
+3: @There must be someone[BREAK]controlling the dead...[BREAK]
+
+4: @Heh heh heh! I'm a[BREAK]meddlesome mouse![BREAK][PAUSE]@In towns, there are some[BREAK]houses you can go inside[BREAK]and some you can't.[BREAK][PAUSE]@Houses with round doors or[BREAK]signs on them are the ones[BREAK]you can go into.[BREAK][PAUSE]@If you try to go into any[BREAK]of the other ones, you'll[BREAK]just hit your head.[BREAK][PAUSE]@Well, bye![BREAK]
+
+5: @Are the zombies going to[BREAK]take over our town too?[BREAK]
+
+6: @Please tell me you're not a[BREAK]zombie![BREAK][PAUSE]...Are you?[BREAK] (Yes/No)
+
+	Yes: @Oh, yeah? W-w-well...[BREAK][PAUSE]You're a big stupid zombie[BREAK]head! Waaaah! Eek![BREAK] (Guy runs away)
+
+	No: @Are you really a human?[BREAK] (Yes/No)
+
+		Yes: @I'm amazed you made it this[BREAK]far.[BREAK]
+
+		No: @I knew it...[BREAK][PAUSE]@I'm so scared I'm about to[BREAK]wet my pants...[BREAK]
+
+7: @Canary Village is north and[BREAK]west of here.[BREAK][PAUSE]@You should definitely go[BREAK]visit it - admission is[BREAK]free![BREAK]
+
+8: @Animals have suddenly[BREAK]turned violent,[BREAK][PAUSE]and the dead have have come[BREAK]back as zombies to attack[BREAK]us...[BREAK][PAUSE]@What are we supposed to do?[BREAK]I'm so scared I can hardly[BREAK]breathe... (gasp gasp)[BREAK]
+
+9: @It's nice that there's a[BREAK]machine on the first floor[BREAK]of the department store[BREAK][PAUSE]that lets you withdraw cash[BREAK]from your bank account,[BREAK][PAUSE]but you need a PTA card or[BREAK]something to use it.[BREAK][PAUSE]That's not very convenient,[BREAK]if you ask me.[BREAK]
+
+10: @I really admire the man[BREAK]living in Canary Village.[BREAK]
+
+11: @There's this really pretty[BREAK]secretary at the town hall.[BREAK][PAUSE]@She's the first floor[BREAK]receptionist.[BREAK]
+
+12: @The town mayor is looking[BREAK]for someone brave to help[BREAK]him.[BREAK]
+
+13: @Bread is great for when[BREAK]you're hungry,[BREAK][PAUSE]but I bet you could also[BREAK]use its crumbs to mark your[BREAK]trail.[BREAK][PAUSE]@...I guess it's really none[BREAK]of my business, though.[BREAK]
+
+14: @I hear they locked the zoo[BREAK]up to keep any more animals[BREAK]from escaping.[BREAK][PAUSE]@They've all gone berserk,[BREAK]you see...[BREAK]
+
+15: @I'm starving.[BREAK]
+
+16: @I heard a little girl got[BREAK]lost in the cemetery.[BREAK][PAUSE]I wonder if she's been[BREAK]rescued yet...[BREAK]
+
+17: @Say... You're not honestly[BREAK]thinking of going to the[BREAK]cemetery, are you?[BREAK] (Yes/No)
+
+Yes: @I thought you were a[BREAK]sensible boy.[BREAK]
+
+No: @I thought you were a[BREAK]sensible boy.[BREAK]
+
+18: @ZOMBIE! (Psuedo Zombie Battle)
+
+19: @Heheheh...![BREAK]You get to be a zombie too![BREAK] (Psuedo Zombie Battle)
+
+20: HOTEL GUY
+
+21: @This hotel is cheap.[BREAK][PAUSE]@But that's about the only[BREAK]thing it has going for it.[BREAK]
+
+22: @Exhausted? Go to the hotel.[BREAK][PAUSE]@Sleepy? Go to the hotel.[BREAK][PAUSE]@That's all there is to say,[BREAK]really.[BREAK]
+
+23: Mother's Day Town Hall[BREAK]
+
+24: FOOD SHOP GIRL
+
+25: @Oh, aren't you [03 16], that[BREAK]snot-nose kid who sat next[BREAK]to me in kindergarten?[BREAK][PAUSE]@Or are you someone else?[BREAK]
+
+26: ITEM SELLING GIRL
+
+27: DRUG STORE GUY
+
+28: SPORTS GOODS GIRL
+
+29: FOODS GIRL
+
+30: @As you can see, all our[BREAK]animals have escaped.[BREAK][PAUSE]@All we have left is this[BREAK]canary chick.[BREAK][PAUSE]Interested in buying it?[BREAK] (Yes/No)
+
+	Yes: @Then how about for $[03 1E]?[BREAK] (Yes/No)
+
+		Yes (If not enough money): @Oh, you don't seem to have[BREAK]enough money.[BREAK]
+
+		Yes (If enough money): @Thanks! Take extra good[BREAK]care of it![BREAK]
+
+		No: @How about for free, then?[BREAK]C'mon, take it.[BREAK]
+
+	No: @Yeah, I don't blame you.[BREAK][PAUSE]It doesn't even know any[BREAK]songs.[BREAK]
+
+31: @I'm almost certain that[BREAK]something is controlling[BREAK]all the animals...[BREAK]
+
+32: HOSPITAL GIRL
+
+33: West: Mother's Day[BREAK]East: Thanksgiving[BREAK]
+
+34: HOSPITAL MAN
+
+35: @I have a secret to share[BREAK]with you later.[BREAK]
+
+36 (Before Pippi): @I'm Abbot, the mayor...'s[BREAK]assistant.[BREAK][PAUSE]@The mayor is right over[BREAK]there.[BREAK]
+
+36 (After Pippi): @Here you go. This is the[BREAK]key to the zoo.[BREAK]
+
+37 (First Time): @I don't know, this task[BREAK]might be too much for you[BREAK]to handle,[BREAK][PAUSE]but I still have high hopes[BREAK]for you anyway.[BREAK][PAUSE]@Well, you see...[BREAK][PAUSE]@A child has strayed into[BREAK]the cemetery.[BREAK][PAUSE]@And, as luck would have it,[BREAK]I'm up for re-election[BREAK]soon.[BREAK][PAUSE]@So... please help me![BREAK] (Yes/No)
+
+	Yes: @Oh! You'll do it?![BREAK][PAUSE]@You'll go and rescue her?![BREAK][PAUSE]@Come back alive and you'll[BREAK]be a hero![BREAK][PAUSE]@I'd go with you, but I'm,[BREAK]umm, not feeling well...[BREAK]
+
+	No: @Oh! You'll do it?![BREAK][PAUSE]@You'll go and rescue her?![BREAK][PAUSE]@Come back alive and you'll[BREAK]be a hero![BREAK][PAUSE]@I'd go with you, but I'm,[BREAK]umm, not feeling well...[BREAK]
+
+37 (Second Time): @I don't know, this task[BREAK]might be too much for you[BREAK]to handle,[BREAK][PAUSE]but I still have high hopes[BREAK]for you anyway.[BREAK]
+
+37 (Without Pippi/Dead Pippi): @Oh, my! It's [03 10], the[BREAK]hero![BREAK][PAUSE]I never expected you to[BREAK]return all alone...[BREAK][PAUSE]@Are you taking a break?[BREAK]
+
+37 (With Pippi): @Oh, is this Pippi, the girl[BREAK]who got lost?[BREAK][PAUSE]@Stunning work, lad![BREAK][PAUSE]@I knew from the start that[BREAK]you showed promise![BREAK][PAUSE](clap clap applause)[BREAK][PAUSE]@You're so lucky, Pippi.[BREAK]Adorable, too.[BREAK][PAUSE]@Now remember to tell your[BREAK]mother that the mayor[BREAK]rescued you.[BREAK][PAUSE]@And for you, [03 16]...[BREAK]A $[03 1E] reward. Here.[BREAK] (Walks behind the table) @Say, since you're here and[BREAK]everything, won't you help[BREAK]with the zoo problem too?[BREAK] (Yes/No)
+
+	Yes: @Oh, you'll go check it out?[BREAK]That's wonderful![BREAK][PAUSE][03 16], you certainly do[BREAK]love to play games![BREAK][PAUSE]@Have my assistant Abbot[BREAK]give you a key to the zoo.[BREAK]
+
+	No: @Oh, you'll go check it out?[BREAK]That's wonderful![BREAK][PAUSE][03 16], you certainly do[BREAK]love to play games![BREAK][PAUSE]@Have my assistant Abbot[BREAK]give you a key to the zoo.[BREAK]
+
+37 (Before Zoo): @Come back alive and you'll[BREAK]be a hero![BREAK][PAUSE]@I'd go with you, but I'm,[BREAK]umm, not feeling well...[BREAK]
+
+37 (After Zoo): @Oh, it's [03 16], the hero![BREAK][PAUSE]@You have tiger droppings[BREAK]all over your clothes, you[BREAK]know.[BREAK][PAUSE]@Oh, I'm just kidding![BREAK][PAUSE]@Sorry, I don't have[BREAK]anything to give you this[BREAK]time...[BREAK][PAUSE]Wahahaha![BREAK]
+
+38: @By mayor's orders, no one's[BREAK]to cross this bridge until[BREAK]martial law is lifted.[BREAK][PAUSE]@I suggest you use the[BREAK]bridge to the east of the[BREAK]zoo instead.[BREAK]
+
+39: @Well, I guess this is bye[BREAK]for now.[BREAK][PAUSE]@Come by my house later to[BREAK]pick up an item of mine.[BREAK][PAUSE]@By the way... do you think[BREAK]my socks are too short?[BREAK] (Yes/No)
+
+	Yes: @Oh, you didn't have to[BREAK]answer.[BREAK][PAUSE]You're such a cutie...[BREAK]
+
+	No: @Oh, you didn't have to[BREAK]answer.[BREAK][PAUSE]You're such a cutie...[BREAK]

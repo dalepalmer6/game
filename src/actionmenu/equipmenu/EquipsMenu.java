@@ -99,7 +99,7 @@ public class EquipsMenu extends PlayerInfoWindow {
 		SelectionTextWindow stw = inventories.get(index);
 		stw.clearSelections();
 		PartyMember pm = party.get(index);
-		ArrayList<Item> items = pm.getEquips();
+		ArrayList<EquipmentItem> items = pm.getEquips();
 		stw.setCurrentOpen(stw.getTextStartX()+96,stw.getTextStartY() + 64);
 //		stw.setTextStart(stw.getTextStartX()+32,stw.getTextStartY());
 		stw.add(new WeaponEditMenuItem(state,items.get(0),pm,stw));

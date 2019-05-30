@@ -39,7 +39,7 @@ public class Entity implements Drawable,EntityInterface {
 	protected StartupNew state;
 	protected ArrayList<Entity> interactables;
 	private long delta;
-	private String name;
+	protected String name;
 	private boolean needsRemove;
 	private String appearFlag = " ";
 	private String disappearFlag = " ";
@@ -49,6 +49,9 @@ public class Entity implements Drawable,EntityInterface {
 	protected int targetY = -1;
 	protected boolean atTargetPoint = true;
 	private boolean ignoreCollisions;
+	protected boolean behind;
+	protected boolean lastBehind;
+	protected long timer;
 	
 	public void setIgnoreCollisions(boolean b) {
 		// TODO Auto-generated method stub
@@ -211,8 +214,9 @@ public class Entity implements Drawable,EntityInterface {
 				atTargetPoint = true;
 			}
 		} 
-		if (!ignoreCollisions) {
+		
 			checkCollisions();
+		if (!ignoreCollisions) {
 			checkEntityCollisions();
 		}
 		x += deltaX;
@@ -223,6 +227,10 @@ public class Entity implements Drawable,EntityInterface {
 		atTargetPoint = true;
 		targetX = -1;
 		targetY = -1;
+	}
+	
+	public void setAtTargetPoint(boolean b) {
+		atTargetPoint = false;
 	}
 	
 	public boolean getAtTargetPoint() {
@@ -275,7 +283,29 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public void update(GameState gs) {
+		timer++;
+		if (timer % 120 == 0) {
+			//implement different movement patterns using this similar style
+			//random pattern, will try to move in any open direction every 2 seconds randomly
+			if (Math.random() < 0.3) {
+				if (Math.random() < 0.5) {
+					targetX = x - 8*6;
+				} else {
+					targetX = x + 8*6;
+				}
+			}
+			if (Math.random() < 0.3) {
+				if (Math.random() < 0.5) {
+					targetY = y - 8*6;
+				} else {
+					targetY = y + 8*6;
+				}
+			}
+		}
 		moveSpeedThisFrame = (int) (stepSize * state.getGameState().getDeltaTime());
+		lastBehind = behind;
+		behind = false;
+		
 		move();
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();
@@ -370,6 +400,18 @@ public class Entity implements Drawable,EntityInterface {
 		drawEntity(m);
 	}
 	
+	public void drawIfBehind(MainWindow m) {
+		if (behind) {
+			draw(m);
+		}
+	}
+	
+	public void drawIfFront(MainWindow m) {
+		if (!behind) {
+			draw(m);
+		}
+	}
+	
 	public static void initDrawEntity(MainWindow m, String texture) {
 		m.setTexture("img\\" + texture);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
@@ -377,24 +419,43 @@ public class Entity implements Drawable,EntityInterface {
 	}
 
 	public void stageForRedraw() {
-		state.getGameState().addToRedrawing(new RedrawObject(this));
+		state.getGameState().addToRedrawing(new RedrawObject(this,state));
 	}
 	
-	public boolean checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) { 
+	public boolean checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg) {
+		return checkCollision(collision,x,y,tbg,tfg,false);
+	}
+	
+	public boolean checkCollision(int collision, int x, int y, TileInstance tbg, TileInstance tfg, boolean isBottom) { 
 //		if (((collision & 1) & 15) == 1) {
 //			deltaX = 0;
 //			deltaY = 0;
 //		}
-		boolean collided = false;
-		int val = ((collision & 5) & 15);
-		switch(val) {
-			case 1: 
-				deltaX = 0; 
-				deltaY = 0; 
-				collided = true; break;
-			case 4: break;
-			case 5: break;
+		if (isBottom) {
+			if (collision == 1 && lastBehind) {
+				behind = true;
+			} else {
+				if (collision == 2) {
+					behind = behind || true;
+				} else {
+					behind = behind || false;
+				}
+			}
 		}
+		
+		boolean collided = false;
+		if (!ignoreCollisions) {
+			int val = ((collision & 5) & 15);
+			switch(val) {
+				case 1: 
+					deltaX = 0; 
+					deltaY = 0; 
+					collided = true; break;
+				case 4: break;
+				case 5: break;
+			}
+		}
+		
 		
 		return collided;
 //		if (val == 1) {
@@ -447,8 +508,8 @@ public class Entity implements Drawable,EntityInterface {
 		
 		boolean tl = checkCollision(collisiont1,leftEdge,upperEdge,t1BG,t1FG);
 		boolean tr = checkCollision(collisiont2,rightEdge,upperEdge,t2BG,t2FG);
-		boolean bl = checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG);
-		boolean br = checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG);
+		boolean bl = checkCollision(collisiont3,leftEdge,lowerEdge,t3BG,t3FG,true);
+		boolean br = checkCollision(collisiont4,rightEdge,upperEdge,t4BG,t4FG,true);
 		
 		int colmask = 0;
 		if (tl) {
@@ -488,7 +549,7 @@ public class Entity implements Drawable,EntityInterface {
 			checkTileCollision();
 		}
 		if (colmask == 1 && directionY.equals("down")) {
-			deltaX = -8;
+			deltaX = 8;
 			deltaY = 0;
 			checkTileCollision();
 		}
@@ -510,7 +571,7 @@ public class Entity implements Drawable,EntityInterface {
 			checkTileCollision();
 		}
 		if (colmask == 2 && directionY.equals("down")) {
-			deltaX = 8;
+			deltaX = -8;
 			deltaY = 0;
 			checkTileCollision();
 		}

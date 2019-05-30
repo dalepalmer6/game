@@ -1,0 +1,2179 @@
+000: New Error Text
+000: @Brother! I'm so scared! [PROMPTINPUT]My lamp suddenly starting going crazy! 
+000: @Brother! It's like our house is about to fall apart! 
+000: @Waah! 
+000: @Here's some juice, big brother! [PROMPTINPUT]You must be pretty thirsty. 
+000: @Eek! My doll is going crazy! 
+000: @Whew, that was scary. [PROMPTINPUT]@Oh! I think I see something inside the doll! 
+000: 
+000: @I'm Mimmie. Don't mix me up with Minnie! 
+000: @Are you okay, [NINTEN]? [PROMPTINPUT]@What on earth is happening to our home? [PROMPTINPUT]I'm so scared... [PROMPTINPUT]@If only your father were here now... 
+000: @You're much braver than I ever imagined. [PROMPTINPUT]@...But I can't send you on a journey so famished. 
+000: @Oh, my! You're hurt! 
+000: @Let's see... To get to the next level, you need... 
+000: @Come back home whenever you want some more [FAVFOOD]. 
+000: @Hmm, I see. Sounds like it must be a poltergeist of some sort. [PROMPTINPUT]@I'm not sure what to do about it, either. [PROMPTINPUT]@But your great-grandfather did study PSI at one point. [PROMPTINPUT]@Perhaps there's something in the basement that could help make sense of things. [PROMPTINPUT]@I know I put the basement key somewhere... [PROMPTINPUT]but I can't remember where. [PROMPTINPUT]@Anyway, you're our only hope. Now is the time for an adventure. [PROMPTINPUT]Go forth, [NINTEN]! Protect us all! 
+000: 
+000: 
+000: 
+000: 
+000: @(Click! Beep-beep-beep...) 
+000: @[NINTEN]? It's your dad. 
+000: @I've deposited [MONEYSIGN][03 18] into your bank account. [PROMPTINPUT]@Taking away what you've spent, you should now have [MONEYSIGN][03 19] in the bank. [PROMPTINPUT]@Use it wisely. 
+000: @I realize this isn't any of my business, but why don't you take a little break? 
+000: @I see. Then I'll make a record of your progress. 
+000: @I see. Well, I guess the Earth IS in danger and all. 
+000: 
+000: 
+000: @Okay. [PROMPTINPUT]@Your dear old dad was also thinking about hitting the hay for the night. [PROMPTINPUT]@I've created a record of your adventure to this point. [PROMPTINPUT]@Good night, sleep tight. 
+000: @We're a great team, aren't we? [PROMPTINPUT]@Well, you should turn the power OFF now. [PROMPTINPUT]@All right? 
+000: @[NINTEN], you like to work hard, just like your mom. [PROMPTINPUT]@But, I don't think it's good to work too hard. 
+000: @Anyway, what do you need from me? 
+000: 
+000: 
+000: @Good luck! 
+000: 
+000: @Hello. [PROMPTINPUT]Pippi and I are feeling just dandy now! 
+000: @You didn't come from the cemetery to the south, did you? [PROMPTINPUT]Please tell me you didn't! 
+000: @You're really amazing. 
+000: @Please tell me you're not a zombie! [PROMPTINPUT]...Are you?[CHOOSE][CHOICE]Yes[TEXT][_027][CHOICE]No[TEXT][_028]
+000: @Oh, yeah? W-w-well... [PROMPTINPUT]You're a big stupid zombie head! Waaaah! Eek! 
+000: @Are you really a human?[CHOOSE][CHOICE]Yes[TEXT][_029][CHOICE]No[TEXT][_02A][_02B]
+000: @I'm amazed you made it this far. 
+000: @I knew it... 
+000: @I'm so scared I'm about to wet my pants... 
+000: @Boy, that was scary... 
+000: @ZOMBIE![STARTBATTLE_Crow]
+000: @Heheheh...! You get to be a zombie too! [STARTBATTLE_Crow]
+000: @There must be someone controlling the dead... 
+000: @Not too shabby, youngster! 
+000: @Are the zombies going to take over our town too? 
+000: @Oh, that's a baby canary. [PROMPTINPUT]Did you find it in Canary Village? 
+000: @Hmm. You don't say. 
+000: @The birds of Canary Village do sing such lovely songs. 
+000: @I really admire the man living in Canary Village. 
+000: @The town mayor is looking for someone brave to help him. 
+000: @I heard a little girl got lost in the cemetery. [PROMPTINPUT]I wonder if she's been rescued yet... 
+000: @Say... You're not honestly thinking of going to the cemetery, are you?[CHOOSE][CHOICE]Yes[TEXT][_039][CHOICE]No[TEXT][_039]
+000: @I thought you were a sensible boy. 
+000: @Animals have suddenly turned violent, [PROMPTINPUT]and the dead have have come back as zombies to attack us... [PROMPTINPUT]@What are we supposed to do? I'm so scared I can hardly breathe... (gasp gasp) 
+000: @You're so awesome! 
+000: 
+000: @Did a poltergeist attack your house? [PROMPTINPUT]It tore mine apart. 
+000: @I hear they locked the zoo up to keep any more animals from escaping. [PROMPTINPUT]@They've all gone berserk, you see... 
+000: @Bread is great for when you're hungry, [PROMPTINPUT]but I bet you could also use its crumbs to mark your trail. [PROMPTINPUT]@...I guess it's really none of my business, though. 
+000: @I don't know, this task might be too much for you to handle, but I still have high hopes for you anyway.[PROMPTINPUT]
+000: @Well, you see... [PROMPTINPUT]@A child has strayed into the cemetery. [PROMPTINPUT]@And, as luck would have it, I'm up for re-election soon. [PROMPTINPUT]@So... please help me![CHOOSE][CHOICE]Yes[TEXT][_042][CHOICE]No[TEXT][_042] 
+000: @Oh! You'll do it?! [PROMPTINPUT]@You'll go and rescue her?![SETFLAG_mayorSpokenTo][_049] 
+000: @Oh, is this Pippi, the girl who got lost? [PROMPTINPUT]@Stunning work, lad! [PROMPTINPUT]@I knew from the start that you showed promise! [PROMPTINPUT](clap clap applause) [PROMPTINPUT]@You're so lucky, Pippi. Adorable, too. [PROMPTINPUT]@Now remember to tell your mother that the mayor rescued you. [PROMPTINPUT]@And for you, [NINTEN]... A [MONEYSIGN][03 1E] reward. Here. 
+000: 
+000: 
+000: @Say, since you're here and everything, won't you help with the zoo problem too? 
+000: @Oh, you'll go check it out? That's wonderful! [PROMPTINPUT][NINTEN], you certainly do love to play games! [PROMPTINPUT]@Have my assistant Abbot give you a key to the zoo.[SETFLAG_pippiIsReturned] 
+000: @Here you go. This is the key to the zoo. 
+000: @Come back alive and you'll be a hero! [PROMPTINPUT]@I'd go with you, but I'm, umm, not feeling well... 
+000: @Oh, it's [NINTEN], the hero! [PROMPTINPUT]@You have tiger droppings all over your clothes, you know. [PROMPTINPUT]@Oh, I'm just kidding! [PROMPTINPUT]@Sorry, I don't have anything to give you this time... [PROMPTINPUT]Wahahaha! 
+000: @Everyone's talking about a girl with special powers. Have you heard about her? [PROMPTINPUT]@I bet she'd be a great help to you on your journey. 
+000: @I have plenty of extra zoo keys. [PROMPTINPUT]@Here, have another. 
+000: @As you can see, all our animals have escaped. 
+000: @All we have left is this canary chick. [PROMPTINPUT]Interested in buying it?[CHOOSE][CHOICE]Yes[TEXT][_04F][CHOICE]No[TEXT][_050] 
+000: @Then how about for [MONEYSIGN]85? [CHOOSE][CHOICE]Yes[TEXT][_051][CHOICE]No[TEXT][_052]
+000: @Yeah, I don't blame you. [PROMPTINPUT]It doesn't even know any songs. 
+000: @Thanks! Take extra good care of it![SETFLAG_haveCanary] 
+000: @How about for free, then? C'mon, take it.[SETFLAG_haveCanary] 
+000: @Say, how's that canary doing? 
+000: @I'm almost certain that something is controlling all the animals... 
+000: @Animals are so cute. Don't you agree? 
+000: @Teehee. 
+000: @Stupid head! 
+000: @Welcome! Do you need to return any items? 
+000: @Something is speaking into [NINTEN]'s mind. 
+000: @Whew, what a relief. 
+000: @Please visit us again for all your shopping needs! (giggle) 
+000: @It's nice that there's a machine on the first floor of the department store [PROMPTINPUT]that lets you withdraw cash from your bank account, [PROMPTINPUT]but you need a PTA card or something to use it. [PROMPTINPUT]That's not very convenient, if you ask me. 
+000: 
+000: @It's such nice weather out. [PROMPTINPUT]But what does it matter?
+000: @Oh, that canary is Laura the songbird's baby! [PROMPTINPUT]@Go take it to her! 
+000: @You seem to have forgotten something important about life. [PROMPTINPUT]How sad. 
+000: @Now where did I last see Laura...? 
+000: @It sounds like Laura the songbird has remembered her song. [PROMPTINPUT]@Have you learned her melody, too? 
+000: @Well, that's no good. 
+000: @In song there is strength. [PROMPTINPUT]True words, indeed. 
+000: @I'm Pippi. I'm lost. You're really brave, huh? 
+000: @You're such a goofball! Hahaha! 
+000: @You're really brave. I hope we meet again sometime, don't you? 
+000: @Oh, I'm so happy! [PROMPTINPUT]@Here, this badge can be a symbol of our bond. [PROMPTINPUT]Take it with you. 
+000: @I guess you already have a special someone, huh... 
+000: @Well, I guess this is bye for now. [PROMPTINPUT]@Come by my house later to pick up an item of mine. [PROMPTINPUT]@By the way... do you think my socks are too short? 
+000: 
+000: @Oh, you didn't have to answer. [PROMPTINPUT]You're such a cutie... 
+000: @Kyakyakya! (You're a big doo-doo head!) 
+000: @[NINTEN] heard a voice... [PROMPTINPUT]@"Where is the god's tail?" 
+000: @Whoa, those are some weird clothes you have on there. [PROMPTINPUT]@I bet you'll attract monsters dressed like that! 
+000: 
+000: @Happiness won't just walk into your life on its own. [PROMPTINPUT]@But neither will unhappiness. [PROMPTINPUT]@Wouldn't you agree? 
+000: @So if you don't want trouble in your life... [PROMPTINPUT]then you'd best stay still and never move a muscle. 
+000: @Really? Unhappiness CAN walk? [PROMPTINPUT]I had no idea. 
+000: @So, you admit I have good taste? [PROMPTINPUT]@Then I take it you want a cool nickname, too? 
+000: @Okay, I got it. [PROMPTINPUT]@From now on, your name will be Stupid Face [NINTEN]. [PROMPTINPUT]@It just oozes class. 
+000: @Oh, that's too bad. 
+000: @Heya, Stupid Face [NINTEN]! 
+000: @Have you met the guy who philosophizes about happiness? 
+000: @He's a master nicknamer. He's got a real knack for names. 
+000: @People cannot part if they have not yet met. 
+000: @Have you met a guy who talks about how you can't part if you haven't met? 
+000: @I agree with him, actually. 
+000: @You really should meet him. You'll be a better person for it! 
+000: @I feel completely refreshed after stopping by Queen Mary's fountain! 
+000: @Gettng to Queen Mary's fountain is really tough. [PROMPTINPUT]Not only is it far away, but it's hard to find, too. 
+000: @I'm going to take this broken earring to the fountain to turn it into a magic earring. 
+000: @I feel so relaxed just listening to the mysterious sound of the fountain. 
+000: @Oh, are you lost? Just keep going south. [PROMPTINPUT]@Oops, sorry. I thought you were looking for a restroom. [PROMPTINPUT]@If you're looking for Queen Mary's fountain, then just go west from the castle. 
+000: 
+000: @I bent my spoon, and now it's hard to eat with. [PROMPTINPUT]@Can you bend it back for me? 
+000: @Please hurry. [PROMPTINPUT]@([NINTEN] used the power of PSI to fix the spoon.) [PROMPTINPUT]@Thanks! (munch munch chomp chomp) [PROMPTINPUT]@Do you wanna stay the night here tonight? 
+000: @Why not?! 
+000: @You're very strange, you know that? [PROMPTINPUT]But I also think I might like you... 
+000: @Great! 
+000: @Waaah! You're supposed to accept people's kindness!
+000: @Oh, a traveler! Why don't you eat with us? [PROMPTINPUT]@Here, can you guess what we're having today? 
+000: @Huh? Why can't you tell? You're really suspicious! 
+000: @That's right, [FAVFOOD]. [PROMPTINPUT]@I read your mind and decided to make [FAVFOOD]. [PROMPTINPUT]@How does it taste? Do you like it? 
+000: 
+000: 
+000: @I used to run a musical instrument store, but the ocarina I ordered never  arrived. [PROMPTINPUT]@So I've given up. 
+000: @Oh. I see. 
+000: @Thanks! [PROMPTINPUT]@Your bed is ready. Pleasant dreams! 
+000: @Stop by again anytime! 
+000: @You don't fit in with this place, you know that? 
+000: @I finished the Ocarina of Hope. [PROMPTINPUT]@It can play the melodies that you know. [PROMPTINPUT]@Do you want it? 
+000: 
+000: @Ahahaha. You're a real straightforward guy. [PROMPTINPUT]@Here you go. 
+000: @Ahahaha! "I want it!" is written all over your face. [PROMPTINPUT]@Go ahead, take it with you. 
+000: @Hi, kid! How's it going? 
+000: @Leave Magicant? That'd be the day! [PROMPTINPUT]@Ahahaha! 
+000: @Outside? [PROMPTINPUT]What is this "outside" you speak of? 
+000: @I'm so embarrassed I wish I could crawl into a hole. [PROMPTINPUT]@If only there were holes to crawl into... 
+000: @I am the mysterious goods-keeper. [PROMPTINPUT]@Can I help you? 
+000: @I'm great at impressions, you know! 
+000: @There's a whole bunch of holes east of town. [PROMPTINPUT]@I'm not sure which hole it is, but you can hear otherworldly sounds coming from one. 
+000: 
+000: 
+000: @If you pull out a Red Weed and put it in the fountain, [PROMPTINPUT]it'll turn into a Magic Herb... just like magic! 
+000: @Could I interest you in a Big Bag? 
+000: @In that case, could I borrow your ATM Card for a short while? 
+000: @It has 30 Magic Herbs inside it, in case you didn't know. 
+000: @Thanks. I promise I'll give it back. [PROMPTINPUT]@It just seems... really cool. 
+000: @You don't trust others. [PROMPTINPUT]@That might be for the best. Well, maybe... 
+000: @Oh, right, I need to return your ATM Card. 
+000: @The queen isn't feeling very well right now... 
+000: @You look suspicious. [PROMPTINPUT]@But I'll let you through if you can solve my little riddle... 
+000: @That's right. The answer is "two alligators". [PROMPTINPUT]@I haven't thought up the question yet, though. [PROMPTINPUT]Heheh. 
+000: @Take care! 
+000: 
+000: @I wish I could hear the queen's song again... 
+000: @Oh, hello! [PROMPTINPUT]@I was just in the middle of pondering philosophical questions. [PROMPTINPUT]@It's hard for me to focus with all this guitar music, though. [PROMPTINPUT]@Oh! Whoops! [PROMPTINPUT]I didn't realize I was the one playing the guitar! How careless of me! [PROMPTINPUT]@......... [PROMPTINPUT]@This is a secret between just you and me: come back here when you're stronger. [PROMPTINPUT]@You should probably make a note of this now so you don't forget later. 
+000: 
+000: @You tried to ignore me, didn't you? [PROMPTINPUT]@I get so lonely, being out here all by myself. [PROMPTINPUT]@If there's anything I can do, I'll do it. [PROMPTINPUT]@Here! 
+000: @I'm so happy you came! [PROMPTINPUT]@I know just what you want. [PROMPTINPUT]@Here you go! 
+000: @I finally wrote a song! Give it a listen, you music-loving adventurer! [PROMPTINPUT]@Oh, baby doll, why do you weep? [PROMPTINPUT]The saddened canary won't utter a peep. [PROMPTINPUT]The monkey can sing, the piano - it chimes. [PROMPTINPUT]Though ghosts will play out on its keyboard sometimes. [PROMPTINPUT]Each night in the desert, the lone cactus croons. [PROMPTINPUT]The dragon, when beaten, will carry some tunes. [PROMPTINPUT]While scaling the mountain, EVE sings along. [PROMPTINPUT]Will Queen Mary ever hear the XX Stone's last song? [PROMPTINPUT]Lalala, what a mysterious lullaby. [PROMPTINPUT]Lullaby, bye-bye, and goodbye. [PROMPTINPUT]@What do you think? Nice song, huh? [PROMPTINPUT]@It is, isn't it? 
+000: @Deep in the forest is a guitar player who loves solitude. [PROMPTINPUT]@He's kind of handsome... and a great poet, too.
+000: @I've heard about a man who was forgotten... [PROMPTINPUT]@But I forget what his story was. 
+000: @Though you may not believe it, I'm a healer. [PROMPTINPUT]@I can restore your PP or heal friends turned to stone. [PROMPTINPUT]@So, what can I do for you? 
+000: @...That's what I figured. 
+000: @Don't carry so much cash with you. [PROMPTINPUT]@Go think things over. See you later. 
+000: @I'm an unsinging monkey. [PROMPTINPUT]@But monkeys don't normally sing, anyway. [PROMPTINPUT]@Any questions? 
+000: @I'm sure it's a dumb question, too. 
+000: @Whew, what a relief. [PROMPTINPUT]@I was worried you were going to ask me something tough. [PROMPTINPUT]@Say, you look kind of like Queen Mary. [PROMPTINPUT]@I wonder why that is.
+000: @I wanted to tell you this as soon as I saw you... [PROMPTINPUT]@The train tracks have been fixed, so the train can run through here again. 
+000: @Just once, I'd like to go inside the castle and see what Queen Mary looks like. 
+000: @Queen Mary often has nightmares. [PROMPTINPUT]@She talks like she's punishing a naughty child [PROMPTINPUT]and then cries out about being afraid. [PROMPTINPUT]@Then she starts to sing a song, but only a short bit of it. [PROMPTINPUT]@The fact she can't remember it seems to bring her pain. [PROMPTINPUT]@Then she wakes up covered in sweat. [PROMPTINPUT]@Something really sad must've happened to Queen Mary a long time ago... 
+000: @But it's for girls only. 
+000: @Zzzzz... 
+000: 
+000: @You rotten liar! 
+000: @We all know you're not from here, but we consider you one of us just the same. [PROMPTINPUT]@With the Onyx Hook, you can come back here any time. 
+000: @Don't hesitate to come visit us again whenever you're having a hard time. [PROMPTINPUT]@Everyone here loves you. 
+000: @Welcome, [NINTEN]. [PROMPTINPUT]@Here in the land of Magicant, everyone is your friend [PROMPTINPUT]and you can have as much as you like of whatever you want. [PROMPTINPUT]@Oh? You want to hear my song? [PROMPTINPUT]@I'm sorry. I don't know why, but I just can't seem to remember it. [PROMPTINPUT]@I'm sure I'll be able to remember it someday... [PROMPTINPUT]@If I can just sing it again, something will happen... [PROMPTINPUT]I just know it. 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: @......
+000: @Let me hear the melodies you've learned... 
+000: @Yes... That's it... That's the song... 
+000: @Oh... Giygas... 
+000: 
+000: @I had a dream that Magicant vanished into thin air. [PROMPTINPUT]@My heart's still pounding, even now. 
+000: 
+000: @I'm a cat that swims in the ground. [PROMPTINPUT]@Can you guess what I'm holding in my paw? 
+000: @Did you see what I'm holding in my paw? [PROMPTINPUT]@That's right. A ribbon. [PROMPTINPUT]@This ribbon is overflowing with a special power. 
+000: @I'll only give this Magic Ribbon to a girl. 
+000: @I'm a swimming cat. [PROMPTINPUT]@Have you heard of a candy that gives courage and strength to weaklings? 
+000: @I see. But you're a strong boy, so I doubt you would need any. 
+000: @That boy with the glasses seems pretty weak. I'll give the candy to him. 
+000: 
+000: @Pretty tasty candy, huh? 
+000: @If you need to see the helpful old man, go to Mary's Fountain. [PROMPTINPUT]@He'll come if he hears a cry from the heart. [PROMPTINPUT]@Remember, a cry from the heart! 
+000: 
+000: @(The crowd grows restless.) [PROMPTINPUT]@We didn't come to see no lousy rocks with hats on 'em! [PROMPTINPUT]Boo! Boo! 
+000: @Need something? 
+000: @Oh, okay. Goodbye. 
+000: @Do you need money? 
+000: @How is it? Are you finding it helpful? 
+000: @I see. [PROMPTINPUT]@You seem to have [MONEYSIGN][03 19] in your account. [PROMPTINPUT]@How much will you withdraw? 
+000: @Hocus-pocus, allakazam! [PROMPTINPUT]@Use it wisely. Goodbye. 
+000: @You can't withdraw that much. [PROMPTINPUT]@You'll have to try again. Goodbye. 
+000: @I'm a forgotten man. I might as well not exist. [PROMPTINPUT]@You didn't have to notice me, you know... [PROMPTINPUT]@Just go ahead and ignore me. 
+000: @I'm a nowhere man. [PROMPTINPUT]@It's best if you don't give me words of kindness. [PROMPTINPUT]@I can't live on like this if I start to miss people... 
+000: @My conversations are always a monologue. [PROMPTINPUT]@I've always been alone, from the moment I was born. 
+000: @Good luck, bad luck.. [PROMPTINPUT]None of it makes a difference to me. [PROMPTINPUT]@Sometimes just breathing is almost too much for me to handle. 
+000: @Why do you insist on talking to me? [PROMPTINPUT]@Are you a forgotten man, too? 
+000: @Liar! I know there's a girl waiting for you! [PROMPTINPUT]Just leave me alone and go back to her! 
+000: @Yeah. That's what I figured. Yep. [PROMPTINPUT]@Now just hurry and ignore me already. 
+000: @Good. Thanks. 
+000: @You seem to be holding too much stuff. [PROMPTINPUT]@Come back for it later.
+000: @I heard some really weird stuff is happening over in Mother's Day...? 
+000: @Something about a kidnapped zombie and animals doing something or other... [PROMPTINPUT]It sounds absolutely nuts. 
+000: Welcome to the town of Thanksgiving!! [PROMPTINPUT] Advertisement: Cheap, fast, and handsome! [PROMPTINPUT]Big Ben Casey can heal what ails you! [PROMPTINPUT]Visit now for a super-discount checkup! [PROMPTINPUT]Protect your life... to the death! 
+000: 
+000: 
+000: @First show me some money. Then I'll heal you. [PROMPTINPUT]@Otherwise I'll have to charge you my own price. [PROMPTINPUT]@I can heal you for [MONEYSIGN][03 1E]. [PROMPTINPUT]@This is my special deal just for you. I'm actually losing money doing this. 
+000: 
+000: @Thanks for the [MONEYSIGN][03 1E]. [PROMPTINPUT]@Okay, you're all better now. [PROMPTINPUT]@Please come back sometime. I'll give you another nice deal. 
+000: @Oh, I see. [PROMPTINPUT]@In that case, I'll call a mortician and give them advance notice. 
+000: @By mayor's orders, no one's to cross this bridge until martial law is lifted. [PROMPTINPUT]@I suggest you use the bridge to the east of the zoo instead. 
+000: @Hey, why aren't you in school, kid? [PROMPTINPUT]@I'm pretty sure today's a school day. 
+000: @I swiped a battery from Duncan's Factory north of here. 
+000: @This factory is Mr. Duncan's private property. [PROMPTINPUT]@Do you have a pass? 
+000: @Sorry, but this is expired, kid. [PROMPTINPUT]@You swiped it, didn't you? [PROMPTINPUT]@You're suspicious... [PROMPTINPUT]@Look me in the eye! 
+000: 
+000: @Some really strong monsters beat me up. [PROMPTINPUT]@If you're headed for the train station, I'd watch out if I were you... 
+000: 
+000: @I heard they lifted the order for martial law over in Mother's Day. [PROMPTINPUT]@Which means we can cross that bridge now... [PROMPTINPUT]@Get my drift? 
+000: 
+000: 
+000: @I was teasing that wimp [LOID] just now, but he got away. 
+000: @Hey, you weakling, stinkling [LOID]! 
+000: @You've been picking on that weakling [LOID], haven't you? 
+000: @What?! That was just a joke?! 
+000: @I heard that [LOID] ran off with some explosives. [PROMPTINPUT]@He's in big trouble if a teacher finds him... 
+000: @[LOID]. Your glasses are slipping. 
+000: @I'm Suzy. I won the Miss Middle of Nowhere pageant. Do you think I'm pretty? 
+000: @You're really cute, too. 
+000: @You're way uglier than me! [PROMPTINPUT]@Stupid Face is what they should call you! 
+000: @The door to the roof is locked. [PROMPTINPUT]@I was plannin' to ditch class and listen to the radio on the roof, too! [PROMPTINPUT]Weren't you?! 
+000: @Geez, you don't talk much, do you? 
+000: @The gym teacher hit me. [PROMPTINPUT]@Maybe I should drop out and become a thug... 
+000: @Getting lost in your own school... [PROMPTINPUT]@Can you get any more lame?! 
+000: @Oh, the door to the roof is locked? 
+000: 
+000: @All she does is get fatter and fatter. [PROMPTINPUT]@Isn't she a terrible woman? 
+000: @A kid like you wouldn't understand the sorrows of life... 
+000: @How dare you talk about my wife like that! [PROMPTINPUT]@Get out! 
+000: @She was pretty when she was young. [PROMPTINPUT]@Yeah, come to think of it, she has her good points, too. [PROMPTINPUT]@Say, how about some tea? 
+000: 
+000: @You're a pretty smart kid. [PROMPTINPUT]@Oh, that's right, you want to go up to the roof. [PROMPTINPUT]@All right, then. Follow me. 
+000: @Cherish your elders or you'll be sorry when YOU grow old! 
+000: @Hold on. What are you doing with something as dangerous as that? [PROMPTINPUT]@I think I'LL hold on to this for you. 
+000: @Say, you should stay a while and have some tea. 
+000: @No running in the halls! 
+000: @Hey! I haven't seen you before, kid! [PROMPTINPUT]@Do you even go to this school? 
+000: @Oh, okay. Just don't run in the halls. 
+000: @Show me what you have. [PROMPTINPUT]@You better not be carrying anything dangerous... 
+000: 
+000: @Who's there?! [PROMPTINPUT]@I'm not coming out! [PROMPTINPUT]@You're just gonna pick on me if I do! 
+000: @You want to be my friend?! [PROMPTINPUT]@Then do you promise not to tell that I took explosives from the science lab? 
+000: @I'm coming out now. 
+000: @I'm [LOID]. [PROMPTINPUT]@I heard they make Bottle Rockets at the Sweet Little Factory south of here... [PROMPTINPUT]I wanna launch one really bad! 
+000: @You must be exhausted. You should stay the night! 
+000: 
+000: @Wow! [PROMPTINPUT]@So this is a Bottle Rocket! I heard so much about them! [PROMPTINPUT]@I should be able to make more of these now. [PROMPTINPUT]@Come with me to the science lab. 
+000: @[LOID]: OK! Now I just flip this switch and... Oh!
+000: @[LOID]: I may be a wimp, but now it's my turn to fight! [PROMPTINPUT]@[TEDDY]! You can take it easy in here. 
+000: @I'm a weird teacher who secretly lives in this school. [PROMPTINPUT]Yes, I admit I'm weird. [PROMPTINPUT]@I need funding for my research. [PROMPTINPUT]@Would you be willing to buy one of my inventions? 
+000: 
+000: @Then have a look at my goods. 
+000: @Come on, you gotta have at least SOME allowance money... 
+000: 
+000: @Come back anytime. [PROMPTINPUT]@I'll have some more nice stuff ready for you. 
+000: @I haven't made any progress with my inventions since your last visit. [PROMPTINPUT]@Would you like to see my older items? 
+000: @I heard on the radio just now that major panics are breaking out everywhere. [PROMPTINPUT]@I WILL protect this train station, no matter what! 
+000: 
+000: @I can't guarantee this train'll go very far, but you'll still need to pay. [PROMPTINPUT]@Are you gonna ride the train? 
+000: @([NINTEN]'s weapon was confiscated.) 
+000: 
+000: 
+000: 
+000: @That'll be [MONEYSIGN][03 1E], then. 
+000: 
+000: 
+000: @It looks like that hat you have belongs to a girl named [ANA] in Snowman. [PROMPTINPUT]@You should go and return it to her. 
+000: @May you live a long life.
+000: @I was on my way to the town of Easter to find my wife. [PROMPTINPUT]@But with the train tracks busted, I have no way to get there now... 
+000: @Poking your nose into other people's business is what makes playing games so fun! 
+000: 
+000: @Here you go. 
+000: @Have you seen a man with a sinister mustache? 
+000: @Sounds like he got away. [PROMPTINPUT]@Guess I'll just go and catch me some more parking violators then. 
+000: @He's a big-time scam artist. [PROMPTINPUT]@If you see him, let me know immediately! 
+000: @Whoa, hey, kid! [PROMPTINPUT]Hold on to this money for me, will ya? [PROMPTINPUT]@If you run into any cops, act like you never saw me. 
+000: @Don't run off with it, now! 
+000: @You'll do what I say! 
+000: @Quit bugging me! [PROMPTINPUT]I'm trying to make a getaway here! 
+000: @Have you seen a man with a huge gut? 
+000: @Looks like he got away. [PROMPTINPUT]@Guess I'll just go and catch some speeders then... 
+000: @He ate five orders of [FAVFOOD] and then ran off without paying. [PROMPTINPUT]@If you see him, let me know immediately! 
+000: @Oof, my stomach's so full. (belch)
+000: @Things've gotten mighty dangerous in this town. [PROMPTINPUT]@But it's still a whole lot better than the city of Valentine, that's for sure. 
+000: @Oh, yeah!! You feelin' it?! 
+000: @Right on! [PROMPTINPUT]You wanna hear me sing?! 
+000: @I'm feelin' glum. 
+000: @It's time to say goodbye already? 
+000: 
+000: @Have you heard the dragon's lullaby? 
+000: @I heard that there's a h-h-haunted house in the town of Halloween. [PROMPTINPUT]@I dunno about you, but I'd never go anywhere near that place! 
+000: 
+000: @Give me something. Anything. [PROMPTINPUT]@Gimme. [PROMPTINPUT]@Please. [PROMPTINPUT]@Pretty please? 
+000: @I'll give you something in return, of course. 
+000: @I was gonna give you something good in return, too... 
+000: @What will you give me? 
+000: @Thanks. In return, here are some fleas and lice. [PROMPTINPUT]@Take them with you. 
+000: @A cold's been going around lately... [PROMPTINPUT]@Achoo! [PROMPTINPUT]@Argh! This sucks! 
+000: @I heard there's a prophetic old man in the mountains [PROMPTINPUT]who's lived for 300 years without ever catching a cold. 
+000: @A aann aak eey ell iiow ma ennas. 
+000: @Not even I can hold a normal conversation with him like this... 
+000: @Oh! In exchange for finding my dentures, [PROMPTINPUT]I'll share with you my secret to living a long life. [PROMPTINPUT]@And that secret is... [PROMPTINPUT]...to gargle all the time. [PROMPTINPUT]@If you catch a cold, go and gargle until it's gone. [PROMPTINPUT]@Here. Take some of my special mouthwash with you. 
+000: 
+000: @Oh, you want more mouthwash? [PROMPTINPUT]@All right, here you go. [PROMPTINPUT]@From now on, it'll cost you [MONEYSIGN][03 1E], though. [PROMPTINPUT](gargle gargle spit) 
+000: @I've heard that some people have died from catching a cold. [PROMPTINPUT]Just a cold! 
+000: @Have you heard about Halloween's haunted house? 
+000: @They say you can hear a piano melody coming from inside, [PROMPTINPUT]even though the house is empty. 
+000: @In that case, it's best that you don't know. 
+000: @Heh heh heh heh. 
+000: @No one's home. Keeheehee... 
+000: @This is a nightmare. [PROMPTINPUT]@A bad dream you'll never, ever wake from... [PROMPTINPUT]@Hee hee hee...
+000: @G O  B A C K 
+000: @Gyaaaa! 
+000: @[NINTEN]. [PROMPTINPUT]@You're going to die. [PROMPTINPUT]@Heeheehee hehehe! [PROMPTINPUT]...Keeheeheehee! 
+000: @A suspicious rat... I am not. [PROMPTINPUT]@The room with the piano... [PROMPTINPUT]@Heheheh...! 
+000: @The haunted house belongs to the Rosemarys. 
+000: @A ghost started showing up at my house, too. [PROMPTINPUT]@It finally left 'cause it hated how cramped it was. 
+000: @I'm more like a game assistant than a citizen of this town. [PROMPTINPUT]@Surely there are things you've forgotten to jot down notes about, right? [PROMPTINPUT]@I can give you a hint for [MONEYSIGN][03 1E]. What do you say? 
+000: 
+000: @Oh. You're really confident about yourself. [PROMPTINPUT]@Then I'll make sure we never meet again.
+000: @I can give you up to three hints. [PROMPTINPUT]@Everything else is a S-E-C-R-E-T. 
+000: @I'm the most upbeat person here in Halloween. [PROMPTINPUT]@Everyone else seems so gloomy, wouldn't you say? 
+000: @Yeah, huh. [PROMPTINPUT]@To be honest, I'm not that cheerful a person either... 
+000: @I dunno. [PROMPTINPUT]@Maybe I'M actually the gloomy one. 
+000: @Our home turned into a hive for ghosts and monsters... [PROMPTINPUT]@So now we live out here. 
+000: @[LOID]: I can use the fuel from your rocket and... [PROMPTINPUT]Then, if I use it with this... [PROMPTINPUT]@Pretty cool, huh? [PROMPTINPUT]Ahh! 
+000: 
+000: @It's too dark to see much, but aren't you that girl from the church in Snowman? [PROMPTINPUT]@[ANA], was it? [PROMPTINPUT]@Your mom is being held in a room in the back. [PROMPTINPUT]@But you can't save us right now. [PROMPTINPUT]@You gotta find a way to deal with the mothership first... 
+000: @Oh! It flew off into outer space. [PROMPTINPUT]@A great success... sort of. 
+000: @Oh! You're such a charming boy! [PROMPTINPUT]@Why, I could just gaze at you forever... [PROMPTINPUT]@If anyone can turn our mansion back to normal, I'm sure it's you. [PROMPTINPUT]@Here. This is the key to get in. [PROMPTINPUT](giggle) 
+000: @My name is [NINTEN]. [PROMPTINPUT]@It used to be Bugerror Rosemary, though. 
+000: @[NINTEN]! You big dummy! [PROMPTINPUT]@Oh, sorry, I was talking to my son, not you.
+000: @The ghosts haven't quite left yet, but you're such a brave boy! [PROMPTINPUT]@In fact, I even renamed my son after you. 
+000: @This is Snowman Station, the last stop. 
+000: @I heard all the citizens of Easter were spirited away. 
+000: @My mommy's in the town of Easter. [PROMPTINPUT]@We haven't heard from her in days, [PROMPTINPUT]so Daddy and I are going there to look for her. 
+000: @Have you been to the haunted house in Halloween? 
+000: @You HAVE to tell me all about it sometime. [PROMPTINPUT]@I just love scary stories!
+000: @I don't wanna visit it, but you probably should. 
+000: @It's freezing here in Snowman. Be careful not to catch a cold. [PROMPTINPUT]@And be sure to brush your teeth, too. [PROMPTINPUT]@(cough cough) 
+000: 
+000: @Life is a game. [PROMPTINPUT]@Sometimes it's important to rest and pick up where you left off later. 
+000: @[ANA] hasn't been at school lately. [PROMPTINPUT]I'm really worried. 
+000: @I'm so worried about [ANA] that I can't sleep at night. 
+000: 
+000: @You don't have enough money. 
+000: @Oh, my! Your nose is running! 
+000: @Say, could I speak to the person playing this game? 
+000: @It's really important. 
+000: @Hello, this is [NINTEN]'s father. Thank you for always looking after him. [PROMPTINPUT]@I thought it would be nice to at least know your name. [PROMPTINPUT]@So, if you could tell me, that'd be great. 
+000: @Thank you for your time. [PROMPTINPUT]@I'm a busy man myself, so I must be going now. Goodbye! 
+000: @[NINTEN]... right? 
+000: @Come on, quit joking around. 
+000: @I've been waiting for you. [PROMPTINPUT]@I need your help to find my mom. [PROMPTINPUT]@Let's start by seeing what's happening in the town of Easter. 
+000: @You know, I had a dream about someone who looked just like you... 
+000: @[NINTEN]... Please stay with me. 
+000: @No! Stay with me... [PROMPTINPUT]Please... 
+000: @It's so quiet here. [PROMPTINPUT]@Would you like to dance? 
+000: @...You're right. This isn't the time for that. [PROMPTINPUT]I'm sorry for asking. 
+000: @[NINTEN]... [PROMPTINPUT]@Do you like me? 
+000: @What's wrong, [LOID]? 
+000: @The dragon is asleep. [PROMPTINPUT]@[NINTEN] can't wake it up just yet. 
+000: @The dragon sensed [NINTEN]'s presence and awoke. [PROMPTINPUT]@"NO ONE WEAKER THAN ME CAN HAVE THIS SHEET MUSIC." 
+000: 
+000: @My daughter [ANA] is timid, but she has a kind heart and mysterious power. 
+000: @You children WILL be victorious. [PROMPTINPUT]@I have faith that our prayers will be heard soon. [PROMPTINPUT]@For now, get some rest. 
+000: @[03 3E] found a pass that someone dropped. 
+000: @[NINTEN][03 17] climbed into the rocket. 
+000: @My grandpa lives in the Advent Desert. [PROMPTINPUT]@If you see him, tell him I say hi. 
+000: @I'm a nice guy's corpse. [PROMPTINPUT]@So don't worry, I won't attack you or anything like that. 
+000: @I make a useful signpost, wouldn't you say? 
+000: @You're one gutsy kid, talking to dead bodies... 
+000: @I'm a camel's bones. [PROMPTINPUT]@Would you like some tips for walking through the desert? 
+000: @Move your left foot before your right foot sinks. [PROMPTINPUT]@Move your right foot before your left foot sinks. [PROMPTINPUT]@It took me 100 years to figure this out. 
+000: @Oh, but I wanna tell you. [PROMPTINPUT]@Wouldn't you like to know? 
+000: @Advent Desert is the most boring part of this game. [PROMPTINPUT]@But watch out for land mines... 
+000: "Advent Desert" Why not take a sightseeing flight? 
+000: @I laid land mines in this desert during the war before last. [PROMPTINPUT]@I thought I dug 'em all up, but I just can't seem to find the last one. [PROMPTINPUT]@Best be careful out there. 
+000: @Oh, do you want to ride in my plane? 
+000: @Then it'll cost [MONEYSIGN][03 1E] for the lot of ya. [PROMPTINPUT]@Be sure to hang on to your ticket stubs. [PROMPTINPUT]@Collect ten of 'em and you'll earn a ride in my tank! [PROMPTINPUT]@Hahaha! You sure seem happy to hear that! 
+000: @It IS rather pricey, so I I can't say I blame ya. 
+000: @Oh! You collected ten ticket stubs! [PROMPTINPUT]@All right, then! I'll lend you my tank! [PROMPTINPUT]@Hahaha! You sure seem happy to hear that! 
+000: @You wrecked my tank. My precious, precious tank... (weep) [PROMPTINPUT]@You better pay me the money to have it fixed. [PROMPTINPUT]@It comes to [MONEYSIGN][03 1E]. [PROMPTINPUT]@Will you pay right now? 
+000: 
+000: @Oh, that's great. Well, be seein' ya! 
+000: @Now I'm mad! Grrrrrrr... 
+000: 
+000: @Mommy and Daddy are gone. 
+000: @I gard this gate. [PROMPTINPUT]Hoo goes there?! 
+000: @Y-you're suspishus! [PROMPTINPUT]D-don't make me beet you up...! (shiver shiver) 
+000: @The Garricksons' baby is weird. Like, REALLY weird. 
+000: @Let's see... Two plus three is five. [PROMPTINPUT]Eight minus four is four... [PROMPTINPUT]I study all the time. 
+000: @Mommy! I miss you! 
+000: @Daddy! I miss you! 
+000: @A big flying ship took all the grownups away. 
+000: @It's great having no grownups around! [PROMPTINPUT](sniffle sob) 
+000: @I want milk! 
+000: @I want milk, too! 
+000: @Milk! 
+000: @Bring my mommy and daddy back. Please. 
+000: @Oh, hello there. My name is Tom Garrickson. [PROMPTINPUT]@Introducing myself is my hobby. 
+000: @Mommy told me this baby has a special power. 
+000: 
+000: @Gaga googoo. 
+000: @I am this baby's consciousness. [PROMPTINPUT]@I have psychic powers, just as you do. [PROMPTINPUT]@I possess the ability to teleport. [PROMPTINPUT]@With it, you can return to anywhere you've been before. [PROMPTINPUT]@(The baby's mind taught [NINTEN] how to use teleportation PSI.) 
+000: 
+000: 
+000: 
+000: 
+000: @I think I heard the voices of my dad and the others coming from the mountains. [PROMPTINPUT]@But the mountains are way past the town of Valentine. [PROMPTINPUT]@It's too far away for me to go there. 
+000: @Aww, man. I can't give it to you. You're holding too much stuff. 
+000: @Time has passed, but you're still underage. 
+000: @You really oughtta watch where you're walking. [PROMPTINPUT]@Heheheh... 
+000: @Oh, that blasted Black Blood Gang...
+000: @"Black Blood Gang" is a long name, so everyone just calls it the BB Gang. 
+000: @You're not with the BB Gang, I hope... 
+000: @Everything's been nuts ever since black clouds appeared over the mountains. [PROMPTINPUT]The town and its people have all started to go crazy. 
+000: @Hey! You! [PROMPTINPUT]@You two, there! Are you two sweethearts? 
+000: @You love each other? Hurray! 
+000: @I dunno, are you sure love isn't budding deep inside your hearts? 
+000: @Hey, I got concert tickets. [PROMPTINPUT]@They cost [MONEYSIGN][03 1E]. Want some? 
+000: @Here you go! [PROMPTINPUT]@You're lucky. They're all sold out at the department store. 
+000: @Geez, you kids are cheap. 
+000: @I have some secret info you might find interesting. [PROMPTINPUT]@Want to hear it? 
+000: @The BB Gang's boss's full name is [TEDDY] Junior the 3rd. [PROMPTINPUT]@It's only a rumor, though. 
+000: @I'm sure you'll regret it later. 
+000: @No peeking in the dressing room. [PROMPTINPUT]@You'll wind up in a world of trouble if you do. 
+000: 
+000: @You're so cute. [PROMPTINPUT]@Oh, your name is [NINTEN]? [PROMPTINPUT]@Here, this beer's on me. Drink up! 
+000: @Oh, you're still a kid? [PROMPTINPUT]@Come back when you're older, then. 
+000: @Forget it. No more drinks from me. 
+000: @Now do you regret what you did? 
+000: @If you promise not to do it again, then you can go. [PROMPTINPUT]@But I think I'll hold on to your dangerous items. 
+000: @Then you can spend another day in there to cool off. 
+000: @Heheheh. [PROMPTINPUT]@I got my hands on some [03 1D]s the other day. [PROMPTINPUT]@Want one for [MONEYSIGN][03 1E]? 
+000: @You don't got enough money. [PROMPTINPUT]@Grrrr... 
+000: @[TEDDY]'s parents were killed by monsters in the mountains. [PROMPTINPUT]@He had always been such a nice boy before then. 
+000: @I wish [TEDDY] would go back to his old, gentle self. 
+000: @You gonna sing too? 
+000: @All right! Do something with lots of pizzaz! 
+000: @I guess you're a shy kid, huh? 
+000: 
+000: @[ANA]! [PROMPTINPUT]@Oh, nothing. I saw your name written on your hat, that's all. 
+000: @That girl you brought with you sure was cute. 
+000: @Thanks, that was a great song. [PROMPTINPUT]@Say, are you the guys who've been messin' with my buddies? 
+000: @You're goin' down! 
+000: @I know it was you! 
+000: @Ahahaha, you're really somethin'! [PROMPTINPUT]@[NINTEN], was it? [PROMPTINPUT]@Whadya say we call it a draw? [PROMPTINPUT]@I really wanna avenge my parents. [PROMPTINPUT]@How about we go to the mountains together? 
+000: 
+000: @Please give my [NINTEN] all the help you can.
+000: @[03 3E] used the Phone Card. 
+000: @Great! I'm sure we'll make a great team of punks! Cheers! 
+000: 
+000: 
+000: @Please! I know I can help you guys! 
+000: @Hello, this is your dad. [PROMPTINPUT]@I don't mean to butt in or anything... [PROMPTINPUT]But what's your problem?! [PROMPTINPUT]@Just press the A Button already! 
+000: @Hey, you. Four-eyes. [PROMPTINPUT]@You're not cut out for fightin'. [PROMPTINPUT]@Rest here and take it easy. [PROMPTINPUT]@I'll take your stuff, too. 
+000: 
+000: @There's no way we can beat 'em with brute strength alone. [PROMPTINPUT]@But we CAN bring peace back to the world. [PROMPTINPUT]@I just know it. 
+000: @[TEDDY]: What're you two blushin' for? [PROMPTINPUT]@Let's get goin' already!
+000: @I'm changing my clothes! You pervert! 
+000: @I'm [LOID]'s father. [PROMPTINPUT]@[NINTEN]'s dad asked for your name earlier. Did you give him the right name? 
+000: @Okay, great. [PROMPTINPUT]@Please keep [LOID] safe, okay? [PROMPTINPUT]@He IS a weakling, after all... 
+000: @Then let's go through the process again. 
+000: @You should visit the harbor before you go to Holy Loly Mountain. [PROMPTINPUT]@I really mean it. 
+000: @...Have you ever had strawberry-flavored tofu before? 
+000: @If you ever find any more, could you bring it to me? [PROMPTINPUT]I'll give you something nice in return. 
+000: @Oh. I wish they'd start selling it out here... 
+000: @Oh, strawberry-flavored tofu! Thank you! [PROMPTINPUT]@Now let me give you a nice gift in return. 
+000: 
+000: 
+000: @Stop by if you ever get hurt. [PROMPTINPUT]@It's not much, but I have food, medicine, and some plain beds here. 
+000: 
+000: @Say, [LOID]. [PROMPTINPUT]@Looks like it's finally time to use what little courage you have. 
+000: @Hello, kids. [PROMPTINPUT]@What do you need? 
+000: @MY NAME IS EVE. [PROMPTINPUT]I HAVE BEEN WAITING FOR YOU. [PROMPTINPUT]@MY FATHER WAS GEORGE. [PROMPTINPUT]HE WAS TAKEN TO THE ENDS OF THE UNIVERSE, [PROMPTINPUT]AND THEN HE RETURNED HERE. [PROMPTINPUT]@MY DUTY IS TO PROTECT YOU. 
+000: 
+000: 
+000: 
+000: 
+000: @Surely it must be hard carrying so much stuff... 
+000: @[NINTEN]! [NINTEN]! [PROMPTINPUT]@It looks like you got your head handed to you. [PROMPTINPUT]@So, how about giving it another shot? 
+000: @[NINTEN] decided to return after summoning all the courage and energy he had. [PROMPTINPUT]@Good luck, [NINTEN]!
+000: @[NINTEN] realized it had only been a bad dream. [PROMPTINPUT]@Good luck, [NINTEN]!
+000: @Give to who? 
+000: @That person can't carry any more stuff. [PROMPTINPUT]@Give it to someone else? 
+000: @You still have some stuff left here, so come get it later. 
+000: @Are you a friend of [NINTEN]? [PROMPTINPUT]@Really? I see. [PROMPTINPUT]@But these items belong to [NINTEN], [PROMPTINPUT]so I can't give them to anyone else. 
+000: @Has that weakling [LOID] kicked the bucket? 
+000: Welcome to Mother's Day 
+000: Cream Puff Zoo   Manager's Office 
+000: Ocean Overlook 
+000: @I don't think there's anyone here by that name, [PROMPTINPUT]but perhaps I'm mistaken... 
+000: @After being placed in the fountain, [PROMPTINPUT]the Red Weed turned into a very energizing Magic Herb. 
+000: @There's no one like that here! 
+000: @[03 1D], right? [PROMPTINPUT]Thanks! I really appreciate it! 
+000: @It is easy to lose items in the vicinity of this sign, so please be careful. 
+000: @Incredibly enough, you found dentures under the sign! 
+000: @Hi there! Not feeling well, are we? [PROMPTINPUT]@Then I can heal you up in a jiffy! 
+000: @Come to the science lab. 
+000: 
+000: @The mysterious phenomenon has stopped, for now... 
+000: @Listen closely, now. I'm going to explain how to use this. [PROMPTINPUT]@All right. Whatever you do, don't press... [PROMPTINPUT]@Oh, crap! I pressed it! 
+000: @I'll make you some [FAVFOOD], [NINTEN]. [PROMPTINPUT]@Eat some and scoot up to bed. 
+000: 
+000: 
+000: 
+000: @Oh me, oh my!  Oh me, oh my!   Oh me, oh my! [PROMPTINPUT]@My dear Pippi's gotten lost. [PROMPTINPUT]@If you're going into town, please tell the mayor for me, okay? [PROMPTINPUT](sniffle sniffle sob sob) 
+000: @What would you like to sell? 
+000: @I can buy your [03 1D] for [MONEYSIGN][03 1E]. [PROMPTINPUT]@Is that okay with you? 
+000: @[03 3E] took out his great-grandfather's diary and read these words aloud: [PROMPTINPUT]"...That which was left behind by the ship that soars the heavens." 
+000: 
+000: 
+000: @You're lying. [PROMPTINPUT]@I can see right through your tricks. 
+000: @(The audience is unhappy.) [PROMPTINPUT]@You said there'd be a trio! There ain't three people here! [PROMPTINPUT]Boo! Boo! 
+000: @Which item will you leave with me? 
+000: 
+000: @The dragon was in a very deep sleep. 
+000: @([03 3E] looked over the sheet music.) 
+000: @Can I help you? 
+000: 
+000: @Your [03 1D]? [PROMPTINPUT]@I'll take good care of it. [PROMPTINPUT]@Do you want me to hold on to anything else? 
+000: @Okay, then. Be careful out there. 
+000: @Your [03 1D]? [PROMPTINPUT]@Sure thing. Take good care of it, okay? [PROMPTINPUT]@Is there anything else you want to take with you? 
+000: @There was a landslide up by Santa Claus Station, so the train can't get through. 
+000: @The [03 1D], yes? 
+000: @It looks you can't hold any more items. 
+000: 
+000: @Oh. You don't seem to have enough money. 
+000: @Oh, my. It looks like you can't hold any more items. 
+000: @You don't have enough money. [PROMPTINPUT]@Come back again when you do. 
+000: @Bye! Take care! 
+000: 
+000: @Oh, my. You can't carry any more things. [PROMPTINPUT]@In that case, I'll give it to you the next time I see you. 
+000: @Here you go! Medicine! 
+000: @Okey-doke! Good night! 
+000: 
+000: @WITHDRAW HOW MUCH? 
+000: @DEPOSIT HOW MUCH? 
+000: @Okay! Let's go back to town now! 
+000: @Oh, no. It looks like you can't carry any more items. [PROMPTINPUT]@That's too bad. 
+000: @You can't carry any more stuff? [PROMPTINPUT]@That's too bad. 
+000: @Looks like you can't carry any. Come by later when you can. 
+000: 
+000: @Which course would you like? 
+000: 
+000: 
+000: @I can't talk very well without my dentures. 
+000: @Looks like you still don't have enough. 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: @You seem to be having a tough time... [PROMPTINPUT]I'm so worried... 
+000: @Good luck! 
+000: @Who's your leader?! [PROMPTINPUT]I'm gonna teach 'im a lesson!! 
+000: @The BB Gang members are doing just fine. 
+000: 
+000: @Please don't make me angry. 
+000: @[03 3E] secretly pocketed it. 
+000: @Oh, you don't seem to have enough money. 
+000: @Oh, it looks like you can't carry any more things. 
+000: @I am the professor's Assistant A. [PROMPTINPUT]@I, too, would love to try some strawberry-flavored tofu. 
+000: @Oh, it looks so good! [PROMPTINPUT]@Thanks, I appreciate it. [PROMPTINPUT]As a token of my gratitude, I'll share some information I heard. [PROMPTINPUT]@There's an amazing robot at the bottom of a lake on Holy Loly Mountain. [PROMPTINPUT]@I bet it still works, too! 
+000: @I realize I look like Assistant A, but I'm actually Assistant B. [PROMPTINPUT]@I really, truly want to try strawberry-flavored tofu too. 
+000: @Oh! Oh! I'm so happy! [PROMPTINPUT]@Please, take these Curse Words with you. 
+000:   Medicine  Sleep
+000: @You can't hold any more stuff... [PROMPTINPUT]@Come get it later, then. Don't forget! 
+000: @You're here for your Big Bag, right? [PROMPTINPUT]I've been expecting you. 
+000: @Here, this is for you. It's a Big Bag. 
+000: @It's no big deal. [PROMPTINPUT]@The real problem is my wife. [PROMPTINPUT]@She sleeps until noon every day and she never packs me a lunch. [PROMPTINPUT]@Isn't that just terrible? 
+000: @Oh! [ANA] is dead! 
+000: @Thank you for everything. [PROMPTINPUT]@As a token of my gratitude... [PROMPTINPUT]I'll be praying for your success. 
+000: @I'm Laura. 
+000: 
+000: 
+000: 
+000: @Oh, my! It's [NINTEN], the hero! [PROMPTINPUT]I never expected you to return all alone... [PROMPTINPUT]@Are you taking a break? 
+000: @Oh, little girl. [PROMPTINPUT]@This is no place for a child like you. 
+000: 
+000: @Oh, [NINTEN]! How are you doing? 
+000: @Good morning. It looks like you slept well. 
+000: @Please come again, okay? Promise? 
+000: @Good morning! 
+000: @Be careful. A lot of the monkeys here like to lie. 
+000: @Heheh. Do I look like a monkey? 
+000: @...I'm actually a tanuki, also known as a racoon dog. [PROMPTINPUT]@I'm in disguise. 
+000: @Darn. [PROMPTINPUT]@You have really good eyes, you know that? 
+000: @You should quit playing. 
+000: @Are you really sure about that? 
+000: @Oh. Oh, well, then. 
+000: @You managed to catch me. [PROMPTINPUT]You're really something. [PROMPTINPUT]@Here's something nice for you. 
+000: @Turn right and then left to find something nice. 
+000: @It seems peaceful in here, but it's also way too dark. 
+000: @Straight! Just walk straight! [PROMPTINPUT]The truth is somewhere straight ahead. 
+000: @I'm a lady, you know. [PROMPTINPUT]@You shouldn't walk up to a lady so casually and start talking. [PROMPTINPUT]Don't you agree? 
+000: @Actually, I'm a man. 
+000: 
+000: @La-la la la-la, la la la la la... [PROMPTINPUT]@Oh, don't pay any attention to this melody. 
+000: @How long has it taken you to get this far? [PROMPTINPUT]@Oh, I just thought I'd ask. 
+000: @I got some good information for you. You interested? 
+000: @Well, basically... Treasure your friends. [PROMPTINPUT]@That's all I have to say. 
+000: @Fine, then! [PROMPTINPUT]@You have no intellectual curiousity at all! 
+000: @Stop! You must not go this way! 
+000: @I don't trust any of the monkeys here. [PROMPTINPUT]All they ever do is lie. [PROMPTINPUT]@Go right, left, left, and then right. 
+000: @Turn back! [PROMPTINPUT]@Or, if you don't feel like turning back, then just keep going! 
+000: @I think you'll meet a new friend in a city with an ocean view. 
+000: @I'm a shy monkey. [PROMPTINPUT]@Talking isn't really my thing. [PROMPTINPUT]@......Okay? [PROMPTINPUT]@...... 
+000: @Hubba hubba. Heaven must be missing an angel. 
+000: @Don't assume that all monkeys are liars. 
+000: @I'm the boss monkey. It annoys me how the others lie all the time. [PROMPTINPUT]@Go straight ahead and you'll find the exit to your right. 
+000: @Boy, did I mess up... [PROMPTINPUT]@I must've made a serious mistake to wind up here. 
+000: @Help! 
+000: @Oh, the phone! Could you get it, [NINTEN]? 
+000: @I'm Abbot, the mayor...'s assistant. [PROMPTINPUT]@The mayor is right over there. 
+000: @I have a secret to share with you later. 
+000: @Oh, you came to stay the night again? 
+000: @Oh, a traveler! 
+000: @If you think you're supposed to bust the ghosts in the haunted house... [PROMPTINPUT]you're gravely mistaken. [PROMPTINPUT]@No, there's actually a melody there. 
+000: 
+000: @I have faith that [ANA] is doing well somewhere out there.
+000: @Hey, you're underage. I'm taking you into custody. 
+000: 
+000: 
+000: @Say, I heard you stepped on a land mine. [PROMPTINPUT]@I stepped in dog crap once myself. 
+000: @I heard you stepped in dog crap in some place called the Advent Desert. [PROMPTINPUT]@Could you get any lamer?! 
+000: Certificate [PROMPTINPUT]This hereby certifies that:    [YOURNAME] [PROMPTINPUT]has stepped on the land mine in the Advent Desert. [PROMPTINPUT]Please keep this location a secret from other players. [PROMPTINPUT]   -Shigesato Itoi  
+000: @It looks like you slept well. [PROMPTINPUT]@Where are you off to today? [PROMPTINPUT]@Well, take care! 
+000: @Oh, you're not here to visit someone? [PROMPTINPUT]@If you are the patient, come into the back room. 
+000: @We don't have anyone named that in our hospital. 
+000: @The cold this year is especially bad. [PROMPTINPUT]@It's made me so scrawny... 
+000: @I don't have a cold. [PROMPTINPUT]Cough cough. [PROMPTINPUT]@Oh, that wasn't a cough. [PROMPTINPUT]it's just something I say out of habit. [PROMPTINPUT]@Cough cough. 
+000: @Exhausted? Go to the hotel. [PROMPTINPUT]@Sleepy? Go to the hotel. [PROMPTINPUT]@That's all there is to say, really. 
+000: @Oh, hi. Heh heh. 
+000: @This is a restaurant, tra-la-la! [PROMPTINPUT]@A happy restaurant, ha-ha-ha! [PROMPTINPUT]@Are you feeling happy? 
+000: @Are restaurant owners everywhere so musical, I wonder? 
+000: @I think [FAVFOOD] is great, too. 
+000: @The hotels around here are really no different from the ones in Mother's Day, [PROMPTINPUT]yet they cost so much more. [PROMPTINPUT](mutter grumble) 
+000: @This hotel is cheap. [PROMPTINPUT]@But that's about the only thing it has going for it. 
+000: @There was a landslide and now big rocks are blocking the railroad tracks. [PROMPTINPUT]@The train can't get through. 
+000: @You understand animal talk, right? [PROMPTINPUT]@Then I'll give you a hint: try checking me. [PROMPTINPUT]@Woof! 
+000: @You don't have enough money. That's too bad. [PROMPTINPUT]@Please come again some other time. 
+000: @Welcome! [PROMPTINPUT]Please have a look at our menu. 
+000: @Thank you. [PROMPTINPUT]One order of [03 1D] to go! 
+000: 
+000: 
+000: @He... [PROMPTINPUT]...might never come again. 
+000: @Have fun! 
+000: @Hey, waiter! Where's the wine list I asked for? 
+000: @I want to try some [FAVFOOD]. 
+000: 
+000: 
+000: @I'd like to help the zombies become friendly by teaching them about God. [PROMPTINPUT]@But... Zombies freak me out! 
+000: @It's me, Pippi! [PROMPTINPUT]@We really did meet again, [NINTEN]! [PROMPTINPUT]@I went out to play again. That's why I'm here. [PROMPTINPUT]Don't tell my mom, though. 
+000: @Oh, aren't you [NINTEN], that snot-nose kid who sat next to me in kindergarten? [PROMPTINPUT]@Or are you someone else? 
+000: @Please don't dine-and-dash. [PROMPTINPUT]Sorry if that comes off as distrustful... 
+000: @You know, you look like you have a big appetite. 
+000: 
+000: @With the tracks ruined, the train has stopped running. [PROMPTINPUT]@Quit with all the pesky questions, will ya? [PROMPTINPUT]@Geez, you're persistent. [PROMPTINPUT]@You're gonna make me cry with all your questions. 
+000: @Don't just stand there! Get moving! 
+000: @You look like you've been through a lot. [PROMPTINPUT]@Well, now you can sit back, relax, and regret it all. 
+000: @I've heard about all the great things you've been up to. [PROMPTINPUT]@You must really be brave, huh? 
+000: @Canary Village is north and west of here. [PROMPTINPUT]@You should definitely go visit it - admission is free! 
+000: @There's this really pretty secretary at the town hall. [PROMPTINPUT]@She's the first floor receptionist. 
+000: @I'm starving. 
+000: @It's like I told my son, "If you have time to play Nintendo games... [PROMPTINPUT]then you should be studying instead!" 
+000: @You have a really cheerful look on your face. 
+000: @Duncan is trying to open a strip club in this town. [PROMPTINPUT]@I'm absolutely against it! 
+000: @Someday I wanna be a doctor so I can help people. [PROMPTINPUT]@And so I can make loads of money. 
+000: @Huh? Really? [PROMPTINPUT]This is a respectable survey, though... 
+000: @Go to school, you! [PROMPTINPUT]@You're a student, aren't you?! 
+000: @How are we going to get the rocks off the train tracks? [PROMPTINPUT]@If we let city hall take care of it, they'll be there well into next year! 
+000: @I heard there's a gigantic rocket in the Duncan Factory way up north. 
+000: @Don't assume I'm just an ordinary old guy. [PROMPTINPUT]@Although I actually am. 
+000: @You know... [PROMPTINPUT]@If it were up to me... [PROMPTINPUT]@I'd probably use a Duncan Factory rocket to blow up the rocks on the tracks. 
+000: @My husband is an important man at Twinkle Elementary School. [PROMPTINPUT]@He's so important that he doesn't eat packed lunches from home. 
+000: @Have you been to the Sweet Little Factory? 
+000: @You know how there are scary monsters all outside town? [PROMPTINPUT]@I'm worried to death that they'll steal my money. 
+000: @La-la-laaa... [PROMPTINPUT]Into the wide blue sky... [PROMPTINPUT]dandelion fuzz does fly... [PROMPTINPUT]La-la-laaa! [PROMPTINPUT]@I love music more than anything else! 
+000: @The school janitor has the key to the roof, [PROMPTINPUT]but he won't give it to anyone. 
+000: @The old fortunetelling man on top of the mountain is really friendly. [PROMPTINPUT]@He'll give you as much stuff as you can possibly carry! 
+000: @I walked through the tunnel once when I was young. [PROMPTINPUT]@I went to see a dead body. 
+000: @This is a residental area. [PROMPTINPUT]Try to keep the noise level down when you're walking around. 
+000: @I bet you've thrown food into the fields to get rid of it, huh? [PROMPTINPUT]@Well, I guess it can't be helped, since this IS a game and all. 
+000: @Whoa...!!! [PROMPTINPUT]@I'm... doing research about baths. [PROMPTINPUT]@It's for a university project. [PROMPTINPUT]@...It's the truth! I swear! 
+000: @Man, having a bike would be so convenient. 
+000: @I'm starving... [PROMPTINPUT]...Is what you expected me to say, huh? [PROMPTINPUT]@Well, don't worry, I won't. [PROMPTINPUT]I AM starving, though.
+000: @I love the city. [PROMPTINPUT]@I love the trendy, fashionable lifestyle. 
+000: @I don't believe in psychic powers at all. 
+000: @I'm an overshadowed man. [PROMPTINPUT]@Sometimes it even seems like I've disappeared completely. 
+000: @I love this town. [PROMPTINPUT]@Halloween, the next town over, is scary, though. 
+000: @Do you believe in God? 
+000: @If you have really strong cold medicine, they'll buy it for a lot at the store. 
+000: @I'm a cheery mailman, la-la-la! [PROMPTINPUT]@Do you know where the Rosemarys moved to, la-la-la? 
+000: @The mailman's trying to find the Rosemarys' new address. [PROMPTINPUT]@If you see him, tell them they live much further to the east. [PROMPTINPUT]@La-la-la! 
+000: @That Rosemary girl gives me the creeps! 
+000: @The whole downtown area was so full of monsters that everyone fled here. 
+000: @Can I help you? 
+000: @I'm a fortuneteller in training. [PROMPTINPUT]@I can see you returning to Santa Claus Station from this train station. [PROMPTINPUT]@I'm not 100 percent sure about that, though. 
+000: @[ANA] lives in a temple... Err, I mean a church. [PROMPTINPUT]@Oh, you already knew that? 
+000: @There's a church in the mountains further to the east. [PROMPTINPUT]@(cough... cough...) 
+000: @You kids sure are energetic and carefree, wearing such light clothes out here! [PROMPTINPUT](cough... cough...) 
+000: @If you run into some camel bones in the Advent Desert, tell them I say hi. [PROMPTINPUT]@That camel and I go way back. 
+000: @I can treat minor injuries here. [PROMPTINPUT]@But if you're sick, you'll need to visit an actual hospital, okay? [PROMPTINPUT]
+000: @I bet [LOID] will have a computer-related job in the future. 
+000: @Shh! Keep quiet in the library! [PROMPTINPUT]@A-a-a-CHOO! 
+000: @Oh, you must be here because you heard I'm the world's greatest fisherman. [PROMPTINPUT]@Well, I wouldn't say I'm THAT great, but... [PROMPTINPUT]@Oh, how about I tell you about some of my great exploits for an hour or so? 
+000: @Get outta my face, twerps! 
+000: @Hey, you! 
+000: @My HP may be low, but I'm gonna give this everything I got! 
+000: @In a fight between you and me... [PROMPTINPUT]I'm pretty sure I would lose. 
+000: @I'm tough. [PROMPTINPUT]@But I'm mostly all talk. 
+000: @Our boss [TEDDY] could totally beat you with just his pinkie if he wanted to! 
+000: @Did you make sure to read the sign? 
+000: @If you ever come across a cactus with a face on it in a desert somewhere... [PROMPTINPUT]...that would be utterly terrifying. 
+000: @Talk to the fisherman and he'll wind up talking your ears off. 
+000: @Any first-grader can do a cartwheel, wouldn't you say? 
+000: @Please take this elevator up to the observation deck. 
+000: @I saw smoke rising from an island you can see from the observation deck. [PROMPTINPUT]@I wonder if someone lives there. [PROMPTINPUT]@Man, if only I'd looked through the telescope... 
+000: @I can't do a cartwheel. 
+000: @I still don't really know how to carry numbers in subtraction. 
+000: @I hear strawberry-flavored tofu is all the rage in big cities. [PROMPTINPUT]@I'd love to try some. 
+000: @I'm hungry. 
+000: @Don't assume I'm an ordinary old guy. [PROMPTINPUT]@...Is what my dad likes to say all the time. 
+000: @You're late for class! 
+000: @Did you see a strange teacher in the science lab? [PROMPTINPUT]@...Because I did.
+000: @Have you played Dragon Quest 4? [PROMPTINPUT]@I'm still having a hard time with the third one. 
+000: @Welcome. [PROMPTINPUT]@What can I get you? 
+000: @I'm very sorry. That item is currently sold out. 
+000: @Oh, you've changed your mind? [PROMPTINPUT]@That's too bad, but I hope you'll come back soon! 
+000: @Thank you. [PROMPTINPUT]@Please come again. 
+000: @Oh, you've changed your mind? [PROMPTINPUT]@Well, please come again. 
+000: @I'm so glad that you recovered, [03 1B]. [PROMPTINPUT]@Come back any time you need. 
+000: @Oh, isn't that your friend, though? [PROMPTINPUT]@They really could die, you know... 
+000: @Yes, yes. [PROMPTINPUT]@I can examine you for [MONEYSIGN][03 1E] per person. [PROMPTINPUT]@Is that agreeable with you? 
+000: @You really don't need treatment? [PROMPTINPUT]@All right, then. 
+000: @I can find nothing wrong with that person. 
+000: @There, all better! 
+000: 
+000: @Though you may not believe it, I'm a healer. [PROMPTINPUT]@What do you want me to do? 
+000: @Oh, okay. If you say so. 
+000: @I need to charge you [MONEYSIGN][03 1E]. Okay? 
+000: @Welcome. @It's [MONEYSIGN][03 1E] per night here. [PROMPTINPUT]@Will you be staying? 
+000: @Oh, that's too bad. [PROMPTINPUT]@Well, come back again. 
+000: @Pleasant dreams! 
+000: @Good morning. [PROMPTINPUT]@Please come back again. We look forward to it. 
+000: @[03 1B] was just brought in, and is still unconscious. [PROMPTINPUT]@Please pay [MONEYSIGN][03 1E] for the doctor's fee. 
+000: @Who are you here to see? 
+000: 
+000: @Dad's not home. [PROMPTINPUT]@I don't understand money, but I can do other stuff. [PROMPTINPUT]@So don't worry. You can stay here tonight if you want. 
+000: @Good morning. [PROMPTINPUT]@Stay again sometime, okay? [PROMPTINPUT]@It gets lonely here all by myself. 
+000: @Oh? You're not going to stay? [PROMPTINPUT]@But I can do this work just fine even when Dad's gone... 
+000: @Oh, I can't let you in without tickets. 
+000: @But... There was nothing there. 
+000: 
+000:   Store     Take
+000: @You don't have any items. 
+000: @You haven't left any items with me. 
+000: @Hold on... [PROMPTINPUT]@The storeroom is full, [PROMPTINPUT]so I can't store any more stuff. 
+000: @WELCOME 
+000: @INSUFFICIENT FUNDS 
+000: 
+000: @NOT ENOUGH MONEY 
+000: @SORRY, BUT YOUR WITHDRAWAL AMOUNT HAS EXCEEDED YOUR ACCOUNT BALANCE 
+000: @THANK YOU 
+000: @There's an old music box hidden inside the doll. [PROMPTINPUT]@[03 3E] opened the music box. [PROMPTINPUT]@A broken melody began to play. 
+000: @ ??? 
+000: @Thank you. 
+000: @I have a great source for weapons. [PROMPTINPUT]@One of these days, I might get ahold of some really amazing ones... 
+000: 
+000: @[NINTEN]'s party won the battle. 
+000:   WITHDRAW  DEPOSIT
+000: @CURRENT BALANCE: [MONEYSIGN][03 19][DOUBLEZERO] 
+000: @It's locked. 
+000: @The key doesn't fit. 
+000: @[NINTEN][03 17] unlocked the door and went inside. 
+000:   Save      Nothing
+000:   Continue  End
+000: @[03 3E] picked up the telephone. 
+000: @I'm sorry, but you don't seem to have enough money. 
+000: @Oh, I'm so sorry. You don't have enough money. 
+000: @This is only my humble opinion, but you probably shouldn't carry any more things. 
+000: @Okay! All better! [PROMPTINPUT]@Amazing, huh? 
+000: @I'm very sorry. I can't buy your [03 1D]. 
+000: @Laura the songbird was so happy to see her baby again that she began singing.[SETFLAG_givenCanary] 
+000: @[NINTEN] learned the melody. 
+000: @The canary is singing. 
+000: @The monkey stole the Zoo Key. 
+000: @The robot is old and rusted. 
+000: @The instant it sensed [NINTEN], the robot sprang to life. 
+000: @[03 1B]: [03 1E] EXP. 
+000: @Good luck. 
+000: 
+000: @Touching the fountain's water revitalized you. 
+000: 
+000: @Pippi! [PROMPTINPUT]@Oh, thank goodness! She's all right! [PROMPTINPUT]@I think the mayor is looking for her too. [PROMPTINPUT]@You should probably go and see him. 
+000: @Someone's in here! ...Wait, this isn't a bathroom. [PROMPTINPUT]@I have my hands full at the moment. Come back later. 
+000: @Who's been poisoned? 
+000: @Who shall I soften? 
+000: @They haven't been poisoned! 
+000: @Wait, they haven't been turned to stone! 
+000: @They used to make loads of Bottle Rockets there. 
+000: @My wife was the very first Miss Middle of Nowhere. 
+000: @Okay, I unlocked the door. [PROMPTINPUT]@The view from the roof is really nice, by the way. 
+000: @Let's go visit Duncan's Factory later. [PROMPTINPUT]@I hear there's a really incredible rocket there. 
+000: @I bet people have been spreading rumors about how I'm a "weakling stinkling" or a "stupid head"... 
+000: @Oh... It's morning now. 
+000: @Cherish your elders, you hear? [PROMPTINPUT](cough cough) 
+000: @Hey, pipsqueak! [PROMPTINPUT]Who said you could talk to me?! 
+000: @I heard there's a Famicom game called "MOTHER" now. [PROMPTINPUT]@They totally copied that from John Lennon, didn't they? 
+000: 
+000: @An old lady at the Reindeer train station has something very important to give you. [PROMPTINPUT]@Have you met her yet? 
+000: @This is my final hint. [PROMPTINPUT]@You know the guitar player in Magicant? [PROMPTINPUT]Be sure you listen to his song! 
+000: @If something ever seems strange, be sure to "Check" all around. 
+000: @The singing monkey sang with passion. 
+000: @The cactus sang. [PROMPTINPUT]@For some reason, it sang. [PROMPTINPUT]@It continued to sing with emotion. 
+000: @The keys on the piano began to play all by themselves. 
+000: @With no hesitation at all, the dragon showed its old sheet music. [PROMPTINPUT]@The song went like this... 
+000: @EVE was destroyed and ceased functioning. [PROMPTINPUT]@Music began to emanate from EVE's chest area. 
+000: The world's only singing monkey! [PROMPTINPUT]Right here at Cream Puff Zoo! 
+000: @There's a big lock on the door at the top of the stairs. 
+000: @I'm going to stay here and help the people of Snowman. [PROMPTINPUT]Please be careful on your way... 
+000: @You don't have enough money. 
+000: @I'm too scared. [PROMPTINPUT]@You lead the way, [NINTEN]. 
+000: @Upon closer look, the gate's lock was broken. [PROMPTINPUT]@[03 3E] opened the gate. 
+000: @Oh! [TEDDY]! What's up? 
+000: @You better hurry and get [TEDDY] back on his feet! 
+000: @Oh, whoops. [PROMPTINPUT]@I can't hold on to your [03 1D]. [PROMPTINPUT]@I'm selfish like that. 
+000: Here rests Flying Man, the courageous warrior and eternal servant to [NINTEN]. 
+000: Here rests Flying Man, the courageous warrior and inner strength of [NINTEN]. 
+000: Here rests Flying Man, the courageous warrior and virtuous heart of [NINTEN]. 
+000: Here rests Flying Man, the courageous warrior and great sorrow of [NINTEN]. 
+000: Here rests Flying Man, the courageous warrior and flesh and blood of [NINTEN]. 
+000: @No one's allowed past here until the incident at the zoo is resolved. [PROMPTINPUT]@Those were the mayor's orders. [PROMPTINPUT]@It's kind of a heavy-handed way of doing things though, if you ask me. 
+000: @There's a strange rock in a mountain cave past here. [PROMPTINPUT]@In fact, it's so strange that you should go check it out. 
+000: @Say... You know how to use telepathy or whatever, right? [PROMPTINPUT]@Everyone's talking about you, you know! [PROMPTINPUT]@You're a real celebrity! 
+000: @By any chance are you on your way to Snowman? 
+000: @I found this hat. I think it belongs to a girl in Snowman. [PROMPTINPUT]@Deliver it to her, if you'd be so kind. 
+000: @Oh, that's too bad. I was hoping to ask you a favor. 
+000: @The cool boy sang a very... unique song. [PROMPTINPUT]@Not even [NINTEN] could learn this melody. 
+000: @I'm sorry to bother you, but could I ask you some survey questions? 
+000: 
+000: @Do you feel that train tickets are too expensive? 
+000: @Have you ever used a Megaphone? 
+000: @Thank you for your cooperation. [PROMPTINPUT]@For your time, please take this Phone Card. 
+000: @I'm sorry to bother you, but... could you... [PROMPTINPUT]@Oh! You've already taken the survey, haven't you? 
+000: @Hearing the cries from your heart, a helpful old man appeared. 
+000: @[03 3E] opened the coffin. [PROMPTINPUT]@Inside the casket was...!! 
+000: @[NINTEN] peered into the telescope. 
+000: @The ocean was beautiful. 
+000: @Something sparkled on the island in the distance! 
+000: @Something leapt out of the capsule![STARTBATTLE_19] The animals of the Zoo appear to have calmed down.[SETFLAG_starmanJrDead]   
+000: @[ANA]: Dad... Goodbye for now... [PROMPTINPUT]The next time I see you, Mom will be with me! [PROMPTINPUT]...Please pray for us. 
+000: 
+000: @Who are you talking to? 
+000: @What? 
+000: @No problem here. 
+000: 
+000: 
+000: 
+000: @If you're looking for a weapon, check these out! 
+000: @Thank you! 
+000: 
+000: @[03 1A] used the [03 1C]. 
+000: @[03 1A] can't use the [03 1C]. 
+000: @Please don't do that. 
+000: @[03 1A] equipped the [03 1C]. 
+000: @[03 1A] can't equip the [03 1C]. 
+000: @[03 1A] threw away the [03 1C]. 
+000: @You shouldn't throw away the [03 1C]. 
+000: @[03 1A] gave the [03 1C] to [03 1B]. 
+000: @The [03 1C] can't be given away. 
+000: @[03 1B] can't hold any more stuff. 
+000: @Nothing happened. 
+000: @[03 3E] opened the present. 
+000: @Found [03 1D]. 
+000: @[NINTEN][03 17] took the [03 1D]. 
+000: 
+000: @But you can't hold any more stuff. 
+000: 
+000: 
+000: 
+000: @It's empty... 
+000: Cure Poison   Soften
+000: South: Mother's Day North: Cream Puff Zoo  
+000: Canary Village ahead  Let's nurture nature together! 
+000: Mother's Day Town Hall 
+000: West:  Ocean Observatory North: Valentine Harbor  Keep our ocean clean! 
+000: West: Valentine East: Holy Loly Mountain 
+000: West:        Healer's House Bridge Path: Cemetery  Walking alone is dangerous! 
+000: West: Mother's Day East: Thanksgiving 
+000: Cream Puff Zoo   700 meters west 
+000: Snowman Church ahead 
+000: West:  Valentine South: Swamp 
+000: Thanksgiving Main Street South: Twinkle Elem. School 
+000: [NINTEN]'s house 
+000: Welcome to Thanksgiving!  West:  Mother's Day North: Santa Claus Station 
+000: West:  Healer's House East:  Reindeer Station South: Reindeer 
+000: West: Downtown Halloween East: Halloween residential       area 
+000: East: Swamp 
+000: Private property of the Rosemary family 
+000: Valentine Police Department 
+000: Coming soon: Strip Theater        -Duncan Construction 
+000: @I HEARD MY BROTHER FELL HONORABLY IN COMBAT. [PROMPTINPUT]@HE WAS BURIED AND GIVEN A HEARTFELT FUNERAL. [PROMPTINPUT]@IT'S MY TURN NEXT. 
+000: @I CAN'T WAIT TO SERVE YOU. 
+000: @I AM Flying Man. [PROMPTINPUT]@I WILL BE YOUR STRENGTH. [PROMPTINPUT]THAT IS WHY I WAS BORN. 
+000: @They finally lifted the orders for martial law. [PROMPTINPUT]@They overreacted a little bit, if you ask me. 
+000: @There's an old rocket here. 
+000: @You came to get your items, right? [PROMPTINPUT]@Okay, here you go! 
+000: @I gave you all your items. [PROMPTINPUT]But come seem me again sometime! 
+000: @I'm Minnie. 
+000:   Refresh   Soften
+000: @[TEDDY]: You two probably wanna be alone, huh? [PROMPTINPUT]I'll just be catchin' some Zs over here, then. 
+000: @Oh no! I'm too late! 
+000: @...I'm so glad. 
+000: @[TEDDY]: Whoa! What the heck was that sound?! 
+000: @[TEDDY]: You gotta be kiddin' me! 
+000: @The boat's engine seems to be in poor condition. 
+000: @[NINTEN] can't get it to work. 
+000: @But [LOID] managed to get it running. 
+000: @The [03 1D], right? [PROMPTINPUT]@I'll be sure to send it to [NINTEN]'s house. [PROMPTINPUT]@Is there anything else you want to store? 
+000: @What are we trapped inside these cramped things for? [PROMPTINPUT]@What's going to happen to us? 
+000: Sweet Little Factory 
+000: @The mothership brought us to the top of the mountain, [PROMPTINPUT]and when we came to, we were stuck in these things... [PROMPTINPUT]@Please, do something! 
+000: @Are you sure it's spelled right? 
+000: @The strange sound driving the animals crazy stopped. [PROMPTINPUT]@The zoo is safe once more. 
+000: 
+000: @This tank is my prized possession. Try not to break it, okay? 
+000: @A key to the basement is hanging from the dog's collar. 
+000: @Heh heh heh! I'm a meddlesome mouse! [PROMPTINPUT]@In towns, there are some houses you can go inside and some you can't. [PROMPTINPUT]@Houses with round doors or signs on them are the ones you can go into. [PROMPTINPUT]@If you try to go into any of the other ones, you'll just hit your head. [PROMPTINPUT]@Well, bye! 
+000: 
+000: @Remember, teleportation isn't something to be toyed with. 
+000: @I had loved him as if he were my own child, too... 
+000: @He would always wag his tail as a baby... [PROMPTINPUT]@I would sing him a lullaby, but then... 
+000: @Oh, George! [PROMPTINPUT]This is your wife, Maria. [PROMPTINPUT]@I know you've been waiting... [PROMPTINPUT]I'm on my way to join you in heaven now... 
+000: @PLEASE INSERT ATM CARD 
+000: @You shouldn't carry around that much cash. 
+000: @This'll return you back to your previous save data. Is that all right? 
+000: @You said yes, but you don't have a save file! [PROMPTINPUT]Ahahaha! 
+000: @His breathing is rough. He looks like he's in pain. 
+000: @You don't have any friends to give items to yet. 
+000: @Oh, the [03 1D]? [PROMPTINPUT]@Here you go. Take good care of it. [PROMPTINPUT]@Is there anything else you want to take with you? 
+000: @It looks like you can't carry any more stuff. [PROMPTINPUT]@Should I give this to someone else? 
+000: @The storeroom is full. 
+000: @Once Queen Mary finished speaking to [NINTEN], she disappeared into the wind. [PROMPTINPUT]And then the land of Magicant itself vanished without a trace. [PROMPTINPUT]@Magicant had actually been an illusion born of Mary's conciousness. 
+000: @It was I who called you here. [PROMPTINPUT]@[NINTEN]! [PROMPTINPUT][ANA]! [PROMPTINPUT][LOID]! [PROMPTINPUT][TEDDY]! [PROMPTINPUT]@And all courageous children out there... [PROMPTINPUT]@The time is now! 
+000: @Shh! I'm just like you! I'm from the other world! [PROMPTINPUT]@For some money, I'll share some souvenirs of Magicant with you. [PROMPTINPUT]@Hee hee hee! 
+000: @You'll end up like me if you don't take the train... 
+000: @Do you need anything else? 
+000: @Welcome, [NINTEN]... [PROMPTINPUT]@I always had faith that you would make it this far. [PROMPTINPUT]@Long ago, your great-grandmother Maria filled her eight melodies [PROMPTINPUT]with all the love she could and scattered them around as gifts for you, [PROMPTINPUT]even though she had never seen you before... [PROMPTINPUT]
+000: @Bathed in the glow of the crystal, everyone was completely healed! 
+000: 
+000: 
+000: 
+000: Big Bag
+000: Phone Card
+000: BreadCrumbs
+000: Repel Ring
+000: ITEM 05
+000: Memory Chip
+000: 
+000: 
+000: 
+000: Knife
+000: Surv. Knife
+000: Basic Sword
+000: Katana
+000: Stun Gun
+000: Toy Air Gun
+000: Cracked Bat
+000: Teeball Bat
+000: Sandlot Bat
+000: HallFameBat
+000: Frypan
+000: DX Frypan
+000: Best Frypan
+000: Slingshot
+000: Boomerang
+000: Bug Spray
+000: Super Spray
+000: Flea Bomb
+000: Love Words
+000: Curse Words
+000: Slime Gen.
+000: Flashdark
+000: Stone Spray
+000: Stinger
+000: Flamethrowr
+000: Bomb
+000: Super Bomb
+000: Laser Beam
+000: Death Beam
+000: ITEM 39
+000: Rope
+000: 
+000: 
+000: 
+000: 
+000: Peace Coin
+000: ProtectCoin
+000: Magic Coin
+000: Fairy Brace
+000: Angel Brace
+000: GoddessBrac
+000: RainPendant
+000: FlamePendnt
+000: EarthPendnt
+000: Sea Pendant
+000: Easy Ring
+000: Item 56
+000: Item 57
+000: 
+000: 
+000: OrangeJuice
+000: FrenchFries
+000: Magic Herb
+000: Hamburger
+000: SportsDrink
+000: Medicine
+000: AsthmaSpray
+000: Antidote
+000: Mouthwash
+000: Berry Tofu
+000: Item 70
+000: Bread
+000: Angel Seed
+000: PSI Stone
+000: 
+000: MagicRibbon
+000: Magic Candy
+000: Item 77
+000: SpeedCapsul
+000: Wis.Capsule
+000: Str.Capsule
+000: ForceCapsul
+000: FightCapsul
+000: 
+000: 
+000: BasementKey
+000: Zoo Key
+000: Haunted Key
+000: GGF's Diary
+000: Pass
+000: Show Ticket
+000: 
+000: 
+000: 
+000: 
+000: Baby Canary
+000: ITEM 96
+000: BottlRocket
+000: Hat
+000: Dentures
+000: Ticket Stub
+000: IC Chip
+000: Ocarina
+000: Item 103
+000: Frank.Badge
+000: Friend Ring
+000: Item 106
+000: Onyx Hook
+000: Ult. Weapon
+000: Ruler
+000: ATM Card
+000: Red Weed
+000: Megaphone
+000: Map
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Coords.
+000: 
+000: Telepathy
+000: Teleport
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Lifeup [ALPHA]
+000: Lifeup [BETA]
+000: Lifeup [GAMMA]
+000: Lifeup [PIZ]
+000: Lifeup [OMEGA]
+000: 
+000: 
+000: 
+000: Healing [ALPHA]
+000: Healing [BETA]
+000: Healing [GAMMA]
+000: Healing [PIZ]
+000: Super Heal
+000: PSI Shield[ALPHA]
+000: PSI Shield[BETA]
+000: PowerShield
+000: Brainshock
+000: BrainCyclon
+000: Hypnosis
+000: Paralysis
+000: Darkness
+000: PSI Magnet
+000: Shield Off
+000: PSI Block
+000: Offense Up
+000: Def. Up [ALPHA]
+000: Def. Up [BETA]
+000: Quick Up
+000: Def. Down [ALPHA]
+000: Def. Down [BETA]
+000: Dimens.Warp
+000: Hypnosis
+000: PK Freeze [ALPHA]
+000: PK Freeze [BETA]
+000: PK Freeze [GAMMA]
+000: PK Freeze [OMEGA]
+000: PK Fire [ALPHA]
+000: PK Fire [BETA]
+000: PK Fire [GAMMA]
+000: PK Fire [OMEGA]
+000: PK Beam [ALPHA]
+000: PK Beam [BETA]
+000: PK Beam [GAMMA]
+000: PK Beam [OMEGA]
+000: PK Thunder[ALPHA]
+000: PK Thunder[BETA]
+000: PK Thunder[GAMMA]
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Uncon.
+000:  Stone
+000: Paral.
+000: Asleep
+000: Flust.
+000: Confus
+000: Poison
+000:   Cold
+000: 
+000: Course A
+000: Course B
+000: Course C
+000: Hint 1
+000: Hint 2
+000: Hint 3
+000: Antidote
+000: Antidote
+000: Antidote
+000: Antidote
+000: Real Rocket
+000: Time Machine
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Home
+000: Mother'sDay
+000: Thanksgiv.
+000: Reindeer
+000: Halloween
+000: Snowman
+000: Easter
+000: Valentine
+000: Santa Claus
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Should you fight it? Or should you run from it?
+000: It appears to be holding a very important secret.
+000: Is there actually any way to defeat this thing?
+000: Sometimes it'll slam you with its heavy body or attack with its long trunk!
+000: Someone ate its food, and it's not happy at all!
+000: Shocked? It really does exist!
+000: Watch out for its exhaust! It can cause an asthma attack!
+000: Hypnosis probably doesn't work on robots, does it?
+000: It's wearing special armor to protect itself from PSI attacks.
+000: This has the power to turn people into stone.
+000: Creatures like this shouldn't exist on Earth, but...
+000: This is no time to be getting caught up with a punk ape like this!
+000: The only one not afraid of this thing's face is its own mother.
+000: Just look at those terrifying eyes!
+000: Whoa, there's no one in the driver's seat!
+000: He has strong friends.
+000: This thing's shell is unbelievably hard.
+000: Watch out. It'll use hypnosis on you.
+000: 
+000: This animal is as swift as they come.
+000: Watch out for those pearly whites!
+000: You dirty thief!
+000: Always turn down an alligator's dinner invitation.
+000: It's a walking fuel tank.
+000: It appears to be protecting something.
+000: This guy is at the very top of the FBI's most-wanted list.
+000: Deep down, he might actually be a nice guy.
+000: A malnourished robot?
+000: Don't be fooled by her smile!
+000: A man from a distant star.
+000: This creature does not exist in the real world.
+000: A mobile brain that is the result of an evil science experiment.
+000: This creature is a master of many kinds of PSI.
+000: It'd be nice to have some armor of your own.
+000: A strange, mobile tree.
+000: He looks bad-tempered, so be careful.
+000: You could probably plant flowers in his hair and they'd grow.
+000: She has a body like a refrigerator and a heart of ice.
+000: Beating the punks' leader will probably set them all straight.
+000: His heart is as warped as his face is.
+000: 
+000: Watch out for this guy's SMAAAASH hits!
+000: Watch out for this guy's constant sneak attacks!
+000: Watch your items! This guy is a thief...
+000: It isn't poisonous. Hopefully, anyway...
+000: He who laughs last laughs best.
+000: This animal is quite a bit different from your ordinary pet cat.
+000: Kill it with bug spray!
+000: Aaaachoo!!
+000: Bug spray works wonders on it!
+000: Why not try using bug spray on it?
+000: It's poisonous, but you can kill it with bug spray.
+000: Try not to get tied up.
+000: It's almost like this guy escaped from a comic book or something.
+000: This guy's face is the easiest to draw.
+000: If this guy put a mask on, it'd be impossible to tell who he is.
+000: A rather run-of-the-mill ghost.
+000: It's about as big as a dinner plate...
+000: Apparently, life is like a puzzle to him.
+000: It may be small, but it's clearly an alien.
+000: Hold your nose!
+000: It looks scary on the outside, but its final attack is even scarier.
+000: A big rat with a long tail.
+000: It looks like an egg but is harder than one.
+000: 
+000: It glares at you from afar...
+000: It's flying all around!
+000: 
+000: 
+000: It was apparently given a powerful poison at a lab somewhere.
+000: Watch out for its poison and petrifying attacks!
+000: 
+000: 
+000: Don't let it get away! It's a good source of experience points!
+000: It apparently doesn't have any friends at all.
+000: @Its chair broke and now it's in a REALLY bad mood!
+000: 
+000: 
+000: 
+000: 
+000: Happen to have any Antidotes handy?
+000: Poison Pois on Poi Sonnnn
+000: Don't smile back at this alligator.
+000: 
+000: Even this thing's own father is scared of its face.
+000: 
+000: Be careful not to get petrified...
+000: This thing better not have fleas...
+000: Hypnosis probably doesn't work on cars, does it?
+000: Hypnosis probably doesn't work on trucks, does it?
+000: How will it come at you next?! Straight-on, or in a zig-zag?!
+000: Watch out, it'll call for friends if it's alarmed!
+000: 
+000: The favorite of optometrists everywhere.
+000: Don't let your guard down. This daddy is always watching you...
+000: This mommy can see through all your tricks!
+000: 
+000: 
+000: This thing will do anything for its friends!
+000: 
+000: He only seems to use PK Beam...
+000: This thing is devilishly strong.
+000: It may look like a hunk of junk, but don't underestimate it!
+000: A cutting-edge, mass-produced robot.
+000: It's about as big as a manhole cover...
+000: Don't let her beauty fool you...
+000: It carries bombs... and often uses them.
+000: This robot has large amounts of fuel stored inside its body.
+000: Watch out! She won't hesitate to use powerful PSI attacks!
+000: His mission is to keep anyone from getting through the caves...
+000: Prefers to use PK Freeze.
+000: If you can beat this thing, you're incredible.
+000: It doesn't just use PSI - it also likes to steal things!
+000: 
+000: Watch out for its Brainshock attacks!
+000: A violent guy who comes out swinging the first chance he gets.
+000: Its beautiful silver coat glistens in the light.
+000: This thing is HUGE!
+000: Don't ever sleep in this guy's bed, no matter how tired you are!
+000: This robot has been remodeled to be even stronger now!
+000: The strongest Starman of all.
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Territ. Oak
+000: Dragon
+000: R-7038
+000: Elephant
+000: Bear
+000: Bigfoot
+000: Mad Truck
+000: Old Robot
+000: Mega-Borg
+000: Gargoyle
+000: Gabilan
+000: Gorilla
+000: Bison
+000: Tiger
+000: Mad Car
+000: Raeb Yddet
+000: Magisnail
+000: Titany
+000: Giygas
+000: Eagle
+000: Wolf
+000: Gull Bandit
+000: Crocodile
+000: Atomic Robot
+000: The Fish
+000: Fugitive
+000: BB Gang Boss
+000: Barbot
+000: Jane
+000: Starman
+000: Ulrich
+000: Brainger
+000: Mook
+000: Armor
+000: Oak
+000: Redneck
+000: Hippie
+000: Bag Lady
+000: Gang Member
+000: Dr. Distorto
+000: 
+000: Gang Zombie
+000: PseudoZombie
+000: Crow
+000: Snake
+000: Hyena
+000: Lynx
+000: Centipede
+000: Dust Ghost
+000: Fly
+000: Arachnid!
+000: Scorpion
+000: Rope
+000: Fireball
+000: Swoosh
+000: Bonus Swoosh
+000: Ghost
+000: Li'l Saucer
+000: Mr. Batty
+000: Starman Jr.
+000: Skunk
+000: BloodyZombie
+000: Rat
+000: Bomber
+000: 
+000: Doll
+000: Lamp
+000: 
+000: 
+000: Biopede
+000: Bio-Scorpion
+000: 
+000: 
+000: Red Snake
+000: Lone Wolf
+000: Polar Bear
+000: 
+000: 
+000: 
+000: 
+000: Rattlesnake
+000: Tarantula
+000: Tough Croc
+000: 
+000: Buffalo
+000: 
+000: Bio-Bat
+000: Stray Dog
+000: Devil Car
+000: Devil Truck
+000: Death Truck
+000: Alarm Ghost
+000: 
+000: Woosh Swoosh
+000: Papa Swoosh
+000: Swooshette
+000: 
+000: 
+000: Sky Yddet
+000: 
+000: Giga-Borg
+000: Last Borg
+000: Scrapper
+000: Death Barbot
+000: Omega Saucer
+000: Caroline
+000: Star Miner
+000: NuclearRobot
+000: Suzie
+000: Blue Starman
+000: Satania
+000: Titanian
+000: Mook Senior
+000: 
+000: Zombie
+000: Mean Zombie
+000: Silver Wolf
+000: R-7037
+000: Grizzly
+000: R-7038XX
+000: Last Starman
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: @[03 1A] decided not to hand over any items. 
+000: @[03 1A] gave the [03 1C] to [03 1B]. 
+000: @[03 1A] put the [03 1C] in [03 1B]'s bag. 
+000: @[03 1B] took the [03 1C] from [03 1A]'s bag. 
+000: @[03 3E] threw out the [03 1C] that was in [03 1A]'s bag. 
+000: @[03 3E] took the [03 1C] out of [03 1A]'s bag [PROMPTINPUT]and put it in [03 1B]'s bag. 
+000: 
+000: 
+000: 
+000: @[03 1A] swallowed the [03 1C]. 
+000: @[03 1A] ate the [03 1C]. 
+000: @[03 1A] drank the [03 1C]. 
+000: was recovered by [03 1E]. 
+000: went up [03 1E]. 
+000: @[03 1A]'s HP 
+000: @[03 1A]'s PP 
+000: @[03 1A]'s Fight 
+000: @[03 1A]'s Speed 
+000: @[03 1A]'s Wisdom 
+000: @[03 1A]'s Strength 
+000: @[03 1A]'s Force 
+000: @[03 1A] took a Magic Herb from the Big Bag and used it. 
+000: @[03 1A] broke the bread into crumbs and started a trail out of them. 
+000: @You need to throw out your old bread crumbs before you can use other bread. 
+000: @[NINTEN] followed the trail of bread crumbs back to where it started. 
+000: @[03 1A] put the ribbon in her hair. 
+000: @"Just turn the power off!" 
+000: @You were able to figure out the lengths of many things. 
+000: @The Big Bag disappeared after being emptied. 
+000: @You used up all the calls on your Phone Card. 
+000: @The poison was removed from [03 1A]'s body. 
+000: @[03 1A]'s cold went away. 
+000: @[03 1A] gripped the PSI Stone. 
+000: @The PSI Stone turned into an ordinary rock. 
+000: @[03 1A] tried [03 1C]. 
+000: @You don't have enough power left to try that. 
+000: @[03 1A] was revived! 
+000: @Most of the diary is unreadable, but one part did stand out: [PROMPTINPUT]@"The password... [PROMPTINPUT]Where is the god's tail, [PROMPTINPUT]that which was left behind by the ship that soars the heavens?" 
+000: @[03 1A]'s body became soft again. 
+000: @You played the Ocarina of Hope. 
+000: @Did you catch that? 
+000: @This location is not on the map. 
+000: @[03 1A] checked the map. 
+000: @Some sort of force is pushing [NINTEN][03 17] back. 
+000: @The Repel Ring's mysterious power wore off. 
+000: 
+000: 
+000: 
+000: 
+000: @[03 1A] took out the [03 1C] and then put it away again. 
+000: @[03 1A] is unconcious. 
+000: @The entire party was healed! 
+000: @[NINTEN] sensed a faint memory of his great-grandfather! 
+000: @Huh? There still seems to be something inside EVE's body... 
+000: @I found your ATM Card on the floor in your room. 
+000: @Oh, it looks like you can't carry any more stuff. 
+000: 
+000: 
+000: 
+000: @Danger seems to be lurking nearby...  
+000: @Things are going crazy!  
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: Copyrights of Game[03 3F] Scenario[03 3F]  Music[03 3F] but excluding the  copyright of Music composed by  Keiichi Suzuki[03 3F] reserved by  SHIGESATO ITOI and NINTENDO.  Copyright of Program reserved  by NINTENDO. 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000:     
+000: [ANA] is reunited with her mother as the rest of the freed people exit the cave. 
+000: [TEDDY], his health fully recovered, is now a popular singer at the Live House. 
+000: The abducted grownups return to their children in Easter. You did great, kids! 
+000: [ANA]: I promise I'll never forget you. So I won't say say goodbye... Just, "'Til we meet again!" 
+000: [LOID] returns to a hero's welcome at Twinkle Elementary School. 
+000: Welcome home, [NINTEN]! We're so glad you made it back safe and sound. You must be famished! 
+000: Oh, a letter from [NINTEN]. I miss him so much. I hope we can get together again soon... 
+000: Well, now that the Earth's crisis is finally over, I think I'll just lie down for a moment and... Zzzzzzz...
+000: Oh, this is your dad. I hate to wake you, but it might be just a little too soon to rest easy...
+000: 
+000: "Big Bag" @A bag filled with lots of Magic Herbs.
+000: "Phone Card" @You can make 50 calls on public phones with this.
+000: "Bread Crumbs" @With these, you can return to the exact spot where you began spreading crumbs.
+000: "Repel Ring" @When used, this item will ward off weak enemies for a short while.
+000: 
+000: "Memory Chip" @Part of Great Grandfather George's memory is stored on this. [PROMPTINPUT]@[NINTEN] can use it to return to EVE's location.
+000: 
+000: 
+000: 
+000: "Knife" @A weapon that [TEDDY] can skillfully use.
+000: "Survival Knife" @A weapon for [TEDDY]. It looks stronger than a regular knife.
+000: "Basic Sword" @Probably only a select few can master using this.
+000: "Katana" @[TEDDY] can use this Japanese sword. [PROMPTINPUT]@It's the strongest weapon of all.
+000: "Stun Gun" @[LOID] can probably use this.
+000: "Toy Air Gun" @This is a very strong weapon, but only [LOID] can use it.
+000: "Cracked Bat" @[NINTEN]! Try using this as a weapon!
+000: "Teeball Bat" @This should work well against weak enemies, [NINTEN].
+000: "Sandlot Bat" @With this, [NINTEN] can fight against strong enemies.
+000: "Hall of Fame Bat" @A spectacular bat with a famous athlete's autograph on it.
+000: "Frypan" @[ANA] can use this as a weapon.
+000: "Deluxe Frypan" @This frypan doesn't burn food, [PROMPTINPUT]and [ANA] can also use it as a weapon.
+000: "Best Frypan" [PROMPTINPUT]@Not even tough baddies can withstand a hit from this heavy frypan.
+000: "Slingshot" @A simple weapon that anyone can use.
+000: "Boomerang" @Handle with care. This is not a toy. [PROMPTINPUT]Anyone can use this weapon.
+000: "Bug Spray" @Somewhat effective on insects and such.
+000: "Super Spray" @A new and powerful bug spray.
+000: "Flea Bomb" @Filled with fleas and lice. Throw it at the enemy and see what happens!
+000: "Love Words" @???
+000: "Curse Words" @???
+000: "Slime Generator" @It SEEMS like it could be useful in battle, but...
+000: "Flashdark" @This is the exact opposite of a flashlight.
+000: 
+000: 
+000: "Flamethrower" @Burns enemies to a crisp, but only [LOID] can use it.
+000: "Bomb" @Probably only [LOID] can use this.
+000: "Super Bomb" @"Danger! Explosive!" is written on it. [PROMPTINPUT]@Leave this in [LOID]'s hands.
+000: "Laser Beam" @If that weakling [LOID] were to wield this...
+000: "Death Beam" @If that cowardly [LOID] were to wield this, he'd really be something.
+000: 
+000: "Rope" @Use this to tie up the enemy.
+000: 
+000: 
+000: 
+000: 
+000: "Peace Coin" @Raises your Defense slightly when equipped.
+000: "Protect Coin" @Raises your Defense somewhat when equipped.
+000: "Magic Coin" @Raises your Defense quite a bit when equipped.
+000: "Fairy Bracelet" @Raises your Defense a tiny bit when equipped.
+000: "Angel Bracelet" @Raises your Defense a nice amount when equipped.
+000: "Goddess Bracelet" @Raises your Defense a whole lot when equipped.
+000: "Rain Pendant" @Reduces damage from PK Fire when equipped.
+000: "Flame Pendant" @Reduces damage from PK Freeze when equipped.
+000: "Earth Pendant" @Reduces damage from PK Thunder when equipped.
+000: "Sea Pendant" @Reduces damage from PK Fire, PK Freeze, and PK Thunder when equipped.
+000: "Easy Ring" @Equip this ring to increase EXP and money from enemies and reduce random battles.
+000: 
+000: 
+000: 
+000: 
+000: "Orange Juice" @Rich with Vitamin C. Restores a little HP.
+000: "French Fries" @Restores HP with or without ketchup.
+000: "Magic Herb" @Please use this when you're exhausted or hurt.
+000: "Hamburger" @Fast food for restoring HP quickly.
+000: "Sports Drink" @Drink this to feel refreshed, no matter how exhausted you are.
+000: "Medicine" @Use this to heal wounds.
+000: "Asthma Spray" @If [NINTEN] starts to have an asthma attack, this will stop it.
+000: "Antidote" @Quickly counteracts poison.
+000: "Mouthwash" @Gargle with this to get over a cold.
+000: "Strawberry Tofu" @Wouldn't you like to try some for real?
+000: 
+000: "Bread" @It's good to eat, [PROMPTINPUT]but you can use its crumbs to mark a trail that you can retrace later.
+000: "Angel Seed" @Lifts the curse of a Demon Seed.
+000: "PSI Power Stone" @PSI power is hidden inside this stone.
+000: 
+000: "Magic Ribbon" @Raises Force a little bit when tied into a girl's hair.
+000: "Magic Candy" @Raises Fight a little bit when a weakling eats it.
+000: 
+000: "Speed Capsule" @Raises Speed.
+000: "Wisdom Capsule" @Raises Wisdom.
+000: "Strength Capsule" @Raises Strength.
+000: "Force Capsule" @Raises Force.
+000: "Fight Capsule" @Raises Fight.
+000: 
+000: 
+000: "Basement Key" @Needed to enter the basement.
+000: "Zoo Key" @This should open the front gate of the zoo.
+000: "Haunted House Key" @The key to the Rosemarys' mansion.
+000: "Great-Grandfather's Diary" @The diary of [NINTEN]'s great-grandfather. [PROMPTINPUT]@It's filled with writing, but it's in such bad shape that it's mostly illegible.
+000: "Pass" @"Duncan Factory Employee" is written on it.
+000: "Show Ticket" @"Every Day All Night Rock 'n' Roll Live Show" is written on it.
+000: 
+000: 
+000: 
+000: 
+000: "Baby Canary" @It has a lonely look in its eyes.
+000: 
+000: "Bottle Rocket" @[LOID] should know how to use this.
+000: "Hat" @A pretty hat with the name "[ANA]" embroided on it.
+000: "Dentures" @Unnecessary if you make sure to take care of your teeth and brush regularly.
+000: "Ticket Stub" @"Collect 10 ticket stubs for a tank ride!" is written on it.
+000: "IC Chip" @"A Chip that brings you to Eve's resting place.
+000: "Ocarina of Hope" @You can use this to hear the melodies you've collected so far.
+000: 
+000: "Franklin Badge" @It's said Ben Franklin wore this as protection during his lightning experiments.
+000: 
+000: 
+000: "Onyx Hook" @You can return to Magicant from anywhere using this.
+000: "Ultimate Weapon" @???
+000: "Ruler" @A 12-inch (approx. 30 cm) ruler.
+000: "ATM Card" @Use this to access your bank account and make deposits or withdrawals.
+000: "Red Weed" @At first glance, it looks like an ordinary weed, but...
+000: "Magic Megaphone" @Use this to scare enemies with your loud voice.
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: [YOURNAME]
+000: SHIGESATO ITOI
+000: MIYUKI KURE
+000: AKIO OHMORI
+000: RITSUO KAMIMURA
+000: KEIICHI SUZUKI
+000: HIROKAZU TANAKA
+000: SHINBO MINAMI
+000: TATSUYA ISHII
+000: TOTTORI
+000: KAZUYA NAKATANI
+000: TAKAYUKI ONODERA
+000: MOTOO YASUMA
+000: MASAYUKI KAMEYAMA
+000: HIDEO KON
+000: KATSUTOMO MAEIWA
+000: KUNIKO SAKURAI
+000: MASAHIRO TATEMOTO
+000: TAKASHI KAWAGUCHI
+000: KEIZOH KATOH
+000: MOTOHIRO ISHII
+000: AKIHITO TODA
+000: YUKARI SAITOH
+000: PHIL SANDHOP
+000: TOSHIKO WATSON
+000: YUKA NAKATA
+000: HIROKO FAULKNER
+000: TONY HARMAN
+000: DAYV BROOKS
+000: NORIYUKI MINAMI
+000: BIN OHGAWARA
+000: YOSHIHISA WADA
+000: HIKONORI SUZUKI
+000: TAKAO SHIMIZU
+000: SHIGERU MIYAMOTO
+000: HIROSHI YAMAUCHI
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: 
+000: [03 20] suddenly attacked!
+000: [03 20] attacks!
+000: [03 20] fired the tank cannon!
+000: [03 21] dodged quickly!
+000: Combo attack!
+000: [03 20] bit [03 21]!
+000: [03 20] scratched [03 21]!
+000: [03 20] bore down on [03 21]!
+000: [03 2C]
+000: [03 21] took [03 23] damage!
+000:           YOU WON! 
+000:  [NINTEN][03 17] was defeated... 
+000: Defeated the [03 21]!
+000: [03 21] got tired and collapsed...
+000: But [03 21] was already gone.
+000: No effect on [03 21]!
+000: [03 20] went berserk!
+000: [03 20] ran out of strength!
+000: [03 20]'s final desperation attack!!!
+000: You can't grasp the form of [03 20]'s attack!
+000: [03 21] was enveloped in a barrier!
+000: "You're a disgrace to your mom!"
+000: [03 21] turned to stone!
+000: [03 20] spewed a a sticky substance!
+000: [03 21] was blinded!
+000: [03 20] is tied up...
+000: [03 20] let out a strange howl!
+000: [03 20] exploded!
+000: [03 20] burst into flames!
+000: [03 21]'s Offense went up by [03 23]!
+000: [03 21]'s Offense went down by [03 23]!
+000: [03 21]'s Defense went up by [03 23]!
+000: [03 21]'s Speed went went up by [03 23]!
+000: [03 3C] Offense [03 23]
+000: [03 3C] Defense [03 23]
+000: [03 21]'s Fight went down by [03 23]!
+000: [03 21]'s Defense went down by [03 23]!
+000: [03 20] smiled boldly!
+000: [03 21]'s Fight went up by [03 23]!
+000: [03 20] flew into a rage!
+000: [03 21]'s Speed went down by [03 23]!
+000: [03 20] did something disturbing!
+000: [03 20] called for help!
+000: [03 20] sowed some seeds!
+000: For some reason, [03 21]'s experience points went up!
+000: [03 20] burst into laughter!
+000: The tank was scrapped...
+000: [03 20] said something scary!
+000: [03 20] said something nasty!
+000: [03 20] is trying to play dead...
+000: It was effective!
+000: It wasn't very convincing.
+000: [03 21] became angry!
+000: [03 21] fell into a critical state!
+000: [03 21] lost all sense of the situation!
+000: [03 20] has lost sense of the situation.
+000: [03 21] fell asleep!
+000: [03 20] is asleep...
+000: [03 21] recovered [03 23] PP!
+000: [03 21] recovered [03 23] HP!
+000: [03 20] replenished energy!
+000: But no one came.
+000: (silence...)
+000: [03 21] joined the battle!
+000: [03 20] ran away!
+000: ...It didn't work out.
+000: [03 20] tripped and fell!
+000: [03 20] can't move...
+000: [03 20] has been petrified...
+000: Stole [03 23] PP from [03 21]!
+000: [03 21] is immobilized!
+000: [03 20] vented exhaust fumes!
+000: [03 21] was poisoned!
+000: [03 21] was dehydrated!
+000: [03 21]'s powers were blocked!
+000: [03 21] was tied up with rope!
+000: [03 21] was enveloped by a shield!
+000: Missed!
+000: But the PSI was blocked!
+000: But [03 21]'s Franklin Badge reflected the beam back!
+000: [03 21] reflected the attack back!
+000: Not enough PP!
+000: There was no effect on [03 21]!
+000: [03 20] had an asthma attack! ...(cough cough cough)
+000: [03 20] is praying!
+000: [03 20] greeted everyone politely and left.
+000: [03 20] is in a defensive stance!
+000: [03 20] sang!
+000: [03 20] is guarding.
+000: [03 20] edged closer!
+000: The poison disappeared from [03 21]'s body!
+000: [03 21] went back to normal!
+000: [03 21] writhed around in itchy pain!
+000: [03 21] is able to move again!
+000: [03 21] woke up!
+000: [03 21] was revived!!!
+000: [03 20] used [03 F0][03 22]!
+000: [03 20] tried [03 22]!
+000: [03 20] can't use [03 22]!
+000: [03 20] is sizing up the situation...
+000: [03 20] did something strange!
+000: [03 20] is spacing out.
+000: [03 21]'s shield was destroyed!
+000: [03 20] checked [03 21]!
+000: [03 3C] Strong against heat
+000: [03 3C] Strong against cold
+000: [03 3C] Strong against thunder
+000: [03 3C] Strong against light
+000: [03 3C] Strong against sprays
+000: [03 21]'s asthma attack went away!
+000: [03 21] softened!
+000: "I like you!"
+000: "I hate you!"
+000: [03 21] had an asthma attack!
+000: The [03 22] broke...
+000: [03 20] used a Demon Seed!
+000: [03 20] used paralysis gas!
+000: The [03 22] turned into an ordinary stone...
+000: [03 21] went back to normal!
+000: [03 21] became tame!
+000: [03 21] was defeated!
+000: [03 21] was destroyed!
+000: [03 21] returned to the dust of the earth!
+000: [03 21] stopped moving!
+000: [03 21] was scrapped!
+000: [03 21] disappeared into thin air!
+000: [03 20] stole [03 21]'s [03 22]!
+000: [03 20] leveled up! [PROMPTINPUT][03 01]
+000: [03 20] learned a new PSI in battle! [PROMPTINPUT][03 01]
+000: Max HP went up [03 23]! [PROMPTINPUT][03 01]
+000: Max PP went up [03 23]! [PROMPTINPUT][03 01]
+000: Fight went up [03 23]! [PROMPTINPUT][03 01]
+000: Speed went up [03 23]! [PROMPTINPUT][03 01]
+000: Wisdom went up [03 23]! [PROMPTINPUT][03 01]
+000: Strength went up [03 23]! [PROMPTINPUT][03 01]
+000: Force went up [03 23]! [PROMPTINPUT][03 01]
+000: [03 20] escaped from the rope!
+000: Picked up [03 F1][03 1D]! [PROMPTINPUT][03 01]
+000: [03 21]'s confusion went away!
+000: [03 20] woke up!
+000: [03 20] tore a hole through space! 
+000: But there was no effect!
+000: The [03 22] was fully emptied...
+000:  No end to the battle is in sight... 
+000: (From somewhere, [PROMPTINPUT][NINTEN] heard Queen Mary's voice...) [PROMPTINPUT]You can't beat Giygas with brute strength... [PROMPTINPUT]I doubt any weapon can defeat him... [PROMPTINPUT]But the lullaby... [PROMPTINPUT]Maybe the song I used to sing to him can stop him! [PROMPTINPUT][03 01]
+000: [03 21] recovered completely!
+000: 
+000: "[NINTEN]! I owe a great deal to your family line!" [PROMPTINPUT][03 01]
+000: "Maria, George's wife, raised me [PROMPTINPUT]when I was very young..." [PROMPTINPUT][03 01]
+000: "While George himself stole vital information [PROMPTINPUT]from our planet and tried to turn against us..." [PROMPTINPUT][03 01]
+000: "And now their descendant [PROMPTINPUT]is bent on hindering our plan again... [PROMPTINPUT][NINTEN]! I am referring to you!" [PROMPTINPUT][03 01]
+000: "Now leave! [PROMPTINPUT]May you be destroyed [PROMPTINPUT]with the rest of the disgusting Earth people!" [PROMPTINPUT][03 01]
+000: "You are too weak to do anything! [PROMPTINPUT]You are mere insects to me!" [PROMPTINPUT][03 01]
+000: "[NINTEN]... [PROMPTINPUT]I'm willing to let you, and only you, live. [PROMPTINPUT]Board the mothership with me." [PROMPTINPUT][03 01]
+000: "...Then you can perish here with your friends [PROMPTINPUT]and all the other hideous Earth people!" [PROMPTINPUT][03 01]
+000: "Stop singing!"
+000: "Stop... singing...!"
+000: "S-stop singing!"
+000: "Stop singing!"
+000: "You Earth insects! Shut up! Stop singing!"
+000: "Stop..."
+000: "...singing!"
+000: "!!!"
+000: "Stop..."
+000: "!!!"
+000: "........."
+000: "HOW COULD I BE DEFEATED BY THIS SONG...?" [PROMPTINPUT][03 01]
+000: "SOMEDAY I WILL RETURN... AND... MAKE YOU..." [PROMPTINPUT][03 01]
+000: "[NINTEN]! We will meet again!" [PROMPTINPUT][03 01]
+000: In the early 1900s, a dark shadow covered a small country town in rural America.
+000: At that time, a young married couple vanished mysteriously from their home.
+000: The man's name[WAIT20] was George, and the woman's name[WAIT20] was Maria.
+000: Two years later, as suddenly as he had left, George returned.
+000: He never told anyone where he had been or what he had done. But, he began an odd study, all by himself.
+000: As for his wife, Maria.[WAIT10].[WAIT10].[WAIT30][NEWLINE]She never returned.
+000: 80 years have passed since then.

@@ -22,6 +22,8 @@ public class DoorEntity extends Entity {
 		
 	}
 	
+	public void interact() {}
+	
 	public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
 		super("door.png", x, y, width, height, m, "door");
 		this.destX = destX;
@@ -73,7 +75,7 @@ public class DoorEntity extends Entity {
 	
 	@Override
 	public String getInfoForTool() {
-		return "" + x + "," + y + ": to " + newMap;
+		return getDesc() + "" + x + "," + y + ": to " + newMap;
 	}
 	
 	public void act() {

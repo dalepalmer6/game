@@ -1,0 +1,23 @@
+1:
+Healer
+
+2:
+@I'd like to help the[BREAK]zombies become friendly by[BREAK]teaching them about God.[BREAK][PAUSE]@But...[BREAK]Zombies freak me out![BREAK]
+
+3:
+@I'm Pippi. I'm lost.[BREAK]You're really brave, huh?[BREAK]
+     (Yes/No)
+               Yes: @You're such a goofball![BREAK]Hahaha![BREAK]
+                      @Okay! Let's go back to town[BREAK]now![BREAK]
+                No: @You're really brave.[BREAK]I hope we meet again[BREAK]sometime, don't you?[BREAK]
+                           (Yes/No)
+                                 Yes: @Oh, I'm so happy![BREAK][PAUSE]@Here, this badge can be a[BREAK]symbol of our bond.[BREAK][PAUSE]Take it with you.[BREAK]
+@Okay! Let's go back to town[BREAK]now![BREAK]
+                                  No: @I guess you already have a[BREAK]special someone, huh...[BREAK]
+@Okay! Let's go back to town[BREAK]now![BREAK]
+
+@I'm too scared.[BREAK][PAUSE]@You lead the way, [03 10].[BREAK]
+
+
+                       
+                      

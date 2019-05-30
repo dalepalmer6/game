@@ -49,8 +49,7 @@ public class EnemyEntity extends Entity {
 				} else if (state.getGameState().getCanEncounter()) {
 					state.getGameState().setCanEncounter(false);
 					//if the player has already been hit, allow any colliding enemies to join
-					SwirlAnimation anim = new SwirlAnimation(state, "swirl", 0, 0, state.getMainWindow().getScreenWidth(),
-							state.getMainWindow().getScreenHeight(), this);
+					SwirlAnimation anim = new SwirlAnimation(state, this);
 					AnimationMenu animMenu = new AnimationMenu(state);
 					animMenu.createAnimMenu(anim);
 					anim.createAnimation();

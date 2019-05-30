@@ -1,0 +1,34 @@
+1-8:
+@......
+
+@The canary is singing.[BREAK]
+
+9:
+@It's such nice weather out.[BREAK][PAUSE]But what does it matter?
+
+@Oh, that canary is Laura[BREAK]the songbird's baby![BREAK][PAUSE]
+@Go take it to her![BREAK]
+                (Yes/No)
+                     Yes: @Now where did I last see[BREAK]Laura...?[BREAK]
+                      No: @You seem to have forgotten[BREAK]something important about[BREAK]life.[BREAK][PAUSE]How sad.[BREAK]
+
+@It sounds like Laura the[BREAK]songbird has remembered her[BREAK]song.[BREAK][PAUSE]@Have you learned her[BREAK]melody, too?[BREAK]
+            (Yes/No)
+                      Yes: @In song there is strength.[BREAK][PAUSE]True words, indeed.[BREAK]
+                       No: @Well, that's no good.[BREAK]
+                          
+10:
+@I'm Laura.[BREAK]
+
+After using Baby Canary:
+@Laura the songbird was so[BREAK]happy to see her baby again[BREAK]that she began singing.[BREAK]
+@[03 16] learned the melody.[BREAK]
+
+@The canary is singing.[BREAK]
+@[03 16] learned the melody.[BREAK]
+
+11:
+South: Mother's Day[BREAK]North: Cream Puff Zoo [BREAK]
+
+12:
+@ ???[BREAK]

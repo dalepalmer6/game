@@ -1,0 +1,34 @@
+Checking anywhere in or around the zoo gives you this message:
+@Danger seems to be lurking[BREAK]nearby...[BREAK] 
+
+1:
+@Kyakyakya![BREAK](You're a big doo-doo[BREAK]head!)[BREAK]
+
+@Kyakyakya![BREAK](You're a big doo-doo[BREAK]head!)[BREAK]@The monkey stole the Zoo[BREAK]Key.[BREAK]
+
+2:
+@Upon closer look, the[BREAK]gate's lock was broken.[BREAK][PAUSE]@[03 3E] opened the gate.[BREAK]
+
+3:
+The world's only singing[BREAK]monkey![BREAK][PAUSE]Right here at Cream Puff[BREAK]Zoo![BREAK]
+
+The world's only singing[BREAK]monkey![BREAK][PAUSE]Right here at Cream Puff[BREAK]Zoo![BREAK]@The singing monkey sang[BREAK]with passion.[BREAK]@[03 16] learned the melody.[BREAK]
+
+4:
+ Cream Puff Zoo[BREAK]  Manager's Office[BREAK]
+
+5:
+Cream Puff Zoo[BREAK]  700 meters west[BREAK]
+
+6:
+@No one's allowed past here[BREAK]until the incident at the[BREAK]zoo is resolved.[BREAK][PAUSE]@Those were the mayor's[BREAK]orders.[BREAK][PAUSE]@It's kind of a heavy-handed[BREAK]way of doing things though,[BREAK]if you ask me.[BREAK]
+
+@They finally lifted the[BREAK]orders for martial law.[BREAK][PAUSE]@They overreacted a little[BREAK]bit, if you ask me.[BREAK]@Say... You know how to use[BREAK]telepathy or whatever,[BREAK]right?[BREAK][PAUSE]@Everyone's talking about[BREAK]you, you know![BREAK][PAUSE]@You're a real celebrity![BREAK]
+
+Cop on top (After moving off bridge):
+@There's a strange rock in a[BREAK]mountain cave past here.[BREAK][PAUSE]@In fact, it's so strange[BREAK]that you should go check it[BREAK]out.[BREAK]
+
+7:
+@Something leapt out of the[BREAK]capsule![BREAK]
+
+@The strange sound driving[BREAK]the animals crazy stopped.[BREAK][PAUSE]@The zoo is safe once more.[BREAK]

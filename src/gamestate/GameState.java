@@ -80,6 +80,10 @@ public class GameState {
 	private int teleportDestX;
 	private int teleportDestY;
 	private double counter;
+	private int bankFunds = 0;
+	private int depositedFunds = 0;
+	private boolean shouldDraw = true;
+	private int windowArgument;
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -195,7 +199,7 @@ public class GameState {
 				int x = Integer.parseInt(datasplit[1]);
 				int y = Integer.parseInt(datasplit[2]);
 				//create all PartyMember entities
-				ninten = state.getEntityFromEnum(texture).createCopy(x,y,24,32,"ninten");
+				ninten = state.getEntityFromEnum("ninten").createCopy(x,y,24,32,"ninten");
 				loid = state.getEntityFromEnum("loid").createCopy(x,y,24,32,"loid");
 				ana = state.getEntityFromEnum("ana").createCopy(x,y,24,32,"ana");
 				teddy = state.getEntityFromEnum("teddy").createCopy(x,y,24,32,"ana");
@@ -210,6 +214,11 @@ public class GameState {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public GameState() {
+		shouldDraw = false;
+		flags = new HashMap<String,Boolean>();
 	}
 	
 	public GameState(StartupNew s) {
@@ -228,6 +237,7 @@ public class GameState {
 		this.map = m;
 		flags = new HashMap<String,Boolean>();
 		removed = new HashMap<String, Entity>();
+		
 	}
 	
 	public void loadMapData() {
@@ -239,23 +249,26 @@ public class GameState {
 		camera.setMapRenderer(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
 		addPartyMember("NINTEN");
+		addPartyMember("PIPPI");
+		addPartyMember("LOID");
+		
 //		createTestEnemy();
 	}
 	
-	public void createTestEnemy() {
-		ArrayList<Enemy> testList = new ArrayList<Enemy>();
-		Entity eStatic = state.allEntities.get("redDressLady");
-		Enemy test2 = state.enemies.get("Lamp").clone();
-		testList.add(test2);
-		EnemyEntity ee = new EnemyEntity(1500, 2600, 24*4,32*4,state,testList);
-		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
-		this.entities.add(ee);
-		test2 = state.enemies.get("Stray Dog").clone();
-		testList.add(test2);
-		ee = new EnemyEntity(1100, 2600, 24*4,32*4,state,testList);
-		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
-		this.entities.add(ee);
-	}
+//	public void createTestEnemy() {
+//		ArrayList<Enemy> testList = new ArrayList<Enemy>();
+//		Entity eStatic = state.allEntities.get("redDressLady");
+//		Enemy test2 = state.enemies.get("Lamp").clone();
+//		testList.add(test2);
+//		EnemyEntity ee = new EnemyEntity(1500, 2600, 24*4,32*4,state,testList);
+//		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
+//		this.entities.add(ee);
+//		test2 = state.enemies.get("Stray Dog").clone();
+//		testList.add(test2);
+//		ee = new EnemyEntity(1100, 2600, 24*4,32*4,state,testList);
+//		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
+//		this.entities.add(ee);
+//	}
 	
 	void sort()
     {
@@ -281,6 +294,30 @@ public class GameState {
         }
     }
 	
+	
+	void sortRo()
+    {
+        int n = ro.size();
+ 
+        // One by one move boundary of unsorted subarray
+        for (int i = 0; i < n-1; i++)
+        {
+            // Find the minimum element in unsorted array
+            int min_idx = i;
+            for (int j = i+1; j < n; j++)
+                if (ro.get(j).getY() + ro.get(j).getHeight()
+                		< ro.get(min_idx).getY() + ro.get(min_idx).getHeight())
+                    min_idx = j;
+ 
+            // Swap the found minimum element with the first
+            // element
+            RedrawObject temp = ro.get(min_idx);
+            ro.remove(min_idx);
+            ro.add(min_idx, ro.get(i));
+            ro.remove(i);
+            ro.add(i,temp);
+        }
+    }
 	
 	public void drawGameState() {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -318,8 +355,10 @@ public class GameState {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
 		for (Entity e : entities) {
-			e.draw(state.getMainWindow());
+			e.drawIfBehind(state.getMainWindow());
+//			e.stageForRedraw();
 		}
+//		sortRo();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.tilesetTexture.getTextureID());
 		for (RedrawObject robj : ro) {
@@ -327,6 +366,9 @@ public class GameState {
 		}
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
+		for (Entity e : entities) {
+			e.drawIfFront(state.getMainWindow());
+		}
 		ro = new ArrayList<RedrawObject>();
 	}
 	
@@ -459,7 +501,7 @@ public class GameState {
 			entities.add(train);
 			TrainCutscene trainCutscene = new TrainCutscene(state,trainStartIndex,trainEndIndex);
 			trainCutscene.loadEntityToCutsceneData();
-			state.getMenuStack().push(trainCutscene);
+			state.setCutscene(trainCutscene);
 			trainAdded = true;
 		} else if (!getFlag("train") && trainAdded) {
 			entities.remove(train);
@@ -482,6 +524,7 @@ public class GameState {
 				state.setBGM(map.getBGM());
 				setFlag("teleportingIn",false);
 				player.setIgnoreCollisions(false);
+				counter = 0;
 				entitiesCanMove = true;
 				canEncounter = true;
 			}
@@ -817,6 +860,46 @@ public class GameState {
 		teleportDest = newMapName;
 		teleportDestX = newX;
 		teleportDestY = newY;
+	}
+	
+	public void depositFunds(int amount) {
+		funds -= amount;
+		bankFunds += amount;
+	}
+	
+	public void withdrawFunds(int amount) {
+		funds += amount;
+		bankFunds -= amount;
+	}
+
+	public int getFundsInBank() {
+		return bankFunds;
+	}
+	
+	public void addFundsToBank(int moneyGained) {
+		// TODO Auto-generated method stub
+		bankFunds += moneyGained;
+		depositedFunds += moneyGained;
+	}
+
+	public boolean shouldDraw() {
+		// TODO Auto-generated method stub
+		return shouldDraw;
+	}
+
+	public void clearFlags() {
+		// TODO Auto-generated method stub
+		flags.clear();
+	}
+
+	public void setWindowArgument(int arg) {
+		// TODO Auto-generated method stub
+		windowArgument = arg;
+	}
+
+	public int getWindowArgument() {
+		// TODO Auto-generated method stub
+		return windowArgument;
 	}
 	
 }

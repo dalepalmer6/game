@@ -10,15 +10,16 @@ import battlesystem.options.BattleAction;
 import battlesystem.options.BattleMenuSelectionTextWindow;
 import battlesystem.options.BattleSelectionTextWindow;
 import battlesystem.options.BattleTextWindow;
+import battlesystem.options.Defend;
 import battlesystem.options.EnemyOption;
 import battlesystem.options.EnemyOptionPanel;
 import battlesystem.options.Goods;
-import battlesystem.options.PSI;
+import actionmenu.PSIMenuItem;
 import battlesystem.options.RunAway;
-import battlesystem.options.Status;
 import canvas.Controllable;
 import canvas.MainWindow;
 import font.SelectionTextWindow;
+import font.TextWindow;
 import font.TextWindowWithPrompt;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
@@ -29,6 +30,7 @@ import gamestate.LevelupData;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
 import global.InputController;
+import menu.AnimationMenu;
 import menu.DrawableObject;
 import menu.Menu;
 import menu.MenuItem;
@@ -79,6 +81,9 @@ public class BattleMenu extends Menu {
 	private boolean needNextPrompt;
 	private boolean partyIsDead;
 	private boolean endBattleSceneGameOver;
+	private int moneyGained;
+	private boolean allActionsMade;
+	private ArrayList<BattleEntity> deadEntities;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -139,11 +144,12 @@ public class BattleMenu extends Menu {
 	
 	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
 		//set the state to draw all menus at once, to facilitate the menu system
+		deadEntities = new ArrayList<BattleEntity>();
 		state.getMenuStack().pop();
-		state.setBGM("dangerous foe.ogg");
+//		state.setBGM(enemy); //depend on the enemy
 		this.enemyEntities = enemyEntities;
 		expPool = 0;
-		state.setDrawAllMenus();
+		state.setDrawAllMenus(true);
 		state.inBattle = true;
 		state.battleMenu = this;
 		//create a battle menu
@@ -155,6 +161,7 @@ public class BattleMenu extends Menu {
 		for (EnemyEntity ee : enemyEntities) {
 			enemies.addAll(ee.getEnemiesList());
 		}
+		state.setBGM(((Enemy)enemies.get(0)).getBGM());
 		generateGreeting();
 		actionMenu.setKillWhenComplete();
 		battleActions = new HashMap<BattleEntity, BattleAction>();
@@ -163,9 +170,10 @@ public class BattleMenu extends Menu {
 		actionMenu.add(bashButton);
 		Goods goodsButton = new Goods("Goods",0,0,state);
 		actionMenu.add(goodsButton);
-		PSI psiButton = new PSI("PSI",0,0,state);
+//		PSI psiButton = new PSI("PSI",0,0,state);
+		PSIMenuItem psiButton = new PSIMenuItem(state,state.getGameState().getPartyMembers(),0);
 		actionMenu.add(psiButton);
-		Status statusButton = new Status("Status",0,0,state);
+		Defend statusButton = new Defend("Guard",0,0,state);
 		actionMenu.add(statusButton);
 		RunAway runButton = new RunAway("Run Away",0,0,state);
 		actionMenu.add(runButton);
@@ -177,7 +185,7 @@ public class BattleMenu extends Menu {
 		int j = 0;
 		for (BattleEntity e : enemies) {
 			eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
-					state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()),state));
+					state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
 			j++;
 		} 
 		
@@ -221,14 +229,35 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptSecond(String s) {
-		if (!s.equals("")) {
+		if (s.equals("donothing")) {
+			readyToDisplay = false;
+			if (turnStackIsEmpty() && currentBattleAction.isComplete()) {
+				setPollForActions();
+			}
+			if (currentBattleAction.isComplete()) {
+				setGetNextPrompt();
+			}
+		}
+		else if (!s.equals("")) {
 			readyToDisplay = true;
 			prompt = createTextWindow(s);
 		} else {
-			//the prompt is empty, so show the damage dealt on the entity
-			readyToDisplay = false;
-//			turnIsDone = true;
 			if (currentBattleAction.isComplete() || enemies.size() == 0) {
+				if (turnStack.isEmpty()) {
+					setPollForActions();
+				}
+				
+				return;
+			}
+		}
+		if (currentBattleAction.needDamageNums()) {
+			//the prompt is empty, so show the damage dealt on the entity
+			boolean disallowAutoProgress = readyToDisplay;
+			readyToDisplay = false || readyToDisplay;
+			if (currentBattleAction.isComplete() || enemies.size() == 0) {
+				if (turnStack.isEmpty()) {
+					setPollForActions();
+				}
 				return;
 			} else {
 				//get the x y coordinates to put the damage
@@ -246,6 +275,9 @@ public class BattleMenu extends Menu {
 					y = eo.getY() + eo.getHeight()/2;
 				}
 				DamageMenuItem mi = new DamageMenuItem(currentBattleAction.getDamageDealt(),x,y,state);
+				mi.setDisallowAutoProgress(disallowAutoProgress);
+				mi.setIsHealing(currentBattleAction.isHealing());
+				
 				addMenuItem(mi);
 			}
 		}
@@ -262,13 +294,30 @@ public class BattleMenu extends Menu {
 	
 	public void setPromptDead() {
 		prompt = createTextWindow(deadEntity.getName() + " became tame.");
+		for (MenuItem i : menuItems) {
+			if (i instanceof TextWindow) {
+				setToRemove(i);
+				if (i == actionMenu) {
+					indexMembers--;
+					while ((party.get(indexMembers).getState() & 16) == 16) {
+						indexMembers++;
+						if (indexMembers > party.size()) {
+							break;
+						}
+					}
+					prompt.setNeedMenuOnExit();
+				}
+			}
+		}
+		//flavor text for enemy or party members
+		
 		if (needNextPrompt) {
 			needNextPrompt = false;
-			((BattleTextWindow)prompt).setPollForActionsOnExit();
+			prompt.setPollForActionsOnExit();
 		}
 		prompt.onCompleteKillEntity();
-		getResultText = false;
-		getNextPrompt = false;
+//		getResultText = false;
+//		getNextPrompt = false;
 		readyToDisplay = true;
 		locked = true;
 	}
@@ -282,7 +331,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public BattleTextWindow createTextWindow(String s) {
-		return new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (10/2)*72,32,10,2,state);
+		return new BattleTextWindow(s,state.getMainWindow().getScreenWidth()/2 - (16/2)*72,32,16,2,state);
 	}
 	
 	public void setTurnIsDone() {
@@ -293,142 +342,222 @@ public class BattleMenu extends Menu {
 		return turnStack.isEmpty();
 	}
 	
+//	public void update(InputController input) {
+//		
+//	}
+//	
+	public void createYouWin() {
+		state.setBGM("you win.ogg");
+		menuItems.remove(actionMenu);
+		ended = true;
+		getNext = false;
+		prompt = createTextWindow("YOU WON!");
+//		prompt.setPollForActionsOnExit();
+		for (int i = 0; i < partyMembers.size(); i++) {
+			partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"),party.get(i).getState());
+		}
+		readyToDisplay = true;
+		battleSceneEnd = false;
+		doOnce = false;
+		displayRecExp = true;
+	}
+	
+	public void showWinnings() {
+		getNext = false;
+		int awardEXP = expPool/calculateAlivePartyMembers();
+		state.getGameState().addFundsToBank(moneyGained);
+		prompt = createTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.");
+		levelupString = "";
+		int index = 0;
+		for (PartyMember pm : partyMembers) {
+			if ((party.get(index++).getState() & 16) == 16) {
+				continue;
+			}
+			pm.addExp(awardEXP);
+			int lv = pm.getStats().getStat("LVL");
+			int newOff = 0;
+			int newDef = 0;
+			int newSpd = 0;
+			int newGuts = 0;
+			int newVit = 0;
+			int newIQ = 0;
+			int newLuck = 0;
+			int newHP = 0;
+			int newPP = 0;
+			boolean leveledUp = false;
+			long newPSI = 0;
+			long oldPSI = pm.getKnownPSI();
+			EntityStats statIncreases = new EntityStats(1,newHP,newPP,newHP,newPP,newOff,newDef,newIQ,newSpd,newGuts,newLuck,newVit,0);
+			while (pm.getStats().getStat("CURXP") >= LevelupData.getExpToLevel(lv+1)) {
+				newPSI = oldPSI | LevelupData.getPSIShouldBeKnown(pm.getId().toLowerCase(),lv,oldPSI);
+				pm.addStats(statIncreases);
+				lv++;
+				EntityStats oldStats = pm.getBaseStats();
+				//generate diffs for all of the stats
+				//int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp
+				int[] growth = {18, 5, 4, 7, 5, 5, 6};
+				newOff+=Math.max(((growth[0] * (lv+1)) - ((oldStats.getStat("ATK") - 2)*10)) * 5/50,0);
+				newDef+=Math.max(((growth[1] * (lv+1)) - ((oldStats.getStat("DEF") - 2)*10)) * 5/50,0);
+				newSpd+=Math.max(((growth[2] * (lv+1)) - ((oldStats.getStat("SPD") - 2)*10)) * 5/50,0);
+				newGuts+=Math.max(((growth[3] * (lv+1)) - ((oldStats.getStat("GUTS") - 2)*10)) * 5/50,0);
+				newVit+=Math.max(((growth[4] * (lv+1)) - ((oldStats.getStat("VIT") - 2)*10)) * 5/50,0);
+				newIQ +=Math.max(((growth[5] * (lv+1)) - ((oldStats.getStat("IQ") - 2)*10)) * 5/50,0);
+				newLuck+=Math.max(((growth[6] * (lv+1)) - ((oldStats.getStat("LUCK") - 2)*10)) * 5/50,0);
+//				int newHP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
+//				int newPP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
+				newHP += 10;
+				newPP += 10;
+				leveledUp = true;
+			}
+			if (leveledUp) {	
+				statIncreases = new EntityStats(0,newHP,newPP,newHP,newPP,newOff,newDef,newIQ,newSpd,newGuts,newLuck,newVit,0);
+				
+				levelupString += pm.getName() + " leveled up![PROMPTINPUT]";
+				if (newOff != 0) 
+				levelupString += "Offense went up by " + newOff + ".[PROMPTINPUT]";
+				if (newDef != 0)
+				levelupString += "Defense went up by " + newDef + ".[PROMPTINPUT]";
+				if (newSpd != 0)
+				levelupString += "Speed went up by " + newSpd + ".[PROMPTINPUT]";
+				if (newGuts != 0)
+				levelupString += "Guts went up by " + newGuts + ".[PROMPTINPUT]";
+				if (newVit != 0)
+				levelupString += "Vitality went up by " + newVit + ".[PROMPTINPUT]";
+				if (newIQ != 0)
+				levelupString += "IQ went up by " + newIQ + ".[PROMPTINPUT]";
+				if (newLuck != 0)
+				levelupString += "Luck went up by " + newLuck + ".[PROMPTINPUT]";
+				if (newHP != 0)
+				levelupString += "Max HP went up by " + newHP + ".[PROMPTINPUT]";
+				if (newPP != 0)
+				levelupString += "Max PP went up by " + newPP + ".[PROMPTINPUT]";
+				if (newPSI != oldPSI) {
+					levelupString += "[PLAYSFX_psilearn.wav]" + pm.getName() + " learned a new PSI ability through battle.[PROMPTINPUT]";
+					pm.setKnownPSI(newPSI);
+				}
+				
+				pm.addStats(statIncreases);
+				readyToDisplay = true;
+				displayRecExp = false;
+				levelupDisplay = true;
+			}
+			//add a check to see if someone is leveling up, if so, then we need to display the level up prompts
+		}
+		if (levelupString.equals("")) {
+			kill = true;
+			readyToDisplay = true;
+			displayRecExp = false;
+		}
+	}
+	
+	public void doLevelupDisplay() {
+		state.setBGM("levelup.ogg");
+		getNext = false;
+		prompt = createTextWindow(levelupString);
+		levelupDisplay = false;
+		readyToDisplay = true;
+		kill = true;
+	}
+	
+	public void endBattleRoutine() {
+		AnimationMenu an = new AnimationMenu(state);
+		an.createAnimMenu();
+		state.getMenuStack().push(an);
+	}
+	
+	public void doDoneFadeOutAction() {
+		// TODO Auto-generated method stub
+		killBattleMenu();
+	}
+	
+	public void killBattleMenu() {
+//		state.getMenuStack().pop();
+		state.setShouldFadeIn();
+		state.setOldBGM();
+		for (EnemyEntity ee : enemyEntities) {
+			ee.setToRemove(true);
+		}
+//		state.getGameState().setCanEncounter(true);
+		state.inBattle = false;
+		state.setDrawAllMenus(false);
+		state.getGameState().setInvincibleCounter();
+	}
+	
 	public void update(InputController input) {
 		if (battleSceneEnd && getNext && !ended) {
 			//create the You Won prompt, then the exp divying screen, then go through anyone's level ups
-			state.setBGM("you win.ogg");
-			menuItems.remove(actionMenu);
-			ended = true;
-			getNext = false;
-			prompt = createTextWindow("YOU WON!");
-//			prompt.setPollForActionsOnExit();
-			for (int i = 0; i < partyMembers.size(); i++) {
-				partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
-			}
-			readyToDisplay = true;
-			battleSceneEnd = false;
-			doOnce = false;
-			displayRecExp = true;
+			createYouWin();
 		}
 		
 		if (displayRecExp && getNext) {
-			getNext = false;
-			int awardEXP = expPool/party.size();
-			prompt = createTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.");
-			levelupString = "";
-			for (PartyMember pm : partyMembers) {
-				pm.addExp(awardEXP);
-				int lv = pm.getStats().getStat("LVL");
-				if (pm.getStats().getStat("CURXP") >= LevelupData.getExpToLevel(lv)) {
-					EntityStats oldStats = pm.getBaseStats();
-					//generate diffs for all of the stats
-					//int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp
-					int[] growth = {18, 5, 4, 7, 5, 5, 6};
-					int newOff=Math.max(((growth[0] * (lv+1)) - ((oldStats.getStat("ATK") - 2)*10)) * 5/50,0);
-					int newDef=Math.max(((growth[1] * (lv+1)) - ((oldStats.getStat("DEF") - 2)*10)) * 5/50,0);
-					int newSpd=Math.max(((growth[2] * (lv+1)) - ((oldStats.getStat("SPD") - 2)*10)) * 5/50,0);
-					int newGuts=Math.max(((growth[3] * (lv+1)) - ((oldStats.getStat("GUTS") - 2)*10)) * 5/50,0);
-					int newVit=Math.max(((growth[4] * (lv+1)) - ((oldStats.getStat("VIT") - 2)*10)) * 5/50,0);
-					int newIQ =Math.max(((growth[5] * (lv+1)) - ((oldStats.getStat("IQ") - 2)*10)) * 5/50,0);
-					int newLuck=Math.max(((growth[6] * (lv+1)) - ((oldStats.getStat("LUCK") - 2)*10)) * 5/50,0);
-//					int newHP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
-//					int newPP = (growth[0] * lv) - ((oldStats.getStat("ATK") - 2)*10) * 1/5;
-					int newHP = 10;
-					int newPP = 10;
-					EntityStats statIncreases = new EntityStats(1,newHP,newPP,newHP,newPP,newOff,newDef,newIQ,newSpd,newGuts,newLuck,newVit,0);
-					
-					levelupString += pm.getName() + " leveled up![PROMPTINPUT]";
-					if (newOff != 0) 
-					levelupString += "Offense went up by " + newOff + "[PROMPTINPUT]";
-					if (newDef != 0)
-					levelupString += "Defense went up by " + newDef + "[PROMPTINPUT]";
-					if (newDef != 0)
-					levelupString += "Speed went up by " + newSpd + "[PROMPTINPUT]";
-					if (newSpd != 0)
-					levelupString += "Guts went up by " + newGuts + "[PROMPTINPUT]";
-					if (newGuts != 0)
-					levelupString += "Vitality went up by " + newVit + "[PROMPTINPUT]";
-					if (newVit != 0)
-					levelupString += "IQ went up by " + newIQ + "[PROMPTINPUT]";
-					if (newIQ != 0)
-					levelupString += "Luck went up by " + newLuck + "[PROMPTINPUT]";
-					if (newLuck != 0)
-					levelupString += "Max HP went up by " + newHP + "[PROMPTINPUT]";
-					if (newHP != 0)
-					levelupString += "Max PP went up by " + newPP + "[PROMPTINPUT]";
-					if (newPP != 0)
-					pm.addStats(statIncreases);
-					readyToDisplay = true;
-					displayRecExp = false;
-					levelupDisplay = true;
-				}
-				//add a check to see if someone is leveling up, if so, then we need to display the level up prompts
-				
-			}
-			if (levelupString.equals("")) {
-				kill = true;
-				readyToDisplay = true;
-				displayRecExp = false;
-			}
+			showWinnings();
 		}
 		
 		if (levelupDisplay && getNext) {
-			state.setBGM("levelup.ogg");
-			getNext = false;
-			prompt = createTextWindow(levelupString);
-			levelupDisplay = false;
-			readyToDisplay = true;
-			kill = true;
+			doLevelupDisplay();
 		}
 		int numAliveParty = 0;
 		if (kill && getNext) {
-			state.getMenuStack().pop();
-			state.setOldBGM();
-			for (EnemyEntity ee : enemyEntities) {
-				ee.setToRemove(true);
-			}
-//			state.getGameState().setCanEncounter(true);
-			state.getGameState().setInvincibleCounter();
+			endBattleRoutine();
 		}
 		
-		else if (!battleSceneEnd && !ended){
-			if(getNextPrompt || getResultText) {
+		else if (!battleSceneEnd && !ended) {
+			if (getNextPrompt || getResultText) {
 				for (int i = 0; i < enemies.size(); i++) {
 					BattleEntity e = enemies.get(i);
-					if (!e.getState().equals("dead")) {
+					if (!((e.getState() & 16) == 16)) {
 						if (e.getStats().getStat("CURHP") <= 0) {
 							alertDeadEntity = true;
-							locked = true;
-							deadEntity = e;
+//							locked = true;
+							deadEntities.add(e);
 							break;
 						}
 					}
 				}
-
 				for (int i = 0; i < party.size(); i++) {
 					BattleEntity e = party.get(i);
 					PlayerStatusWindow psw = pswList.get(i);
-					if (!e.getState().equals("dead")) {
+					if (!((e.getState() & 16) == 16)) {
 						if (psw.getHP() <= 0) {
 							alertDeadEntity = true;
-							locked = true;
-							deadEntity = e;
+//							locked = true;
+							deadEntities.add(e);
+							e.setStatus(16);
 							break;
 						}
 					}
 				}
 				
-				for (BattleEntity be : party) {
-					if (!be.getState().equals("dead")) {
-						numAliveParty++;
-					}
-				}
+				numAliveParty = calculateAlivePartyMembers();
 				if (numAliveParty == 0) {
 					partyIsDead = true;
 					getNext = true;
 					getNextPrompt = false;
 					getResultText = false;
 				}
+			}
+			
+			if (deadEntities.size() > 0 && !locked) {
+				alertDeadEntity = false;
+				deadEntity = deadEntities.remove(deadEntities.size()-1);
+				if (getResultText) {
+					getResultText = false;
+					needResults = true;
+				}
+				if (getNextPrompt) {
+					getNextPrompt = false;
+					needNextPrompt = true;
+				}
+				setPromptDead();
+			}
+			
+			if (alertDeadEntity && !locked) {
+				alertDeadEntity = false;
+				if (getResultText) {
+					getResultText = false;
+					needResults = true;
+				}
+				setPromptDead();
 			}
 			
 			if (partyIsDead && getNext) {
@@ -440,24 +569,13 @@ public class BattleMenu extends Menu {
 			
 			if (endBattleSceneGameOver && getNext) {
 				state.getMenuStack().pop();
-//				state.getGameState().setCurrentMap("house - myhome");//get the savedmap
-//				state.getGameState().createStartPosition();
-//				state.getGameState().loadMapData();
-//				state.getGameState().getEntityList().clear();
+				state.inBattle = false;
+				state.setDrawAllMenus(false);
 				state.getGameState().reloadInitialMap();
 				state.getGameState().setCanEncounter(true);
 			}
 			
-//			if (partyIsDead && getNext) {
-//				//load the gameover screen
-//				//for now just reload the gamestate map
-//				state.getMenuStack().pop();
-//			}
-			
 			if (enemies.size() == 0) {
-				for (PlayerStatusWindow psw : pswList) {
-					psw.stopScrolling();
-				}
 				endBattleScene();
 			}
 			
@@ -465,35 +583,35 @@ public class BattleMenu extends Menu {
 				battleActions.clear();
 				pollForActions = false;
 				needMenu = true;
+				allActionsMade = false;
 				indexMembers = 0;
 				battleActions = new HashMap<BattleEntity,BattleAction>();
 				for (BattleEntity be : allEntities) {
-					if (!be.getState().equals("dead")) {
+					if (((be.getState() & 16) != 16)) {
 						turnStack.add(be);
 					}
 				}
 				sortTurnStackBySpeed();
 			}
 			
-			if (needMenu) {
+			if (needMenu && !locked) {
 				windowStack.clear();
-				partyMember = party.get(indexMembers);
-				while (partyMember.getState().equals("dead")) {
+				partyMember = party.get(indexMembers++);
+				while ((partyMember.getState() & 16) == 16) {
 					if (indexMembers < party.size()) {
-						indexMembers++;
-						partyMember = party.get(indexMembers);
-					}else {
-						
+//						indexMembers++;
+						partyMember = party.get(indexMembers++);
+					} else {
+						needMenu = false;
+						doneActionSelect = true;
+						return;
 					}
 				}
-				partyMember = party.get(indexMembers);
-				indexMembers++;
 				addToMenuItems(actionMenu);
 				needMenu = false;
-				
 			}
 			
-			if (doneActionSelect) {
+			if (doneActionSelect && !locked) {
 				setToRemove(actionMenu);
 				doneActionSelect = false;
 				addBattleAction(partyMember,currentAction);
@@ -504,23 +622,22 @@ public class BattleMenu extends Menu {
 					indexMembers = 0;
 					//generate battle actions for each enemy
 					for (BattleEntity e : enemies) {
-						//create stubs
-						int val = (int) Math.floor(Math.random() * party.size());
 						BattleAction ba = new BattleAction(state);
 						ba.setUser(e);
-						ba.setTargets(party,party.get(val),false);
-						ba.setAction("bash");
+						//this should be randomly dictated by the enemy's possible actions as well, rather than always a bash
+						ba.setAction("enemyaction");
+						ba.setEnemyActionIndex(e.getRandomAction(),party,enemies);
 						addBattleAction(e,ba);
 					}
+					allActionsMade = true;
 				}
+				
 			}
 			
-//			if (getResultText) {
-				
-//			}
-			
-			if (battleActions.size() == enemies.size() + numAliveParty && getNextPrompt && !alertDeadEntity && enemies.size() > 0) {
+			if (!locked && allActionsMade && getNextPrompt && !alertDeadEntity && enemies.size() > 0) {
 				if (currentBattleAction == null || currentBattleAction.isComplete()) {
+					turnIsDone = false;
+					getResultText = false;
 					BattleEntity be = turnStack.remove(turnStack.size()-1);
 					currentBattleAction = battleActions.get(be);
 					if (be instanceof PCBattleEntity) {
@@ -533,7 +650,10 @@ public class BattleMenu extends Menu {
 						indexMembers = 0;
 					}
 				}
-				setPromptFirst(currentBattleAction.getBattleActionString());
+				if (currentBattleAction != null) {
+					setPromptFirst(currentBattleAction.getBattleActionString());
+//					getNextPrompt = false;
+				}
 				getNextPrompt = false;
 			}
 			
@@ -547,39 +667,42 @@ public class BattleMenu extends Menu {
 				getAnimation = false;
 			}
 			
-//			for (MenuItem i : menuItems) {
-//				i.updateAnim();
+//			if (getResultText && !locked && !currentBattleAction.isComplete()) {
+//				getResultText = false;
+//				setPromptSecond(currentBattleAction.doAction());
 //			}
 			
-			if (getResultText && alertDeadEntity) {
+			if (getResultText && !locked && !currentBattleAction.isComplete()) {
 				getResultText = false;
-				needResults = true;
-				setPromptDead();
-			}
-			
-			if (getResultText && !alertDeadEntity && !currentBattleAction.isComplete()) {
-				getResultText = false;
+				getNextPrompt = false;
 				setPromptSecond(currentBattleAction.doAction());
 			}
 			
-			if (getNextPrompt && alertDeadEntity) {
-				alertDeadEntity = false;
-				getNextPrompt = false;
-				needNextPrompt = true;
-				setPromptDead();
-			}
+//			if (getResultText && alertDeadEntity) {
+//				getResultText = false;
+//				needResults = true;
+//				setPromptDead();
+//			}
+//			
+//			if (getResultText && !alertDeadEntity && !currentBattleAction.isComplete()) {
+//				getResultText = false;
+//				setPromptSecond(currentBattleAction.doAction());
+//			}
+//			
+//			if (getNextPrompt && alertDeadEntity) {
+//				alertDeadEntity = false;
+//				getNextPrompt = false;
+//				needNextPrompt = true;
+//				setPromptDead();
+//			}
 			
 			for (int i = 0; i < party.size(); i++) {
 				pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5));
 				pswList.get(i).updateStatus(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
 				if (i == indexMembers-1 && i >= 0) {
 					pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5)-32);
-					
 				}
 			}
-			
-			
-			
 		}
 		
 		if (readyToDisplay) {
@@ -587,10 +710,30 @@ public class BattleMenu extends Menu {
 			addToMenuItems(prompt);
 			readyToDisplay = false;
 			prompt.setGetNext();
+//			if (currentBattleAction != null) {
+//				if (currentBattleAction.isComplete()) {
+//					prompt.setPollForActionsOnExit();
+//				}
+//			}
 		}
 		
 	}
 	
+	private void determineRandomAction(BattleEntity e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private int calculateAlivePartyMembers() {
+		int i =0;
+		for (BattleEntity be : party) {
+			if (((be.getState() & 16) != 16)) {
+				i++;
+			}
+		}
+		return i;
+	}
+
 	public void sortTurnStackBySpeed()
     {
         int n = turnStack.size();
@@ -647,16 +790,24 @@ public class BattleMenu extends Menu {
 				j++;
 			} 
 			expPool += ((Enemy)deadEntity).getExpYield();
+			moneyGained += ((Enemy) deadEntity).getMoneyYield();
 		}
 		else if (deadEntity instanceof PCBattleEntity) {
 			//dont remove, just set the state of the pc to dead
-			((PCBattleEntity) deadEntity).setState("dead");
+//			deadEntity.setStatus(16);
 			for (BattleEntity be : battleActions.keySet()) {
 				BattleAction ba = battleActions.get(be);
+				if (ba == null) {
+					continue;
+				}
+				if (ba.getTarget() == null) {
+					System.out.println("target is null");
+					continue;
+				}
 				if (ba.getTarget().equals(deadEntity)) {
 //					if (ba.getActor() instanceof PCBattleEntity) {
 						for (BattleEntity pbe : party) {
-							if (!pbe.getState().equals("dead")) {
+							if (!((pbe.getState() & 16) == 16)) {
 								battleActions.get(be).setTargets(party,pbe,false);
 							}
 						}
@@ -692,9 +843,26 @@ public class BattleMenu extends Menu {
 			addToMenuItems(windowStack.remove(windowStack.size()-1));
 		} else {
 			if (indexMembers > 1) {
+				boolean atLeastOne = false;
+				for (int x = indexMembers-2; x >= 0; x--) {
+					if ((party.get(x).getState() & 16) != 16) {
+						atLeastOne = true;
+					}
+				}
+				if (!atLeastOne) {
+					return;
+				}
 				needToRemove.add(actionMenu);
 				needMenu = true;
 				indexMembers-=2;
+				while ((party.get(indexMembers).getState() & 16) == 16) {
+					indexMembers--;
+				}
+				if (indexMembers >= party.size()) {
+					needMenu = false;
+					getNextPrompt = true;
+					doneActionSelect = true;
+				}
 			}
 			
 		}
@@ -736,6 +904,11 @@ public class BattleMenu extends Menu {
 	public void setGetNext() {
 		// TODO Auto-generated method stub
 		getNext=true;
+	}
+
+	public void setNeedMenu() {
+		// TODO Auto-generated method stub
+		needMenu = true;
 	}
 
 }

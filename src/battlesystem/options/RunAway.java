@@ -13,8 +13,9 @@ public class RunAway extends MenuItem{
 	public String execute() {
 		BattleMenu m =  ((BattleMenu) state.getMenuStack().peek());
 		m.setCurrentAction(new BattleAction(state));
-		m.getCurrentAction().setAction("run");
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());
+		m.getCurrentAction().setAction("run");
+		
 		m.getCurrentAction().setTarget(null);
 		m.setDoneAction();
 		return null;

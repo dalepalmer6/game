@@ -14,6 +14,13 @@ public class AnimationMenu extends Menu {
 		return complete;
 	}
 	
+	@Override
+	public void doDoneFadeOutAction() {
+		if (isSwirl()) {
+			((SwirlAnimation)menuItems.get(0)).startBattle();
+		}
+	}
+	
 	public boolean isSwirl() {
 		if (menuItems.isEmpty()) {
 			return false;

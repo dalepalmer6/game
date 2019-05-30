@@ -144,12 +144,12 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		for (int i = 0; i < 4; i++) { //y
 			for (int j = 0; j < 4; j++) { //x
 				if ((tbg.getInstance(instancebg).getCollisionInfoAtIndex(j,i)&2&15) == 2) {
-						RedrawObject robj = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8);
+						RedrawObject robj = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tbg.getDx(instancebg) + (j*8),tbg.getDy(instancebg) + (i*8),8,8,state);
 						state.getGameState().addToRedrawing(robj);
 						redrawBG = true;
 				}
 				if (((tfg.getInstance(instancefg).getCollisionInfoAtIndex(j,i)&2)&15) == 2 || (drawFG && redrawBG)) {
-						RedrawObject robj2 = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8);
+						RedrawObject robj2 = new RedrawObject(-camera.getX()%TILE_SIZE + this.x + (x-1)*TILE_SIZE + (j*8*4), -camera.getY()%TILE_SIZE+ this.y + (y-1)*TILE_SIZE + (i*8*4),TILE_SIZE/4,TILE_SIZE/4, tfg.getDx(instancefg) + (j*8),tfg.getDy(instancefg) + (i*8),8,8,state);
 						state.getGameState().addToRedrawing(robj2);
 				}
 				if (drawBG)

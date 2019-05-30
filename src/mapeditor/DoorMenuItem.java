@@ -9,7 +9,7 @@ public class DoorMenuItem extends MenuItem {
 	private DoorEntity door;
 	
 	public DoorMenuItem(DoorEntity door, String text,StartupNew state) {
-		super(text,0,0,0,0,state);
+		super(text,0,0,state);
 		this.door = door;
 		this.text = text;
 	}

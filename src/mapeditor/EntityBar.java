@@ -130,11 +130,13 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	public void getTilesOfInterest() {
 		MainWindow m = state.getMainWindow();
 		m.setTexture("img\\entities.png");
-		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
-		this.MAX_WIDTH_IN_TILES =  state.getTextureAtlas().getCurrentRectangle().width / 16;
+//		this.MAX_HEIGHT_IN_TILES = state.getTextureAtlas().getCurrentRectangle().height / 16;
+//		this.MAX_WIDTH_IN_TILES =  state.getTextureAtlas().getCurrentRectangle().width / 16;
+		this.MAX_HEIGHT_IN_TILES = 8;
+		this.MAX_WIDTH_IN_TILES =  10;
 //		Texture t = m.getTexture();
-		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 16;
-		ArrayList<ArrayList<Entity>> tiles = new ArrayList<ArrayList<Entity>>();
+//		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 16;
+//		ArrayList<ArrayList<Entity>> tiles = new ArrayList<ArrayList<Entity>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Entity> row = new ArrayList<Entity>();
 		currentEntitiesOfInterest = mapPreview.getMap().getEntities();

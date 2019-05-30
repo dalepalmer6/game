@@ -22,6 +22,7 @@ public class DoorTool extends MapTool {
 	
 	public void doActionOnMap(int x, int y, int xMouse, int yMouse) {
 		//create a new Map object and set the MapPreview object to draw it instead for this
+		door.getState().setHoldable(false);
 		MapPreview mp = ((MapEditMenu) door.getState().getMenuStack().peek()).getMapPreview();
 		int tilesize = mp.getTileSize();
 		if (otherMapState) {

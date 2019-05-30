@@ -42,15 +42,26 @@ public class UseMenuItem extends MenuItem {
 			onParty = false;
 		}
 		if (state.inBattle) {
+			if (!item.canUseInBattle()) {
+				return null;
+			}
 			//use in battle, needs a User and a Target
 			BattleEntity user = state.battleMenu.getPartyMembers().get(userIndex);
 			state.battleMenu.setCurrentAction(new BattleAction(state));
 			state.battleMenu.getCurrentAction().setUser(user);
 			state.battleMenu.getCurrentAction().setAction("item");
 			state.battleMenu.getCurrentAction().setIndexOfUse(item);
-			SelectTargetMenu sem = new SelectTargetMenu(state,all,state.battleMenu.getEnemies());
+			SelectTargetMenu sem;
+			if (onParty) {
+				sem = new SelectTargetMenu(state,all,state.battleMenu.getPartyMembers());
+			} else {
+				sem = new SelectTargetMenu(state,all,state.battleMenu.getEnemies());
+			}
 			state.getMenuStack().push(sem);
 		} else {
+			if (!item.canUseOutBattle()) {
+				return null;
+			}
 			PartyMember user = party.get(userIndex);
 			PartyMember target = null;
 			if (party.size() == 1) {

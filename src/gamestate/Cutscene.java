@@ -11,6 +11,7 @@ public class Cutscene extends Menu {
 	private CutsceneMenuItem csMenuItem;
 	private String text;
 	protected boolean reverseOrder;
+	private boolean ended;
 	
 	public Cutscene(StartupNew m,CutsceneData cd) {
 		super(m);
@@ -29,13 +30,14 @@ public class Cutscene extends Menu {
 		cutsceneData.loadEntity();
 	}
 	
-	public void update(InputController input) {
-		doCutscene();
-	}
+//	public void update(InputController input) {
+//		doCutscene();
+//	}
 	
 	public void doCutscene() {
-		if (cutsceneData.getEntity().getAtTargetPoint()) {
+		if (cutsceneData.getEntity().getAtTargetPoint() && state.getMenuStack().isEmpty()) {
 			curMovement = cutsceneData.getMovementData();
+			cutsceneData.getEntity().setAtTargetPoint(false);
 			text = cutsceneData.getString();
 			if (text != null) {
 				SimpleDialogMenu.createDialogBox(state,text);
@@ -52,13 +54,17 @@ public class Cutscene extends Menu {
 	}
 	
 	public void end() {
-		menuItems.remove(csMenuItem);
+		ended = true;
 		cutsceneData.getEntity().resetMovement();
 		onEndAction();
 	}
 
 	public void onEndAction() {
 		cutsceneData.removeHotSpot();
+	}
+	
+	public boolean needToRemove() {
+		return ended;
 	}
 
 	private void applyMovementToEntity() {

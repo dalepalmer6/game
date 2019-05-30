@@ -16,12 +16,13 @@ import menu.StartupNew;
 public class PartyMember {
 	private String name;
 	private String id;
+	private int status = 0;
 	private EntityStats stats;
 	private EntityStats baseStats;//non modified by equipment, serves as a reference
 	private Entity entity;
 	private long knownPSI;
 	private ArrayList<Item> items = new ArrayList<Item>();
-	private ArrayList<Item> equips = new ArrayList<Item>(4);//in the future, make the index here reference the inventory instead of an item
+	private ArrayList<EquipmentItem> equips = new ArrayList<EquipmentItem>(4);//in the future, make the index here reference the inventory instead of an item
 	private StartupNew state;
 	private int index;
 	
@@ -77,7 +78,7 @@ public class PartyMember {
 		return stats;
 	}
 	
-	public ArrayList<Item> getEquips() {
+	public ArrayList<EquipmentItem> getEquips() {
 		//0 weapon; 1 head; 2 body; 3 other
 		return equips;
 	}
@@ -104,8 +105,12 @@ public class PartyMember {
 		return items;
 	}
 	
-	public void addItemToBag(Item i) {
-		items.add(i);
+	public boolean addItemToBag(Item i) {
+		if (items.size() < 20) {
+			items.add(i);
+			return true;
+		}
+		return false;	
 	}
 	
 	public String getName() {
@@ -149,7 +154,7 @@ public class PartyMember {
 			//second line contains item bag data
 			row = br.readLine().split(",");
 			for (String elem : row) {
-				Item item =  state.items.get(Integer.parseInt(elem));
+				Item item = state.items.get(Integer.parseInt(elem)).clone();
 				this.items.add(item);
 			}
 			//third line contains psi data
@@ -159,7 +164,7 @@ public class PartyMember {
 			row = br.readLine().split(",");
 			int j = 0;
 			for (String elem : row) {
-				Item item = state.items.get(Integer.parseInt(elem));
+				EquipmentItem item = (EquipmentItem) state.items.get(Integer.parseInt(elem));
 				this.equips.add(j++,item);
 			}
 		} catch (FileNotFoundException e) {
@@ -172,7 +177,9 @@ public class PartyMember {
 	}
 	
 	public PCBattleEntity createBattleEntity() {
-		return new PCBattleEntity("",name,id,stats,state);
+		PCBattleEntity be = new PCBattleEntity("",name,id,stats,state,status);
+		be.setItems(items);
+		return be;
 	}
 
 	public void addExp(int awardEXP) {
@@ -186,14 +193,20 @@ public class PartyMember {
 		this.stats = stats;
 	}
 
-	public void setStats(int stat, int stat2) {
+	public void setStats(int stat, int stat2, int status) {
 		// TODO Auto-generated method stub
 		this.baseStats.replaceStat("CURHP",stat);
 		this.baseStats.replaceStat("CURPP",stat2);
+		this.status = status;
 	}
 	
 	public void addStats(EntityStats diffs) {
 		this.baseStats.addStats(diffs);
 		this.stats.addStats(diffs);
+	}
+
+	public void setKnownPSI(long newPSI) {
+		// TODO Auto-generated method stub
+		knownPSI = newPSI;
 	}
 }

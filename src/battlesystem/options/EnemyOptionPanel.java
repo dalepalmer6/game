@@ -23,7 +23,7 @@ public class EnemyOptionPanel extends MenuItem {
 	
 	public void addEnemyOption(EnemyOption e) {
 		this.enemyOptions.add(e);
-		e.getEnemy().getWidth();
+//		e.getEnemy().getWidth();
 	}
 
 	public void removeEnemyOption(EnemyOption e) {

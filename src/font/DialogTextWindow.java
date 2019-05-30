@@ -10,6 +10,10 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 	private String name;
 	private TextLabel textName;
 	
+	public DialogTextWindow(String s, int x, int y, int width, int height, StartupNew state) {
+		super(s,x,y,width,height,state);
+	}
+	
 	public DialogTextWindow(String s, StartupNew state) {
 		super(s,128,792,24,2,state);
 //		textName = new Text(name,x,y-160,0,0,state.charList);
@@ -35,7 +39,7 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 		//draw as many of these as needed to fit the name!
 		int i = 1;
 		int widthOfNameBox = 0;
-		while (widthOfNameBox < textName.getWidthOfText()*4) {
+		while (widthOfNameBox < textName.getWidthOfText()) {
 			m.renderTile(x+32*i,y-64,32,64,56,0,8,16);
 			i++;
 			widthOfNameBox += 32;

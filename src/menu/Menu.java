@@ -21,7 +21,7 @@ public class Menu implements MenuInterface {
 	protected List<DrawableObject> drawables = new ArrayList<DrawableObject>();
 	private String id;
 	protected StartupNew state;
-	protected String input;
+	protected String input="";
 	private Controllable focused;
 	protected ArrayList<MenuItem> needToAdd = new ArrayList<MenuItem>();
 	protected ArrayList<MenuItem> needToRemove = new ArrayList<MenuItem>();
@@ -132,8 +132,12 @@ public class Menu implements MenuInterface {
 		menuItems.addAll(needToAdd);
 		if (this.menuItems.isEmpty()) {
 //			state.needToPop = true;
-			state.setToRemove(this);
+			doOnEmpty();
 		}
+	}
+	
+	public void doOnEmpty() {
+		state.setToRemove(this);
 	}
 	
 	public void update(InputController input) {
@@ -147,6 +151,11 @@ public class Menu implements MenuInterface {
 	public void removeMenuItem(SelectionTextWindow stw) {
 		// TODO Auto-generated method stub
 		menuItems.remove(stw);
+	}
+
+	public void doDoneFadeOutAction() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

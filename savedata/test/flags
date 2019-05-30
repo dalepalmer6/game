@@ -1,7 +1,6 @@
 nintenInParty,true
 anaInParty,false
-pippiInParty,true
-loidInParty,true
-lampDead,true
+pippiInParty,false
+loidInParty,false
 teddyInParty,false
 saveGame,true

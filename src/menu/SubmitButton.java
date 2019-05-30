@@ -8,17 +8,21 @@ public class SubmitButton extends MenuItem {
 	}
 	
 	public SubmitButton(StartupNew m) {
-		super("Done",0,0,0,0,m);
+		super("Done",0,0,m);
 	}
 	
 	public String execute() {
 		Menu m = state.getMenuStack().pop();
-		state.getMenuStack().push(m);
-		MenuItem c = state.getSelectionStack().pop(); //gets rid of the Submit click
-		c = state.getSelectionStack().pop();
-		state.getSelectionStack().push(c);
-		c.setText(m.getInput());
-		new BackButton(state).execute();
+		setOutput(m.getInput());
+		m = state.getMenuStack().peek();
+//		m = state.getMenuStack().pop();
+//		state.getMenuStack().push(m);
+//		MenuItem c = state.getSelectionStack().pop(); //gets rid of the Submit click
+//		c = state.getSelectionStack().pop();
+//		state.getSelectionStack().push(c);
+//		c.setText(m.getInput());
+		m.setInput(output);
+//		new BackButton(state).execute();
 		return null;
 	}
 }

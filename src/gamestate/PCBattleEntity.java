@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 import battlesystem.BattleMenu;
 import font.TextWindowWithPrompt;
+import gamestate.elements.items.Item;
 import menu.StartupNew;
 
 public class PCBattleEntity extends BattleEntity {
 	private String id; //use to get the sprite to draw on top of the window
+	private ArrayList<Item> items;
 	
-	public PCBattleEntity(String texture, String name, String id, EntityStats stats, StartupNew state) {
+	public PCBattleEntity(String texture, String name, String id, EntityStats stats, StartupNew state,int status) {
 		super(texture,name,stats,state);
 		this.id = id;
-		this.state = "normal";
+		this.status = status;
 	}
 	
 	public String getId() {
@@ -25,9 +27,18 @@ public class PCBattleEntity extends BattleEntity {
 		
 	}
 
-	public void takeDamage(int damage) {
+	public int takeDamage(int damage, int element) {
 		systemState.setShakeVariables(damage,true);
-		super.takeDamage(damage);
+		return super.takeDamage(damage,element);
+	}
+
+	public void setItems(ArrayList<Item> items) {
+		// TODO Auto-generated method stub
+		this.items = items;
+	}
+	
+	public ArrayList<Item> getItems() {
+		return items;
 	}
 	
 }

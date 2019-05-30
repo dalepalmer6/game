@@ -16,6 +16,11 @@ public class TextWindowWithLabels extends TextWindow implements Controllable {
 		labels = new ArrayList<TextLabel>();
 	}
 	
+	public TextWindowWithLabels(StartupNew state, int x, int y, int width, int height) {
+		super(true,"",x,y,width,height,state);
+		labels = new ArrayList<TextLabel>();
+	}
+	
 	@Override
 	public void handleInput(InputController input) {
 		// TODO Auto-generated method stub

@@ -26,12 +26,11 @@ public class PartyMemberSelectMenuItem extends MenuItem {
 		state.setClearMenuStack();
 		ArrayList<PartyMember> partyMems = new ArrayList<PartyMember>();
 		if (!(item instanceof PSIAttack)) {
-			result += "user.getName() + \"pulled out \" + item.getName() + \" and used it on \" + pm.getName() + \"[PROMPTINPUT]\"";
 			partyMems.add(pm);
 			result += item.useOutOfBattle(user,partyMems);
 			state.setResultOfMenuToDisplay(result);
 		} else if (item instanceof PSIAttack) {
-			result += user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
+			result += "[PLAYSFX_psi.wav]" + user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
 			partyMems.add(pm);
 			result += item.useOutOfBattle(user,partyMems);
 			state.setResultOfMenuToDisplay(result);

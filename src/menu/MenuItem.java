@@ -121,6 +121,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	
 	public void setText(String t) {
 		this.text = t;
+		textObject.setText(t);
 	}
 	
 	public String getText() {

@@ -6,8 +6,10 @@ import font.TextWindow;
 public class ButtonMenuItem extends MenuItem {
 	private TextWindow tw;
 	public ButtonMenuItem(String t, int x, int y, int width, int height, StartupNew m) {
-		super("", x, y, 175, 63, m);
+		super(t, x, y,175,63, m);
 		tw = new TextWindow(true,t,x,y,width/32,height/32,m);
+//		width = 175;
+//		height = 63;
 		// TODO Auto-generated constructor stub
 	}
 	

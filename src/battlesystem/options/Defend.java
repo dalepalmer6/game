@@ -4,18 +4,19 @@ import battlesystem.BattleMenu;
 import menu.MenuItem;
 import menu.StartupNew;
 
-public class Status extends MenuItem{
+public class Defend extends MenuItem{
 
-	public Status(String t, int x, int y, StartupNew m) {
+	public Defend(String t, int x, int y, StartupNew m) {
 		super(t, x, y, m);
 		// TODO Auto-generated constructor stub
 	}
 	public String execute() {
 		BattleMenu m =  ((BattleMenu) state.getMenuStack().peek());
 		m.setCurrentAction(new BattleAction(state));
-		m.getCurrentAction().setAction("status");
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());
-		m.getCurrentAction().setTarget(null);
+		m.getCurrentAction().setAction("defend");
+		
+		m.getCurrentAction().setTarget(m.getCurrentPartyMember());
 		m.setDoneAction();
 		return null;
 	}

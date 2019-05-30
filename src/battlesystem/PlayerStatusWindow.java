@@ -20,7 +20,7 @@ public class PlayerStatusWindow extends MenuItem {
 	private String statusCondition;
 	private double tickCount = 0;
 	private double ticksPerFrame = 0.25;
-	private int offsetX;
+	private int[] offsetX = {0,0,0};
 	private char[] HPdigitsArray = {'0','0','0'};
 	private double counter = 0;
 	private boolean animating;
@@ -69,6 +69,11 @@ public class PlayerStatusWindow extends MenuItem {
 		this.name = be.getName();
 		this.HP = be.getStats().getStat("CURHP");
 		this.PP = be.getStats().getStat("CURPP");
+		String digits = HP + "";
+		while (digits.length() < 3) {
+			digits = "0" + digits;
+		}
+		HPdigitsArray = digits.toCharArray();
 		targetHP = HP;
 		targetPP = PP;
 		this.x = x;
@@ -139,11 +144,11 @@ public class PlayerStatusWindow extends MenuItem {
 	}
 	
 	public void drawHPIndicator(MainWindow m) {
-		m.renderTile(this.x+40,this.drawingY+96,16*4,16*4,32,0,16,16);
+		m.renderTile(this.x+40,this.drawingY+96,16*4,16*4,32,0,16,15);
 	}
 	
 	public void drawPPIndicator(MainWindow m) {
-		m.renderTile(this.x+40,this.drawingY+96+14*4,16*4,16*4,48,0,16,16);
+		m.renderTile(this.x+40,this.drawingY+96+14*4,16*4,16*4,48,0,16,15);
 	}
 	
 	
@@ -163,7 +168,7 @@ public class PlayerStatusWindow extends MenuItem {
 		if (editing == 0) {
 			for (int i = 0; i < HPdigitsArray.length; i++) {
 				char c;
-				if((c = HPdigitsArray[i]) !=oldDigitsArray[i]) {
+				if((c = HPdigitsArray[i]) != oldDigitsArray[i]) {
 					if (i == 0) {
 						editing |= 1;
 					}
@@ -179,31 +184,34 @@ public class PlayerStatusWindow extends MenuItem {
 		
 		for (int i = 0; i < HPdigitsArray.length; i++) {
 			char c = HPdigitsArray[i];
-			int offsetX = 0;
 			if (((editing & (1 << i)) == (1 << i))) {
 				if (c != oldDigitsArray[i] || animating) {
 					//scroll the digit to the value
 					if (counter %4 == 0) {
-						offsetX = 24;
+						offsetX[i] = 24;
 					} else if (counter%4 == 1) {
-						offsetX = 16;
+						offsetX[i] = 16;
 					} else if (counter%4== 2 ) {
-						offsetX = 8;
+						offsetX[i] = 8;
 					} else if (counter%4== 3 ) {
-						offsetX = 0;
+						offsetX[i] = 0;
 						editing = 0;
 						animating = false;
 					}
 				}
 				if (animating) {
-					counter+=1;
+					if (battleEntity.getDefending()) {
+						counter += 0.25;
+					} else {
+						counter+=0.5;
+					}
 				}
 				if (targetHP > HP) {
-					offsetX *= -1;
+					offsetX[i] *= -1;
 				}
 			}
 			
-			drawDigit(m,Integer.parseInt(String.valueOf(c)),offsetX, x,y);
+			drawDigit(m,Integer.parseInt(String.valueOf(c)),offsetX[i], x,y);
 			x += 8*4;
 		}
 		
@@ -232,7 +240,7 @@ public class PlayerStatusWindow extends MenuItem {
 		drawWindow(m);
 		Text.initDrawText(m);
 		textName.setX(this.x+64);
-		textName.setY(this.y+64);
+		textName.setY(this.y+48);
 		textName.draw(m);
 		m.setTexture("img\\battlehud.png");
 		drawHealth(m);

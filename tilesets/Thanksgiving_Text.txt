@@ -1,0 +1,209 @@
+1: Welcome to Thanksgiving![BREAK][BREAK]West:  Mother's Day[BREAK]North: Santa Claus Station[BREAK]
+
+2: @I heard some really weird[BREAK]stuff is happening over in[BREAK]Mother's Day...?[BREAK] (Yes/No)
+
+	Yes: @Something about a kidnapped[BREAK]zombie and animals doing[BREAK]something or other...[BREAK][PAUSE]It sounds absolutely nuts.[BREAK]
+
+	No: @Hmm. You don't say.[BREAK]
+
+3: @Go to school, you![BREAK][PAUSE]@You're a student, aren't[BREAK]you?![BREAK]
+
+4: @How are we going to get the[BREAK]rocks off the train tracks?[BREAK][PAUSE]@If we let city hall take[BREAK]care of it, they'll be[BREAK]there well into next year![BREAK]
+
+5: @I heard there's a gigantic[BREAK]rocket in the Duncan[BREAK]Factory way up north.[BREAK]
+
+6: @Have you been to the Sweet[BREAK]Little Factory?[BREAK] (Yes/No)
+
+	Yes: @They used to make loads of[BREAK]Bottle Rockets there.[BREAK]
+
+	No: @Hmm. You don't say.[BREAK]
+
+7: @You know how there are[BREAK]scary monsters all outside[BREAK]town?[BREAK][PAUSE]@I'm worried to death that[BREAK]they'll steal my money.[BREAK]
+
+8: @Don't assume I'm just an[BREAK]ordinary old guy.[BREAK][PAUSE]@Although I actually am.[BREAK]
+
+9: @Hey, why aren't you in[BREAK]school, kid?[BREAK][PAUSE]@I'm pretty sure today's a[BREAK]school day.[BREAK]
+
+10: @There was a landslide up by[BREAK]Santa Claus Station, so the[BREAK]train can't get through.[BREAK]
+
+11: @Someday I wanna be a doctor[BREAK]so I can help people.[BREAK][PAUSE]@And so I can make loads of[BREAK]money.[BREAK]
+
+12: Welcome to the town of[BREAK]Thanksgiving!![BREAK][PAUSE][BREAK]Advertisement: Cheap, fast,[BREAK]and handsome![BREAK][PAUSE]Big Ben Casey can heal what[BREAK]ails you![BREAK][PAUSE]Visit now for a[BREAK]super-discount checkup![BREAK][PAUSE]Protect your life... to the[BREAK]death![BREAK]
+
+13: @My husband is an important[BREAK]man at Twinkle Elementary[BREAK]School.[BREAK][PAUSE]@He's so important that he[BREAK]doesn't eat packed lunches[BREAK]from home.[BREAK]
+
+14: @I swiped a battery from[BREAK]Duncan's Factory north of[BREAK]here.[BREAK]
+
+15: @You know...[BREAK][PAUSE]@If it were up to me...[BREAK][PAUSE]@I'd probably use a Duncan[BREAK]Factory rocket to blow up[BREAK]the rocks on the tracks.[BREAK]
+
+16: @Duncan is trying to open a[BREAK]strip club in this town.[BREAK][PAUSE]@I'm absolutely against it![BREAK]
+
+17: Thanksgiving Main Street[BREAK]South: Twinkle Elem. School[BREAK]
+
+18: @It's like I told my son,[BREAK]"If you have time to play[BREAK]Nintendo games...[BREAK][PAUSE]then you should be studying[BREAK]instead!"[BREAK]
+
+19: @You have a really cheerful[BREAK]look on your face.[BREAK]
+
+20: Coming soon: Strip Theater[BREAK][BREAK]      -Duncan Construction[BREAK]
+
+21: @Some really strong monsters[BREAK]beat me up.[BREAK][PAUSE]@If you're headed for the[BREAK]train station, I'd watch[BREAK]out if I were you...[BREAK]
+
+22: @I heard they lifted the[BREAK]order for martial law over[BREAK]in Mother's Day.[BREAK][PAUSE]@Which means we can cross[BREAK]that bridge now...[BREAK][PAUSE]@Get my drift?[BREAK]
+
+23: @I'm sorry to bother you,[BREAK]but could I ask you some[BREAK]survey questions?[BREAK] (Yes/No)
+
+	Yes: @Do you feel that train[BREAK]tickets are too expensive?[BREAK] (Yes/No)
+
+		Yes or No: @Have you ever used a[BREAK]Megaphone?[BREAK] (Yes/No)
+
+			Yes or No: @Thank you for your[BREAK]cooperation.[BREAK][PAUSE]@For your time, please take[BREAK]this Phone Card.[BREAK]
+
+				If not enough space: @Oh, it looks like you can't[BREAK]carry any more things.[BREAK]
+
+	No: @Huh? Really?[BREAK][PAUSE]This is a respectable[BREAK]survey, though...[BREAK]
+
+24: FOOD SHOP GIRL
+
+25: HOSPITAL WOMAN
+
+26: HOSPITAL MAN
+
+27: SERVICE LADY
+
+28: DRUGS MAN
+
+29: SPORTS GOODS LADY
+
+30: FOODS GUY
+
+31: VARIETY GOODS LADY
+
+32: @The hotels around here are[BREAK]really no different from[BREAK]the ones in Mother's Day,[BREAK][PAUSE]yet they cost so much more.[BREAK][PAUSE](mutter grumble)[BREAK]
+
+33: HOTEL GUY
+
+34: @I just love [03 15], too.[PAUSE]
+
+35: @Are restaurant owners[BREAK]everywhere so musical, I[BREAK]wonder?[BREAK]
+
+36: @This is a restaurant,[BREAK]tra-la-la![BREAK][PAUSE]@A happy restaurant,[BREAK]ha-ha-ha![BREAK][PAUSE]@Are you feeling happy?[BREAK]
+
+37: PAY PHONE
+
+38: ATM
+
+39: (Before Locked Door) @Someone's in here![BREAK]...Wait, this isn't a[BREAK]bathroom.[BREAK][PAUSE]@I have my hands full at the[BREAK]moment. Come back later.[BREAK]
+
+40: @No running in the halls![BREAK]
+
+41: @Hey! I haven't seen you[BREAK]before, kid![BREAK][PAUSE]@Do you even go to this[BREAK]school?[BREAK] (Yes/No)
+
+	Yes: @Oh, okay. Just don't run in[BREAK]the halls.[BREAK]
+
+	No: @Show me what you have.[BREAK][PAUSE]@You better not be carrying[BREAK]anything dangerous...[BREAK]
+
+42 (Before Lloyd): @You've been picking on that[BREAK]weakling [03 11], haven't[BREAK]you?[BREAK]
+
+42 (After Lloyd): @Stupid head![BREAK]
+
+43 (Before Lloyd): @I was teasing that wimp[BREAK][03 11] just now, but he got[BREAK]away.[BREAK]
+
+43 (After Lloyd): @Hey, you weakling,[BREAK]stinkling [03 11]![BREAK]
+
+44: @I can treat minor injuries[BREAK]here.[BREAK][PAUSE]@But if you're sick, you'll[BREAK]need to visit an actual[BREAK]hospital, okay?[BREAK][PAUSE]
+
+45: @Have you played Dragon[BREAK]Quest 4?[BREAK][PAUSE]@I'm still having a hard[BREAK]time with the third one.[BREAK]
+
+46: @You're late for class![BREAK]
+
+47: @Did you see a strange[BREAK]teacher in the science lab?[BREAK][PAUSE]@...Because I did.
+
+48: @I can't do a cartwheel.[BREAK]
+
+49: @I still don't really know[BREAK]how to carry numbers in[BREAK]subtraction.[BREAK]
+
+50: @Any first-grader can do a[BREAK]cartwheel, wouldn't you[BREAK]say?[BREAK]
+
+51: @The school janitor has the[BREAK]key to the roof,[BREAK][PAUSE]but he won't give it to[BREAK]anyone.[BREAK]
+
+52: @I'm Suzy. I won the Miss[BREAK]Middle of Nowhere pageant.[BREAK]Do you think I'm pretty?[BREAK] (Yes/No)
+
+	Yes: @You're really cute, too.[BREAK]
+
+	No: @You're way uglier than me![BREAK][PAUSE]@Stupid Face is what they[BREAK]should call you![BREAK]
+
+53 (Before Lloyd): @I heard that [03 11] ran off[BREAK]with some explosives.[BREAK][PAUSE]@He's in big trouble if a[BREAK]teacher finds him...[BREAK]
+
+53 (After Lloyd): @[03 11]. Your glasses are[BREAK]slipping.[BREAK]
+
+54: @The gym teacher hit me.[BREAK][PAUSE]@Maybe I should drop out and[BREAK]become a thug...[BREAK]
+
+55: @I hear strawberry-flavored[BREAK]tofu is all the rage in big[BREAK]cities.[BREAK][PAUSE]@I'd love to try some.[BREAK]
+
+56: @The door to the roof is[BREAK]locked.[BREAK][PAUSE]@I was plannin' to ditch[BREAK]class and listen to the[BREAK]radio on the roof, too![BREAK][PAUSE]Weren't you?![BREAK] (Yes/No)
+
+	Yes or No: @Geez, you don't talk much,[BREAK]do you?[BREAK]
+
+57: @I'm hungry.[BREAK]
+
+58: @Don't assume I'm an[BREAK]ordinary old guy.[BREAK][PAUSE]@...Is what my dad likes to[BREAK]say all the time.[BREAK]
+
+59: @Getting lost in your own[BREAK]school...[BREAK][PAUSE]@Can you get any more lame?![BREAK]
+
+60: @La-la-laaa...[BREAK][PAUSE]Into the wide blue sky...[BREAK][PAUSE]dandelion fuzz does fly...[BREAK][PAUSE]La-la-laaa![BREAK][PAUSE]@I love music more than[BREAK]anything else![BREAK]
+
+61: @I bet [03 11] will have a[BREAK]computer-related job in the[BREAK]future.[BREAK]
+
+62: @Shh! Keep quiet in the[BREAK]library![BREAK][PAUSE]@A-a-a-CHOO![BREAK]
+
+63 (Before unlocking door): @Oh, the door to the roof is[BREAK]locked?[BREAK] (Yes/No)
+
+	Yes: @It's no big deal.[BREAK][PAUSE]@The real problem is my[BREAK]wife.[BREAK][PAUSE]@She sleeps until noon every[BREAK]day and she never packs me[BREAK]a lunch.[BREAK][PAUSE]@Isn't that just terrible?[BREAK] (Yes/No)
+
+		Yes: @All she does is get fatter[BREAK]and fatter.[BREAK][PAUSE]@Isn't she a terrible woman?[BREAK] (Yes/No)
+
+			Yes: @How dare you talk about my[BREAK]wife like that![BREAK][PAUSE]@Get out![BREAK]
+
+			No: @She was pretty when she was[BREAK]young.[BREAK][PAUSE]@Yeah, come to think of it,[BREAK]she has her good points,[BREAK]too.[BREAK][PAUSE]@Say, how about some tea?[BREAK] (Yes/No)
+
+				Yes: @You're a pretty smart kid.[BREAK][PAUSE]@Oh, that's right, you want[BREAK]to go up to the roof.[BREAK][PAUSE]@All right, then. Follow me.[BREAK] (Starts walking) @My wife was the very first[BREAK]Miss Middle of Nowhere.[BREAK] (Unlocks Door) @Okay, I unlocked the door.[BREAK][PAUSE]@The view from the roof is[BREAK]really nice, by the way.[BREAK]
+
+				No: @Cherish your elders or[BREAK]you'll be sorry when YOU[BREAK]grow old![BREAK]
+
+		No: @A kid like you wouldn't[BREAK]understand the sorrows of[BREAK]life...[BREAK]
+
+	No: @Say, you should stay a[BREAK]while and have some tea.[BREAK]
+
+63: (After unlocking door): @Say, you should stay a[BREAK]while and have some tea.[BREAK]
+
+64 (Check): @ ???[BREAK]
+
+64 (Talk) (First): @Who's there?![BREAK][PAUSE]@I'm not coming out![BREAK][PAUSE]@You're just gonna pick on[BREAK]me if I do![BREAK]
+
+64 (Second) @You want to be my friend?![BREAK][PAUSE]@Then do you promise not to[BREAK]tell that I took explosives[BREAK]from the science lab?[BREAK] (Yes/No)
+
+	Yes: @I'm coming out now.[BREAK]
+
+	No: @......
+
+64 (Third): @I'm [03 11].[BREAK][PAUSE]@I heard they make Bottle[BREAK]Rockets at the Sweet Little[BREAK]Factory south of here...[BREAK][PAUSE]I wanna launch one really[BREAK]bad![BREAK]
+
+64 (With Bottle Rocket):@I'm [03 11].[BREAK][PAUSE]@I heard they make Bottle[BREAK]Rockets at the Sweet Little[BREAK]Factory south of here...[BREAK][PAUSE]I wanna launch one really[BREAK]bad![BREAK][PAUSE]@Wow![BREAK][PAUSE]@So this is a Bottle Rocket![BREAK]I heard so much about them![BREAK][PAUSE]@I should be able to make[BREAK]more of these now.[BREAK][PAUSE]@Come with me to the science[BREAK]lab.[BREAK] (Walks down stairs) @Let's go visit Duncan's[BREAK]Factory later.[BREAK][PAUSE]@I hear there's a really[BREAK]incredible rocket there.[BREAK] (Walks down second stairs) @I bet people have been[BREAK]spreading rumors about how[BREAK]I'm a "weakling stinkling"[BREAK]or a "stupid head"...[BREAK] (Walks into science lab) @[03 11]: I can use the fuel[BREAK]from your rocket and...[BREAK][PAUSE]Then, if I use it with[BREAK]this...[BREAK][PAUSE]@Pretty cool, huh?[BREAK][PAUSE]Ahh![BREAK]
+
+65: (Before Janitor) @There's a big lock on the[BREAK]door at the top of the[BREAK]stairs.[BREAK]
+
+66 (Appears after explosion): @I'm a weird teacher who[BREAK]secretly lives in this[BREAK]school.[BREAK][PAUSE]Yes, I admit I'm weird.[BREAK][PAUSE]@I need funding for my[BREAK]research.[BREAK][PAUSE]@Would you be willing to buy[BREAK]one of my inventions?[BREAK] (Yes/No)
+
+	Yes: @Then have a look at my[BREAK]goods.[BREAK] (Shop menu opens)
+
+		Close Shop: @Come back anytime.[BREAK][PAUSE]@I'll have some more nice[BREAK]stuff ready for you.[BREAK]
+
+	No: @Come on, you gotta have[BREAK]at least SOME allowance[BREAK]money...[BREAK]
+
+66 (Second time): @I haven't made any progress[BREAK]with my inventions since[BREAK]your last visit.[BREAK][PAUSE]@Would you like to see my[BREAK]older items?[BREAK] (Yes/No)
+
+	Yes: @Then have a look at my[BREAK]goods.[BREAK] (Shop menu opens)
+
+		Close Shop: @Come back anytime.[BREAK][PAUSE]@I'll have some more nice[BREAK]stuff ready for you.[BREAK]
+
+	No: @Come on, you gotta have[BREAK]at least SOME allowance[BREAK]money...[BREAK]

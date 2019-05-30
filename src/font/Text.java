@@ -3,6 +3,7 @@ package font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -17,9 +18,12 @@ import gamestate.Enemy;
 import gamestate.EnemyEntity;
 import gamestate.PartyMember;
 import global.InputController;
+import menu.ATMMenu;
+import menu.AnimationMenu;
 import menu.MenuItem;
 import menu.ShopMenu;
 import menu.StartupNew;
+import menu.SwirlAnimation;
 
 public class Text implements Drawable{
 	private String textString;
@@ -55,6 +59,13 @@ public class Text implements Drawable{
 	private boolean isSingleString;
 	private double shakeApplyY = 0;
 	private int drawingY;
+	private ArrayList<String> flags;
+	private boolean waitingForNumberInput;
+	private DigitScroller digitScroller;
+	
+	public HashMap<Integer,String> getControlCodes() {
+		return controlCodes;
+	}
 	
 	public void append(String s) {
 		parsedString += s;
@@ -74,7 +85,7 @@ public class Text implements Drawable{
 	
 	public void incrementDrawUntil() {
 		if (parsedString != null && !drawAll) {
-			if (waitingForDecision) {
+			if (waitingForDecision || waitingForNumberInput) {
 				return;
 			}
 			if (drawUntil < parsedString.length()) {
@@ -99,6 +110,11 @@ public class Text implements Drawable{
 		this.height = height;
 		this.charList = cd;
 		this.drawAll = shouldDrawAll;
+		flags = new ArrayList<String>();
+	}
+	
+	public ArrayList<String> getFlags() {
+		return flags;
 	}
 	
 	
@@ -120,18 +136,28 @@ public class Text implements Drawable{
 	}
 	
 	public void parse() {
-		parseIfs();
-		parseCodes();
-		reparseForWidths();
-		reparseForHeights();
+		if (!ignoreControlCodes) {
+			parseIfs();
+			parseCodes();
+			reparseForWidths();
+			reparseForHeights();
+		}
+//		parseCodes();
+//		reparseForWidths();
+//		reparseForHeights();
 	}
 	
 	public void parseCodes() {
 		char[] stringArray = parsedString.toCharArray();
 		String controlCode = "";
 		int indexOfCode = 0;
+		boolean foundChoose = false;
 		boolean parsingControlCode = false;
 		for (int i = 0; i < stringArray.length; i++) {
+			if (stringArray[i] == ',') {
+				controlCode = "WAIT10";
+				controlCodes.put(i+1,controlCode);
+			}
 			if (stringArray[i] == '[') {
 				//start a new control code
 				controlCode = "";
@@ -148,11 +174,72 @@ public class Text implements Drawable{
 				if (controlCodes.containsKey(indexOfCode)) {
 					controlCodesList = controlCodes.get(indexOfCode) + "," + controlCode;
 				}
+				if (controlCode.startsWith("CHOOSE")) {
+//					if (!ignoreControlCodes) {
+						foundChoose = true;
+//					}
+//					return;
+				}
+				if (controlCode.startsWith("_") && !foundChoose) {
+					int indexInString = Integer.parseInt(controlCode.substring(1),16);
+					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), state.textData.get(indexInString) + "[NEWLINE]");
+					textString = parsedString;
+					parsingControlCode = false;
+					i-=controlCode.length()+2;
+					stringArray = parsedString.toCharArray();
+					continue;
+				}
+				boolean replacementCode = false;
+				String replacement = "";
+				if (controlCode.equals("MONEYSIGN")) {
+					replacementCode = true;
+					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), "\\$");
+					parsingControlCode = false;
+					i-=controlCode.length()+2;
+					stringArray = parsedString.toCharArray();
+				}
+				if (controlCode.equals("NINTEN")) {
+					replacementCode = true;
+					replacement =state.namesOfCharacters[0];
+				}
+				if (controlCode.equals("ANA")) {
+					replacementCode = true;
+					replacement =state.namesOfCharacters[1];
+				}
+				if (controlCode.equals("LOID")) {
+					replacementCode = true;
+					replacement =state.namesOfCharacters[2];
+				}
+				if (controlCode.equals("TEDDY")) {
+					replacementCode = true;
+					replacement = state.namesOfCharacters[3];
+				}
+				if (controlCode.equals("FAVFOOD")) {
+					replacementCode = true;
+					replacement = state.namesOfCharacters[4];
+				}
+				if (controlCode.equals("WINDOWARG")) {
+					replacementCode = true;
+					replacement = "" + state.getGameState().getWindowArgument();
+				}
+				
+				if (replacementCode) {
+					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), replacement);
+					parsingControlCode = false;
+					i-=controlCode.length()+2;
+					stringArray = parsedString.toCharArray();
+					continue;
+				}
 				controlCodes.put(indexOfCode,controlCodesList);
-				parsedString = parsedString.replaceFirst("\\[" + controlCode + "\\]", "");
+				if (controlCode.startsWith("NUMSCROLL_")) {
+					parsedString = parsedString.substring(0,parsedString.indexOf("[" + controlCode +"]"));
+					return;
+				}
+				parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), "");
 				i -= (controlCode.length()+2);
 				stringArray = parsedString.toCharArray();
 				parsingControlCode = false;
+				
 				continue;
 			}
 		}
@@ -178,20 +265,25 @@ public class Text implements Drawable{
 	}
 	
 	public void reparseForWidths() {
-		//implement text that can scroll, and be prompted next
 		int currentWidth = 0;
-		int currentHeight = 0;
 		int currentWordWidth = 0;
 		int indexOfLastSpace = 0;
 		boolean addToWidths = true;
 		char[] stringArray = parsedString.toCharArray();
 		for (int i = 0; i < stringArray.length; i++) {
+			if (stringArray.length == 0) {
+				continue;
+			} 
 			addToWidths = true;
 			if (controlCodes.containsKey(i)){
-				currentWordWidth = 0;
-				currentWidth = 0;
-				indexOfLastSpace = i;
-				continue;
+				String thisControlCode = controlCodes.get(i);
+				if (thisControlCode.equals("NEWLINE") || thisControlCode.equals("PROMPTINPUT")) {
+					currentWordWidth = 0;
+					currentWidth = 0;
+					indexOfLastSpace = i;
+					continue;
+				}
+				
 			}
 			if (stringArray[i] == ' ') {
 				currentWidth += currentWordWidth;
@@ -201,7 +293,7 @@ public class Text implements Drawable{
 			if (isSingleString) {
 				this.width = currentWidth + currentWordWidth;
 			}
-			else if (currentWidth + currentWordWidth > this.width) {
+			else if (currentWidth + currentWordWidth > this.width*4 + 32) {
 				String controlCode = "NEWLINE";
 				if (controlCodes.containsKey(indexOfLastSpace)) {
 					controlCode = "NEWLINE," + controlCodes.get(indexOfLastSpace);
@@ -232,7 +324,7 @@ public class Text implements Drawable{
 				addToWidths = false;
 			}
 			if (addToWidths) {
-				currentWordWidth += charList.getCharObjects().get(parsedString.toCharArray()[i]).getDw() + 1;
+				currentWordWidth += 4*charList.getCharObjects().get(parsedString.toCharArray()[i]).getDw() + 4*1;
 			}
 		}
 	}
@@ -276,9 +368,8 @@ public class Text implements Drawable{
 		if (parsedString == null || textChanged) {
 			this.parsedString = textString;
 			controlCodes.clear();
-			if (!ignoreControlCodes) {
-				parse();
-			}
+			
+			parse();
 			
 			textChanged = false;
 			
@@ -287,7 +378,8 @@ public class Text implements Drawable{
 			}
 			
 			for (int key : controlCodes.keySet()) {
-				if (key >= parsedString.length()) {
+//				if (key >= parsedString.length()) {
+				if (key > parsedString.length()) {
 					controlCodes.remove(key);
 					break;
 				}
@@ -316,11 +408,24 @@ public class Text implements Drawable{
 						saveStart = i;
 						drawUntil = i;
 						freeze = true;
+						GL11.glColor3f(255,255,255);
 						return;
 					}
 					if (control.startsWith("WAIT")) {
 						dramaticPause = true;
 						lengthToWait = Integer.parseInt(control.substring(4));
+					}
+					if (control.startsWith("ATMWITHDRAW")) {
+						state.getMenuStack().pop();
+						ATMMenu atm = new ATMMenu(state);
+						atm.createWithdraw();
+						state.getMenuStack().push(atm);
+					}
+					if (control.startsWith("ATMDEPOSIT")) {
+						state.getMenuStack().pop();
+						ATMMenu atm = new ATMMenu(state);
+						atm.createDeposit();
+						state.getMenuStack().push(atm);
 					}
 					if (control.startsWith("SC_")) {
 						//draw the symbol here
@@ -337,24 +442,46 @@ public class Text implements Drawable{
 						newListOfControlCodes += "," + control;
 					}
 					if (control.startsWith("STARTBATTLE_")) {
+						controlCodes.put(i,controlCodes.get(i).replaceFirst(Pattern.quote("," + control),""));
 						state.saveAudio();
 						String enemyListString = control.substring(12);
-						String[] enemyList = enemyListString.split("_");
 						BattleMenu bm = new BattleMenu(state);
-						ArrayList<Enemy> battleEnemyList = new ArrayList<Enemy>();
-						for (int j = 0; j < enemyList.length; j++) {
-							battleEnemyList.add(state.enemies.get(enemyList[j]));
-						}
-						EnemyEntity test = new EnemyEntity(1200, 1200, 24*4,32*4,state,battleEnemyList);
 						ArrayList<EnemyEntity> list = new ArrayList<EnemyEntity>();
-						list.add(test);
-						bm.startBattle(list);
+						ArrayList<Enemy> battleEnemyList = new ArrayList<Enemy>();
+						if (enemyListString.equals("WINDOWARG")) {
+							try {
+								battleEnemyList.add(state.enemies.get(state.getGameState().getWindowArgument()));
+								list.add(new EnemyEntity(0,0,0,0,state,battleEnemyList));
+							} catch(ArrayIndexOutOfBoundsException e) {
+								
+							}
+						} else {
+							String[] enemyList = enemyListString.split("_");
+							for (int j = 0; j < enemyList.length; j++) {
+								battleEnemyList.add(state.enemies.get(Integer.parseInt(enemyList[j])));
+							}
+							EnemyEntity test = new EnemyEntity(1200, 1200, 24*4,32*4,state,battleEnemyList);
+							list.add(test);
+						}
+						SwirlAnimation anim = new SwirlAnimation(state,list);
+						AnimationMenu menu = new AnimationMenu(state);
+						menu.createAnimMenu(anim);
+						state.getMenuStack().push(menu);
+						anim.createAnimation();
+//						bm.startBattle(list);
+					}
+					if (control.startsWith("PLAYSFX_")) {
+						String audio = control.substring(8);
+						state.setSFX(audio);
 					}
 					if (control.startsWith("SETBGM_")) {
 						String audio = control.substring(7);
 						state.setBGM(audio);
 						state.saveAudio();
 						state.setAudioOverride(true);
+					}
+					if (control.startsWith("STOPBGM")) {
+						state.stopBGM();
 					}
 					if (control.startsWith("ENDBGM")) {
 						state.setAudioOverride(false);
@@ -398,10 +525,10 @@ public class Text implements Drawable{
 					if (control.startsWith("SHIFTTEXTUP")) {
 						targetY -= 64;
 					}
-					if (control.startsWith("CHOOSE")) {
+					if (control.startsWith("CHOOSE") && !ignoreControlCodes) {
 						waitingForDecision = true;
-						String[] split = textString.split(Pattern.quote("[CHOOSE]"));
-						choices = split[1].split(Pattern.quote("[CHOICE]"));
+//						String[] split = textString.split(Pattern.quote("[CHOOSE]"));
+						choices = textString.split(Pattern.quote("[CHOICE]"));
 						String[] choiceLabels;
 //						drawUntil-=1;
 						choiceWindow = new SelectionTextWindow(500,500,2,choices.length,state);
@@ -411,6 +538,40 @@ public class Text implements Drawable{
 							choiceWindow.add(mi);
 						}
 						state.getMenuStack().peek().addMenuItem(choiceWindow);
+					}
+					if (control.startsWith("NUMSCROLL_")) {
+						int digitSize = Integer.parseInt(control.substring(10));
+						waitingForNumberInput = true;
+						digitScroller = new DigitScroller(state,digitSize);
+						
+						state.getMenuStack().peek().addMenuItem(digitScroller);
+					}
+//					if (control.startsWith("WINDOWARG")) {
+//						int arg = state.getGameState().getWindowArgument();
+//					}
+					if (control.startsWith("HAVEFUNDS_")) {
+						int amount = Integer.parseInt(control.substring(9));
+						if (state.getGameState().getFundsOnHand() < amount) {
+							
+						}
+					}
+					if (control.startsWith("DEPOSITFUNDS_")) {
+						int amount = 0;
+						if (control.substring(13).equals("")) {
+							amount = state.getGameState().getWindowArgument();
+						} else {
+							amount = Integer.parseInt(control.substring(13));
+						}
+						state.getGameState().depositFunds(amount);
+					}
+					if (control.startsWith("WITHDRAWFUNDS_")) {
+						int amount = 0;
+						if (control.substring(14).equals("")) {
+							amount = state.getGameState().getWindowArgument();
+						} else {
+							amount = Integer.parseInt(control.substring(14));
+						}
+						state.getGameState().withdrawFunds(amount);
 					}
 					if (control.startsWith("SHOP_")) {
 						state.getMenuStack().pop();
@@ -429,6 +590,9 @@ public class Text implements Drawable{
 				controlCodes.put(i,newListOfControlCodes);
 			}
 			if (i < drawUntil) {
+				if (chars.length == 0) {
+					return;
+				}
 				char c = chars[i];
 				if (charList.getCharObjects().get(c) == null) {
 					continue;
@@ -484,45 +648,64 @@ public class Text implements Drawable{
 				stringArray = parsedString.toCharArray();
 				if (controlCode.startsWith("FLAGISSET_")) {
 					String flagName = controlCode.substring(10);
+					if (!flags.contains(flagName)) {
+						flags.add(flagName);
+					}
+					
 					if (!state.getGameState().getFlag(flagName)) {
-						//goto [ELSE]
-//						int endifIndex = parsedString.indexOf("[ENDIF]");
-//						if (parsedString.indexOf("[ELSE]") > endifIndex) {
-//							//there is no accompanying else to the if
-//							String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ENDIF]")+7);
-//							toRemove = toRemove.replace("[","\\[");
-//							toRemove = toRemove.replace("]","\\]");
-//							i-=controlCode.length()+2;
-//							parsedString = parsedString.replaceFirst(toRemove,"");
-//						} 
-//						else {
-							String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
-//							toRemove = toRemove.replace("[","\\[");
-//							toRemove = toRemove.replace("]","\\]");
-							i-=controlCode.length()+2;
-							parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
-//						}
+						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
+						i-=controlCode.length()+2;
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
 						parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
-//						parsedString = parsedString.substring(parsedString.lastIndexOf("[ELSE]")+6);
 					} else {
-//						int endifIndex = parsedString.indexOf("[ENDIF]");
-//						if (parsedString.indexOf("[ELSE]") > endifIndex) {
-//							//there is no accompanying else to the if
-//							parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
-//						} 
-//						else {
-							String toRemove = parsedString.substring(parsedString.indexOf("[ELSE]"),parsedString.indexOf("[ENDIF]")+7);
-//							toRemove = toRemove.replace("[","\\[");
-//							toRemove = toRemove.replace("]","\\]");
-							parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
-//						}
+						String toRemove = parsedString.substring(parsedString.indexOf("[ELSE]"),parsedString.indexOf("[ENDIF]")+7);
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
 						parsedString = parsedString.replace("[" + controlCode + "]","");
 						i-=controlCode.length()+2;
-//						parsedString = parsedString.substring(parsedString.indexOf("]")+1,parsedString.lastIndexOf("[ELSE]"));
 					}
 					stringArray = parsedString.toCharArray();
-//					parseIfs();
-//					break;
+				}
+				if (controlCode.startsWith("HAVEFUNDSINBANK_")) {
+					int amount = 0;
+					if (controlCode.substring(16).equals("")) {
+						amount = state.getGameState().getWindowArgument();
+					} else {
+						amount = Integer.parseInt(controlCode.substring(16));
+					}
+					
+					if (state.getGameState().getFundsInBank() < amount) {
+						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
+						i-=controlCode.length()+2;
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+						parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
+					} else {
+						String toRemove = parsedString.substring(parsedString.indexOf("[ELSE]"),parsedString.indexOf("[ENDIF]")+7);
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+						parsedString = parsedString.replace("[" + controlCode + "]","");
+						i-=controlCode.length()+2;
+					}
+					stringArray = parsedString.toCharArray();
+				}
+				if (controlCode.startsWith("HAVEFUNDSONHAND_")) {
+					int amount = 0;
+					if (controlCode.substring(16).equals("")) {
+						amount = state.getGameState().getWindowArgument();
+					} else {
+						amount = Integer.parseInt(controlCode.substring(16));
+					}
+					
+					if (state.getGameState().getFundsOnHand() < amount) {
+						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
+						i-=controlCode.length()+2;
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+						parsedString = parsedString.replaceFirst("\\[ENDIF\\]","");
+					} else {
+						String toRemove = parsedString.substring(parsedString.indexOf("[ELSE]"),parsedString.indexOf("[ENDIF]")+7);
+						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
+						parsedString = parsedString.replace("[" + controlCode + "]","");
+						i-=controlCode.length()+2;
+					}
+					stringArray = parsedString.toCharArray();
 				}
 			}
 		}
@@ -547,6 +730,22 @@ public class Text implements Drawable{
 		if (!drawAll && !dramaticPause) {
 			this.tickCount += ticksPerFrame;
 			MenuItem it;
+			if (digitScroller != null) {
+				if (digitScroller.isDone()) {
+					waitingForNumberInput = false;
+					String[] split = textString.split(Pattern.quote("[NUMSCROLL_" + digitScroller.getDigitCount() +"]"));
+					parsedString = "";
+					textString = split[1];
+					parsedString = textString;
+					controlCodes = new HashMap<Integer,String>();
+					parse();
+					drawUntil = -2;
+					drawingY = y;
+					targetY = y;
+					digitScroller = null;
+				}
+			}
+			
 			if ((it = state.getSelectionStack().peek()) instanceof DecisionMenuItem) {
 				waitingForDecision = false;
 				state.getSelectionStack().pop();
@@ -592,7 +791,7 @@ public class Text implements Drawable{
 
 	public boolean getDoneState() {
 		// TODO Auto-generated method stub
-		return done || freeze || dramaticPause || waitingForDecision;
+		return done || freeze || dramaticPause || waitingForDecision || waitingForNumberInput;
 	}
 	
 	public boolean getDone() {
@@ -622,6 +821,11 @@ public class Text implements Drawable{
 	public void draw(MainWindow m) {
 		// TODO Auto-generated method stub
 		draw(m,0,0,0);
+	}
+
+	public void setParsedString() {
+		// TODO Auto-generated method stub
+		parsedString = textString;
 	}
 	
 	

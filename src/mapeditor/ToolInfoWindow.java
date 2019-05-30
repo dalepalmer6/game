@@ -23,7 +23,7 @@ public class ToolInfoWindow extends MenuItem {
 	}
 	
 	public ToolInfoWindow(StartupNew state, MapTool tool) {
-		super("",1600,300,5,3,state);
+		super("",1600,300,2,6,state);
 		toolWindow = new TextWindow(true,"Tool Info",x,y,width,height,state);
 		toolWindow.setIgnoreCodes();
 	}

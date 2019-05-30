@@ -14,6 +14,7 @@ import gamestate.Entity;
 import gamestate.FollowingPlayer;
 import gamestate.HotSpot;
 import gamestate.Player;
+import gamestate.PresentEntity;
 import gamestate.SpritesheetCoordinates;
 import menu.StartupNew;
 import tiles.MultiInstanceTile;
@@ -47,6 +48,8 @@ public class Map {
 	private String tileset;
 	private String pathToMaps;
 	private String pathToTilesets;
+	
+	private boolean ignoreTiles;
 	
 	public ArrayList<ArrayList<Integer>> getLayerMap() {
 		return layerMap;
@@ -110,23 +113,31 @@ public class Map {
 	}
 	
 	public void saveMap() {
+		saveMap(false);
+	}
+	
+	public void saveMap(boolean saveTextEditor) {
 		try {
-			PrintWriter pw = new PrintWriter(new File(pathToMaps + mapId + "/base.map"));
-			pw.write(toString(tileMapBase));
-			pw.flush();
-			pw.close();
-			pw = new PrintWriter(new File(pathToMaps + mapId + "/fg.map"));
-			pw.write(toString(tileMapFG));
-			pw.flush();
-			pw.close();
-			pw = new PrintWriter(new File(pathToMaps +mapId + "/bg.map"));
-			pw.write(toString(tileMapBG));
-			pw.flush();
-			pw.close();
+			PrintWriter pw;
+			if (!saveTextEditor) {
+				pw = new PrintWriter(new File(pathToMaps + mapId + "/base.map"));
+				pw.write(toString(tileMapBase));
+				pw.flush();
+				pw.close();
+				pw = new PrintWriter(new File(pathToMaps + mapId + "/fg.map"));
+				pw.write(toString(tileMapFG));
+				pw.flush();
+				pw.close();
+				pw = new PrintWriter(new File(pathToMaps +mapId + "/bg.map"));
+				pw.write(toString(tileMapBG));
+				pw.flush();
+				pw.close();
+			}
+			
 			pw = new PrintWriter(new File(pathToMaps + mapId +"/entities.csv"));
 			String writeEntities = "TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG\n";
 			for (Entity e : entitiesInMap) {
-				if (!((e instanceof DoorEntity) || (e instanceof EnemySpawnEntity))) {
+				if (!((e instanceof DoorEntity) || (e instanceof EnemySpawnEntity) || (e instanceof PresentEntity))) {
 					writeEntities += e.getTextureNoExt() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + e.getText() + "," + e.getName() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
 				}
 			}
@@ -165,6 +176,16 @@ public class Map {
 			pw.write(writeEnemyData);
 			pw.flush();
 			pw.close();
+			pw = new PrintWriter(pathToMaps + mapId + "/presents.csv");
+			String writePresentData = "x,y,item,name\n";
+			for (Entity e : entitiesInMap) {
+				if (e instanceof PresentEntity) {
+					writePresentData += e.toString() + "\n";
+				}
+			}
+			pw.write(writePresentData);
+			pw.flush();
+			pw.close();
 		} catch(FileNotFoundException e) {
 			
 		} 
@@ -182,30 +203,78 @@ public class Map {
 		return string;
 	}
 	
+	public String[] getEntityTexts() {
+		String[] texts = new String[entitiesInMap.size()];
+		for (int i = 0; i < entitiesInMap.size(); i++) {
+			texts[i] = entitiesInMap.get(i).getText();
+		}
+		return texts;
+	}
+	
 	public void parseMap(int scale, String mapId) {
-		ArrayList<Entity> players = new ArrayList<Entity>();
-		for (Entity e : entitiesInMap) {
-			if (e instanceof Player) {
-				players.add(e);
-			} else if (e instanceof FollowingPlayer) {
-				players.add(e);
+		String pathToCurrentMap = pathToMaps + mapId + "/";
+		if (!ignoreTiles) {
+			ArrayList<Entity> players = new ArrayList<Entity>();
+			for (Entity e : entitiesInMap) {
+				if (e instanceof Player) {
+					players.add(e);
+				} else if (e instanceof FollowingPlayer) {
+					players.add(e);
+				}
 			}
+			
+			this.entitiesInMap.clear();
+			entitiesInMap.addAll(players);
+			this.mapId = mapId;
+			readProperties();
+			
+			parseMapBase(new File(pathToCurrentMap + "base.map"));
+			parseMapFG(new File(pathToCurrentMap + "fg.map"));
+			parseMapBG(new File(pathToCurrentMap + "bg.map"));
+			state.setBGM(bgm,true);
+			state.playBGM();
 		}
 		
-		this.entitiesInMap.clear();
-		entitiesInMap.addAll(players);
-		this.mapId = mapId;
-		readProperties();
-		String pathToCurrentMap = pathToMaps + mapId + "/";
-		parseMapBase(new File(pathToCurrentMap + "base.map"));
-		parseMapFG(new File(pathToCurrentMap + "fg.map"));
-		parseMapBG(new File(pathToCurrentMap + "bg.map"));
+		
 		parseEntities(new File(pathToCurrentMap + "entities.csv"),scale);
 		parseDoors(new File(pathToCurrentMap + "doors.csv"),scale);
 		parseHotspots(new File(pathToCurrentMap + "hotspots.csv"),scale);
 		parseEnemySpawns(new File(pathToCurrentMap + "enemyspawns.data"),scale);
-		state.setBGM(bgm,true);
-		state.playBGM();
+		parsePresents(new File(pathToCurrentMap + "presents.csv"),scale);
+		
+	}
+	
+	public void parsePresents(File ent,int scale) {
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(ent));
+			String row = "";
+			br.readLine();//skip headers
+			while ((row = br.readLine()) != null) {
+				String[] split = row.split(",");
+				int x = Integer.parseInt(split[0]);
+				int y = Integer.parseInt(split[1]);
+				int itemId = Integer.parseInt(split[2]);
+				String name = split[3];
+				PresentEntity pe = new PresentEntity(x*scale,y*scale,itemId,name,state);
+				if (!ignoreTiles) {
+					pe.setSpriteCoords(state.getEntityFromEnum("present").getSpriteCoordinates());
+				}
+				//				pe = (PresentEntity) pe.createCopy(pe.getX(),pe.getY(),pe.getWidth(),pe.getHeight(),pe.getName());
+//				Entity e = state.getEntityFromEnum(name).createCopy(scale*x,scale*y,scale*width,scale*height);
+//				e.setText(text);
+//				DoorEntity e = new DoorEntity(desc,x*scale,y*scale,width*scale,height*scale,state,destX*scale,destY*scale,destMap,text);
+//				e.setAppearFlag(appFlag);
+//				e.setDisappearFlag(disFlag);
+				entitiesInMap.add(pe);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void parseEnemySpawns(File ent,int scale) {
@@ -651,9 +720,18 @@ public class Map {
 	}
 	
 	public Map(String mId, int width, int height, TileHashMap tm, StartupNew m) {
+		this(mId,width,height,tm,m,false);
+	}
+	
+	public Map(String mId, int width, int height, TileHashMap tm, StartupNew m,boolean ignoreTiles) {
 		pathToTilesets = m.getPathToTilesets();
+		this.ignoreTiles = ignoreTiles;
 		this.tileset = pathToTilesets + "magicant.png";
-		m.loadAllTiles(tileset);
+//		ignoreTiles = true;
+		if (!ignoreTiles) {
+			m.loadAllTiles(tileset);
+		}
+		
 		this.state = m;
 		this.width = width;
 		this.height = height;
@@ -684,6 +762,8 @@ public class Map {
 		pathToMaps = "maps/";
 	}
 
+	
+	
 	public String getMapId() {
 		// TODO Auto-generated method stub
 		return mapId;

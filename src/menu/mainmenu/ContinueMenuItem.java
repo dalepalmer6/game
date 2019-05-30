@@ -19,11 +19,7 @@ public class ContinueMenuItem extends MenuItem {
 		System.out.println("Loading a previous game.");
 		AnimationMenu an = new AnimationMenu(state);
 		an.createAnimMenu();
-//		state.needToPop = true;
 		state.getMenuStack().push(an);
-//		GameState gs = new GameState(state);
-//		state.setGameState(gs);
-
 		return null;
 	}
 	

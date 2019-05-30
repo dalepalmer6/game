@@ -1,0 +1,4 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+mayor,1141,285,24,32,[FLAGISSET_starmanJrDead][_04A][ELSE][FLAGISSET_pippiInParty][_043][_046][_047][ELSE][FLAGISSET_mayorSpokenTo][_040][ELSE][_040][_041][ENDIF][ENDIF][ENDIF] ,mayor, , 
+npc02,984,272,24,32,[FLAGISSET_haveZooKey]I have nothing else to give you.[ELSE][FLAGISSET_pippiIsReturned][_048][SETFLAG_haveZooKey] [ELSE][_295][ENDIF][ENDIF],abbot, , 
+npc04,358,279,24,32,TEXT,receptionist, , 

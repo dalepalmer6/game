@@ -2,15 +2,17 @@ package menu.namecharactersmenu;
 
 import font.SelectionTextWindow;
 import font.TextWindow;
+import gamestate.Entity;
 import global.InputController;
 import menu.BackButton;
 import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 import menu.SubmitButton;
+import menu.TexturedMenuItem;
 
 public class CharacterNameInputMenu extends Menu {
-	private String input = "";
+//	private String input = "";
 	private SelectionTextWindow STW;		
 	private TextWindow TW;
 	
@@ -33,25 +35,59 @@ public class CharacterNameInputMenu extends Menu {
 		TW.setText(input);
 	}
 	
-	public void create() {
-		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		SelectionTextWindow STW = new SelectionTextWindow("horizontal",300,300,30,8,state);		
-		
-		TextWindow TW = new TextWindow(true,input,300,220,5,1,state); 
+	public void create(int index) {
+//		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		String entityId = "";
+		switch(index) {
+		case 0: entityId = StartupNew.Characters.NINTEN.getId(); break;
+		case 1: entityId = StartupNew.Characters.ANA.getId(); break;
+		case 2: entityId = StartupNew.Characters.LOID.getId(); break;
+		case 3: entityId = StartupNew.Characters.TEDDY.getId(); break;
+		case 4: entityId = StartupNew.Characters.NINTEN.getId(); break;
+		}
+		Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
+		//int x, int y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh
+		TexturedMenuItem tmi = new TexturedMenuItem("",150+6*64,0,16*4,24*4,state,entityId + ".png",0,0,24,32);
+		addMenuItem(tmi);
+		String alphabet = "ABCDEabcde01234FGHIJfghij56789KLMNOklmno* \"@@PQRSTpqrst\"\"'=/UVWXYuvwxy+- $ Z()  z!?., :;  ";
+		SelectionTextWindow STW = new SelectionTextWindow("horizontal",150,300,25,8,state);		
+//		STW.createGrid(15,7);
+		STW.setSteps(64,0);
+		TextWindow TW = new TextWindow(true,input,1402-36,300-152,6,1,state); 
+		TextWindow descriptionTW = new TextWindow(true,state.characterNamingStrings[index],150,300-152,6,1,state);
+//		int x = STW.getTextStartX();
 		int x = 0;
 		int y = 0;
+		int i = 0;
 		for (char key : alphabet.toCharArray()) {
-			STW.add(createMenuItem(key,x,y));
-			x += 32;
-			if (x > 32 * 16) {
-				y += 32;
-				x = 0;
+			i++;
+			STW.setSteps(80,0);
+			if (i % 5 == 0) {
+				STW.setSteps(288,0);
 			}
+			
+//			STW.setCurrentOpen(x,y);
+			STW.add(createMenuItem(key,x,y));
+			x += 64;
+//			if (x > 32 * 16) {
+//				y += 32;
+//				x = STW.getTextStartX();
+//			}
 		}
+		STW.setSteps(80,0);
 		STW.add(new BackButton(state));
+		for (int j = 0; j < 13; j++) {
+			STW.setSteps(80,0);
+			if ((j+1) % 5 == 0) {
+				STW.setSteps(288,0);
+			}
+			STW.add(null);
+		}
+		STW.setSteps(80,0);
 		STW.add(new SubmitButton(state));
 		addMenuItem(TW);
 		addMenuItem(STW);
+		addMenuItem(descriptionTW);
 		
 		this.TW = TW;
 		this.STW = STW;

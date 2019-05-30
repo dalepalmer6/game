@@ -15,7 +15,7 @@ public class PSIAttack extends Item{
 	private int ppUsed;
 	
 	public PSIAttack(int id, String name, String desc, int type, int action, String animation,String classification,String family,String stage, int ppUsed) {
-		super(id,name,desc,type,action,-1,"",0);
+		super(id,name,desc,type,action,-1,"",0,0);
 		ppCost = 0;
 		this.animation = animation;
 		this.classification = classification;
@@ -31,6 +31,7 @@ public class PSIAttack extends Item{
 	public void setMinMaxDmg(int min, int max) {
 		this.damageUpperBound = max;
 		this.damageLowerBound = min;
+		damageVariable = max;
 	}
 	
 	public int calculateDamage() {

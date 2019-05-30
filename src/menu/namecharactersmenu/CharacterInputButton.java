@@ -16,8 +16,7 @@ public class CharacterInputButton extends MenuItem {
 	
 	public String execute() {
 		//add to a String representing a name
-		Menu m = state.getMenuStack().pop();
-		state.getMenuStack().push(m);
+		Menu m = state.getMenuStack().peek();
 		m.appendInput(this.text);
 		return null;
 //		System.out.println(this.text);

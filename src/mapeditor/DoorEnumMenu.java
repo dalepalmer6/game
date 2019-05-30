@@ -17,7 +17,7 @@ public class DoorEnumMenu extends Menu {
 	}
 	
 	public void createMenu() {
-		SelectionTextWindow stw = new SelectionTextWindow(0,0,10,14,state);
+		SelectionTextWindow stw = new SelectionTextWindow(0,0,20,14,state);
 		for (DoorEntity door : doors) {
 			String text = door.getDesc() + ", (" + door.getX() + ":" + door.getWidth() + "," + door.getY() + ":" + door.getHeight() + ")" + " - GOES TO - " + door.getDestMap() + ": (" + door.getDestX() + "," + door.getDestY() + ")";
 			stw.add(new DoorMenuItem(door, text,state));

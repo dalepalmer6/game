@@ -90,7 +90,7 @@ int index;
 				} else if (psi.getTargetType() == 1) {
 					//use on the whole party
 					String result = "";
-					result += user.getName() + " tried " + psi.getName() + ".[PROMPTINPUT]";
+					result += "[PLAYSFX_psi.wav]" + user.getName() + " tried " + psi.getName() + ".[PROMPTINPUT]";
 					result += psi.useOutOfBattle(user,party);
 					state.setResultOfMenuToDisplay(result);
 					state.setClearMenuStack();

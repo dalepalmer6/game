@@ -25,8 +25,8 @@ public class HotSpot extends DoorEntity {
 	
 	public void act() {
 		for (Entity e : interactables) {
-			if (e instanceof Player) {
-				state.getMenuStack().push(cutscene);
+			if (e instanceof Player && state.getCutscene() == null) {
+				state.setCutscene(cutscene);
 				cutscene.loadEntityToCutsceneData();
 			}
 		}

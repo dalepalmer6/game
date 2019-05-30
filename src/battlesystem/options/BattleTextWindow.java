@@ -13,6 +13,7 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 	private boolean getResultsOnExit;
 	private String textString;
 	private boolean setKillEntity;
+	private boolean setNeedMenu;
 	
 	public BattleTextWindow(String s, int x, int y, int width, int height, StartupNew m) {
 		super(s, x,y,width,height,m);
@@ -41,12 +42,15 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 		text.setFreeze(false);
 		if (text.getDrawState()) {
 			state.getMenuStack().peek().setToRemove(this);
-			BattleMenu bm = ((BattleMenu) state.getMenuStack().peek());
+			BattleMenu bm = state.battleMenu;
 			if (setKillEntity) {
 				bm.killDeadEntity();
 			}
 			if (getNext) {
 				bm.setGetNext();
+			}
+			if (setNeedMenu) {
+				bm.setNeedMenu();
 			}
 			if (loadAnimOnExit) {
 				bm.setGetAnimation(loadAnimOnExit);
@@ -88,5 +92,10 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 	public void onCompleteKillEntity() {
 		// TODO Auto-generated method stub
 		setKillEntity = true;
+	}
+
+	public void setNeedMenuOnExit() {
+		// TODO Auto-generated method stub
+		setNeedMenu = true;
 	}
 }

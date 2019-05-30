@@ -15,9 +15,10 @@ import menu.MenuItem;
 import menu.StartupNew;
 
 public class PromptForCharacterNameButton extends MenuItem {
-	
-	public PromptForCharacterNameButton(String text, int x, int y,StartupNew m ) {
+	int index;
+	public PromptForCharacterNameButton(int index,String text, int x, int y,StartupNew m ) {
 		super(text,x,y,m);
+		this.index = index;
 	}
 	
 	public String execute() {
@@ -25,7 +26,7 @@ public class PromptForCharacterNameButton extends MenuItem {
 //		String n = name.showInputDialog("Enter a Name:",text);
 //		this.setText(n);
 		CharacterNameInputMenu m = new CharacterNameInputMenu(state);
-		m.create();
+		m.create(index);
 		state.getMenuStack().push(m);
 		return null;
 	}

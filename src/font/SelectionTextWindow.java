@@ -12,10 +12,11 @@ import menu.StartupNew;
 
 public class SelectionTextWindow extends TextWindow implements Controllable{
 	protected ArrayList<ArrayList<MenuItem>> selections;
-	private boolean drawOnly;
+	protected boolean drawOnly;
 	private String output = "";
 	protected int currentOpenX;
 	protected int currentOpenY;
+	protected int TEXT_START_X = 40;
 	protected int stepForwardX = 128;
 	protected int stepForwardY = 64;
 	private int dimX = 0;
@@ -23,9 +24,9 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private String orientation = "vertical";
 	private String t = "";
 	private boolean focused = false;
-	private boolean killWhenComplete;
-	private int selectedY = 0;
-	private int selectedX = 0;
+	protected boolean killWhenComplete;
+	protected int selectedY = 0;
+	protected int selectedX = 0;
 	private boolean canPopMenuStack = true;
 	private boolean maxDimYReached;
 	private int index = 0;
@@ -34,13 +35,15 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		super.updateAnim();
 		for (ArrayList<MenuItem> list : selections) {
 			for (MenuItem i : list) {
-				if (getSelectedItem() == i) {
-					i.setHovered(true);
-				} else {
-					i.setHovered(false);
-				}
-				if (i.getWidthOfText() > width) {
-					width = i.getWidthOfText();
+				if (i != null) {
+					if (getSelectedItem() == i) {
+						i.setHovered(true);
+					} else {
+						i.setHovered(false);
+					}
+					if (i.getWidthOfText() > width*4+32) {
+						width = i.getWidthOfText();
+					}
 				}
 			}
 		}
@@ -72,6 +75,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	
 	public void clearSelections() {
 		selections.clear();
+		currentOpenX = this.x + this.TEXT_START_X + 16;
+		currentOpenY = this.y + this.TEXT_START_Y;
 		index = 0;
 		dimX = 1;
 		dimY = 1;
@@ -127,7 +132,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		this.orientation = orientation;
 		dimX = 1;
 		dimY = 1;
-		currentOpenX = this.x + this.TEXT_START_X + 16;
+		currentOpenX = this.x + this.TEXT_START_X;
 		currentOpenY = this.y + this.TEXT_START_Y;
 		ArrayList<MenuItem> firstRow = new ArrayList<MenuItem>(1);
 		selections = new ArrayList<ArrayList<MenuItem>>();
@@ -154,8 +159,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void add(MenuItem m) {
-		m.setX(currentOpenX);
-		m.setY(currentOpenY);
+//		m.setX(currentOpenX);
+//		m.setY(currentOpenY);
 		switch (orientation) {
 		case "vertical":
 			if (currentOpenY > this.y + this.getHeight()*4 + (2*TILE_SIZE)) {
@@ -165,8 +170,11 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				index = 0;
 				maxDimYReached = true;
 			}
-			m.setX(currentOpenX);
-			m.setY(currentOpenY);
+			if (m != null) {
+				m.setX(currentOpenX);
+				m.setY(currentOpenY);
+			}
+			
 			selections.get(index++).add(m);
 			if (!maxDimYReached) {
 				dimY++;
@@ -184,8 +192,10 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				selections.add(new ArrayList<MenuItem>());
 				dimY++;
 			}
-			m.setX(currentOpenX);
-			m.setY(currentOpenY);
+			if (m != null) {
+				m.setX(currentOpenX);
+				m.setY(currentOpenY);
+			}
 			selections.get(dimY-1).add(m);
 			currentOpenX += stepForwardX;
 			break;
@@ -199,17 +209,45 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				   if (selectedY >= selections.size()) {
 					   selectedY = 0;
 				   }
-				   while (selections.get(selectedY).size() <= selectedX || selections.get(selectedY).get(selectedX) == null) {
+				   while (selections.get(selectedY).size() <= selectedX) {
 					   updateIndex("D");
-					}
+				   }
+				   while (selections.get(selectedY).get(selectedX) == null) {
+					   boolean atLeastOne = false;
+						for (MenuItem i : selections.get(selectedY)) {
+							if (i != null) {
+								atLeastOne = true;
+								break;
+							}
+						}
+						if (!atLeastOne) {
+							updateIndex("D");
+							return;
+						}
+					   updateIndex("R");
+				   }
 					break;
 		case "U" : 	selectedY--;
 					if (selectedY < 0)  {
 						selectedY = selections.size()-1;
 					}
-					while (selections.get(selectedY).size() <= selectedX || selections.get(selectedY).get(selectedX) == null) {
+					while (selections.get(selectedY).size() <= selectedX) {
 						updateIndex("U");
 					}
+					while (selections.get(selectedY).get(selectedX) == null) {
+						   boolean atLeastOne = false;
+							for (MenuItem i : selections.get(selectedY)) {
+								if (i != null) {
+									atLeastOne = true;
+									break;
+								}
+							}
+							if (!atLeastOne) {
+								updateIndex("U");
+								return;
+							}
+						   updateIndex("R");
+					   }
 					break;			
 		case "L" : selectedX--;
 					if (selectedX < 0) {

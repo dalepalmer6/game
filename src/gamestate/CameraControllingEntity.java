@@ -58,6 +58,8 @@ public class CameraControllingEntity extends Entity {
 	}
 	
 	public void update(GameState gs) {
+		lastBehind = behind;
+		behind = false;
 		moveWithCamera(deltaX,deltaY);
 		xOnScreen = x - gs.getCamera().getX();
 		yOnScreen = y - gs.getCamera().getY();

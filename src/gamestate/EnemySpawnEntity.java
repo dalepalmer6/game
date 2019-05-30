@@ -31,7 +31,7 @@ public class EnemySpawnEntity extends Entity {
 		value += getName() + "\n";
 		value += getX() + "," + getY() + "," + getWidth() + "," + getHeight() + "\n";
 		for (Enemy e : enemies) {
-			value += e.getName() + ",";
+			value += e.getId() + ",";
 		}
 		value += "\n";
 		for (float val : rates) {
@@ -99,7 +99,7 @@ public class EnemySpawnEntity extends Entity {
 	public void setEnemies(String[] enemyNames) {
 		enemies = new ArrayList<Enemy>();
 		for (String name : enemyNames) {
-			enemies.add(state.enemies.get(name));
+			enemies.add(state.enemies.get(Integer.parseInt(name)));
 		}
 	}
 	

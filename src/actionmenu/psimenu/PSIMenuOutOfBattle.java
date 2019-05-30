@@ -37,7 +37,10 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	}
 	
 	public void update(InputController input) {
-		super.update(input);
+		if (!state.inBattle) {
+			super.update(input);
+		}
+		
 		if (!backShouldExit && input.getSignals().get("BACK")) {
 			psiSTW.setDrawOnly(true);
 			classificationWindow.setDrawOnly(false);
@@ -80,7 +83,10 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	
 	@Override
 	public void reload() {
-		super.reload();
+		if (!state.inBattle) {
+			super.reload();
+		}
+		
 		classificationWindow = new SelectionTextWindow(256,128,3,4,state);
 		addMenuItem(classificationWindow);
 		for (PSIClassification psic : state.psiClassList.getPSIClassifications()) {
@@ -100,7 +106,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 		classId = classificationWindow.getSelectedIndex();
 		ArrayList<PSIFamily> psiFams = state.psiClassList.getPSIClassifications().get(classId).getFamilies();
 		psiSTW.clearSelections();
-		psiSTW.createGrid(5,5);
+		psiSTW.createGrid(5,15);
 		if (backShouldExit) {
 			psiSTW.setDrawOnly(true);
 		}
