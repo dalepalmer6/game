@@ -471,7 +471,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void killBattleMenu() {
-//		state.getMenuStack().pop();
+		state.getMenuStack().pop();
 		state.setShouldFadeIn();
 		state.setOldBGM();
 		for (EnemyEntity ee : enemyEntities) {

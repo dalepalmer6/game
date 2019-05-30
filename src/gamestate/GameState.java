@@ -249,8 +249,8 @@ public class GameState {
 		camera.setMapRenderer(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
 		addPartyMember("NINTEN");
-		addPartyMember("PIPPI");
-		addPartyMember("LOID");
+//		addPartyMember("PIPPI");
+//		addPartyMember("LOID");
 		
 //		createTestEnemy();
 	}

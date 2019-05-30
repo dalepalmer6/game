@@ -27,7 +27,7 @@ public class Cutscene extends Menu {
 	}
 	
 	public void loadEntityToCutsceneData() {
-		cutsceneData.loadEntity();
+			cutsceneData.loadEntity();
 	}
 	
 //	public void update(InputController input) {
@@ -35,9 +35,18 @@ public class Cutscene extends Menu {
 //	}
 	
 	public void doCutscene() {
-		if (cutsceneData.getEntity().getAtTargetPoint() && state.getMenuStack().isEmpty()) {
+		boolean canGoIn = false;
+		if (cutsceneData.getEntity() != null) {
+			canGoIn = cutsceneData.getEntity().getAtTargetPoint();
+		} else {
+			canGoIn = true;
+		}
+		if (canGoIn && state.getMenuStack().isEmpty()) {
 			curMovement = cutsceneData.getMovementData();
-			cutsceneData.getEntity().setAtTargetPoint(false);
+			if (cutsceneData.getEntity() != null) {
+				cutsceneData.getEntity().setAtTargetPoint(false);
+			}
+			
 			text = cutsceneData.getString();
 			if (text != null) {
 				SimpleDialogMenu.createDialogBox(state,text);
@@ -55,7 +64,10 @@ public class Cutscene extends Menu {
 	
 	public void end() {
 		ended = true;
-		cutsceneData.getEntity().resetMovement();
+		if (cutsceneData.getEntity() != null) {
+			cutsceneData.getEntity().resetMovement();
+		}
+		
 		onEndAction();
 	}
 

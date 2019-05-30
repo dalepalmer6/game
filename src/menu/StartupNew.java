@@ -963,6 +963,7 @@ public class StartupNew{
 			menuStack.pop();
 			if (needToAddMenu!=null) {
 				menuStack.push(needToAddMenu);
+				needToAddMenu = null;
 			}
 			
 			shouldFadeIn = false;
