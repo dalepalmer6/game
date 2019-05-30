@@ -18,8 +18,8 @@ vec2 distorsion(vec2 p, float amplitude, float frequency, float speed)
 		res.x = p.x - amplitude * sin( frequency + time*speed);
 	}
 	
-	res.y = p.y + amplitude * (frequency + time*speed);
-	
+	//res.y = p.y + amplitude * (frequency + time*speed);
+	res.y = p.y;
 	return res;
 }
 

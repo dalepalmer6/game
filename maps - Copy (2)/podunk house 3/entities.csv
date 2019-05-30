@@ -1,0 +1,4 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+mayor,0,0,24,32,[FLAGISSET_pippiIsReturned][_043][_046][_047][ELSE][FLAGISSET_mayorSpokenTo][_040][ELSE][_040][_041][ENDIF][ENDIF] ,mayor, , 
+npc02,0,0,24,32,[FLAGISSET_keyitem63]I have nothing else to give you.[ELSE][FLAGISSET_pippiIsReturned][_048][ADDITEM_63] [ELSE][_295][ENDIF][ENDIF],abbot, , 
+npc04,0,0,24,32,TEXT,receptionist, , 

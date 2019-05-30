@@ -1,0 +1,30 @@
+﻿Index,Text,Action,Use Variable,Target
+0,rammed into,26,0,2
+1,brandished a knife,26,0,2
+2,used a biting attack,26,0,2
+3,vented exhaust fumes,27,4,3
+4,is staring menacingly,30,0,2
+5,stole,28,0,2
+6,fired the tank cannon,26,0,3
+7,scratched,26,0,2
+8,went berserk,26,0,3
+9,s final desperation attack!,26,0,3
+10,greeted everyone politely and left,29,0,2
+11,burst into laughter,30,0,2
+12,burst into flames,31,0,3
+13,tripped and fell,30,0,0
+14,is in a defensive stance,32,0,0
+15,is guarding,32,0,0
+16,edged closer,33,0,0
+17,used a Demon Seed,34,128,0
+18,used paralysis gas,27,512,3
+19,tried ,35,10,0
+20,is doing a continuous attack,36,3,2
+21,is out of control,36,3,3
+22,hissed at you,30,0,2
+23,is doing kickies,36,3,2
+24,bit down hard,26,0,2
+25,wanted to attack your sweater,30,0,2
+26,is purring and acting cuddly,30,0,2
+27,is staring attentively,30,0,2
+28,is cripping tall[WAIT10].[WAIT10].[WAIT10]. It was ineffective,30,0,2

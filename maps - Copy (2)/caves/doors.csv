@@ -1,0 +1,4 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+podunk exit,172,511,9,32,podunk,4042,433,text, , 
+graveyard exit,943,319,9,32,graveyard,1646,371,text, , 
+magicant exit,329,194,193,32,magicant,1698,3389,text, , 
