@@ -244,7 +244,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	public String execute() {
 		// TODO Auto-generated method stub
 		Entity e = hoveredEntity;
-		mapPreview.setTool(new SingleEntity(e,state));
+		((MapEditMenu) state.getMenuStack().peek()).setTool(new SingleEntity(e,state));
 		return null;
 	}
 }

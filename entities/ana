@@ -38,9 +38,10 @@ walking_upright,0,96,24,32,true
 walking_upright,24,96,24,32,true
 walking_upright,0,96,24,32,true
 walking_upright,48,96,24,32,true
-climb,0,160,24,32,false
-climb,24,160,24,32,false
-climb,48,160,24,32,false
+idle_climb,0,160,24,32,false
+_climb,0,160,24,32,false
+_climb,24,160,24,32,false
+_climb,48,160,24,32,false
 charred,0,192,24,32,false
 dead_down,0,224,24,32,false
 dead_downleft,24,224,24,32,false

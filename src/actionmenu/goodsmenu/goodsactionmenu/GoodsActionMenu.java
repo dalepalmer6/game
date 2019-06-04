@@ -25,9 +25,12 @@ public class GoodsActionMenu extends Menu {
 //		menuItems.clear();
 		stw = new SelectionTextWindow(0,0,5,5,state);
 		stw.add(new UseMenuItem(item,state,party,partyIndex));
-//		stw.add(new GiveMenuItem(item,state,partyIndex));//needs index
-//		stw.add(new DropMenuItem(item,state,partyIndex));//needs index
-		stw.add(new HelpMenuItem(item,state));
+		if (party.size() > 1) {
+			stw.add(new GiveMenuItem(item,state,party,partyIndex));//needs index
+		}
+		
+		stw.add(new DropMenuItem(item,state,party,partyIndex));//needs index
+//		stw.add(new HelpMenuItem(item,state));
 		addMenuItem(stw);
 	}
 }

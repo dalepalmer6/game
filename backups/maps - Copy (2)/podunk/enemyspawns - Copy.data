@@ -1,0 +1,10 @@
+#
+spawnTest
+200,200,32,32
+Lamp
+100
+#
+spawnTest
+800,800,32,32
+Lamp
+50

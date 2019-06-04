@@ -29,6 +29,8 @@ public class Menu implements MenuInterface {
 //	private int targetX;
 //	private int targetY;
 	
+	
+	
 	public List<DrawableObject> getDrawableObjects() {
 		return drawables;
 	}

@@ -14,11 +14,11 @@
 12,PK Fire [SC_gamma],A PSI attack that chars a foe in a pillar of flames. Deals between 200 and 220 points of damage to all foes.,3,TRUE,FALSE,8,pkfireg,Offense,PK Fire,[SC_gamma] ,200,220,28
 13,PK Fire [SC_omega],A PSI attack that chars a foe in a pillar of flames. Deals between 280 and 320 points of damage to all foes.,3,TRUE,FALSE,8,pkfireo,Offense,PK Fire,[SC_omega] ,280,320,38
 14,PK Fire [SC_sigma],An ultimate PSI attack that chars a foe in a pillar of flames. Deals between 450 and 500 points of damage to all foes.,3,TRUE,FALSE,2,undef,Offense,PK Fire,[SC_sigma] ,450,500,54
-15,PK Thunder [SC_alpha],A PSI attack that generates a shocking jolt of electricity. Deals 100 points of damage to a foe[COMMA] but has a low accuracy.,4,TRUE,FALSE,10,pkthunderab,Offense,PK Thunder,[SC_alpha] ,100,100,6
-16,PK Thunder [SC_beta],A PSI attack that generates two shocking jolts of electricity. Each jolt deals 150 points of damage to a foe[COMMA] but have a low accuracy.,5,TRUE,FALSE,10,pkthunderab,Offense,PK Thunder,[SC_beta] ,150,150,16
-17,PK Thunder [SC_gamma],A PSI attack that generates three shocking jolts of electricity. Each jolt deals 170 points of damage to a foe[COMMA] but have a low accuracy.,6,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_gamma] ,170,170,24
-18,PK Thunder [SC_omega],A PSI attack that generates four shocking jolts of electricity. Each jolt deals 180 points of damage to a foe[COMMA] but have a low accuracy.,7,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_omega] ,180,180,30
-19,PK Thunder [SC_sigma],An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,8,TRUE,FALSE,10,undef,Offense,PK Thunder,[SC_sigma] ,200,200,46
+15,PK Thunder [SC_alpha],A PSI attack that generates a shocking jolt of electricity. Deals 100 points of damage to a foe[COMMA] but has a low accuracy.,3,TRUE,FALSE,10,pkthunderab,Offense,PK Thunder,[SC_alpha] ,100,100,6
+16,PK Thunder [SC_beta],A PSI attack that generates two shocking jolts of electricity. Each jolt deals 150 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,pkthunderab,Offense,PK Thunder,[SC_beta] ,150,150,16
+17,PK Thunder [SC_gamma],A PSI attack that generates three shocking jolts of electricity. Each jolt deals 170 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_gamma] ,170,170,24
+18,PK Thunder [SC_omega],A PSI attack that generates four shocking jolts of electricity. Each jolt deals 180 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_omega] ,180,180,30
+19,PK Thunder [SC_sigma],An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,undef,Offense,PK Thunder,[SC_sigma] ,200,200,46
 20,4th D. Slip,The user creates a rift by which the party can escape from the current battle. Has a higher chance of success than simply running away.,0,TRUE,TRUE,41,undef,Other,4th Dimens. Slip,[SC_alpha] ,0,0,12
 21,Super Healing,Fully restores a fainted target to full HP.,0,TRUE,TRUE,2,undef,Healing,Super Healing,[SC_alpha] ,0,0,35
 22,Healing [SC_alpha],A PSI healing technique that cures the body of poison and cold.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_alpha] ,4092,4092,6
@@ -26,35 +26,35 @@
 24,Healing [SC_gamma],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone. Also has a small chance of reviving a fainted ally.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_gamma] ,3096,3096,24
 25,Healing [SC_omega],A PSI healing technique that cures the body of all status afflictions[COMMA] and resurrects a fainted party member to half of their maximum HP.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_omega] ,3096,3096,32
 26,Healing [SC_sigma],An ultimate PSI healing technique that cures all status afflictions on the party. Revives all fainted party members to half HP.,1,TRUE,TRUE,2,undef,Healing,Healing,[SC_sigma] ,0,0,40
-27,Shield [SC_alpha],Creates a shield against physical attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,undef,Assist,Shield,[SC_alpha] ,1,1,16
-28,Shield [SC_beta],Creates a shield against physical attacks[COMMA] causing physical damage to be reduced by half.,1,TRUE,FALSE,29,undef,Assist,Shield,[SC_beta] ,1,1,28
-29,PSI Shield [SC_alpha],Creates a shield against PSI attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,undef,Assist,PSI Shield,[SC_alpha] ,2,2,16
-30,PSI Shield [SC_beta],Creates a shield against PSI attacks[COMMA] causing PSI damage to be reduced by half.,1,TRUE,FALSE,29,undef,Assist,PSI Shield,[SC_beta] ,2,2,28
+27,Shield [SC_alpha],Creates a shield against physical attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,shieldb,Assist,Shield,[SC_alpha] ,1,1,16
+28,Shield [SC_beta],Creates a shield against physical attacks[COMMA] causing physical damage to be reduced by half.,1,TRUE,FALSE,29,shieldb,Assist,Shield,[SC_beta] ,1,1,28
+29,PSI Shield [SC_alpha],Creates a shield against PSI attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,psishielda,Assist,PSI Shield,[SC_alpha] ,2,2,16
+30,PSI Shield [SC_beta],Creates a shield against PSI attacks[COMMA] causing PSI damage to be reduced by half.,1,TRUE,FALSE,29,psishieldb,Assist,PSI Shield,[SC_beta] ,2,2,28
 31,Teleport [SC_alpha],Visit a previously discovered location. Requires substantial room to gather enough speed.,-1,FALSE,TRUE,22,undef,Other,Teleport,[SC_alpha] ,0,0,2
 32,Teleport [SC_beta],No desc.,-1,FALSE,TRUE,23,undef,Other,Teleport,[SC_beta] ,0,0,8
 33,Telepathy,Telepathically communicate with things.,-1,FALSE,TRUE,24,undef,Other, ,Telepathy,0,0,1
-34,PK Beam [SC_alpha],Weak beam attack.,2,TRUE,FALSE,17,undef,Offense,PK Beam,[SC_alpha] ,40,80,3
-35,PK Beam [SC_beta],Strong beam attack.,2,TRUE,FALSE,17,undef,Offense,PK Beam,[SC_beta],120,160,9
-36,PK Beam [SC_gamma],Chance of instant death.,2,TRUE,FALSE,17,undef,Offense,PK Beam,[SC_gamma],999,999,24
-37,PK Beam [SC_omega],Strong beam attack on all foes.,3,TRUE,FALSE,17,undef,Offense,PK Beam,[SC_omega],200,300,32
+34,PK Beam [SC_alpha],Weak beam attack.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_alpha] ,40,80,3
+35,PK Beam [SC_beta],Strong beam attack.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_beta],120,160,9
+36,PK Beam [SC_gamma],Chance of instant death.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_gamma],999,999,24
+37,PK Beam [SC_omega],Strong beam attack on all foes.,3,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_omega],200,300,32
 38,PK Beam [SC_sigma],Chance of instant death on all foes.,3,TRUE,FALSE,17,undef,Offense,PK Beam,[SC_sigma],450,550,52
-39,PSI Magnet [SC_alpha],Drain a small amount of PP from a foe.,2,TRUE,FALSE,25,undef,Assist,PSI Magnet,[SC_alpha],4,8,0
-40,PSI Magnet [SC_beta],Drain a small amount of PP from all foes.,3,TRUE,FALSE,25,undef,Assist,PSI Magnet,[SC_beta],4,8,0
-41,Hypnosis [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,Hypnosis,[SC_alpha],256,256,5
-42,Hypnosis [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,Hypnosis,[SC_omega],256,256,15
-43,Paralysis [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,Paralysis,[SC_alpha],512,512,8
-44,Paralysis [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,Paralysis,[SC_omega],512,512,24
-45,Power Shield,No desc.,0,TRUE,FALSE,29,undef,Assist,Shield,[SC_alpha],3,3,10
+39,PSI Magnet [SC_alpha],Drain a small amount of PP from a foe.,2,TRUE,FALSE,25,magneta,Assist,PSI Magnet,[SC_alpha],4,8,0
+40,PSI Magnet [SC_beta],Drain a small amount of PP from all foes.,3,TRUE,FALSE,25,magnetb,Assist,PSI Magnet,[SC_beta],4,8,0
+41,Hypnosis [SC_alpha],No desc.,2,TRUE,FALSE,27,hypnoa,Assist,Hypnosis,[SC_alpha],256,256,5
+42,Hypnosis [SC_omega],No desc.,3,TRUE,FALSE,27,hypnoo,Assist,Hypnosis,[SC_omega],256,256,15
+43,Paralysis [SC_alpha],No desc.,2,TRUE,FALSE,27,paraa,Assist,Paralysis,[SC_alpha],512,512,8
+44,Paralysis [SC_omega],No desc.,3,TRUE,FALSE,27,parao,Assist,Paralysis,[SC_omega],512,512,24
+45,Power Shield,No desc.,0,TRUE,FALSE,29,shieldb,Assist,Shield,[SC_alpha],3,3,10
 46,PSI Darkness [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,PSI Darkness,[SC_alpha],2,2,10
 47,PSI Darkness [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,PSI Darkness,[SC_omega],2,2,25
 48,PSI Block [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,PSI Block,[SC_alpha],128,128,5
 49,PSI Block [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,PSI Block,[SC_omega],128,128,15
-50,Offense Up [SC_alpha],No desc.,0,TRUE,FALSE,5,undef,Assist,Offense Up,[SC_alpha],15,30,6
-51,Offense Up [SC_omega],No desc.,1,TRUE,FALSE,5,undef,Assist,Offense Up,[SC_omega],15,30,20
-52,Defense Up [SC_alpha],No desc.,0,TRUE,FALSE,6,undef,Assist,Defense Up,[SC_alpha],15,30,3
-53,Defense Up [SC_omega],No desc.,1,TRUE,FALSE,6,undef,Assist,Defense Up,[SC_omega],15,30,13
-54,Quick Up [SC_alpha],No desc.,0,TRUE,FALSE,4,undef,Assist,Quick Up,[SC_alpha],15,30,3
-55,Quick Up [SC_omega],No desc.,1,TRUE,FALSE,4,undef,Assist,Quick Up,[SC_omega],15,30,13
+50,Offense Up [SC_alpha],No desc.,0,TRUE,FALSE,5,defdowna,Assist,Offense Up,[SC_alpha],15,30,6
+51,Offense Up [SC_omega],No desc.,1,TRUE,FALSE,5,defdowno,Assist,Offense Up,[SC_omega],15,30,20
+52,Defense Up [SC_alpha],No desc.,0,TRUE,FALSE,6,defdowna,Assist,Defense Up,[SC_alpha],15,30,3
+53,Defense Up [SC_omega],No desc.,1,TRUE,FALSE,6,defdowno,Assist,Defense Up,[SC_omega],15,30,13
+54,Quick Up [SC_alpha],No desc.,0,TRUE,FALSE,4,defdowna,Assist,Quick Up,[SC_alpha],15,30,3
+55,Quick Up [SC_omega],No desc.,1,TRUE,FALSE,4,defdowno,Assist,Quick Up,[SC_omega],15,30,13
 56,Brainshock [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,Brainshock,[SC_alpha],32,32,5
 57,Brainshock [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,Brainshock,[SC_omega],32,32,15
 58,Shield Off [SC_alpha],No desc.,2,TRUE,FALSE,36,undef,Assist,Shield Off,[SC_alpha],0,0,8

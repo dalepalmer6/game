@@ -12,6 +12,14 @@ public class TileInstance {
 		return tileCollisionMap.getCollisionData(y*4 + x);
 	}
 	
+	public String getCollisionData() {
+		return tileCollisionMap.getCollisionData();
+	}
+	
+	public void modifyCollisionInfoAtIndex(int x, int y, int newValue) {
+		tileCollisionMap.setCollision(x+  y*4,newValue);
+	}
+	
 	public int getDx() {
 		return dx;
 	}

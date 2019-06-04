@@ -30,9 +30,46 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private boolean canPopMenuStack = true;
 	private boolean maxDimYReached;
 	private int index = 0;
+	private int yStart = 0;
+	private int yEnd = 4;
+	private boolean maxHeightReached;
+	private boolean grid;
 	
 	public void updateAnim() {
 		super.updateAnim();
+		if (grid) {
+			while (selectedY >= yEnd) {
+				yStart++;
+				yEnd++;
+			}
+			while (selectedY < yStart) {
+				yStart--;
+				yEnd--;
+			}
+			while (yEnd > selections.size()) {
+				yStart = 0;
+				yEnd = 4;
+			}
+			while (yStart < 0) {
+				yEnd = selections.size();
+				yStart = yEnd - 4;
+			}
+			int y = 32;
+			for (int i = yStart; i < yEnd; i++) {
+				int x = 288;
+				
+				ArrayList<MenuItem> mis = selections.get(i);
+				for (MenuItem mi : mis) {
+					if (mi != null) {
+						mi.setX(this.x + (x += 64));
+						mi.setY(this.y + y);
+					}
+				}
+				y += 64;
+			}
+		}
+		
+		
 		for (ArrayList<MenuItem> list : selections) {
 			for (MenuItem i : list) {
 				if (i != null) {
@@ -140,6 +177,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void createGrid(int x, int y) {
+		grid = true;
 		selections = new ArrayList<ArrayList<MenuItem>>();
 		ArrayList<MenuItem> row;
 		for (int i = 0; i < y; i++) {
@@ -195,6 +233,11 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 			if (m != null) {
 				m.setX(currentOpenX);
 				m.setY(currentOpenY);
+			}
+			if (currentOpenY > this.y + this.getHeight()*4 && !maxHeightReached) {
+				maxHeightReached = true;
+				yStart = 0;
+				yEnd = dimY;
 			}
 			selections.get(dimY-1).add(m);
 			currentOpenX += stepForwardX;
@@ -309,7 +352,17 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	public void drawSelections(MainWindow mw) {
 		Text.initDrawText(mw);
 		int scale = 2;
-		for (ArrayList<MenuItem> mis : selections) {
+//		int i = yStart;
+//		for (ArrayList<MenuItem> mis : selections) {
+		if (!grid) {
+			yStart = 0;
+			yEnd = selections.size();
+		}
+		for (int i = yStart; i < yEnd; i++) {
+			ArrayList<MenuItem> mis = selections.get(i);
+//			if (i++ > yEnd) {
+//				break;
+//			}
 			for (MenuItem m : mis) {
 				if (m == null) {
 					continue;
@@ -346,6 +399,14 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 			return -100;
 		}
 		return selections.get(0).get(0).getY();
+	}
+	
+	public int getYStart() {
+		return yStart;
+	}
+	
+	public int getYEnd() {
+		return yEnd;
 	}
 	
 	public void drawCursor(MainWindow m) {

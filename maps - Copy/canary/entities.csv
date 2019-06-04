@@ -1,0 +1,2 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,848,145,24,32,[FLAGISSET_haveCanary][_33f][NINTEN] took note of the melody.[SETFLAG_melody2] [ELSE][_26C] [ENDIF],laura, , 

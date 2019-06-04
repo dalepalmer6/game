@@ -13,27 +13,36 @@ public class PartyMemberSelectMenuItem extends MenuItem {
 	private PartyMember pm;
 	private Item item;
 	private PartyMember user;
-	
-	public PartyMemberSelectMenuItem(PartyMember pm, Item item, PartyMember user, StartupNew state) {
+	private String actionToDo;
+	public PartyMemberSelectMenuItem(String act, PartyMember pm, Item item, PartyMember user, StartupNew state) {
 		super(pm.getName(),0,0,state);
 		this.pm = pm;
 		this.item = item;
 		this.user = user;
+		actionToDo = act;
 	}
 	
 	public String execute() {
 		String result = "";
-		state.setClearMenuStack();
-		ArrayList<PartyMember> partyMems = new ArrayList<PartyMember>();
-		if (!(item instanceof PSIAttack)) {
-			partyMems.add(pm);
-			result += item.useOutOfBattle(user,partyMems);
-			state.setResultOfMenuToDisplay(result);
-		} else if (item instanceof PSIAttack) {
-			result += "[PLAYSFX_psi.wav]" + user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
-			partyMems.add(pm);
-			result += item.useOutOfBattle(user,partyMems);
-			state.setResultOfMenuToDisplay(result);
+		if (actionToDo.equals("give")) {
+			state.getMenuStack().pop();
+			state.getMenuStack().pop();
+			pm.setItem(item,pm.getOpenInventorySpace());
+			user.consumeItem(item);
+		}
+		if (actionToDo.equals("use")) {
+			state.setClearMenuStack();
+			ArrayList<PartyMember> partyMems = new ArrayList<PartyMember>();
+			if (!(item instanceof PSIAttack)) {
+				partyMems.add(pm);
+				result += item.useOutOfBattle(user,partyMems);
+				state.setResultOfMenuToDisplay(result);
+			} else if (item instanceof PSIAttack) {
+				result += "[PLAYSFX_psi.wav]" + user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
+				partyMems.add(pm);
+				result += item.useOutOfBattle(user,partyMems);
+				state.setResultOfMenuToDisplay(result);
+			}
 		}
 		return null;
 	}

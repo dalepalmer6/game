@@ -79,7 +79,7 @@ int index;
 			if (psi.getTargetType() != -1) {
 				if (party.size() == 1) {
 					target = party.get(0);
-					PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,psi,user,state);
+					PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem("use",target,psi,user,state);
 					use.execute();
 					state.getMenuStack().pop();
 				} else if (psi.getTargetType() == 0) {

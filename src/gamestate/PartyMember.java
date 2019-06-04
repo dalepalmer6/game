@@ -50,6 +50,10 @@ public class PartyMember {
 		items.set(space,i);
 	}
 	
+	public void consumeItem(Item i) {
+		items.remove(i);
+	}
+	
 	public String getId() {
 		return id;
 	}

@@ -66,7 +66,7 @@ public class UseMenuItem extends MenuItem {
 			PartyMember target = null;
 			if (party.size() == 1) {
 				target = party.get(0);
-				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem(target,item,user,state);
+				PartyMemberSelectMenuItem use = new PartyMemberSelectMenuItem("use",target,item,user,state);
 				use.execute();
 				state.getMenuStack().pop();
 			} else {

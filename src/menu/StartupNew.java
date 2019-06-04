@@ -733,17 +733,26 @@ public class StartupNew{
 				String[] potentialEnemyActions = data[17].split("_");
 				String bgm = data[18];
 				String battleBG = data[19];
+				String predicate = data[20];
+				String resist = data[21];
 				EnemyAction[] enemyActions = new EnemyAction[potentialEnemyActions.length];
 				for (int x = 0; x < potentialEnemyActions.length; x++) {
 					enemyActions[x] = this.enemyActions.get(Integer.parseInt(potentialEnemyActions[x]));
 				}
 //				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				Enemy e = new Enemy(i++,texture,name,stats,xp,money,entityName,this);
+				Enemy e = new Enemy(i,texture,name,stats,xp,money,entityName,this);
 				e.setActions(enemyActions);
 				e.setBGM(bgm);
 				e.setBattleBG(battleBG);
-				enemies.put(i,e);
+				e.setResistances(Integer.parseInt(resist));
+				if (predicate.equals(" ")) {
+					e.setPredicate("");
+				} else {
+					e.setPredicate(predicate);
+				}
+				
+				enemies.put(i++,e);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -852,8 +861,8 @@ public class StartupNew{
 			loadImageData();
 			loadAllEntities();
 			loadAllItems();
-			loadAllPSI();
-			loadAllAnims();
+//			loadAllPSI();
+//			loadAllAnims();
 			loadAllEnemyActions();
 			loadAllEnemies();
 			loadAllStrings();

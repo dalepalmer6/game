@@ -58,6 +58,7 @@ public class CameraControllingEntity extends Entity {
 	}
 	
 	public void update(GameState gs) {
+		forceAllowMovementY = false;
 		lastBehind = behind;
 		behind = false;
 		moveWithCamera(deltaX,deltaY);

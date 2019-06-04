@@ -46,6 +46,15 @@ public class Player extends CameraControllingEntity implements Controllable{
 		    //record new position
 			movementData[0] = new MovementData(x,y,actionTaken,directionX,directionY);
 		}
+		if (forceAllowMovementY) {
+			actionTaken = "";
+			deltaX=0;
+			directionX = "";
+			if (deltaY == 0) {
+				actionTaken = "idle";
+			}
+			directionY = "climb";
+		}
 	}
 
 	public Player(int scale, Entity e, Camera c, StartupNew s) {
@@ -103,11 +112,13 @@ public class Player extends CameraControllingEntity implements Controllable{
 			angleDirection = 0;
 			deltaX += stepSize * Math.cos(angleDirection);
 			deltaY += stepSize * Math.sin(angleDirection);
+			if (!forceAllowMovementY)
 			directionX = "right";
 		} else if (input.getSignals().get("LEFT")) {
 			angleDirection = Math.PI;
 			deltaX += stepSize * Math.cos(angleDirection);
 			deltaY += stepSize * Math.sin(angleDirection);
+			if (!forceAllowMovementY)
 			directionX = "left";
 		} else {
 			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("UP") || input.getSignals().get("DOWN"))) {

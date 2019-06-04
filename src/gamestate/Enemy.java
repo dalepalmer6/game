@@ -33,6 +33,7 @@ public class Enemy extends BattleEntity {
 		enemyCopy.setActions(actions);
 		enemyCopy.setBGM(battleBGM);
 		enemyCopy.setBattleBG(battleBG);
+		enemyCopy.setResistances(resistances);
 		return enemyCopy;
 	}
 	
@@ -100,4 +101,8 @@ public class Enemy extends BattleEntity {
 		// TODO Auto-generated method stub
 		return battleBGM;
 	}
+
+	
+
+	
 }

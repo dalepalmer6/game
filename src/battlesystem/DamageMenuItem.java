@@ -1,5 +1,6 @@
 package battlesystem;
 
+import battlesystem.options.BattleTextWindow;
 import canvas.MainWindow;
 import menu.MenuItem;
 import menu.StartupNew;
@@ -74,7 +75,12 @@ public class DamageMenuItem extends MenuItem {
 				if (bm.getCurrentActiveBattleAction().isComplete()) {
 					bm.setGetNextPrompt();
 				} else {
-					bm.setGetResultText();
+					if (bm.getCurrentActiveBattleAction().isContinuous()&& bm.getCurrentActiveBattleAction().needAnim() && !bm.getCurrentActiveBattleAction().isComplete()) {
+						bm.setGetAnimation(true);
+					} else {
+						bm.setGetResultText();
+					}
+					
 				}
 				alive = false;
 			}

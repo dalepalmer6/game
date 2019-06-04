@@ -15,7 +15,6 @@ public class DoorEntity extends Entity {
 	private int destX;
 	private int destY;
 	private String newMap;
-	private String description;
 	private String text;
 	
 	public void draw(MainWindow m) {
@@ -23,6 +22,18 @@ public class DoorEntity extends Entity {
 	}
 	
 	public void interact() {}
+	
+	public void setNewParams(int x, int y, int w, int h, String name, String appFlag, String disFlag, String newMap) {
+		// TODO Auto-generated method stub
+		this.x = x;
+		this.y = y;
+		this.width = w;
+		this.height = h;
+		this.name = name;
+		this.appearFlag = appFlag;
+		this.disappearFlag = disFlag;
+		this.newMap = newMap;
+	}
 	
 	public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
 		super("door.png", x, y, width, height, m, "door");
@@ -32,7 +43,7 @@ public class DoorEntity extends Entity {
 		this.spriteCoordinates = new SpritesheetCoordinates();
 		spriteCoordinates.setPose("idle_down");
 		spriteCoordinates.addStateToPose("idle_down",0,0,12,12);
-		this.description = desc;
+		this.name = desc;
 		this.text = text;
 	}
 	
@@ -60,10 +71,6 @@ public class DoorEntity extends Entity {
 		return destY;
 	}
 	
-	public String getDesc() {
-		return description;
-	}
-	
 	public String getText() {
 		return text;
 	}
@@ -75,7 +82,7 @@ public class DoorEntity extends Entity {
 	
 	@Override
 	public String getInfoForTool() {
-		return getDesc() + "" + x + "," + y + ": to " + newMap;
+		return getName() + "" + x + "," + y + ": to " + newMap;
 	}
 	
 	public void act() {

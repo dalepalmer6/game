@@ -2,6 +2,7 @@ package mapeditor.tools;
 
 import gamestate.DoorEntity;
 import gamestate.Entity;
+import global.InputController;
 import mapeditor.Map;
 import mapeditor.MapEditMenu;
 import mapeditor.MapPreview;
@@ -14,10 +15,42 @@ public class DoorTool extends MapTool {
 	private Map newMap;
 	private int savedViewX;
 	private int savedViewY;
-
+	private String newmapName;
 	public DoorTool(DoorEntity door, StartupNew state) {
 		super(state);
 		this.door = door;
+	}
+	
+	public void setDoor(DoorEntity door) {
+		this.door = door;
+	}
+	
+	public void update(InputController input) {
+		if (newmapName != null) {
+			editDestinationOnly();
+		}
+	}
+	
+	public void setNewMapName(String n) {
+		newmapName = n;
+	}
+	
+	public void editDestinationOnly() {
+		door.getState().setHoldable(false);
+		MapPreview mp = ((MapEditMenu) door.getState().getMenuStack().peek()).getMapPreview();
+		int tilesize = mp.getTileSize();
+		String mapName = newmapName;//getthis from somewhere
+		newMap = new Map("locmap",34,34,door.getState().tileMap,door.getState());
+		newMap.parseMap(4,mapName);
+		oldMap = mp.getMap();
+		MapEditMenu mem = ((MapEditMenu) door.getState().getMenuStack().peek());
+		savedViewX = mp.getViewX();
+		savedViewY = mp.getViewY();
+//		newMap = new MapPreview(32,96,96,mapToSetLocation,door.getState().tileMap,door.getState());
+		mp.setMap(newMap);
+		mp.setView(0,0);
+		otherMapState = true;
+		newmapName = null;
 	}
 	
 	public void doActionOnMap(int x, int y, int xMouse, int yMouse) {
@@ -37,6 +70,7 @@ public class DoorTool extends MapTool {
 			mp.getMap().readProperties();
 			System.out.println("Resetting map to old map. Hopefully it worked for you!");
 			otherMapState = false;
+			
 		}
 		else {
 			if (xMouse > mp.getWidth() || yMouse > mp.getHeight()

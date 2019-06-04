@@ -21,6 +21,14 @@ public class TileCollisionMap {
 		return collisions.get(i);
 	}
 	
+	public String getCollisionData() {
+		String s = "";
+		for (int i : collisions) {
+			s += i + ",";
+		}
+		return s;
+	}
+	
 	public TileCollisionMap() {
 		collisions = new ArrayList<Integer>(); 
 	}

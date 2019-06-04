@@ -409,7 +409,14 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 			updateView("D");
 		} else if (input.getSignals().get("MOUSE_RIGHT_DOWN")) {
 			executeRightClick();
+		} else if (input.getSignals().get("ENTER")) {
+			fillInGrass();
 		}
+	}
+
+	private void fillInGrass() {
+		// TODO Auto-generated method stub
+		map.fillInGrass();
 	}
 
 	@Override

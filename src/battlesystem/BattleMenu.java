@@ -84,6 +84,7 @@ public class BattleMenu extends Menu {
 	private int moneyGained;
 	private boolean allActionsMade;
 	private ArrayList<BattleEntity> deadEntities;
+	private boolean forceWaitForPrompt;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -132,11 +133,12 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void generateGreeting() {
-		String greeting = "You encountered a ";
+		String greeting = enemies.get(0).getPredicate();
 		greeting += enemies.get(0).getName();
 		if (enemies.size() > 1) {
 			greeting += " and cohorts";
 		}
+		greeting += " suddenly attacked";
 		greeting += ".";
 		setPromptGreet(greeting);
 		waitToStart = true;
@@ -282,10 +284,15 @@ public class BattleMenu extends Menu {
 			}
 		}
 		
-		((BattleTextWindow)prompt).setGetResultsOnExit();
+		if (currentBattleAction.isContinuous() && currentBattleAction.needAnim() && !currentBattleAction.isComplete()) {
+			prompt.loadAnimOnExit();
+		} else if (!currentBattleAction.isComplete()){
+			prompt.setGetResultsOnExit();
+		}
+		
 		if (turnIsDone) {
 			turnIsDone = false;
-			((BattleTextWindow)prompt).setPollForActionsOnExit();
+			prompt.setPollForActionsOnExit();
 			currentBattleAction.setComplete();
 			getResultText = false;
 			return;
@@ -293,7 +300,13 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptDead() {
-		prompt = createTextWindow(deadEntity.getName() + " became tame.");
+		String text = "";
+		if (deadEntity instanceof PCBattleEntity) {
+			text = "[PLAYSFX_die.wav]" + deadEntity.getName() + " got hurt and collapsed!";
+		} else {
+			text = deadEntity.getName() + " " + deadEntity.getKillText(); 
+		}
+		prompt = createTextWindow(text);
 		for (MenuItem i : menuItems) {
 			if (i instanceof TextWindow) {
 				setToRemove(i);
@@ -909,6 +922,10 @@ public class BattleMenu extends Menu {
 	public void setNeedMenu() {
 		// TODO Auto-generated method stub
 		needMenu = true;
+	}
+
+	public void setForceWaitForGetPrompt() {
+		forceWaitForPrompt = true;
 	}
 
 }

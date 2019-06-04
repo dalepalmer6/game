@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import battlesystem.BattleMenu;
 import gamestate.BattleEntity;
+import gamestate.Enemy;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
 import menu.Animation;
@@ -36,6 +37,7 @@ public class BattleAction {
 	private boolean continuous;
 	private int continuousCounter = 0;
 	private String flavorTextAttack;
+	private boolean thunderWillHit = true;
 	
 	public boolean isComplete() {
 		return completed;
@@ -45,7 +47,14 @@ public class BattleAction {
 		BattleMenu bm = (BattleMenu) state.getMenuStack().peek();
 		switch(usedAction) {
 			case "psi" : //draw anim only if the psi has an animation
-				Animation anim = ((PSIAttack) itemToUse).getAnimation();
+				Animation anim = null;
+				if (actor instanceof Enemy) {
+					anim = new Animation(state,"enemypsi",0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
+					anim.createAnimation();
+				} else {
+					anim = ((PSIAttack) itemToUse).getAnimation();
+				}
+				
 				if (anim.getTexture().equals("undef")) {
 					bm.setGetResultText();
 					if (!targetAll) {
@@ -54,6 +63,7 @@ public class BattleAction {
 //					
 					break;
 				}
+				
 				state.getMenuStack().peek().addToMenuItems(anim);
 				state.setCurrentAnimation(anim.getTexture() + ".png");
 //				state.createAtlas();
@@ -104,7 +114,7 @@ public class BattleAction {
 		if (target.getShieldType() == 1) {
 			damage/=2;
 			if (target.decreaseShieldCharge()) {
-				resultText = target.getName() + "'s PSI Shield halved the damage.";
+				resultText = target.getName() + "'s PSI Shield absorbed some of the damage.";
 			} else {
 				resultText = target.getName() + "'s PSI Shield dissipated.";
 			}
@@ -141,12 +151,8 @@ public class BattleAction {
 	}
 	
 	public String doAction() {
+		damageDealt = 0;
 		String result = "";
-//		if (usedAction.equals("defend")) {
-//			state.battleMenu.setTurnIsDone();
-//			completed = true;
-//			return "donothing";
-//		}
 		if (doNothing) {
 			state.battleMenu.setTurnIsDone();
 			completed = true;
@@ -199,7 +205,34 @@ public class BattleAction {
 			case "psi" : if (itemToUse.getActionType() == 0 || itemToUse.getActionType() == 1) {
 							isHealing = true;
 						}
-						if (targetAll) {
+						if (itemToUse.getActionType() == 10) {
+							double prob = Math.random();
+							double chance = (double) targets.size() / 4;
+							continuousCounter--;
+							boolean needToBreak = false;
+							if (continuous && continuousCounter >= 0) {
+								
+							} else {
+								state.battleMenu.setGetNextPrompt();
+								state.battleMenu.setTurnIsDone();
+								state.battleMenu.getCurrentActiveBattleAction().setComplete();
+								result = "";
+								needToBreak = true;
+							}
+							
+							if (prob < chance) {
+								int index = (int) (Math.random() * (double) targets.size());
+								setDamageDealt(itemToUse.useInBattle(actor,targets.get(index)));
+							} else {
+								damageDealt = 777;
+								result = "";
+							}
+							if (needToBreak) {
+								break;
+							}
+//							
+						}
+						else if (targetAll) {
 							if (index >= targets.size()) {
 								state.battleMenu.setGetNextPrompt();
 								state.battleMenu.setTurnIsDone();
@@ -221,9 +254,17 @@ public class BattleAction {
 							setDamageDealt(itemToUse.useInBattle(actor,target));
 						} else {
 							setDamageDealt(itemToUse.useInBattle(actor,recipient));
-							state.battleMenu.setTurnIsDone();
+							continuousCounter--;
+							if (continuous && continuousCounter > 0) {
+								
+							} else {
+								state.battleMenu.setTurnIsDone();
+							}
 						}
 						result = itemToUse.getUsedString();
+						if (result == null) {
+							result = "";
+						}
 						if (damageDealt != 0) {
 							needDamageNums = true;
 						}
@@ -370,7 +411,19 @@ public class BattleAction {
 							break;
 			case "psi":		state.setSFX("psi.wav");
 							state.playSFX();
-							battleString += actor.getName() + " tried " + itemToUse.getName() + ".[NEWLINE]";
+							battleString += actor.getName() + " tried " + itemToUse.getName() + ".";
+							if (itemToUse.getActionType() == 10) {
+								//psi thunder
+								continuous = true;
+								switch(itemToUse.getId()) {
+									case 15: continuousCounter = 1; break;
+									case 16: continuousCounter = 2; break;
+									case 17: continuousCounter = 3; break;
+									case 18: continuousCounter = 4; break;
+									case 19: continuousCounter = 5; break;
+								}
+//								continuousCounter = 3;
+							}
 							break;
 			case "item":	battleString += actor.getName() + " pulled out ";
 							if (itemToUse.getName().toLowerCase().startsWith("a") ||
@@ -567,4 +620,14 @@ public class BattleAction {
 		}
 		setTargetsForEnemyAction(players,enemies);
 	}
+	
+	public boolean isContinuous() {
+		return continuous;
+	}
+
+	public boolean needAnim() {
+		// TODO Auto-generated method stub
+		return continuousCounter > 0;
+	}
+	
 }

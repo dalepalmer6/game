@@ -1,5 +1,7 @@
 package gamestate;
 
+import java.util.ArrayList;
+
 import gamestate.elements.items.Item;
 import menu.StartupNew;
 
@@ -18,11 +20,25 @@ public class PresentEntity extends Entity{
 		text = "[FLAGISSET_present" + flagName + "]The box has been emptied.[ELSE][NINTEN] opened the present. Inside there was " + item.getParticiple() + " " + item.getName() + "[ADDITEM_" + item.getId() + "]. [PROMPTINPUT]You took it.[SETFLAG_present" + flagName + "][ENDIF] ";
 	}
 	
+	public void setNewParams(int x, int y, String name, int id) {
+		// TODO Auto-generated method stub
+		this.x = x;
+		this.y = y;
+		this.flagName = name;
+		this.itemId = id;
+		this.item = state.items.get(id);
+		
+	}
+	
 	public void update(GameState gs) {
 		super.update(gs);
 		if (gs.getFlag("present" + flagName)) {
 			actionTaken = "opened";
 		}
+	}
+	
+	public int getItemId() {
+		return itemId;
 	}
 
 	public String toString() {

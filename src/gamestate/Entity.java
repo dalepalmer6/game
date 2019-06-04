@@ -32,7 +32,7 @@ public class Entity implements Drawable,EntityInterface {
 	protected double deltaY;
 	protected int xOnScreen;
 	protected int yOnScreen;
-	private String texture;
+	protected String texture;
 	protected int width;
 	protected int height;
 	protected int stepSize = 8;
@@ -41,8 +41,8 @@ public class Entity implements Drawable,EntityInterface {
 	private long delta;
 	protected String name;
 	private boolean needsRemove;
-	private String appearFlag = " ";
-	private String disappearFlag = " ";
+	protected String appearFlag = " ";
+	protected String disappearFlag = " ";
 	private double moveSpeedThisFrame;
 	protected double angleDirection;
 	protected int targetX = -1;
@@ -52,6 +52,7 @@ public class Entity implements Drawable,EntityInterface {
 	protected boolean behind;
 	protected boolean lastBehind;
 	protected long timer;
+	protected boolean forceAllowMovementY;
 	
 	public void setIgnoreCollisions(boolean b) {
 		// TODO Auto-generated method stub
@@ -165,6 +166,10 @@ public class Entity implements Drawable,EntityInterface {
 	public void setXY(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public void setName(String n) {
+		this.name = n;
 	}
 	
 	public void move() {
@@ -283,6 +288,7 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public void update(GameState gs) {
+		forceAllowMovementY = false;
 		timer++;
 		if (timer % 120 == 0) {
 			//implement different movement patterns using this similar style
@@ -445,13 +451,24 @@ public class Entity implements Drawable,EntityInterface {
 		
 		boolean collided = false;
 		if (!ignoreCollisions) {
-			int val = ((collision & 5) & 15);
+			int val = ((collision & 13) & 15);
 			switch(val) {
 				case 1: 
 					deltaX = 0; 
-					deltaY = 0; 
-					collided = true; break;
+					if (!forceAllowMovementY) {
+						deltaY = 0; 
+						collided = true;
+					} else {
+						collided = false;
+					}
+					break;
 				case 4: break;
+				case 8: forceAllowMovementY = true;
+						break;
+				case 9: deltaX=0;
+						collided = false;
+						forceAllowMovementY = true;
+						break;
 				case 5: break;
 			}
 		}
@@ -611,6 +628,10 @@ public class Entity implements Drawable,EntityInterface {
 //		}
 //		return collision;
 //	}
+	
+	public String toString() {
+		return name;
+	}
 
 	public void interact() {
 		if (this.text != null) {
@@ -754,6 +775,17 @@ public class Entity implements Drawable,EntityInterface {
 	public void moveOnScreen(int arg0, int arg1) {
 		xOnScreen += arg0;
 		yOnScreen += arg1;
+	}
+
+	public void setNewParams(int x, int y, int w, int h, String name, String texture, String appFlag, String disFlag) {
+		// TODO Auto-generated method stub
+		this.x = x;
+		this.y = y;
+		this.width = w;
+		this.height = h;
+		this.name = name;
+		this.appearFlag = appFlag;
+		this.disappearFlag = disFlag;
 	}
 	
 }

@@ -28,7 +28,7 @@ public class BattleEntity {
 	//position to be drawn on screen
 	protected StartupNew systemState;
 	private boolean defending;
-	private int resistances;
+	protected int resistances;
 	//0 - none
 	//1 - freeze
 	//2 - fire
@@ -40,6 +40,37 @@ public class BattleEntity {
 	//2 - psi
 	//3 - power shield
 	private int shieldCharge; //num hits the shield will endure
+	private String predicate = "";
+	
+	public String getResistanceString() {
+		String resists = name;
+		if (resistances == 0) {
+			resists += " doesn't appear to have any vulnerabilities!";
+		} else {
+			if ((resistances & 1) == 1) {
+				resists += " appears weak to ice.";
+			}
+			if ((resistances & 2) == 8) {
+				resists += " appears weak to fire.";
+			}
+			if ((resistances & 4) == 8) {
+				resists += " appears weak to thunder.";
+			}
+			if ((resistances & 8) == 8) {
+				resists += " appears weak to beam.";
+			}
+		}
+		return resists;
+	}
+	
+	public void setPredicate(String predicate) {
+		// TODO Auto-generated method stub
+		this.predicate = predicate;
+	}
+	
+	public String getPredicate() {
+		return predicate;
+	}
 	
 //	public void setState(String string) {
 //		// TODO Auto-generated method stub
@@ -102,9 +133,15 @@ public class BattleEntity {
 		return texture;
 	}
 
+	public void setResistances(int resist) {
+		// TODO Auto-generated method stub
+		resistances = resist;
+	}
+	
 	public int takeDamage(int damage, int element) {
 		// TODO Auto-generated method stub
 		if (element != 0 && (resistances & element) == element) {
+			System.out.println("It seems weak...");
 			damage /= 2;
 		}
 		if (damage > 0 && defending) {
@@ -181,5 +218,10 @@ public class BattleEntity {
 	
 	public void resetSleepTimer() {
 		turnsAsleep = 0;
+	}
+
+	public String getKillText() {
+		// TODO Auto-generated method stub
+		return "became tame.";
 	}
 }

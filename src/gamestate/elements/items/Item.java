@@ -152,6 +152,14 @@ public class Item{
 		}
 		int hp = target.getStats().getStat("CURHP");
 		int damage = calculateDamage();
+		if (target.getShieldType() == 2) {
+			damage/=2;
+			if (target.decreaseShieldCharge()) {
+				usedString = target.getName() + "'s PSI Shield absorbed some of the damage.";
+			} else {
+				usedString = target.getName() + "'s PSI Shield dissipated.";
+			}
+		}
 		damage = target.takeDamage(damage,damageElement);
 		return damage;
 	}

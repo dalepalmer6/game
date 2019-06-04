@@ -53,6 +53,8 @@ public class MainWindow {
 	private int indicesCount;
 	private int vaoId;
 	private Texture tilesetTexture;
+	private Texture battleBGTexture;
+	private float[] battleBGVars;
 	
 	public void setTextureAtlas(TextureAtlas ta) {
 		this.textureAtlas = ta;
@@ -161,24 +163,36 @@ public class MainWindow {
 
 	}
 	
+	public void drawBattleBG() {
+		renderTile(0,0,getScreenWidth(),getScreenHeight(),0,0,256,256);
+	}
+	
 	public void useShader() {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		float dTime = time - System.nanoTime();
 		GL20.glUseProgram(pId);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		try {
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferedImageUtil.getTexture("", ImageIO.read(new File("img/battlebg.png"))).getTextureID());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, battleBGTexture.getTextureID());
 //		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
         GL20.glUniform1i(loc,2);
-        loc = GL20.glGetUniformLocation(pId, "time");
+        	loc = GL20.glGetUniformLocation(pId, "time");
+        int fx = GL20.glGetUniformLocation(pId, "freqx");
+        int fy = GL20.glGetUniformLocation(pId, "freqy");
+        int ax = GL20.glGetUniformLocation(pId, "amplitudex");
+        int ay = GL20.glGetUniformLocation(pId, "amplitudey");
+        int sx = GL20.glGetUniformLocation(pId, "speedx");
+        int sy = GL20.glGetUniformLocation(pId, "speedy");
+        
         GL20.glUniform1f(loc,dTime/10e9f);
+        GL20.glUniform1f(fx,battleBGVars[1]);
+        GL20.glUniform1f(fy,battleBGVars[4]);
+        GL20.glUniform1f(ax,battleBGVars[0]);
+        GL20.glUniform1f(ay,battleBGVars[3]);
+        GL20.glUniform1f(sx,battleBGVars[2]);
+        GL20.glUniform1f(sy,battleBGVars[5]);
         
         TexturedVertex v0 = new TexturedVertex(); 
         v0.setXYZ(-1f, 1f, 0); v0.setRGB(1, 0, 0); v0.setST(0, 0);
@@ -417,6 +431,13 @@ public class MainWindow {
 		int x = Mouse.getX();
 		int y = SCREEN_HEIGHT - Mouse.getY();
 		return new Point(x, y);
+	}
+
+	public void setBattleTexture(Texture t, float[] vals) {
+		if (battleBGTexture == null) {
+			battleBGTexture = t;
+			battleBGVars = vals;
+		}
 	}
 
 }

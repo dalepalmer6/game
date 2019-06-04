@@ -38,6 +38,7 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	private StartupNew state;
 	private int TILE_SIZE = 32;
 	private ArrayList<ArrayList<Tile>> currentTilesOfInterest;
+	private int tilesize;
 
 	public int getWidth() {
 		return width;
@@ -75,13 +76,30 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		this.heightInTiles = maxHeightTiles;
 		this.width = widthInTiles * TILE_SIZE;
 		this.height = heightInTiles * TILE_SIZE;
+		if (mapPreview != null) {
+			 tilesize = mapPreview.getTileSize();
+		}
+	}
+	
+	public TileBar(int maxWidthTiles, int maxHeightTiles, TileHashMap tm, StartupNew state) {
+		// set location
+		this.x = 128;
+		this.y = 128;
+		this.state = state;
+		tileMap = tm;
+		this.widthInTiles = maxWidthTiles;
+		this.heightInTiles = maxHeightTiles;
+		this.width = widthInTiles * TILE_SIZE;
+		this.height = heightInTiles * TILE_SIZE;
+		tilesize = 32;
 	}
 
 	public Point getTilePosition() {
+		
 		double tileX = Math
-				.floor((-this.x + state.getMainWindow().getMouseCoordinates().getX()) / mapPreview.getTileSize());
+				.floor((-this.x + state.getMainWindow().getMouseCoordinates().getX()) / tilesize);
 		double tileY = Math
-				.floor((-this.y + state.getMainWindow().getMouseCoordinates().getY()) / mapPreview.getTileSize());
+				.floor((-this.y + state.getMainWindow().getMouseCoordinates().getY()) / tilesize);
 		if (tileX > this.widthInTiles || tileX < 0) {
 			tileX = -1;
 		}
@@ -168,8 +186,8 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 				int drawingY = (j) * TILE_SIZE;
 				Tile tile = getCurrentTileFromInterestList(i, j);
 				if (tile != null) {
-					m.renderTiles(drawingX + this.x, drawingY + this.y, mapPreview.getTileSize(),
-							mapPreview.getTileSize(), tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0),false);
+					m.renderTiles(drawingX + this.x, drawingY + this.y, tilesize,
+							tilesize, tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0),false);
 				}
 			}
 		}
@@ -244,10 +262,15 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		// TODO Auto-generated method stub
 		Tile t = tileMap.getTile(hoveredTileId);
 		if (t instanceof PremadeTileObject) {
-			mapPreview.setTool(new PremadeTileObjectTool(t, state));
+			((MapEditMenu)state.getMenuStack().peek()).setTool(new PremadeTileObjectTool(t, state));
 		} else if (t instanceof SingleInstanceTile || t instanceof MultiInstanceTile) {
-			mapPreview.setTool(new SingleTile(t, state));
+			((MapEditMenu)state.getMenuStack().peek()).setTool(new SingleTile(t, state));
 		}
+//		if (t instanceof PremadeTileObject) {
+//			mapPreview.setTool(new PremadeTileObjectTool(t, state));
+//		} else if (t instanceof SingleInstanceTile || t instanceof MultiInstanceTile) {
+//			mapPreview.setTool(new SingleTile(t, state));
+//		}
 		return null;
 	}
 }

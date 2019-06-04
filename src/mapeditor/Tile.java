@@ -104,4 +104,9 @@ public class Tile {
 		// TODO Auto-generated method stub
 		tg.addTileInstance(parseInt, parseInt2, parseInt3, parseInt4, collision);
 	}
+
+	public void setNewCollisionValue(int x, int y, int colval) {
+		// TODO Auto-generated method stub
+		tg.getTileInstance(0).modifyCollisionInfoAtIndex(x,y,colval);
+	}
 }

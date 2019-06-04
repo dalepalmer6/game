@@ -1,0 +1,12 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,540,720,24,32,[FLAGISSET_pippiIsReturned][_043][_046][_047][ELSE][FLAGISSET_mayorSpokenTo][_040][ELSE][_040][_041][ENDIF][ENDIF] ,lamp, , 
+ninten,570,720,24,32,I am testing the ATM[CHOOSE][CHOICE]Deposit[TEXT][ATMDEPOSIT][CHOICE]Withdraw[TEXT][ATMWITHDRAW] ,lamp, , 
+ninten,600,720,24,32,I am testing the battle system. [STARTBATTLE_21]I'm actually a firm believer that the world is flat.,lamp, , 
+ninten,515,314,24,32,Oh my sweet jesus.[WAIT30][NEWLINE]What is happening to our house?[WAIT30][NEWLINE]If only your father were here he would know what to do...[WAIT60]Oh![SETBGM_phonering.ogg] Telephone![SETFLAG_dadFirstCall] Please get it!,mommy, , 
+ninten,589,271,24,32,[FLAGISSET_dadFirstCall][_014][_00E][ELSE][_013][ENDIF],DaddyPhone, , 
+loid,611,700,24,32,Hi I'm Lloyd.[ADDMEMBER_LOID]...Isn't that great?,loid, ,loidInParty
+ana,573,700,24,32,I lost my hat on a trip to the town of Reindeer.[PROMPTINPUT][ADDMEMBER_ANA] ,ana, ,anaInParty
+ninten,480,702,24,32,Loading a shop menu[PROMPTINPUT][SHOP_onett] ,tester, , 
+pippi,500,701,24,32,[FLAGISSET_pippiInParty]Yeah?[ELSE]Can I come with?[CHOOSE][CHOICE]Yes[TEXT]My name is Pippi.[ADDMEMBER_PIPPI] [CHOICE]No[TEXT]Laaaaaaame![ENDIF] ,pippi, ,pippiInParty
+ninten,550,701,24,32,Pssst!...[WAIT30]I can let you try out the train if you want.[CHOOSE][CHOICE]Youngtown to Snowman[TEXT][SETFLAG_train][SET_TRAIN_RIDE_0:33] [CHOICE]Youngtown to Merrysville[TEXT][SETFLAG_train][SET_TRAIN_RIDE_0:6] [CHOICE]Merrysville to Reindeer[TEXT][SETFLAG_train][SET_TRAIN_RIDE_6:21] [CHOICE]Reindeer to Spookane[TEXT][SETFLAG_train][SET_TRAIN_RIDE_21:24],pippi, , 
+ninten,450,702,24,32,Ninten? It's your dad.[PROMPTINPUT]I deposited $[DEPOSITED_MONEY] into your bank account.[PROMPTINPUT]Taking away what you have spent you should now have $[TOTAL_MONEY] in the bank.[PROMPTINPUT][NEWLINE]Anyways what do you need from me?[CHOOSE][CHOICE]Record[TEXT][SAVE_PROGRESS]All done.[PROMPTINPUT]I have created a record of your adventure up to this point.[CHOICE]Nothing[TEXT]Ok don't work yourself too hard now. *SLAM* ,tester, , 

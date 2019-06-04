@@ -148,7 +148,7 @@ public class Map {
 			String writeDoors = "DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG\n";
 			for (Entity e : entitiesInMap) {
 				if ((e instanceof DoorEntity) && !(e instanceof HotSpot)) {
-					writeDoors += ((DoorEntity)e).getDesc() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + ((DoorEntity)e).getDestMap() + "," + (((DoorEntity)e).getDestX()) + "," + (((DoorEntity)e).getDestY()) + "," + e.getText() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
+					writeDoors += ((DoorEntity)e).getName() + "," + (e.getX()) + "," + (e.getY()) + "," + e.getWidth() + "," + e.getHeight() + "," + ((DoorEntity)e).getDestMap() + "," + (((DoorEntity)e).getDestX()) + "," + (((DoorEntity)e).getDestY()) + "," + e.getText() + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n"; 
 				}
 			}
 			pw.write(writeDoors);
@@ -160,7 +160,7 @@ public class Map {
 				if (e instanceof HotSpot) {
 					String csnameAbsolute = ((HotSpot)e).getCutsceneName();
 					String csName = csnameAbsolute.replaceFirst(pathToMaps + mapId + "/","");
-					writeHotspots += (((HotSpot)e).getDesc() + "," + e.getX() + "," + e.getY() + "," + e.getWidth() + "," + e.getHeight() + "," + csName + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n");
+					writeHotspots += (((HotSpot)e).getName() + "," + e.getX() + "," + e.getY() + "," + e.getWidth() + "," + e.getHeight() + "," + csName + "," + e.getAppearFlag() + "," + e.getDisappearFlag() + "\n");
 				}
 			}
 			pw.write(writeHotspots);
@@ -789,5 +789,36 @@ public class Map {
 		return list;
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void fillInGrass() {
+		// TODO Auto-generated method stub
+		int[] grassTiles = {0,22,23,28,29};
+		for (int i = 0; i < tileMapBG.size(); i++) {
+			ArrayList<Integer> row = tileMapBG.get(i);
+			for (int j = 0; j < row.size(); j++) {
+				if (Math.random() < 0.5) {
+					continue;
+				}
+				if (row.get(j) == 0) {
+					int gid = (int) (5*Math.random());
+					row.set(j,grassTiles[gid]);
+				}
+			}
+		}
+//		for (int i = 0; i < tileMapBase.size(); i++) {
+//			ArrayList<Integer> row = tileMapBase.get(i);
+//			for (int j = 0; j < row.size(); j++) {
+//				if (row.get(j) > 158 || row.get(j) == 2 || row.get(j) == 8) {
+//					tileMapBG.get(i).set(j,row.get(j));
+//					tileMapBase.get(i).set(j,0);
+//				}
+//			}
+//		}
+	}
+
+	public void setIgnoreTiles(boolean b) {
+		// TODO Auto-generated method stub
+		ignoreTiles = b;
 	}
 }

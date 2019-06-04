@@ -16,7 +16,7 @@ public class MapEditMenu extends Menu {
 	private MapPreview mapPreview;
 	private ToolInfoWindow toolInfoWindow;
 	private ArrayList<ButtonMenuItem> currentToolButtons;
-	private MapTool prevTool;
+	protected MapTool prevTool;
 	
 	public Map getMap() {
 		return map;
@@ -30,11 +30,20 @@ public class MapEditMenu extends Menu {
 		mapPreview = mp;
 	}
 	
+	public void setTool(MapTool m) {
+		this.prevTool = m;
+	}
+	
+	public MapTool getMapTool() {
+		return prevTool;
+	}
+	
 	public void update(InputController input) {
-		currentToolButtons = mapPreview.getTool().getAssociatedButtons();
-		toolInfoWindow.setTool(mapPreview.getTool());
-		toolInfoWindow.setText(mapPreview.getTool().getToolInfo());
-		mapPreview.getTool().update(input);
+		prevTool.update(input);
+		currentToolButtons = prevTool.getAssociatedButtons();
+		toolInfoWindow.setTool(prevTool);
+		toolInfoWindow.setText(prevTool.getToolInfo());
+		prevTool.update(input);
 		if (prevTool != null) {
 			menuItems.removeAll(prevTool.getAssociatedButtons());
 		}
@@ -42,12 +51,13 @@ public class MapEditMenu extends Menu {
 		for (ButtonMenuItem mi : currentToolButtons) {
 			addMenuItem(mi);
 		}
-		prevTool = mapPreview.getTool();
+		mapPreview.setTool(prevTool);
 	}
 	
 	public MapEditMenu(StartupNew m, TileHashMap tm) {
 		super(m);
 		this.map = new Map("podunk",34,34, tm, state);
+		prevTool = new MapTool(state);
 		mapPreview = new MapPreview(TILE_SIZE,3 * TILE_SIZE,3 * TILE_SIZE, map, tm,state);
 		TileBar tilebar = new TileBar(48,8,tm, mapPreview,state);
 		addMenuItem(mapPreview);

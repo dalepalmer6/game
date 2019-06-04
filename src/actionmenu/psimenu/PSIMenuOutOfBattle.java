@@ -12,6 +12,7 @@ import gamestate.elements.psi.PSIAttack;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
 import global.InputController;
+import menu.MenuItem;
 import menu.StartupNew;
 
 public class PSIMenuOutOfBattle extends PlayerInfoWindow {
@@ -22,6 +23,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	private boolean lockedIn;
 	private PartyMember currentPartyMember;
 	private int classId;
+	private MenuItem lastClassWindowSelection;
 	
 	public PSIMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party) {
 		super(state,party);
@@ -37,6 +39,23 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	}
 	
 	public void update(InputController input) {
+		int x = 0;
+		int maxY = 0;
+		for (TextLabel tl : labels) {
+			setToRemove(tl);
+		}
+		if (labels.size() <= psiSTW.getYEnd()) {
+			maxY = labels.size();
+		} else {
+			maxY = psiSTW.getYEnd();
+		}
+		for (int i = psiSTW.getYStart(); i < maxY; i++) {
+			MenuItem mi = labels.get(i);
+			//psiSTW.getX() + psiSTW.getTextStartX() + 16,psiSTW.getY()+y
+			mi.setY(psiSTW.getY() + 32 + (x++)*64);
+			addToMenuItems(mi);
+		}
+		
 		if (!state.inBattle) {
 			super.update(input);
 		}
@@ -57,14 +76,13 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 //			descWindow.setText(((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription());
 		}
 		
-		for (TextLabel tl : labels) {
-			setToRemove(tl);
+		if (lastClassWindowSelection != classificationWindow.getSelectedItem()) {
+			
+			menuItems.remove(psiSTW);
+			enumPSIForMember();
 		}
 		
-		menuItems.remove(psiSTW);
-		enumPSIForMember();
-		
-//		this.addToMenuItems(psiSTW);
+		lastClassWindowSelection = classificationWindow.getSelectedItem();
 		
 		if (invisSelectItem.getCanLoadInventory()) {
 			if (party.get(index).getItemsList().get(0).getId() != 0) {
@@ -76,9 +94,9 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 			}
 		}
 		
-		for (TextLabel tl : labels) {
-			addToMenuItems(tl);
-		}
+//		for (TextLabel tl : labels) {
+//			addToMenuItems(tl);
+//		}
 	}
 	
 	@Override
@@ -93,7 +111,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 			classificationWindow.add(new ClassificationMenuItem(state,psic));
 		}
 		PartyMember pm = party.get(0);
-		psiSTW = new PSISelectionTextWindow(256+192,128,15,10,state,pm);
+		psiSTW = new PSISelectionTextWindow(256+192,128,15,3,state,pm);
 		
 		enumPSIForMember();
 		
@@ -134,7 +152,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 			}
 			if (atLeastOne) {
 				TextLabel tl = new TextLabel(pf.getName(),psiSTW.getX() + psiSTW.getTextStartX() + 16,psiSTW.getY()+y,state);
-				labels .add(tl);
+				labels.add(tl);
 				addToMenuItems(tl);
 				atLeastOne = false;
 			}

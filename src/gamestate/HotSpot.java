@@ -10,6 +10,18 @@ public class HotSpot extends DoorEntity {
 		return cutsceneName;
 	}
 	
+	public void setNewParams(int x, int y, int w, int h, String name, String texture, String appFlag, String disFlag, String cutsceneName) {
+		// TODO Auto-generated method stub
+		this.x = x;
+		this.y = y;
+		this.width = w;
+		this.height = h;
+		this.name = name;
+		this.appearFlag = appFlag;
+		this.disappearFlag = disFlag;
+		this.cutsceneName = cutsceneName;
+	}
+	
 	@Override
 	public String getInfoForTool() {
 		return cutsceneName + ": " + x + "," + y;

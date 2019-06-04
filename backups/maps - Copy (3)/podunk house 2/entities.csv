@@ -1,0 +1,5 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+hotelguy,0,0,24,32,TEXT,hotelReceptionist, , 
+npc08,0,0,24,32,TEXT,hotelReceptionist, , 
+npc02,0,0,24,32,TEXT,hotelReceptionist, , 
+npc04,0,0,24,32,TEXT,hotelReceptionist, , 

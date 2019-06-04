@@ -1575,7 +1575,7 @@ group
 2,2,2,2,
 1,1,1,1
 #ZooGateDoor
-flagChange,zooGateOpen,0
+flagChange,usedZooKey,0
 574,224,32,32
 1,1,1,1,
 1,1,1,1,
