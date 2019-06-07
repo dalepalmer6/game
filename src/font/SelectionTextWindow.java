@@ -34,8 +34,13 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private int yEnd = 4;
 	private boolean maxHeightReached;
 	private boolean grid;
+	private boolean callUpdate = false;
 	
 	public void updateAnim() {
+		if (callUpdate) {
+			callUpdate = false;
+			update();
+		}
 		super.updateAnim();
 		if (grid) {
 			while (selectedY >= yEnd) {
@@ -461,7 +466,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				state.setSFX("curshoriz.wav");
 				state.playSFX();
 			} else if (input.getSignals().get("CONFIRM")) {
-				update();
+				callUpdate = true;
 			} 
 //			else if (input.getSignals().get("BACK")) {
 //				state.getMenuStack().pop();

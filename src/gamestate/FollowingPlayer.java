@@ -21,7 +21,7 @@ public class FollowingPlayer extends Entity {
 	}
 	
 	public FollowingPlayer(int scale, Entity e, StartupNew m, int i) {
-		super(e.getTexture(),scale*e.getX(),scale*e.getY(),scale*e.getWidth(),scale*e.getHeight(),m,e.getName());
+		super(e.getTexture(),e.getX(),e.getY(),e.getWidth()*scale,scale*e.getHeight(),m,e.getName());
 		spriteCoordinates = e.getSpriteCoordinates();
 		indexInParty = i;
 	}

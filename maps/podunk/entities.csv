@@ -19,4 +19,4 @@ npc01,861,3930,24,32,[_037],NewEntityName, ,
 npc03,2120,4131,24,32,[_038],NewEntityName, , 
 npc02,1978,4153,24,32,[_02D],NewEntityName, , 
 npc02,2199,4402,24,32,[_02E],NewEntityName, , 
-pippi,368,230,24,32,[FLAGISSET_pippiInParty]Yeah?[ELSE]Can I come with?[CHOOSE][CHOICE]Yes[TEXT]My name is Pippi.[ADDMEMBER_PIPPI] [CHOICE]No[TEXT]Laaaaaaame![ENDIF] ,pippi, ,pippiInParty
+pippi,368,230,24,32,[_011] ,pippi, , 

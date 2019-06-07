@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import battlesystem.BattleMenu;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
+import gamestate.PCBattleEntity;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
 import menu.Animation;
@@ -52,18 +53,24 @@ public class BattleAction {
 					anim = new Animation(state,"enemypsi",0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
 					anim.createAnimation();
 				} else {
-					anim = ((PSIAttack) itemToUse).getAnimation();
-				}
-				
-				if (anim.getTexture().equals("undef")) {
-					bm.setGetResultText();
-					if (!targetAll) {
-//						bm.getCurrentActiveBattleAction().setComplete();
+					if (anim == null) {
+						//no animation for the psi
+						bm.setGetResultText();
+						break;
 					}
-//					
-					break;
+					anim = ((PSIAttack) itemToUse).getAnimation();
+					anim.createAnimation();
 				}
 				
+//				if (anim.getTexture().equals("undef")) {
+//					
+//					if (!targetAll) {
+////						bm.getCurrentActiveBattleAction().setComplete();
+//					}
+////					
+//					break;
+//				}
+//				
 				state.getMenuStack().peek().addToMenuItems(anim);
 				state.setCurrentAnimation(anim.getTexture() + ".png");
 //				state.createAtlas();
@@ -185,8 +192,14 @@ public class BattleAction {
 								doBash(actor,targets.get(index));
 							} 
 							else {
-								state.setSFX("bash.wav");
-								state.playSFX();
+								if (actor instanceof PCBattleEntity) {
+									state.setSFX("bash.wav");
+									state.playSFX();
+								} else {
+									state.setSFX("dmg.wav");
+									state.playSFX();
+								}
+								
 								doBash(actor,recipient);
 							}
 							continuousCounter--;
@@ -348,7 +361,7 @@ public class BattleAction {
 				doNothing = true;
 				statusLock = true;
 				if (Math.random() < 0.30) {
-					battleString += "[PROMPTINPUT][PLAYSFX_heal 2.wav]" + actor.getName() + " was cured of asthma.";
+					battleString += "[PROMPTINPUT][PLAYSFX_healedbeta.wav]" + actor.getName() + " was cured of asthma.";
 					actor.removeStatus(4);
 				}
 			}
@@ -398,8 +411,14 @@ public class BattleAction {
 		}
 		
 		switch (usedAction) {
-			case "bash" : 	state.setSFX("attack1.wav");
-							state.playSFX();
+			case "bash" : 	
+							if (actor instanceof PCBattleEntity) {
+								state.setSFX("playeratk.wav");
+								state.playSFX();
+							} else {
+								state.setSFX("enemyatk.wav");
+								state.playSFX();
+							}
 							battleString += actor.getName();
 							if (flavorTextAttack != null) {
 								battleString += " " + flavorTextAttack + "!";
@@ -409,8 +428,14 @@ public class BattleAction {
 							break;
 			case "run":		battleString = "Tried to run... but failed!";
 							break;
-			case "psi":		state.setSFX("psi.wav");
-							state.playSFX();
+			case "psi":		
+							if (actor instanceof PCBattleEntity) {
+								state.setSFX("psicast.wav");
+								state.playSFX();
+							} else {
+								state.setSFX("enemypsicast.wav");
+								state.playSFX();
+							}
 							battleString += actor.getName() + " tried " + itemToUse.getName() + ".";
 							if (itemToUse.getActionType() == 10) {
 								//psi thunder
@@ -546,11 +571,12 @@ public class BattleAction {
 		while ((party.get(val).getState() & 16) == 16) {
 			val = (int) Math.floor(Math.random() * party.size());
 		}
+		int valEnemy = (int) Math.floor(Math.random() * enemies.size());
 		if (enemyAction.getTarget() == 0) {
 			//on one enemy
 			targetAll = false;
 			targets=new ArrayList<BattleEntity>();
-			targets.add(this.actor);
+			targets.add(enemies.get(valEnemy));
 			recipient = this.actor;
 		}
 		if (enemyAction.getTarget() == 1) {
@@ -562,7 +588,7 @@ public class BattleAction {
 			//on one party mem
 			recipient = party.get(0);
 			targets=new ArrayList<BattleEntity>();
-			targets.add(recipient);
+			targets.add(party.get(val));
 			targetAll = false;
 		}
 		if (enemyAction.getTarget() == 3) {

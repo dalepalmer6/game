@@ -51,6 +51,7 @@ public class GameState {
 	private Entity pippi;
 	private int numPartyMembers=0;
 	private HashMap<String,Entity> partyMemberEntities = new HashMap<String,Entity>();
+	private HashMap<String,PartyMember> partyMembers = new HashMap<String,PartyMember>();
 	private HashMap<String, Boolean> flags;
 	private HashMap<String, Entity> removed;
 	private ArrayList<Entity> partyMembersInEntities;
@@ -84,6 +85,10 @@ public class GameState {
 	private int depositedFunds = 0;
 	private boolean shouldDraw = true;
 	private int windowArgument;
+	private int initialX=-1;
+	private int initialY=-1;
+	private String initialMapName;
+	private boolean loadOriginalStats;
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -114,7 +119,9 @@ public class GameState {
 				return false;
 			}
 		}
-		this.party.add(new PartyMember(member,party.size()+1,state));
+		PartyMember pm = partyMembers.get(member);
+		pm.setIndex(party.size()+1);
+		this.party.add(pm);
 		return true;
 	}
 	
@@ -131,21 +138,21 @@ public class GameState {
 	}
 	
 	public void reloadInitialMap() {
-		createStartPosition();
+//		createStartPosition();
 		ArrayList<Entity> players = new ArrayList<Entity>();
 		for (Entity e : entities) {
 			if (e instanceof Player) {
-				e.setCoordinates(startX,startY);
+				e.setCoordinates(initialX,initialY);
 				players.add(e);
 			} else if (e instanceof FollowingPlayer) {
-				e.setCoordinates(startX,startY);
+				e.setCoordinates(initialX,initialY);
 				players.add(e);
 			}
 		}
 		state.getGameState().getEntityList().clear();
 		state.getGameState().getEntityList().addAll(players);
-		state.getGameState().getCamera().snapToEntity(startX,startY);
-		state.getGameState().setCurrentMap("house - myhome");
+		state.getGameState().getCamera().snapToEntity(initialX,initialY);
+		state.getGameState().setCurrentMap(initialMapName);
 		state.getGameState().loadMap(4);
 	}
 	
@@ -195,9 +202,18 @@ public class GameState {
 			br = new BufferedReader(new FileReader(new File("savedata/mapinfo")));
 			while ((data = br.readLine()) != null) {
 				String[] datasplit = data.split(",");
-				String texture = datasplit[0];
-				int x = Integer.parseInt(datasplit[1]);
-				int y = Integer.parseInt(datasplit[2]);
+				int x = 0;
+				int y = 0;
+				if (initialX == -1 && initialY == -1) {
+					x = Integer.parseInt(datasplit[1]);
+					y = Integer.parseInt(datasplit[2]);
+				}else {
+					x = initialX;
+					y = initialY;
+					initialX *= 4;
+					initialY *= 4;
+				}
+				
 				//create all PartyMember entities
 				ninten = state.getEntityFromEnum("ninten").createCopy(x,y,24,32,"ninten");
 				loid = state.getEntityFromEnum("loid").createCopy(x,y,24,32,"loid");
@@ -237,24 +253,104 @@ public class GameState {
 		this.map = m;
 		flags = new HashMap<String,Boolean>();
 		removed = new HashMap<String, Entity>();
-		
+	}
+	
+	private void createAllPartyMembersInMem(String savedata) {
+		if (savedata.equals("")) {
+			savedata = "players";
+		}
+		partyMembers.put("NINTEN",new PartyMember("NINTEN",savedata,state));
+		partyMembers.put("ANA",new PartyMember("ANA",savedata,state));
+		partyMembers.put("LOID",new PartyMember("LOID",savedata,state));
+		partyMembers.put("TEDDY",new PartyMember("TEDDY",savedata,state));
+		partyMembers.put("PIPPI",new PartyMember("PIPPI",savedata,state));
+	}
+
+	public void loadFromSaveFile(String saveName) {
+		String path = "savedata/" + saveName + "/";
+		File f = new File(path);
+		if (f.isDirectory()) {
+			//load the game
+			createAllPartyMembersInMem(saveName);
+			f = new File(path + "sys");
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String[] data = br.readLine().split(",");
+				String mapName = data[0];
+				int x = Integer.parseInt(data[1]);
+				int y = Integer.parseInt(data[2]);
+				int funds = Integer.parseInt(data[3]);
+				int fundsInBank = Integer.parseInt(data[4]);
+				int fundsDeposited = Integer.parseInt(data[5]);
+				
+				currentMapName = mapName;
+				initialX = x;
+				initialY = y;
+				initialMapName = mapName;
+//				createPlayer(4);
+				this.funds = funds;
+				this.bankFunds = fundsInBank;
+				this.depositedFunds = fundsDeposited;
+				
+				f = new File(path + "flags");
+				br = new BufferedReader(new FileReader(f));
+				String row;
+				while ((row=br.readLine()) != null) {
+					String[] split = row.split(",");
+					String name = split[0];
+					boolean val = Boolean.parseBoolean(split[1]);
+					flags.put(name,val);
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			createAllPartyMembersInMem("");
+		}
 	}
 	
 	public void loadMapData() {
 		loadMap(4);
 		state.setBGM(map.getBGM());
 		state.playBGM();
-		createPlayer(4);
+		if (player == null) {
+			createPlayer(4);
+		}
+		
 		this.mapRenderer = new MapRenderer(map,getCamera(),state); 
 		camera.setMapRenderer(mapRenderer);
 		ro = new ArrayList<RedrawObject>();
-		addPartyMember("NINTEN");
+		addPartyMembersNeeded();
+//		addPartyMember("NINTEN");
 //		addPartyMember("PIPPI");
 //		addPartyMember("LOID");
 		
 //		createTestEnemy();
 	}
 	
+private void addPartyMembersNeeded() {
+		// TODO Auto-generated method stub
+		if (flags.get("nintenInParty")) {
+			addPartyMember("NINTEN");
+		}
+		if (flags.get("anaInParty")) {
+			addPartyMember("ANA");
+		}
+		if (flags.get("loidInParty")) {
+			addPartyMember("LOID");
+		}
+		if (flags.get("teddyInParty")) {
+			addPartyMember("TEDDY");
+		}
+		if (flags.get("pippiInParty")) {
+			addPartyMember("PIPPI");
+		}
+	}
+
 //	public void createTestEnemy() {
 //		ArrayList<Enemy> testList = new ArrayList<Enemy>();
 //		Entity eStatic = state.allEntities.get("redDressLady");
@@ -587,6 +683,7 @@ public class GameState {
 							this.entities.add(player);
 						} else if (numPartyMembers < 4) {
 							FollowingPlayer fent = new FollowingPlayer(4,partyMemberEntities.get(id),state,numPartyMembers);
+							fent.setXY(player.getX(),player.getY());
 							removed.put(id,partyMemberEntities.get(id));
 							this.entities.add(fent);
 							savedParty.add(fent);
@@ -826,8 +923,9 @@ public class GameState {
 		flagsOut.flush();
 		flagsOut.close();
 		//write all party members to their respective files
-		for (PartyMember pm : party) {
-			file = new File(savedataLoc + pm.getId());
+		for (String s : partyMembers.keySet()) {
+			PartyMember pm = partyMembers.get(s);
+			file = new File(savedataLoc + pm.getId().toLowerCase());
 			file.createNewFile();
 			PrintWriter pw = new PrintWriter(file);
 			pw.println(pm.getName() + "," + pm.getStats().toString());
@@ -850,9 +948,12 @@ public class GameState {
 		file = new File(savedataLoc + "sys");
 		file.createNewFile();
 		PrintWriter pw = new PrintWriter(file);
-		pw.println(currentMapName + "," + player.getX() + "," + player.getY() + "," + funds);
+		pw.println(currentMapName + "," + player.getX()/4 + "," + player.getY()/4 + "," + funds + "," + bankFunds + "," + depositedFunds);
 		pw.flush();
 		pw.close();
+		initialX = player.getX();
+		initialY = player.getY();
+		initialMapName = currentMapName;
 	}
 
 	public void setTeleportVariables(String newMapName, int newX, int newY) {
@@ -900,6 +1001,15 @@ public class GameState {
 	public int getWindowArgument() {
 		// TODO Auto-generated method stub
 		return windowArgument;
+	}
+
+//	public void addFundsDeposited(int moneyGained) {
+//		// TODO Auto-generated method stub
+//		depositedFunds += moneyGained;
+//	}
+	
+	public int getFundsDeposited() {
+		return depositedFunds;
 	}
 	
 }

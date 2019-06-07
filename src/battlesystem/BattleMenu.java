@@ -163,6 +163,16 @@ public class BattleMenu extends Menu {
 		for (EnemyEntity ee : enemyEntities) {
 			enemies.addAll(ee.getEnemiesList());
 		}
+		//for each enemy in the battle, draw them on the canvas
+				EnemyOptionPanel eop = new EnemyOptionPanel(state);
+				this.eop = eop;
+				int j = 0;
+				for (BattleEntity e : enemies) {
+					eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
+							state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
+					j++;
+				} 
+				state.setEOP(eop);
 		state.setBGM(((Enemy)enemies.get(0)).getBGM());
 		generateGreeting();
 		actionMenu.setKillWhenComplete();
@@ -179,17 +189,6 @@ public class BattleMenu extends Menu {
 		actionMenu.add(statusButton);
 		RunAway runButton = new RunAway("Run Away",0,0,state);
 		actionMenu.add(runButton);
-		
-		
-		//for each enemy in the battle, draw them on the canvas
-		EnemyOptionPanel eop = new EnemyOptionPanel(state);
-		this.eop = eop;
-		int j = 0;
-		for (BattleEntity e : enemies) {
-			eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
-					state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
-			j++;
-		} 
 		
 		partyMembers = state.getGameState().getPartyMembers();
 		party = new ArrayList<BattleEntity>();
@@ -212,6 +211,10 @@ public class BattleMenu extends Menu {
 		}
 
 		turnStack = new ArrayList<BattleEntity>();
+	}
+	
+	public ArrayList<PlayerStatusWindow> getPSWs() {
+		return pswList;
 	}
 	
 	public BattleEntity getCurrentPartyMember() {
@@ -275,6 +278,10 @@ public class BattleMenu extends Menu {
 					EnemyOption eo = eop.getEnemyOptions().get(index);
 					x = eo.getX() + eo.getWidth()/2;
 					y = eo.getY() + eo.getHeight()/2;
+					eop.setToShake(index);
+					if (currentBattleAction.getTarget().getStats().getStat("CURHP") <= 0) {
+						eop.setKilled(index);
+					}
 				}
 				DamageMenuItem mi = new DamageMenuItem(currentBattleAction.getDamageDealt(),x,y,state);
 				mi.setDisallowAutoProgress(disallowAutoProgress);
@@ -314,7 +321,7 @@ public class BattleMenu extends Menu {
 					indexMembers--;
 					while ((party.get(indexMembers).getState() & 16) == 16) {
 						indexMembers++;
-						if (indexMembers > party.size()) {
+						if (indexMembers >= party.size()) {
 							break;
 						}
 					}
@@ -490,10 +497,10 @@ public class BattleMenu extends Menu {
 		for (EnemyEntity ee : enemyEntities) {
 			ee.setToRemove(true);
 		}
-//		state.getGameState().setCanEncounter(true);
 		state.inBattle = false;
 		state.setDrawAllMenus(false);
 		state.getGameState().setInvincibleCounter();
+		state.setNeedAddSavedMenu(state.getSavedMenu());
 	}
 	
 	public void update(InputController input) {
@@ -665,7 +672,6 @@ public class BattleMenu extends Menu {
 				}
 				if (currentBattleAction != null) {
 					setPromptFirst(currentBattleAction.getBattleActionString());
-//					getNextPrompt = false;
 				}
 				getNextPrompt = false;
 			}
@@ -680,34 +686,11 @@ public class BattleMenu extends Menu {
 				getAnimation = false;
 			}
 			
-//			if (getResultText && !locked && !currentBattleAction.isComplete()) {
-//				getResultText = false;
-//				setPromptSecond(currentBattleAction.doAction());
-//			}
-			
 			if (getResultText && !locked && !currentBattleAction.isComplete()) {
 				getResultText = false;
 				getNextPrompt = false;
 				setPromptSecond(currentBattleAction.doAction());
 			}
-			
-//			if (getResultText && alertDeadEntity) {
-//				getResultText = false;
-//				needResults = true;
-//				setPromptDead();
-//			}
-//			
-//			if (getResultText && !alertDeadEntity && !currentBattleAction.isComplete()) {
-//				getResultText = false;
-//				setPromptSecond(currentBattleAction.doAction());
-//			}
-//			
-//			if (getNextPrompt && alertDeadEntity) {
-//				alertDeadEntity = false;
-//				getNextPrompt = false;
-//				needNextPrompt = true;
-//				setPromptDead();
-//			}
 			
 			for (int i = 0; i < party.size(); i++) {
 				pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5));
@@ -795,13 +778,19 @@ public class BattleMenu extends Menu {
 			currentBattleAction.indexDown();
 			enemies.remove(deadEntity);
 			allEntities.remove(deadEntity);
-			this.eop = new EnemyOptionPanel(state);
-			int j = 0;
-			for (BattleEntity en : enemies) {
-				eop.addEnemyOption(new EnemyOption((Enemy) en,state.getMainWindow().getScreenWidth()/2  - (en.getWidth())*enemies.size()/2 + (en.getWidth() + 32)*j,
-						state.getMainWindow().getScreenHeight()/2 -(((Enemy) en).getHeight()),state));
-				j++;
-			} 
+			for (EnemyOption eo : eop.getEnemyOptions()) {
+				if (eo.getEnemy() == deadEntity) {
+					eop.removeEnemyOption(eo);
+					break;
+				}
+			}
+//			this.eop = new EnemyOptionPanel(state);
+//			int j = 0;
+//			for (BattleEntity en : enemies) {
+//				eop.addEnemyOption(new EnemyOption((Enemy) en,state.getMainWindow().getScreenWidth()/2  - (en.getWidth())*enemies.size()/2 + (en.getWidth() + 32)*j,
+//						state.getMainWindow().getScreenHeight()/2 -(((Enemy) en).getHeight()),state));
+//				j++;
+//			} 
 			expPool += ((Enemy)deadEntity).getExpYield();
 			moneyGained += ((Enemy) deadEntity).getMoneyYield();
 		}

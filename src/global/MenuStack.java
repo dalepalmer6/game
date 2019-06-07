@@ -24,7 +24,12 @@ public class MenuStack {
 	
 	public Menu pop() {
 		if (stack.size() != 0) {
-			return stack.remove(stack.size()-1);
+			Menu m = stack.remove(stack.size()-1);
+			if (stack.size() != 0) {
+				peek().reloadActionOnPop();
+			}
+			
+			return m;
 		}
 		return null;
 	}

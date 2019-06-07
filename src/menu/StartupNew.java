@@ -32,6 +32,8 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import actionmenu.goodsmenu.InvisibleMenuItem;
 import battlesystem.BattleMenu;
+import battlesystem.SelectTargetMenu;
+import battlesystem.options.EnemyOptionPanel;
 import battlesystem.options.PSI;
 import canvas.Controllable;
 import canvas.Drawable;
@@ -168,7 +170,15 @@ public class StartupNew{
 	private boolean textEditor;
 	public HashMap<Integer,EnemyAction> enemyActions;
 	private Menu needToAddMenu;
+	private Menu savedMenu;
+	private boolean needAddSavedMenu;
+	private EnemyOptionPanel eop;
+	private int indexOfParty;
 	
+	
+	public void setNeedAddSavedMenu(Menu m) {
+		needToAddMenu = m;
+	}
 	
 	public static enum Characters {
 		NINTEN("ninten"),
@@ -262,9 +272,8 @@ public class StartupNew{
 	}
 	
 	
-	
 	public BufferedImage getAnimation(String s) {
-		return animations.get(s);
+		return animations.get(pathToAnimsTextures + s + ".png");
 	}
 	
 	public String getPathToAnims() {
@@ -356,9 +365,13 @@ public class StartupNew{
 					psi.add(psiAttack);
 				}
 				psiAttack.setMinMaxDmg(minDmg,maxDmg);
-				Animation animate = new Animation(this,anim,0,0,mainWindow.getScreenWidth(),mainWindow.getScreenHeight());
-				animate.createAnimation();
-				psiAttack.setAnim(animate);
+				if (anim.equals("undef")) {
+					
+				} else {
+					Animation animate = new Animation(this,anim,0,0,mainWindow.getScreenWidth(),mainWindow.getScreenHeight());
+//					animate.createAnimation();
+					psiAttack.setAnim(animate);
+				}
 			}
 			//create the classifications ordering now.
 			psiClassList = new PSIClassificationList();
@@ -861,8 +874,8 @@ public class StartupNew{
 			loadImageData();
 			loadAllEntities();
 			loadAllItems();
-//			loadAllPSI();
 //			loadAllAnims();
+//			loadAllPSI();
 			loadAllEnemyActions();
 			loadAllEnemies();
 			loadAllStrings();
@@ -1025,6 +1038,19 @@ public class StartupNew{
 			}
 		}
 		
+		if (inBattle && eop != null) {
+			if (!(menuStack.peek() instanceof SelectTargetMenu)) {
+				eop.setSelected(-2);
+			}
+//			if (menuStack.peek() instanceof SelectTargetMenu) {
+				eop.updateAnim();
+//			}
+		}
+		
+//		if (battleMenu != null && menuStack.peek() != battleMenu) {
+//			battleMenu.updateAll(input);
+//		}
+		
 		
 //		input.setHoldable(false);
 		Point mouse = getMainWindow().getMouseCoordinates();
@@ -1067,8 +1093,8 @@ public class StartupNew{
 			}
 			if (gameState.getFlag("saveGame")) {
 				try {
-					gameState.saveData();
 					gameState.setFlag("saveGame",false);
+					gameState.saveData();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1107,6 +1133,7 @@ public class StartupNew{
 				needToPop = false;
 				GameState gs = new GameState(this);
 				this.setGameState(gs);
+				gs.loadFromSaveFile("test");
 				gs.loadMapData();
 			}
 		}
@@ -1338,5 +1365,34 @@ public class StartupNew{
 			needToAddMenu = m;
 		}
 		shouldFadeIn = true;
+	}
+
+	public Menu getSavedMenu() {
+		return savedMenu;
+	}
+
+	
+	public void saveCurrentDialogMenu() {
+		// TODO Auto-generated method stub
+		savedMenu = menuStack.peek();
+	}
+
+	public void addSavedMenu(boolean b) {
+		// TODO Auto-generated method stub
+		needAddSavedMenu = b;
+	}
+
+	public void setEOP(EnemyOptionPanel eop) {
+		// TODO Auto-generated method stub
+		this.eop = eop;
+	}
+
+	public void setIndexOfParty(int partyIndex) {
+		// TODO Auto-generated method stub
+		indexOfParty = partyIndex;
+	}
+	
+	public int getPartyIndex() {
+		return indexOfParty;
 	}
 }

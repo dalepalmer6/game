@@ -11,7 +11,6 @@ public class SimpleDialogMenu extends Menu {
 		super(m);
 	}
 
-
 	public static void createDialogBox(StartupNew state, String s) {
 		// TODO Auto-generated method stub
 		SimpleDialogMenu sdm = new SimpleDialogMenu(state);

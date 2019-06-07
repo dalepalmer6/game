@@ -13,9 +13,36 @@ import menu.StartupNew;
 public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 	private ArrayList<SelectionTextWindow> inventories;
 	private TextWindow descWindow;
+	private boolean selling;
+	
+	public void reloadActionOnPop() {
+//		inventories = new ArrayList<SelectionTextWindow>();
+		int j = 0;
+		for (SelectionTextWindow stw:  inventories) {
+//			SelectionTextWindow base = new SelectionTextWindow(0,0,0,0,state);
+			stw.clearSelections();
+			stw.setCurrentOpen(stw.getTextStartX(),stw.getTextStartY());
+//			stw.setTextStart(base.getTextStartX()+96,base.getTextStartY());
+			stw.setSteps(680,0);
+			stw.setDrawOnly(false);
+			PartyMember pm = party.get(j++);
+			for (Item item : pm.getItemsList()) {
+				if (item.getId() == 0) {
+					continue;
+				}
+				stw.add(new GoodsSelectMenuItem(item,index,state,party,selling));
+			}
+		}
+		menuTitle.setText("Goods");
+	}
 	
 	public GoodsMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party) {
+		this(state,party,false);
+	}
+	
+	public GoodsMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party,boolean selling) {
 		super(state,party);
+		this.selling = selling;
 		inventories = new ArrayList<SelectionTextWindow>();
 		for (int i = 0; i < party.size(); i++) {
 			PartyMember pm = party.get(i);
@@ -28,13 +55,15 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 				if (item.getId() == 0) {
 					continue;
 				}
-				stw.add(new GoodsSelectMenuItem(item,index,state,party));
+				stw.add(new GoodsSelectMenuItem(item,index,state,party,selling));
 			}
+			index++;
 			inventories.add(stw);
 			descWindow = new TextWindow(true," ",256,128+11*64,20,1,state);
 			//add a TexturedMenuItem that draws the item's picture
 			addMenuItem(descWindow);
 		}
+		index = 0;
 		menuTitle.setText("Goods");
 	}
 	

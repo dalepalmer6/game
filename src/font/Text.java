@@ -222,6 +222,14 @@ public class Text implements Drawable{
 					replacementCode = true;
 					replacement = "" + state.getGameState().getWindowArgument();
 				}
+				if (controlCode.equals("DADDEPOSITED")) {
+					replacementCode = true;
+					replacement = "" + state.getGameState().getFundsDeposited();
+				}
+				if (controlCode.equals("BANKFUNDS")) {
+					replacementCode = true;
+					replacement = "" + state.getGameState().getFundsInBank();
+				}
 				
 				if (replacementCode) {
 					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), replacement);
@@ -442,6 +450,8 @@ public class Text implements Drawable{
 						newListOfControlCodes += "," + control;
 					}
 					if (control.startsWith("STARTBATTLE_")) {
+						drawStart = i;
+						state.saveCurrentDialogMenu();
 						controlCodes.put(i,controlCodes.get(i).replaceFirst(Pattern.quote("," + control),""));
 						state.saveAudio();
 						String enemyListString = control.substring(12);
@@ -504,13 +514,27 @@ public class Text implements Drawable{
 						}
 					}
 					if (control.startsWith("CONSUMEITEM_")) {
-						int itemId = Integer.parseInt(control.substring(12));
-						for (PartyMember mi : state.getGameState().getPartyMembers()) {
-							int index;
-							while ((index = mi.hasItem(itemId)) != -1) {
-								mi.setItem(state.items.get(0),index);
+//						int itemId = Integer.parseInt(control.substring(12));
+						String itemId = control.substring(12);
+						if (itemId.contains("_")) {
+							//have a specified index
+							String[] split = itemId.split("_");
+							int id = Integer.parseInt(split[0]);
+							int memberId = Integer.parseInt(split[1]);
+							state.getGameState().getPartyMembers().get(memberId).consumeItem(id);
+						} else {
+							int id = Integer.parseInt(control.substring(12));
+							for (PartyMember mi : state.getGameState().getPartyMembers()) {
+								int index;
+								while ((index = mi.hasItem(id)) != -1) {
+									mi.setItem(state.items.get(0),index);
+								}
 							}
 						}
+					}
+					if (control.startsWith("ADDMONEY_")) {
+						int money = -Integer.parseInt(control.substring(9));
+						state.getGameState().spendFunds(money); //we use the negative value
 					}
 					if (control.startsWith("SETFLAG_")) {
 						String flagName = control.substring(8);
@@ -578,6 +602,12 @@ public class Text implements Drawable{
 						ShopMenu sm = new ShopMenu(state, control.substring(5));
 						sm.loadShopItems();
 						state.getMenuStack().push(sm);
+					}
+					if (control.equals("SELLWINDOW")) {
+						((ShopMenu) state.getMenuStack().peek()).addSellWindow();
+					}
+					if (control.equals("BUYWINDOW")) {
+						((ShopMenu) state.getMenuStack().peek()).addBuyWindow();
 					}
 					if (control.startsWith("SET_ITEM_TO_BUY_")) {
 						int id = Integer.parseInt(control.substring(16));

@@ -20,9 +20,59 @@ import menu.StartupNew;
 public class EnemyOptionPanel extends MenuItem {
 	private ArrayList<EnemyOption> enemyOptions;
 	private int allEnemyWidths;
-	private int selected;
+	private int selected = -2;
 	private Texture battleBGTexture;
 	private float[] battleBGVars;
+	private int entityToShake;
+	private int timer = -1;
+	private int killed = -1;
+	
+	public void setSelected(int i) {
+		selected = i;
+	}
+	
+	public EnemyOption getEnemyOption(int i) {
+		return enemyOptions.get(i);
+	}
+	
+	@Override
+	public void updateAnim() {
+		if (killed != -1) {
+			enemyOptions.get(entityToShake).setWidth((int)(enemyOptions.get(entityToShake).getWidth()*0.95));
+			enemyOptions.get(entityToShake).setHeight((int)(enemyOptions.get(entityToShake).getHeight()*0.95));
+			enemyOptions.get(entityToShake).moveY(1*(timer-15));
+		}
+		if (timer != -1) {
+			timer--;
+//			if (timer % 1 == 0) {
+				enemyOptions.get(entityToShake).moveX(8*Math.cos(timer*Math.PI/8));
+				enemyOptions.get(entityToShake).moveY(2*Math.cos(timer*Math.PI/2));
+//			}
+		}
+		if (timer == 0) {
+			enemyOptions.get(entityToShake).setWidth(0);
+			timer = -1;
+			killed = -1;
+		}
+		int i = 0;
+		for (EnemyOption eo : enemyOptions) {
+			if (selected == -2) {
+				eo.setSelected(false);
+			}
+			if (selected == -1) {
+				//targeting all
+				eo.setSelected(true);
+			} else {
+				if (i == selected) {
+					eo.setSelected(true);
+				}  else {
+					eo.setSelected(false);
+				}
+			}
+			i++;
+		}
+//		selected = -2;
+	}
 	
 	public EnemyOptionPanel(StartupNew m) {
 		super("", 0, 400, m.getMainWindow().getScreenWidth(), m.getMainWindow().getScreenHeight()-400, m);
@@ -51,7 +101,6 @@ public class EnemyOptionPanel extends MenuItem {
 				err.printStackTrace();
 			}
 		}
-//		e.getEnemy().getWidth();
 	}
 
 	public void removeEnemyOption(EnemyOption e) {
@@ -78,5 +127,21 @@ public class EnemyOptionPanel extends MenuItem {
 		for (EnemyOption eo : enemyOptions) {
 			eo.draw(state.getMainWindow());
 		}
+	}
+
+	public int getSelected() {
+		// TODO Auto-generated method stub
+		return selected;
+	}
+
+	public void setToShake(int index) {
+		// TODO Auto-generated method stub
+		entityToShake = index;
+		timer = 30;
+	}
+
+	public void setKilled(int index) {
+		// TODO Auto-generated method stub
+		killed = index;
 	}
 }

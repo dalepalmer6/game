@@ -20,8 +20,8 @@ public class EquipMenuItem extends TexturedMenuItem {
 	}
 	
 	public String execute() {
-		state.setSFX("window.wav");
-		state.playSFX();
+//		state.setSFX("window.wav");
+//		state.playSFX();
 //		EquipmentSelectionTextWindows estw = new EquipmentSelectionTextWindows(state,party);
 //		estw.createMenu();
 		EquipsMenu em = new EquipsMenu(state, party);

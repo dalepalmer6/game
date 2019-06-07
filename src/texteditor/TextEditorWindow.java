@@ -356,7 +356,7 @@ public class TextEditorWindow {
 		int i = 0;
 		String output = "";
 		for (String s : state.textData) {
-			output += String.format("%03X", i) + ": " + s + "\n";
+			output += String.format("%03X", i++) + ": " + s + "\n";
 		}
 		PrintWriter pw;
 		try {

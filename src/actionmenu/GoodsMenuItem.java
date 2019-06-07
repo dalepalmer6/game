@@ -23,8 +23,8 @@ public class GoodsMenuItem extends TexturedMenuItem {
 		//create the goods Menu
 //		GoodsMenu gm = new GoodsMenu(state,party);
 //		gm.createMenu();
-		state.setSFX("window.wav");
-		state.playSFX();
+//		state.setSFX("window.wav");
+//		state.playSFX();
 		
 		GoodsMenuOutOfBattle piw = new GoodsMenuOutOfBattle(state,party);
 		state.getMenuStack().push(piw);

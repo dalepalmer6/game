@@ -25,10 +25,10 @@ public class PartyMemberSelectMenuItem extends MenuItem {
 	public String execute() {
 		String result = "";
 		if (actionToDo.equals("give")) {
-			state.getMenuStack().pop();
-			state.getMenuStack().pop();
 			pm.setItem(item,pm.getOpenInventorySpace());
 			user.consumeItem(item);
+			state.getMenuStack().pop();
+			state.getMenuStack().pop();
 		}
 		if (actionToDo.equals("use")) {
 			state.setClearMenuStack();
@@ -38,7 +38,7 @@ public class PartyMemberSelectMenuItem extends MenuItem {
 				result += item.useOutOfBattle(user,partyMems);
 				state.setResultOfMenuToDisplay(result);
 			} else if (item instanceof PSIAttack) {
-				result += "[PLAYSFX_psi.wav]" + user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
+				result += "[PLAYSFX_psicast.wav]" + user.getName() + " tried " + item.getName() + ".[PROMPTINPUT]";
 				partyMems.add(pm);
 				result += item.useOutOfBattle(user,partyMems);
 				state.setResultOfMenuToDisplay(result);

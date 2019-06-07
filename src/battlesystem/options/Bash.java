@@ -15,7 +15,7 @@ public class Bash extends MenuItem{
 	
 	public String execute() {
 		//show the options who can be attacked
-		BattleMenu m =  ((BattleMenu) state.getMenuStack().peek());
+		BattleMenu m = ((BattleMenu) state.getMenuStack().peek());
 		m.setCurrentAction(new BattleAction(state));
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());
 		m.getCurrentAction().setAction("bash");

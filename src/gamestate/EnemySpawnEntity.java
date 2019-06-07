@@ -105,9 +105,9 @@ public class EnemySpawnEntity extends Entity {
 		if (!done) {
 			//only do this once when entity is loaded
 			spawned = new ArrayList<EnemyEntity>(); 
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 3; i++) {
 				double rand = Math.random();
-				if (rand < 0.3) {//base rate
+				if (rand < 0.3) { //base rate
 					for (int j = 0; j < rates.length; j++) {
 						rand = Math.random();
 						float rate = rates[j];

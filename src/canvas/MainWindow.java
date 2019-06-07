@@ -55,6 +55,7 @@ public class MainWindow {
 	private Texture tilesetTexture;
 	private Texture battleBGTexture;
 	private float[] battleBGVars;
+	private boolean useTransparency;
 	
 	public void setTextureAtlas(TextureAtlas ta) {
 		this.textureAtlas = ta;
@@ -116,10 +117,10 @@ public class MainWindow {
 			
 			// draw quad
 			GL11.glBegin(GL11.GL_QUADS);
-			    GL11.glVertex2f(0,0);
-			    GL11.glVertex2f(width,0);
-			    GL11.glVertex2f(width,height);
-			    GL11.glVertex2f(0,height);
+			    GL11.glVertex2f(x,y);
+			    GL11.glVertex2f(x+width,y);
+			    GL11.glVertex2f(x+width,y+height);
+			    GL11.glVertex2f(x,y+height);
 			GL11.glEnd();
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -299,6 +300,10 @@ public class MainWindow {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureAtlas.getTexture().getTextureID());
 	}
 	
+	public void setUseTransparency() {
+		useTransparency = true;
+	}
+	
 	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
 //		GL11.glColor4f(0.0f,0.0f,0.0f,0.0f);
 		if (useShader) { 
@@ -306,6 +311,10 @@ public class MainWindow {
 			return;
 		} 
 		else {GL20.glUseProgram(0);}
+		if (useTransparency) {
+			GL11.glPushAttrib(GL11.GL_CURRENT_BIT);
+			GL11.glColor4f(255f,255f,255f,0.2f);
+		}
         GL11.glPushMatrix();
         Rectangle rect = textureAtlas.getCurrentRectangle();
 	        float xo = (rect.x + dx)/textureAtlas.getTexture().getTextureWidth();
@@ -332,6 +341,10 @@ public class MainWindow {
 			GL11.glVertex2f(-correction + scaleX*x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
+        if (useTransparency) {
+			GL11.glPopAttrib();
+			useTransparency = false;
+		}
         
 	}
 	

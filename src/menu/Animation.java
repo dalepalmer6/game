@@ -1,5 +1,6 @@
 package menu;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -50,12 +51,6 @@ public class Animation extends MenuItem {
 	public Animation(StartupNew m, String texture, int x, int y, int w, int h) {
 		super("",x,y,w,h,m);
 		this.texture = texture;
-		try {
-			textureSlick = BufferedImageUtil.getTexture("", ImageIO.read(new File(state.getPathToAnims() + this.texture + ".png")));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		coordinates = new AnimationCoordinates(texture);
 	}
 	
@@ -80,8 +75,6 @@ public class Animation extends MenuItem {
 			    String width = subTextureElement.getAttribute("w");
 			    String height= subTextureElement.getAttribute("h");
 			    coordinates.addStateToPose(0,Integer.parseInt(x),Integer.parseInt(y),Integer.parseInt(width),Integer.parseInt(height));
-			    // DO SOMETHING WITH THIS DATA HERE
-			    // GET THE PICTURE FROM SHEET WITH THESE.
 			}
 			
 			
@@ -106,6 +99,12 @@ public class Animation extends MenuItem {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+		try {
+			textureSlick = BufferedImageUtil.getTexture("", state.getAnimation(texture));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		coordinates.setPose(0);
 		parseXMLFile();
 //		tm = coordinates.getPose(0).getStateByNum(0);

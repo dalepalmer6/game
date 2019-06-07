@@ -25,6 +25,11 @@ public class PartyMember {
 	private ArrayList<EquipmentItem> equips = new ArrayList<EquipmentItem>(4);//in the future, make the index here reference the inventory instead of an item
 	private StartupNew state;
 	private int index;
+	private String saveFile;
+	
+	public void setIndex(int i) {
+		this.index = i;
+	}
 	
 	public int hasItem(int id) {
 		for (int i = 0; i < items.size(); i++) {
@@ -52,6 +57,15 @@ public class PartyMember {
 	
 	public void consumeItem(Item i) {
 		items.remove(i);
+	}
+	
+	public void consumeItem(int id) {
+		for (Item i : items) {
+			if (i.getId() == id) {
+				items.remove(i);
+				return;
+			}
+		}
 	}
 	
 	public String getId() {
@@ -121,8 +135,8 @@ public class PartyMember {
 		return name;
 	}
 	
-	public PartyMember(String id,int number, StartupNew state) {
-		this.index = number;
+	public PartyMember(String id, String saveFileToLoad, StartupNew state) {
+		this.saveFile = saveFileToLoad;
 		this.state = state;
 		this.id = id;
 		loadStats(id);
@@ -130,7 +144,7 @@ public class PartyMember {
 	
 	public void loadStats(String i) {
 		//load from a saved file
-		String pathToEntity = "savedata/players/" + i;
+		String pathToEntity = "savedata/" + saveFile + "/" + i;
 		File file = new File(pathToEntity);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));

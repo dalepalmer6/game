@@ -11,6 +11,7 @@ import menu.StartupNew;
 public class GoodsMenu extends Menu {
 	private int index;
 	private ArrayList<PartyMember> party;
+	private boolean sellingState;
 	
 	public GoodsMenu(StartupNew m, ArrayList<PartyMember> party, int i) {
 		super(m);
@@ -22,9 +23,14 @@ public class GoodsMenu extends Menu {
 		SelectionTextWindow stw = new SelectionTextWindow(0,0,15,15,state);
 		stw.setSteps(480,0);
 		for (Item i : party.get(index).getItemsList()) {
-			stw.add(new GoodsSelectMenuItem(i,index,state,party));
+			stw.add(new GoodsSelectMenuItem(i,index,state,party,sellingState));
 		}
 		addMenuItem(stw);
+	}
+
+	public void setSelling(boolean b) {
+		// TODO Auto-generated method stub
+		sellingState = b;
 	}
 	
 }

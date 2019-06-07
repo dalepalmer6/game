@@ -66,6 +66,7 @@ public class EntityEditor {
 	private JComboBox<String>  enemy4ComboBox;
 	private JLabel xyLabel;
 	private JTextArea textArea;
+	private boolean done;
 	
 	public void commitCurrentEntity() {
 		String name = nameTextField.getText();
@@ -110,34 +111,44 @@ public class EntityEditor {
 	}
 	
 	public void setMap(Map m) {
+		this.map = m;
+	}
+	
+	public void reload() {
 //		destMapComboBox.clear();
-		map = m;
 		entities = map.getEntities();
 		if (entities.size() == 0) {
 			PresentEntity pe = new PresentEntity(0,0,0,"firstEntity",state);
 			entities.add(pe);
 			pe.setSpriteCoords(state.getEntityFromEnum("present").getSpriteCoordinates());
 		}
-		for (String n : state.mapNames) {
-			destMapComboBox.addItem(n);
-		}
-		for (Item n : state.items) {
-			itemComboBox.addItem(n.getName());
-		}
+		entityComboBox.removeAllItems();
 		for (Entity e : entities) {
 			entityComboBox.addItem(e);
 		}
-		for (String e : state.allEntities.keySet()) {
-			textureComboBox.addItem(e);
+		
+		if (entity != null) {
+			entityComboBox.setSelectedItem(entity);
 		}
 		
-		
-		for (int n : state.enemies.keySet()) {
-			Enemy en = state.enemies.get(n);
-			enemy1ComboBox.addItem(en.getName());
-			enemy2ComboBox.addItem(en.getName());
-			enemy3ComboBox.addItem(en.getName());
-			enemy4ComboBox.addItem(en.getName());
+		if (!done) {
+			for (String n : state.mapNames) {
+				destMapComboBox.addItem(n);
+			}
+			for (Item n : state.items) {
+				itemComboBox.addItem(n.getName());
+			}
+			for (String e : state.allEntities.keySet()) {
+				textureComboBox.addItem(e);
+			}
+			for (int n : state.enemies.keySet()) {
+				Enemy en = state.enemies.get(n);
+				enemy1ComboBox.addItem(en.getName());
+				enemy2ComboBox.addItem(en.getName());
+				enemy3ComboBox.addItem(en.getName());
+				enemy4ComboBox.addItem(en.getName());
+			}
+			done = true;
 		}
 		
 		updateAllFields();
@@ -213,6 +224,8 @@ public class EntityEditor {
 	public EntityEditor(StartupNew state) {
 		this.state = state;
 		initialize();
+		setMap(((MapEditMenu)state.getMenuStack().peek()).getMapPreview().getMap());
+		reload();
 		frame.setVisible(true);
 	}
 
@@ -270,7 +283,10 @@ public class EntityEditor {
 		panel.add(entityComboBox);
 		entityComboBox.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
-		        updateAllFields();
+		    	if (done) {
+		    		entity = null;
+		    		updateAllFields();
+		    	}
 		    }
 		});
 		
@@ -445,6 +461,8 @@ public class EntityEditor {
 				Entity e = state.allEntities.get("ninten").createCopy(0,0,24,32,"NewEntityName");
 				e.setText("New Entity");
 				map.getEntities().add(e);
+				reload();
+				updateAllFields();
 			}
 			
 		});
@@ -459,6 +477,8 @@ public class EntityEditor {
 				// TODO Auto-generated method stub
 				DoorEntity e = new DoorEntity("Description",0,0,32,32,state,0,0,"podunk","Text");
 				map.getEntities().add(e);
+				reload();
+				updateAllFields();
 			}
 			
 		});
@@ -473,6 +493,7 @@ public class EntityEditor {
 				// TODO Auto-generated method stub
 				HotSpot e = new HotSpot("Description",0,0,32,32,state,0,0,"podunk","Text","Cutscene Name");
 				map.getEntities().add(e);
+				updateAllFields();
 			}
 			
 		});
@@ -488,6 +509,8 @@ public class EntityEditor {
 				Entity e = new EnemySpawnEntity(0,0,32,32,state,"");
 				e.setText("New Entity");
 				map.getEntities().add(e);
+				reload();
+				updateAllFields();
 			}
 			
 		});
@@ -501,6 +524,8 @@ public class EntityEditor {
 				PresentEntity pe = new PresentEntity(0,0,0,"New Present",state);
 				pe.setSpriteCoords(state.getEntityFromEnum("present").getSpriteCoordinates());
 				map.getEntities().add(pe);
+				reload();
+				updateAllFields();
 			}
 			
 		});

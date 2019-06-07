@@ -22,7 +22,7 @@ public class ActionMenu extends Menu {
 	}
 	
 	public void createMenu() {
-		state.setSFX("window.wav");
+		state.setSFX("openstart.wav");
 		state.playSFX();
 		stw = new PauseMenuSelectionWindow(state,party);
 		addMenuItem(stw);

@@ -99,6 +99,10 @@ public class Menu implements MenuInterface {
 		
 	}
 
+	public void reloadActionOnPop() {
+		
+	}
+	
 	public StartupNew getState() {
 		return state;
 	}

@@ -187,7 +187,7 @@ public class Item{
 		}
 		beStatus &= status;
 		if (beStatus != be.getState()) {
-			usedString = "[PLAYSFX_heal 2.wav]" + be.getName() + " recovered their status.";
+			usedString = "[PLAYSFX_healedbeta.wav]" + be.getName() + " recovered their status.";
 		} else {
 			usedString = "Nothing happened.";
 		}
@@ -314,10 +314,10 @@ public class Item{
 		}
 		switch (action) {
 			case 0: 			result += healTarget(user,target); 
-							  	usedString = "[PLAYSFX_heal 1.wav]" + target.getName() + " recovered " + result + "HP.[PROMPTINPUT]";
+							  	usedString = "[PLAYSFX_lifeupbeta.wav]" + target.getName() + " recovered " + result + "HP.[PROMPTINPUT]";
 							  	break;
 			case 1: 			result+= healPP(user,target);
-								usedString = "[PLAYSFX_heal 1.wav]" + target.getName() + " recovered " + result + "PP.[PROMPTINPUT]";
+								usedString = "[PLAYSFX_pphealedfield.wav]" + target.getName() + " recovered " + result + "PP.[PROMPTINPUT]";
 								break;
 			case 2: 			healStatus(target,damageVariable);
 								break;
