@@ -1,4 +1,8 @@
 DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
-podunkDoor,302,1946,32,128,podunk,4298,2241,a, , 
-merryspookTunnel,4288,3186,13,37,merrydeer tunnel,196,232,a, , 
-to north merrysville,305,185,81,13,merrysville north,3050,1932,a, , 
+podunkDoor,302.0,1946.0,32,128,podunk,4298,2241,a, , 
+merryspookTunnel,4288.0,3186.0,13,37,merrydeer tunnel,196,232,a, , 
+to north merrysville,305.0,185.0,185,13,merrysville north,3050,1932,a, , 
+Description,1515.0,5592.0,9,32,tailcavemerrysville,332,516,Text, , 
+Description,1082.0,5780.0,16,32,factory,1904,875,Text, , 
+Description,1317.0,3715.0,16,32,podunk,0,0,Text, , 
+Description,364.0,733.0,96,33,merrysville north,2283,1936,Text, , 

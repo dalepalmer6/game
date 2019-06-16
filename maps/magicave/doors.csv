@@ -1,4 +1,5 @@
 DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
-Description,2147,188,25,32,merrysville,1334,4111,Text, , 
-Description,2343,747,17,9,magicave,331,1607,Text, , 
-Description,416,126,32,32,magicant,3565,3053,Text, , 
+Description,2147.0,188.0,25,32,tailcavemerrysville,622,197,Text, , 
+Description,2343.0,747.0,17,9,magicave,331,1607,Text, , 
+Description,416.0,126.0,32,32,magicant,3565,3053,Text, , 
+Description,320.0,1520.0,32,32,magicave,2313,735,Text, , 
