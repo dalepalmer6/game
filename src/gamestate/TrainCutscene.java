@@ -35,7 +35,7 @@ public class TrainCutscene extends Cutscene {
 			curMovement = cutsceneData.getMovementData();
 //			cutsceneData.step(reverseOrder);
 //			state.getGameState().getTrain().setXY(curMovement.getX(),curMovement.getY());
-			DoorEntity e = new DoorEntity("",state.getGameState().getTrain().getX(),state.getGameState().getTrain().getY(),256,256,state,curMovement.getX(),curMovement.getY(),mapName,"");
+			DoorEntity e = new DoorEntity("",state.getGameState().getTrain().getX(),state.getGameState().getTrain().getY(),256,256,state,(int)curMovement.getX(),(int)curMovement.getY(),mapName,"");
 			e.addToInteractables(state.getGameState().getTrain());
 			state.getGameState().getEntityList().add(e);
 			e.act();

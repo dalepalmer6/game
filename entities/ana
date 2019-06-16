@@ -42,7 +42,7 @@ idle_climb,0,160,24,32,false
 _climb,0,160,24,32,false
 _climb,24,160,24,32,false
 _climb,48,160,24,32,false
-charred,0,192,24,32,false
+charred_,0,192,24,32,false
 dead_down,0,224,24,32,false
 dead_downleft,24,224,24,32,false
 dead_left,48,224,24,32,false

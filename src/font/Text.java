@@ -62,6 +62,7 @@ public class Text implements Drawable{
 	private ArrayList<String> flags;
 	private boolean waitingForNumberInput;
 	private DigitScroller digitScroller;
+	private boolean waitForAudio;
 	
 	public HashMap<Integer,String> getControlCodes() {
 		return controlCodes;
@@ -123,7 +124,7 @@ public class Text implements Drawable{
 	}
 	
 	public int getY() {
-		return y;
+		return drawingY;
 	}
 	
 	public void setText(String s) {
@@ -182,7 +183,11 @@ public class Text implements Drawable{
 				}
 				if (controlCode.startsWith("_") && !foundChoose) {
 					int indexInString = Integer.parseInt(controlCode.substring(1),16);
-					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), state.textData.get(indexInString) + "[NEWLINE]");
+					String newline = "[NEWLINE]";
+					if (indexOfCode == 0) {
+						newline = "";
+					}
+					parsedString = parsedString.replaceFirst(Pattern.quote("[" + controlCode + "]"), newline + state.textData.get(indexInString));
 					textString = parsedString;
 					parsingControlCode = false;
 					i-=controlCode.length()+2;
@@ -486,9 +491,10 @@ public class Text implements Drawable{
 					}
 					if (control.startsWith("SETBGM_")) {
 						String audio = control.substring(7);
-						state.setBGM(audio);
 						state.saveAudio();
-						state.setAudioOverride(true);
+						state.setBGM(audio);
+						state.setRestoreAudioWhenDone();
+						waitForAudio = true;
 					}
 					if (control.startsWith("STOPBGM")) {
 						state.stopBGM();
@@ -754,6 +760,13 @@ public class Text implements Drawable{
 //			oldTicksPerFrame = ticksPerFrame;
 //			ticksPerFrame *= 2;
 //		}
+		if (waitForAudio) {
+			freeze = true;
+			if (state.getBGMEnded()) {
+				state.resetBGMEnded();
+				waitForAudio = false;
+			}
+		}
 		if (drawingY > targetY) {
 			drawingY-=8;
 		}
@@ -791,7 +804,7 @@ public class Text implements Drawable{
 				drawingY = y;
 				targetY = y;
 			}
-			if (tickCount % textRate == 0) {
+			if (tickCount % textRate == 0 && !waitForAudio) {
 				incrementDrawUntil();
 			}
 		} else if (dramaticPause) {
@@ -810,7 +823,7 @@ public class Text implements Drawable{
 	}
 	
 	public void setY(int y) {
-		this.y = y;
+//		this.y = y;
 		drawingY = y;
 	}
 
@@ -821,7 +834,7 @@ public class Text implements Drawable{
 
 	public boolean getDoneState() {
 		// TODO Auto-generated method stub
-		return done || freeze || dramaticPause || waitingForDecision || waitingForNumberInput;
+		return done || freeze || dramaticPause || waitingForDecision || waitingForNumberInput || waitForAudio;
 	}
 	
 	public boolean getDone() {
@@ -856,6 +869,21 @@ public class Text implements Drawable{
 	public void setParsedString() {
 		// TODO Auto-generated method stub
 		parsedString = textString;
+	}
+
+	public int getTargetY() {
+		// TODO Auto-generated method stub
+		return targetY;
+	}
+
+	public void shift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTargetY(int i) {
+		// TODO Auto-generated method stub
+		targetY = i;
 	}
 	
 	

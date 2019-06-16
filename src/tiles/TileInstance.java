@@ -1,12 +1,16 @@
 package tiles;
 
 public class TileInstance {
-	private String id;
+	private int id;
 	private int dx;
 	private int dy;
 	private int dw;
 	private int dh;
 	private TileCollisionMap tileCollisionMap;
+	
+	public int getId() {
+		return id;
+	}
 	
 	public int getCollisionInfoAtIndex(int x, int y) {
 		return tileCollisionMap.getCollisionData(y*4 + x);
@@ -36,7 +40,7 @@ public class TileInstance {
 		return dw;
 	}
 	
-	public TileInstance(String id, int dx, int dy, int dw, int dh, int[] colmap) {
+	public TileInstance(int id, int dx, int dy, int dw, int dh, int[] colmap) {
 		this.id = id;
 		this.dx = dx;
 		this.dy = dy;

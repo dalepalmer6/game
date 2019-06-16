@@ -13,7 +13,7 @@ public class PSIMenuItem extends TexturedMenuItem {
 	private ArrayList<PartyMember> party;
 	
 	public PSIMenuItem(StartupNew state, ArrayList<PartyMember> party, int ty) {
-		super("PSI",64,ty,96,96,state,"menu.png",60,0,14,14);
+		super("PSI",64,ty,14*4,14*4,state,"menu.png",60,0,14,14);
 		this.party = party;
 		targetY = 0;
 	}

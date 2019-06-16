@@ -26,7 +26,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private int savedX;
 	private int savedY;
 	protected double shakeApplyY = 0;
-	protected int drawingY = y;
+	protected int drawingY;
 	protected boolean hovered;
 	protected int targetX;
 	protected int targetY;
@@ -148,6 +148,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	
 	public void updateAnim() {
 		drawingY = (int) (y + shakeApplyY);
+		approachTargetPos();
 	}
 	
 	public String executeButton() {

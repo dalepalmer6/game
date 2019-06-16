@@ -1,6 +1,9 @@
 nintenInParty,true
 anaInParty,false
+dadFirstCall,true
+adventureStartFlag,true
 pippiInParty,true
 loidInParty,true
+lampDead,true
 teddyInParty,false
 saveGame,false

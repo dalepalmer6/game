@@ -5,13 +5,13 @@ package gamestate;
  * 
  * */
 public class MovementData {
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private String state;
 	private String dirX;
 	private String dirY;
 	
-	public MovementData(int x, int y, String s, String dirX, String dirY) {
+	public MovementData(double x, double y, String s, String dirX, String dirY) {
 		this.x = x;
 		this.y = y;
 		this.state = s;
@@ -19,11 +19,11 @@ public class MovementData {
 		this.dirY = dirY;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	
@@ -39,12 +39,12 @@ public class MovementData {
 		return dirY;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		// TODO Auto-generated method stub
 		this.x = x;
 	}
 	
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	

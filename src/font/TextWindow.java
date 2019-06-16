@@ -24,15 +24,31 @@ public class TextWindow extends MenuItem implements Drawable{
 	protected int TILE_SIZE = 16;
 	protected int width;
 	protected int height;
-//	protected int x;
-//	protected int y;
 	protected StartupNew m;
 	protected boolean shouldDrawAll;
-	private int drawingY = y;
+//	private int drawingY = y;
 	
 	public void setIgnoreCodes() {
 		text.setIgnoreCodes();
 	}
+	
+	public void setTargetPosY(int i) {
+		// TODO Auto-generated method stub
+		targetY = i;
+		text.setTargetY(i + TEXT_START_Y);
+	}
+	
+	public void approachTargetPos() {
+		// TODO Auto-generated method stub
+		if (targetY > y) {
+			y+=8;
+			text.setY(text.getY()+8);
+		} else if (targetY < y) {
+			y-=8;
+//			text.setY(text.getY()-8);
+		}
+	}
+
 	
 	public void setX(int dx) {
 		text.setX(dx + TEXT_START_X);
@@ -156,7 +172,7 @@ public class TextWindow extends MenuItem implements Drawable{
 	}
 	
 	public void updateAnim() {
-//		super.updateAnim();
+		super.updateAnim();
 		text.update();
 		tickCount += ticksPerFrame;
 		if (!shouldDrawAll && !text.getDoneState() && tickCount % 2 == 0) {

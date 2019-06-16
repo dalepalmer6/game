@@ -66,8 +66,8 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		// TODO Auto-generated constructor stub
 		this.camera = c;
 		this.map = m;
-		viewX = c.getX();
-		viewY = c.getY();
+		viewX = (int) c.getX();
+		viewY = (int) c.getY();
 		mainWindow = s.getMainWindow();
 		this.widthInTiles = 3 + mainWindow.getScreenWidth() / TILE_SIZE;
 		this.heightInTiles = 4 + mainWindow.getScreenHeight() / TILE_SIZE;
@@ -96,7 +96,7 @@ public class MapRenderer extends DrawableObject implements Drawable{
 				if (val == 0) {
 					continue;
 				}
-				int instance  = map.inspectSurroundings(i + camera.getX()/TILE_SIZE,j + camera.getY()/TILE_SIZE);
+				int instance  = map.inspectSurroundings((int)(i + camera.getX()/TILE_SIZE),(int)(j + camera.getY()/TILE_SIZE));
 				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 			}
 		}
@@ -116,7 +116,7 @@ public class MapRenderer extends DrawableObject implements Drawable{
 						tile = tileMap.getTile(((ChangeWithFlagTile) tile).getNewTileId());
 					}
 				}
-				int instance  = map.inspectSurroundings(i + camera.getX()/TILE_SIZE,j + camera.getY()/TILE_SIZE);
+				int instance  = map.inspectSurroundings((int)(i + camera.getX()/TILE_SIZE),(int)(j + camera.getY()/TILE_SIZE));
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
 				m.renderTile(-camera.getX()%TILE_SIZE + x + (i-1)*TILE_SIZE, -camera.getY()%TILE_SIZE+ y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 			}
@@ -175,8 +175,8 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Integer> row = new ArrayList<Integer>();
-		for (int j = camera.getY()/TILE_SIZE; j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
-			for (int i = Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
+		for (int j = (int) (camera.getY()/TILE_SIZE); j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
+			for (int i = (int) Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
 				int curId = map.getTileId(i, j);
 				row.add(curId);
 			}
@@ -195,8 +195,8 @@ public class MapRenderer extends DrawableObject implements Drawable{
 		ArrayList<ArrayList<Integer>> rows = new ArrayList<ArrayList<Integer>>();
 		//start from viewX,viewY as i, and increment by 1 each time while i < widthInTiles
 		ArrayList<Integer> row = new ArrayList<Integer>();
-		for (int j = camera.getY()/TILE_SIZE; j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
-			for (int i = Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
+		for (int j = (int) (camera.getY()/TILE_SIZE); j < this.heightInTiles + camera.getY()/TILE_SIZE + 2; j++) {
+			for (int i = (int) Math.max(0,camera.getX()/TILE_SIZE); i < widthInTiles + camera.getX()/TILE_SIZE + 2; i++) {
 				int curId = map.get(j).get(i);
 				row.add(curId);
 			}

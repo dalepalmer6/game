@@ -16,7 +16,7 @@ public class EnemyEntity extends Entity {
 		state.getGameState().addNumEntities(-1);
 	}
 	
-	public EnemyEntity(int x, int y, int width, int height, StartupNew m,
+	public EnemyEntity(double x, double y, int width, int height, StartupNew m,
 			ArrayList<Enemy> enemy) {
 		super(enemy.get(0).getEntityId() + ".png", x, y, width, height, m, "enemy_" + enemy.get(0).getName());
 		ArrayList<Enemy> clones = new ArrayList<Enemy>();
@@ -24,15 +24,13 @@ public class EnemyEntity extends Entity {
 			clones.add(((Enemy)e).clone());
 		}
 		this.enemys = clones;
-		stepSize =4;
+		stepSizeX =4;
+		stepSizeY =4;
 	}
 	
-	public void update(GameState gs) {
-		Player player = state.getGameState().getPlayer();
-		targetX = player.getX();
-		targetY = player.getY();
-		super.update(gs);
-	}
+//	public void update(GameState gs) {
+//		super.update(gs);
+//	}
 
 	public void interact() {}
 	

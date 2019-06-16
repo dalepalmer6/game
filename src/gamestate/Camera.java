@@ -4,10 +4,10 @@ import canvas.MainWindow;
 import menu.StartupNew;
 
 public class Camera {
-	private int x;
-	private int y;
-	private int dx;
-	private int dy;
+	private double x;
+	private double y;
+	private double dx;
+	private double dy;
 	private StartupNew state;
 	private MapRenderer mapRenderer;
 	private boolean stopped;
@@ -20,19 +20,19 @@ public class Camera {
 		return state;
 	}
 	
-	public int getDX() {
+	public double getDX() {
 		return dx;
 	}
 	
-	public int getDY() {
+	public double getDY() {
 		return dy;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	
@@ -59,7 +59,7 @@ public class Camera {
 	}
 
 	
-	public void updateCamera(int dx, int dy) {
+	public void updateCamera(double dx, double dy) {
 		if (!stopped) {
 			this.dx = dx;
 			this.dy = dy;
@@ -69,11 +69,11 @@ public class Camera {
 			x=Math.min(x,mapRenderer.getTileSize()*state.getGameState().getMap().getMap().size()-getMainWindow().getScreenWidth());
 			y=Math.max(0,this.y);
 			y = Math.min(y, mapRenderer.getTileSize()*state.getGameState().getMap().getMap().get(0).size()-getMainWindow().getScreenHeight());
-
+			state.getGameState().updateEntityPositions();
 		}
 	}
 
-	public void snapToEntity(int x, int y) {
+	public void snapToEntity(double x, double y) {
 		if (!stopped) {
 			this.x = Math.max(0,x - getMainWindow().getScreenWidth()/2);
 			this.y = Math.max(0,y - getMainWindow().getScreenHeight()/2);

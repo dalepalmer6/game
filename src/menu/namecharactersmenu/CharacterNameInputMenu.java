@@ -15,6 +15,16 @@ public class CharacterNameInputMenu extends Menu {
 //	private String input = "";
 	private SelectionTextWindow STW;		
 	private TextWindow TW;
+	private int index;
+	
+	public void onPop() {
+		if (input.length() > 0) {
+			input = input.substring(0,input.length()-1);
+		}
+		else {
+			super.onPop();
+		}
+	}
 	
 	public void setInput(String s) {
 		input =s;
@@ -27,15 +37,20 @@ public class CharacterNameInputMenu extends Menu {
 	public String getInput() {
 		return input;
 	}
-	public CharacterNameInputMenu(StartupNew m) {
+	public CharacterNameInputMenu(StartupNew m, int index) {
 		super(m);
+		this.index = index;
+		backShouldExit = false;
 	}
 	
 	public void update(InputController inputC) {
 		TW.setText(input);
+		if (input.equals("")) {
+			backShouldExit = true;
+		}
 	}
 	
-	public void create(int index) {
+	public void create() {
 //		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		String entityId = "";
 		switch(index) {
@@ -75,8 +90,11 @@ public class CharacterNameInputMenu extends Menu {
 //			}
 		}
 		STW.setSteps(80,0);
+		STW.add(new DontCareButton(state,index));
+		STW.add(null);
+		STW.add(null);
 		STW.add(new BackButton(state));
-		for (int j = 0; j < 13; j++) {
+		for (int j = 0; j < 10; j++) {
 			STW.setSteps(80,0);
 			if ((j+1) % 5 == 0) {
 				STW.setSteps(288,0);

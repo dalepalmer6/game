@@ -10,7 +10,7 @@ public class HotSpot extends DoorEntity {
 		return cutsceneName;
 	}
 	
-	public void setNewParams(int x, int y, int w, int h, String name, String texture, String appFlag, String disFlag, String cutsceneName) {
+	public void setNewParams(double x, double y, int w, int h, String name, String texture, String appFlag, String disFlag, String cutsceneName) {
 		// TODO Auto-generated method stub
 		this.x = x;
 		this.y = y;
@@ -26,7 +26,7 @@ public class HotSpot extends DoorEntity {
 	public String getInfoForTool() {
 		return cutsceneName + ": " + x + "," + y;
 	}
-	public HotSpot(String desc, int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,
+	public HotSpot(String desc, double x, double y, int width, int height, StartupNew m, int destX, int destY, String map,
 			String text,String csname) {
 		super(desc, x, y, width, height, m, destX, destY, map, text);
 		// TODO Auto-generated constructor stub

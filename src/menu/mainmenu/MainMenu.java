@@ -14,11 +14,12 @@ public class MainMenu extends Menu {
 	
 	public MainMenu(StartupNew m) {
 		super(m);
+		logo = new TexturedMenuItem("Mother",state.getMainWindow().getScreenWidth()/2 - 96*4,96,192*4,64*4,state,"motherlogo.png",0,0,192,64);
+		addMenuItem(logo);
 	}
 	
 	public void update(InputController input) {
-		logo = new TexturedMenuItem("Mother",state.getMainWindow().getScreenWidth()/2 - 96*4,96,192*4,64*4,state,"motherlogo.png",0,0,192,64);
-		addMenuItem(logo);
+		
 	}
 	
 }

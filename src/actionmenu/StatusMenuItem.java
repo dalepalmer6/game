@@ -12,7 +12,7 @@ public class StatusMenuItem extends TexturedMenuItem {
 	private ArrayList<PartyMember> party;
 	
 	public StatusMenuItem(StartupNew state ,ArrayList<PartyMember> party, int ty) {
-		super("Status",96,ty,96,96,state,"menu.png",74,0,14,14);
+		super("Status",96,ty,14*4,14*4,state,"menu.png",74,0,14,14);
 		this.party = party;
 		targetY = 0;
 	}

@@ -37,10 +37,10 @@ public class SingleEntity extends MapTool {
 		super(state);
 		this.entity = e;
 		this.toolInfo = entity.getInfoForTool();
-		associatedButtons.add(new NewEntityButton(500,0,159,31,state));
-		associatedButtons.add(new NewDoorButton(700,0,159,31,state));
-		associatedButtons.add(new NewHotSpotButton(900,0,159,31,state));
-		associatedButtons.add(new NewEnemySpawnButton(1100,0,159,31,state));
+//		associatedButtons.add(new NewEntityButton(500,0,159,31,state));
+//		associatedButtons.add(new NewDoorButton(700,0,159,31,state));
+//		associatedButtons.add(new NewHotSpotButton(900,0,159,31,state));
+//		associatedButtons.add(new NewEnemySpawnButton(1100,0,159,31,state));
 	}
 	
 	/*

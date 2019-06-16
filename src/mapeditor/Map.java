@@ -252,8 +252,8 @@ public class Map {
 			br.readLine();//skip headers
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
-				int x = Integer.parseInt(split[0]);
-				int y = Integer.parseInt(split[1]);
+				double x = Double.parseDouble(split[0]);
+				double y = Double.parseDouble(split[1]);
 				int itemId = Integer.parseInt(split[2]);
 				String name = split[3];
 				PresentEntity pe = new PresentEntity(x*scale,y*scale,itemId,name,state);
@@ -289,8 +289,8 @@ public class Map {
 					String name = row;
 					row = br.readLine();
 					String[] mapdata = row.split(",");
-					int x = Integer.parseInt(mapdata[0]);
-					int y = Integer.parseInt(mapdata[1]);
+					double x = Double.parseDouble(mapdata[0]);
+					double y = Double.parseDouble(mapdata[1]);
 					int w = Integer.parseInt(mapdata[2]);
 					int h = Integer.parseInt(mapdata[3]);
 					row = br.readLine();
@@ -325,8 +325,8 @@ public class Map {
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				String desc = split[0];
-				int x = Integer.parseInt(split[1]);
-				int y = Integer.parseInt(split[2]);
+				double x = Double.parseDouble(split[1]);
+				double y = Double.parseDouble(split[2]);
 				int width = Integer.parseInt(split[3]);
 				int height = Integer.parseInt(split[4]);
 				String destMap = split[5];
@@ -362,8 +362,8 @@ public class Map {
 				String[] split = row.split(",");
 				String name = split[6];
 				String texture = split[0];
-				int x = Integer.parseInt(split[1]);
-				int y = Integer.parseInt(split[2]);
+				double x = Double.parseDouble(split[1]);
+				double y = Double.parseDouble(split[2]);
 				int width = Integer.parseInt(split[3]);
 				int height = Integer.parseInt(split[4]);
 				String text = split[5];
@@ -394,8 +394,8 @@ public class Map {
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
 				String name = split[0];
-				int x = Integer.parseInt(split[1]);
-				int y = Integer.parseInt(split[2]);
+				double x = Double.parseDouble(split[1]);
+				double y = Double.parseDouble(split[2]);
 				int w = Integer.parseInt(split[3]);
 				int h = Integer.parseInt(split[4]);
 				String csName = split[5];

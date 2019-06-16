@@ -17,6 +17,7 @@ public class CharacterNamingMenu extends Menu{
 	private int selectedIndex;
 	private String inputtedName;
 	private int index;
+	private int changeIndex=0;
 	
 	public void setInput(String s) {
 		inputtedName = s;
@@ -30,41 +31,39 @@ public class CharacterNamingMenu extends Menu{
 			state.namesOfCharacters[j++] = name;
 		}
 		index = 0;
-//		stw = new SelectionTextWindow("vertical",300,300,5,10,state);
-//		int i = 0;
-//		for (String name : state.namesOfCharacters) {
-//			stw.add(createMenuItem(i++,name));
-//		}
-//		addMenuItem(stw);
+	}
+	
+	public void increaseIndex(int i) {
+		// TODO Auto-generated method stub
+		changeIndex = i;
+	}
+	
+	public void reloadActionOnPop() {
+		
 	}
 	
 	public void update(InputController input) {
-//		menuItems.remove(stw);
-//		selectedIndex = stw.getSelectedIndex();
+		index+=changeIndex;
+		changeIndex = -1;
+		if (index < 0) {
+			index = 0;
+		}
 		addMenuItem(new MenuItem("test",0,0,state));
-		if (inputtedName != null) {
+		if (inputtedName != null && index < state.defaultNames.length) {
 			state.namesOfCharacters[index] = inputtedName;
-			index++;
 			inputtedName = null;
 		}
-//		stw.clearSelections();
-////		stw.clearSelections();
-//		int i = 0;
-//		for (String name : state.namesOfCharacters) {
-//			stw.add(createMenuItem(i++,name));
-//		}
-//		addMenuItem(stw);
 		if (index >= state.defaultNames.length) {
 			//create the starting textbox.
 			IntroWindowMenu m = new IntroWindowMenu(state);
 			state.getMenuStack().clear();
 			state.getMenuStack().push(m);
-			DialogTextWindow dtw = new DialogTextWindow("[_87C][_87D][_87E][_87F][_880][_881][STOPBGM][_882] ",150,150,15,15,state);
+			DialogTextWindow dtw = new DialogTextWindow("[_87C][_87D][_87E][_87F][_880][_881][STOPBGM][_882] ",150,150,22,15,state);
 			m.addMenuItem(dtw);
 			return;
 		}
-		CharacterNameInputMenu m = new CharacterNameInputMenu(state);
-		m.create(index);
+		CharacterNameInputMenu m = new CharacterNameInputMenu(state,index);
+		m.create();
 		state.getMenuStack().push(m);
 	}
 	

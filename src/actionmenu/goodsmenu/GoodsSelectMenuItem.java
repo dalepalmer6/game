@@ -36,6 +36,7 @@ public class GoodsSelectMenuItem extends MenuItem {
 		} else {
 			state.getSelectionStack().push(this);
 			state.getMenuStack().pop();
+//			state.setSelling(true);
 			state.setIndexOfParty(partyIndex);
 		}
 		

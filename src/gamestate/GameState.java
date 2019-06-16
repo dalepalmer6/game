@@ -40,7 +40,7 @@ public class GameState {
 	private ArrayList<RedrawObject> ro;
 	private ArrayList<PartyMember> party = new ArrayList<PartyMember>();
 	private final String pathToMaps = "/maps/";
-	private String currentMapName;
+	public String currentMapName;
 	private boolean canSpawnEnemies = true;
 	private int[] dx = new int[48];
 	private int[] dy = new int[48];
@@ -85,10 +85,11 @@ public class GameState {
 	private int depositedFunds = 0;
 	private boolean shouldDraw = true;
 	private int windowArgument;
-	private int initialX=-1;
-	private int initialY=-1;
+	private double initialX=-1;
+	private double initialY=-1;
 	private String initialMapName;
 	private boolean loadOriginalStats;
+	private int teleportFailedTimer = -1;
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -144,7 +145,8 @@ public class GameState {
 			if (e instanceof Player) {
 				e.setCoordinates(initialX,initialY);
 				players.add(e);
-			} else if (e instanceof FollowingPlayer) {
+			} 
+			else if (e instanceof FollowingPlayer) {
 				e.setCoordinates(initialX,initialY);
 				players.add(e);
 			}
@@ -188,6 +190,7 @@ public class GameState {
 			br = new BufferedReader(new FileReader(new File("savedata/mapinfo")));
 			while ((data = br.readLine()) != null) {
 				String[] datasplit = data.split(",");
+				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -202,8 +205,8 @@ public class GameState {
 			br = new BufferedReader(new FileReader(new File("savedata/mapinfo")));
 			while ((data = br.readLine()) != null) {
 				String[] datasplit = data.split(",");
-				int x = 0;
-				int y = 0;
+				double x = 0;
+				double y = 0;
 				if (initialX == -1 && initialY == -1) {
 					x = Integer.parseInt(datasplit[1]);
 					y = Integer.parseInt(datasplit[2]);
@@ -255,7 +258,7 @@ public class GameState {
 		removed = new HashMap<String, Entity>();
 	}
 	
-	private void createAllPartyMembersInMem(String savedata) {
+	public void createAllPartyMembersInMem(String savedata) {
 		if (savedata.equals("")) {
 			savedata = "players";
 		}
@@ -277,8 +280,8 @@ public class GameState {
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				String[] data = br.readLine().split(",");
 				String mapName = data[0];
-				int x = Integer.parseInt(data[1]);
-				int y = Integer.parseInt(data[2]);
+				double x = Double.parseDouble(data[1]);
+				double y = Double.parseDouble(data[2]);
 				int funds = Integer.parseInt(data[3]);
 				int fundsInBank = Integer.parseInt(data[4]);
 				int fundsDeposited = Integer.parseInt(data[5]);
@@ -334,19 +337,19 @@ public class GameState {
 	
 private void addPartyMembersNeeded() {
 		// TODO Auto-generated method stub
-		if (flags.get("nintenInParty")) {
+		if (getFlag("nintenInParty")) {
 			addPartyMember("NINTEN");
 		}
-		if (flags.get("anaInParty")) {
+		if (getFlag("anaInParty")) {
 			addPartyMember("ANA");
 		}
-		if (flags.get("loidInParty")) {
+		if (getFlag("loidInParty")) {
 			addPartyMember("LOID");
 		}
-		if (flags.get("teddyInParty")) {
+		if (getFlag("teddyInParty")) {
 			addPartyMember("TEDDY");
 		}
-		if (flags.get("pippiInParty")) {
+		if (getFlag("pippiInParty")) {
 			addPartyMember("PIPPI");
 		}
 	}
@@ -427,7 +430,7 @@ private void addPartyMembersNeeded() {
 				map.setChangeMap("BASE");
 				int val = base.get(i).get(j);
 				Tile tile = state.tileMap.getTile(val);
-				int instance  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
+				int instance  = map.inspectSurroundings((int)(j + camera.getX()/128),(int)(i + camera.getY()/128));
 				mapRenderer.drawTileBase(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
 		}
@@ -439,11 +442,11 @@ private void addPartyMembersNeeded() {
 				map.setChangeMap("BG");
 				int valbg = bg.get(i).get(j);
 				Tile tilebg = state.tileMap.getTile(valbg);
-				int instancebg  = map.inspectSurroundings(j + camera.getX()/128,i + camera.getY()/128);
+				int instancebg  = map.inspectSurroundings((int)(j + camera.getX()/128),(int)(i + camera.getY()/128));
 				map.setChangeMap("FG");
 				int valfg = fg.get(i).get(j);
 				Tile tilefg = state.tileMap.getTile(valfg);
-				int instancefg  = map.inspectSurroundings(j+ camera.getX()/128,i + camera.getY()/128);
+				int instancefg  = map.inspectSurroundings((int)(j + camera.getX()/128),(int)(i + camera.getY()/128));
 				mapRenderer.drawTile(state.getMainWindow(),j,i,tilebg,instancebg,tilefg,instancefg);
 //				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
@@ -586,91 +589,7 @@ private void addPartyMembersNeeded() {
 		}
 		return false;
 	}
-	
-	public void update(InputController input) {
-		boolean entitiesCanMove = true;
-		if (getFlag("train") && !trainAdded) {
-			//replace the party with a single train entity which extends the CameraControllingEntity
-			entities.removeAll(savedParty);
-			Entity e = state.getEntityFromEnum("bus").createCopy(player.getX(),player.getY(),64*4,48*4,"train");
-			train = new TrainEntity(e, camera, state);
-			entities.add(train);
-			TrainCutscene trainCutscene = new TrainCutscene(state,trainStartIndex,trainEndIndex);
-			trainCutscene.loadEntityToCutsceneData();
-			state.setCutscene(trainCutscene);
-			trainAdded = true;
-		} else if (!getFlag("train") && trainAdded) {
-			entities.remove(train);
-			entities.addAll(savedParty);
-			player.setXY(train.getX(),train.getY());
-			trainAdded = false;
-		}
-		if (getFlag("teleportingIn") && getFlag("teleporting")) {
-			setFlag("teleporting",false);
-			player.setXY(teleportDestX + 1000, teleportDestY);
-			state.setBGM("teleportend.ogg");
-		}
-		if (getFlag("teleportingIn")) {
-			entitiesCanMove = false;
-			player.setDeltaX(-250*(Math.pow(2,-counter++/2d)));
-			teleportTimer-=160/60;
-			player.update(this);
-			player.setIgnoreCollisions(true);
-			if (teleportTimer <= 0) {
-				state.setBGM(map.getBGM());
-				setFlag("teleportingIn",false);
-				player.setIgnoreCollisions(false);
-				counter = 0;
-				entitiesCanMove = true;
-				canEncounter = true;
-			}
-		}
-		if (getFlag("teleporting")) {
-			state.setBGM("teleport.ogg");
-			//do teleport actions
-			entitiesCanMove = false;
-			canEncounter = false;
-			if (player.getDirectionX().equals("left"))  {
-				player.setDeltaX(-1*teleportTimer/2);
-			} else if (player.getDirectionX().equals("right")) {
-				player.setDeltaX(1*teleportTimer/2);
-			} else if (player.getDirectionX().equals("")) {
-				player.setDeltaX(0);
-			}
-			if (player.getDirectionY().equals("up")) {
-				player.setDeltaY(-1*teleportTimer/2);
-			} else if (player.getDirectionY().equals("down")) {
-				player.setDeltaY(1*teleportTimer/2);
-			} else if (player.getDirectionY().equals("")) {
-				player.setDeltaY(0);
-			}
-			player.update(this);
-			//increase a timer from 0 to 240
-			if (teleportTimer >= 120) {
-				camera.setStop(true);
-				player.setIgnoreCollisions(true);
-			}
-			if (teleportTimer >= 160) {
-				setFlag("teleportingIn",true);
-				entitiesCanMove = true;
-//				teleportTimer = -1;
-				//create a door at the x,y of the player to send him to the destination!
-//				DoorEntity e = new DoorEntity("",state.getGameState().getTrain().getX(),state.getGameState().getTrain().getY(),256,256,state,curMovement.getX(),curMovement.getY(),mapName,"");
-				Entity testTeleport = new DoorEntity("",player.getX(),player.getY(),300,300,state,teleportDestX,teleportDestY,teleportDest,"");
-				entities.add(testTeleport);
-			}
-			teleportTimer++;
-		}
-		timeNow = System.nanoTime();
-		if (invincibleCounter > 0) {
-			invincibleCounter--;
-			canEncounter = false;
-		} else {
-			canEncounter = true;
-		}
-		updateSystemFlags();
-		updateTiles();
-		//get all entities that belong in the map (in the viewport bounds)
+	public void createParty() {
 		while (numPartyMembers < party.size() && !getFlag("train")) {
 			savedParty = new ArrayList<Entity>();
 			for (PartyMember m : party) {
@@ -696,16 +615,150 @@ private void addPartyMembersNeeded() {
 				}
 			}
 		}
+	}
+	
+	
+	public void update(InputController input) {
+		createParty();
+		for (Entity e : savedParty) {
+			if (!entities.contains(e)) {
+				entities.add(e);
+			}
+		}
+		boolean entitiesCanMove = true;
+		if (getFlag("train") && !trainAdded) {
+			//replace the party with a single train entity which extends the CameraControllingEntity
+			entities.removeAll(savedParty);
+			Entity e = state.getEntityFromEnum("bus").createCopy(player.getX(),player.getY(),64*4,48*4,"train");
+			train = new TrainEntity(e, camera, state);
+			entities.add(train);
+			TrainCutscene trainCutscene = new TrainCutscene(state,trainStartIndex,trainEndIndex);
+			trainCutscene.loadEntityToCutsceneData();
+			state.setCutscene(trainCutscene);
+			trainAdded = true;
+		} else if (!getFlag("train") && trainAdded) {
+			entities.remove(train);
+			entities.addAll(savedParty);
+			for (Entity e : savedParty) {
+				e.setXY(train.getX(),train.getY());
+				e.fillMovementData(train.getX(),train.getY());
+			}
+//			player.setXY(train.getX(),train.getY());
+			trainAdded = false;
+		}
+		if (getFlag("teleportingIn") && getFlag("teleporting")) {
+			setFlag("teleporting",false);
+			for (Entity player : savedParty) {
+				player.setXY(teleportDestX + 3000, teleportDestY);
+				player.fillMovementData(teleportDestX + 3000, teleportDestY);
+			}
+			state.setBGM("teleportend.ogg");
+		}
+		if (getFlag("teleportingIn")) {
+			entitiesCanMove = false;
+			teleportTimer-=160/60;
+//			for (Entity player : savedParty) {
+				player.setDeltaX(-187.5*(Math.pow(0.5,counter++/8)));
+				player.update(this);
+				player.setIgnoreCollisions(true);
+				if (teleportTimer <= 0) {
+					state.setBGM(map.getBGM());
+					setFlag("teleportingIn",false);
+					player.setIgnoreCollisions(false);
+					counter = 0;
+					entitiesCanMove = true;
+					canEncounter = true;
+				}
+//			}
+			
+		}
+		if (getFlag("teleporting")) {
+			state.setBGM("teleport.ogg");
+			//do teleport actions
+			entitiesCanMove = false;
+			canEncounter = false;
+			for (Entity player : savedParty) {
+				if (player.getDirectionX().equals("left"))  {
+					player.setDeltaX(-1*teleportTimer/2);
+				} else if (player.getDirectionX().equals("right")) {
+					player.setDeltaX(1*teleportTimer/2);
+				} else if (player.getDirectionX().equals("")) {
+					player.setDeltaX(0);
+				}
+				if (player.getDirectionY().equals("up")) {
+					player.setDeltaY(-1*teleportTimer/2);
+				} else if (player.getDirectionY().equals("down")) {
+					player.setDeltaY(1*teleportTimer/2);
+				} else if (player.getDirectionY().equals("")) {
+					player.setDeltaY(0);
+				}
+				if (player.checkCollisions()) {
+					//a collision
+					player.saveDirection();
+					teleportTimer = 0;
+					teleportFailedTimer = 120;
+					state.stopBGM();
+					state.setSFX("teleportfail.wav");
+					player.actionTaken = ("charred");
+					player.directionX = "";
+					player.directionY = "";
+					setFlag("teleporting",false);
+				} else {
+					player.update(this);
+				}
+				//increase a timer from 0 to 240
+				if (teleportTimer >= 120) {
+					camera.setStop(true);
+					player.setIgnoreCollisions(true);
+					for (Entity e : savedParty) {
+						if (!(e instanceof Player)) {
+							e.determinePositionWithCamera();
+						}
+					}
+				}
+				if (teleportTimer >= 160) {
+					setFlag("teleportingIn",true);
+					entitiesCanMove = true;
+					Entity testTeleport = new DoorEntity("",player.getX(),player.getY(),300,300,state,teleportDestX,teleportDestY,teleportDest,"");
+					entities.add(testTeleport);
+				}
+			}
+			teleportTimer++;
+		}
+		if (teleportFailedTimer > -1) {
+			entitiesCanMove = false;
+			teleportFailedTimer--;
+			for (Entity player : savedParty) {
+				player.directionX = "";
+				player.directionY = "";
+				player.actionTaken = "charred";
+			}
+			if (teleportFailedTimer == -1) {
+				entitiesCanMove = true;
+				state.setBGM(map.getBGM());
+				player.restoreSavedDirection();
+			}
+		}
+		timeNow = System.nanoTime();
+		if (invincibleCounter > 0) {
+			invincibleCounter--;
+			canEncounter = false;
+		} else {
+			canEncounter = true;
+		}
+		updateSystemFlags();
+		updateTiles();
+		//get all entities that belong in the map (in the viewport bounds)
 		
 		
-		for (Entity e : map.getEntitiesInView(camera.getX(), camera.getY())) {
+		for (Entity e : map.getEntitiesInView((int)camera.getX(), (int)camera.getY())) {
 			if (!entities.contains(e) && entityReady(e)) {
 				entities.add(e);
 			} else if (entities.contains(e) && getFlag(e.getDisappearFlag())) {
 				e.setToRemove(true);
 			}
 			for (Entity entityFromMap : map.getEntities()) {
-				if (!map.getEntitiesInView(camera.getX(), camera.getY()).contains(entityFromMap)) {
+				if (!map.getEntitiesInView((int)camera.getX(),(int) camera.getY()).contains(entityFromMap)) {
 					entityFromMap.setToRemove(true);
 				}
 			}
@@ -713,8 +766,10 @@ private void addPartyMembersNeeded() {
 		
 		sort();
 		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
-			updatePlayer(input);
-			updateEntities(input,entitiesCanMove);
+			if (teleportFailedTimer == -1) {
+				updatePlayer(input);
+				updateEntities(input,entitiesCanMove);
+			}
 		}
 	}
 	
@@ -1010,6 +1065,13 @@ private void addPartyMembersNeeded() {
 	
 	public int getFundsDeposited() {
 		return depositedFunds;
+	}
+
+	public void updateEntityPositions() {
+		// TODO Auto-generated method stub
+		for (Entity e : entities) {
+			e.determinePositionWithCamera();
+		}
 	}
 	
 }

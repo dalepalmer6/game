@@ -14,7 +14,7 @@ public class GoodsMenuItem extends TexturedMenuItem {
 	private ArrayList<PartyMember> party;
 	
 	public GoodsMenuItem(StartupNew state, ArrayList<PartyMember> party, int ty) {
-		super("Goods",32,ty,96,96,state,"menu.png",32,0,14,14);
+		super("Goods",32,ty,14*4,14*4,state,"menu.png",32,0,14,14);
 		this.party = party;
 		targetY = 0;
 	}

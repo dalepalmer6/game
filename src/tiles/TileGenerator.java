@@ -13,7 +13,7 @@ public class TileGenerator {
 	} 
 	
 	public void addTileInstance(int x, int y, int w, int h, int[] colMap) {
-			tiles.add(new TileInstance(Integer.toString(tiles.size()),x,y,w,h,colMap));
+			tiles.add(new TileInstance(tiles.size(),x,y,w,h,colMap));
 	}
 	
 	public TileInstance getTileInstance(int i) {

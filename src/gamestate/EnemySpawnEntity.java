@@ -13,7 +13,7 @@ public class EnemySpawnEntity extends Entity {
 	
 	public void draw(MainWindow m) {}
 	
-	public void setNewParams(int x, int y, int w, int h, String name, int v1, int v2, int v3, int v4, float p1, float p2, float p3, float p4) {
+	public void setNewParams(double x, double y, int w, int h, String name, int v1, int v2, int v3, int v4, float p1, float p2, float p3, float p4) {
 		// TODO Auto-generated method stub
 		this.x = x;
 		this.y = y;
@@ -68,7 +68,7 @@ public class EnemySpawnEntity extends Entity {
 		return value;
 	}
 	
-	public EnemySpawnEntity(int x, int y, int w, int h,StartupNew state, String name) {
+	public EnemySpawnEntity(double x, double y, int w, int h,StartupNew state, String name) {
 		super("enemySpawn.png",x,y,w,h,state,name);
 		this.spriteCoordinates = new SpritesheetCoordinates();
 		spriteCoordinates.setPose("idle_down");
@@ -111,7 +111,7 @@ public class EnemySpawnEntity extends Entity {
 					for (int j = 0; j < rates.length; j++) {
 						rand = Math.random();
 						float rate = rates[j];
-						if (rand < rate/100 && state.getGameState().getNumEnemies() < 10) {
+						if (rand < rate/100 && state.getGameState().getNumEnemies() < 4) {
 							int randW = (int) (Math.random()*width);
 							int randH = (int) (Math.random()*height);
 							ArrayList<Enemy> picked = new ArrayList<Enemy>();

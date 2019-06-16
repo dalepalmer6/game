@@ -41,6 +41,7 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	
 	public PlayerInfoWindow(StartupNew state, ArrayList<PartyMember> party) {
 		super(state);
+		addMenuItem(new BackingBar(state));
 		if (!state.inBattle) {
 			this.party = party;
 			reload();
@@ -84,6 +85,7 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 		if (invisSelectItem == null) {
 			invisSelectItem = new InvisibleMenuItem(state,party.size());
 		}
+//		addToMenuItems(backingBar);
 		addToMenuItems(invisSelectItem);
 	}
 	

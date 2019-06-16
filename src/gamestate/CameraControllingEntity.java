@@ -50,10 +50,10 @@ public class CameraControllingEntity extends Entity {
 		}
 		move();
 		if (x > camera.getState().getMainWindow().getScreenWidth()/2) {
-			camera.updateCamera((int)deltaX, 0);
+			camera.updateCamera(deltaX, 0);
 		}
 		if (y > camera.getState().getMainWindow().getScreenHeight()/2) {
-			camera.updateCamera(0, (int)deltaY);
+			camera.updateCamera(0, deltaY);
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class CameraControllingEntity extends Entity {
 		updateFrameTicks();
 	}
 
-	public CameraControllingEntity(String texture,int x, int y, int width, int height, Camera c, StartupNew m,String name) {
+	public CameraControllingEntity(String texture,double x, double y, int width, int height, Camera c, StartupNew m,String name) {
 		super(texture,x,y,width,height,m,name);
 		this.camera = c;
 		if (c != null) {

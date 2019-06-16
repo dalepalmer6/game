@@ -48,7 +48,7 @@ public class BattleAction {
 		BattleMenu bm = (BattleMenu) state.getMenuStack().peek();
 		switch(usedAction) {
 			case "psi" : //draw anim only if the psi has an animation
-				Animation anim = null;
+				Animation anim = ((PSIAttack)itemToUse).getAnimation();
 				if (actor instanceof Enemy) {
 					anim = new Animation(state,"enemypsi",0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
 					anim.createAnimation();

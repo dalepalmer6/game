@@ -21,8 +21,8 @@ public class DropMenuItem extends MenuItem {
 	}
 	
 	public String execute() {
-		state.getMenuStack().pop();
 		party.get(userIndex).consumeItem(item);
+		state.getMenuStack().pop();
 		return null;
 	} 
 }

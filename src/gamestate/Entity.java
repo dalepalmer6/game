@@ -24,18 +24,19 @@ public class Entity implements Drawable,EntityInterface {
 	protected String directionY="";
 	protected String actionTaken;
 	protected String inputLast = "";
-	protected int x;
-	protected int y;
+	protected double x;
+	protected double y;
 	private boolean doNotMove;
 	protected int boundingBoxHeight;
 	protected double deltaX;
 	protected double deltaY;
-	protected int xOnScreen;
-	protected int yOnScreen;
+	protected double xOnScreen;
+	protected double yOnScreen;
 	protected String texture;
 	protected int width;
 	protected int height;
-	protected int stepSize = 8;
+	protected double stepSizeX = 8;
+	protected double stepSizeY = 8;
 	protected StartupNew state;
 	protected ArrayList<Entity> interactables;
 	private long delta;
@@ -45,14 +46,18 @@ public class Entity implements Drawable,EntityInterface {
 	protected String disappearFlag = " ";
 	private double moveSpeedThisFrame;
 	protected double angleDirection;
-	protected int targetX = -1;
-	protected int targetY = -1;
+	protected double targetX = -1;
+	protected double targetY = -1;
 	protected boolean atTargetPoint = true;
-	private boolean ignoreCollisions;
+	protected boolean ignoreCollisions;
 	protected boolean behind;
 	protected boolean lastBehind;
 	protected long timer;
 	protected boolean forceAllowMovementY;
+	boolean collided;
+	private int movementPattern = 0;
+	private String savedDirX;
+	private String savedDirY;
 	
 	public void setIgnoreCollisions(boolean b) {
 		// TODO Auto-generated method stub
@@ -103,7 +108,7 @@ public class Entity implements Drawable,EntityInterface {
 		spriteCoordinates = sc;
 	}
 	
-	public Entity createCopy(int newX, int newY, int width, int height, String name) {
+	public Entity createCopy(double newX, double newY, int width, int height, String name) {
 		Entity copy = new Entity(texture,newX,newY,width,height,state,name);
 		copy.setSpriteCoords(spriteCoordinates);
 		return copy;
@@ -123,7 +128,7 @@ public class Entity implements Drawable,EntityInterface {
 		}
 	}
 	
-	public void setCoordinates(int x, int y) {
+	public void setCoordinates(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -163,59 +168,154 @@ public class Entity implements Drawable,EntityInterface {
 		}
 	}
 	
-	public void setXY(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public void fillMovementData(double x, double y) {
+		
+	}
+	
+	public void setDeltaX(double dx) {
+		// TODO Auto-generated method stub
+		deltaX = dx;
+	}
+	
+	public void setDeltaY(double dy) {
+		deltaY = dy;
+	}
+	
+	public void setXY(double d, double e) {
+		this.x = d;
+		this.y = e;
 	}
 	
 	public void setName(String n) {
 		this.name = n;
 	}
 	
+//	public void move() {
+//		if (targetX != -1 && targetY != -1) {
+//			if (x - targetX < 0) {
+//				deltaX = stepSize;
+//				if (Math.abs(targetX - x - deltaX) <= stepSize) {
+//					deltaX = x-targetX;
+//				}
+//				actionTaken="walking";
+//				directionX = "right";
+//			} else if (x - targetX > 0){
+//				deltaX = -stepSize;
+//				if (Math.abs(x - targetX - deltaX) <= stepSize) {
+//					deltaX = x-targetX;
+//				}
+//				
+//				actionTaken="walking";
+//				directionX = "left";
+//			} else {
+//				deltaX = 0;
+////				directionX = "";
+//				actionTaken="idle";
+//			}
+//			if (y - targetY < 0) {
+//				deltaY = stepSize;
+//				if (Math.abs(targetY - y - deltaY) <= stepSize) {
+//					deltaY = targetY - y;
+//				}
+//				
+//				actionTaken="walking";
+//				directionY = "down";
+//			} else if (y - targetY > 0){
+//				deltaY = -stepSize;
+//				if (Math.abs(y - targetY - deltaY) <= stepSize) {
+//					deltaY = y - targetY;
+//				}
+//				
+//				actionTaken="walking";
+//				directionY = "up";
+//			} else {
+//				deltaY = 0;
+////				directionY = "";
+//				actionTaken = "idle";
+//			}
+//			if (Math.abs(deltaX - 0) <= 0.001 && Math.abs(deltaY - 0) <= 0.001) {
+//				atTargetPoint = true;
+//			}
+//		} 
+//			checkCollisions();
+//		if (!ignoreCollisions) {
+//			checkEntityCollisions();
+//		}
+//		if (!(Math.abs(deltaX - 0) < 0.001) && !(Math.abs(deltaY - 0) < 0.001)) {
+//			boolean xNeg = false;
+//			boolean yNeg = false;
+//			if (deltaX < 0) {
+//				xNeg = true;
+//			}
+//			if (deltaY < 0) {
+//				yNeg = true;
+//			}
+//			deltaX = Math.sqrt(0.5*deltaX*deltaX);
+//			deltaY = deltaX;
+//			if (xNeg) {
+//				deltaX *= -1;
+//			}
+//			if (yNeg) {
+//				deltaY *= -1;
+//			}
+//		}
+//		x += deltaX;
+//		y += deltaY;
+//	}
+	
 	public void move() {
+		boolean ignoreDiagX = false;
+		boolean ignoreDiagY = false;
 		if (targetX != -1 && targetY != -1) {
-			if (x - targetX < 0) {
-				deltaX = stepSize;
-				while (x + deltaX > targetX) {
-					deltaX--;
-				}
-				actionTaken="walking";
-				directionX = "right";
-			} else if (x - targetX > 0){
-				deltaX = -stepSize;
-				while (x + deltaX < targetX) {
-					deltaX++;
-				}
-				
-				actionTaken="walking";
-				directionX = "left";
-			} else {
+			if (Math.abs(x-targetX) < 0.0001) {
 				deltaX = 0;
 //				directionX = "";
 				actionTaken="idle";
 			}
-			if (y - targetY < 0) {
-				deltaY = stepSize;
-				while (y + deltaY > targetY) {
-					deltaY--;
+			else if (x < targetX) {
+				deltaX = stepSizeX;
+				if (x + deltaX > targetX) {
+					ignoreDiagX = true;
+					deltaX = Math.abs(targetX - x);
+				}
+				actionTaken="walking";
+				directionX = "right";
+			} else if (x > targetX){
+				deltaX = -stepSizeX;
+				if (x + deltaX < targetX) {
+					ignoreDiagX = true;
+					deltaX = Math.abs(targetX - x)*-1;
+				}
+				
+				actionTaken="walking";
+				directionX = "left";
+			} 
+			
+			
+			if (Math.abs(y-targetY) < 0.0001) {
+				deltaY = 0;
+				actionTaken="idle";
+			}
+			else if (y < targetY) {
+				deltaY = stepSizeY;
+				if (y + deltaY > targetY) {
+					ignoreDiagY = true;
+					deltaY = Math.abs(y - targetY);
 				}
 				
 				actionTaken="walking";
 				directionY = "down";
-			} else if (y - targetY > 0){
-				deltaY = -stepSize;
-				while (y + deltaY < targetY) {
-					deltaY++;
+			} else if (y > targetY) {
+				deltaY = -stepSizeY;
+				if (y + deltaY < targetY) {
+					ignoreDiagY = true;
+					deltaY = Math.abs(y - targetY)*-1;
 				}
-				
 				actionTaken="walking";
 				directionY = "up";
-			} else {
-				deltaY = 0;
-//				directionY = "";
-				actionTaken = "idle";
 			}
-			if (deltaX == 0 && deltaY == 0) {
+			
+			if (Math.abs(deltaX-0) <= 0.0001 && Math.abs(deltaY-0) <= 0.0001) {
 				atTargetPoint = true;
 			}
 		} 
@@ -223,6 +323,30 @@ public class Entity implements Drawable,EntityInterface {
 			checkCollisions();
 		if (!ignoreCollisions) {
 			checkEntityCollisions();
+		}
+		if (!(Math.abs(deltaX - 0) < 0.001) && !(Math.abs(deltaY - 0) < 0.001)) {
+			boolean xNeg = false;
+			boolean yNeg = false;
+			if (deltaX < 0) {
+				xNeg = true;
+			}
+			if (deltaY < 0) {
+				yNeg = true;
+			}
+			if (!ignoreDiagX ) {
+				deltaX = Math.sqrt(0.5*deltaX*deltaX);
+				
+			}
+			if (!ignoreDiagY) {
+				deltaY = Math.sqrt(0.5*deltaY*deltaY);
+			}
+			
+			if (xNeg && !ignoreDiagX) {
+				deltaX *= -1;
+			}
+			if (yNeg && !ignoreDiagY) {
+				deltaY *= -1;
+			}
 		}
 		x += deltaX;
 		y += deltaY;
@@ -287,58 +411,81 @@ public class Entity implements Drawable,EntityInterface {
 		
 	}
 	
+	public void setPlayerAsTarget() {
+		Player player = state.getGameState().getPlayer();
+		targetX = player.getX();
+		targetY = player.getY();
+	}
+	
 	public void update(GameState gs) {
 		forceAllowMovementY = false;
 		timer++;
-		if (timer % 120 == 0) {
-			//implement different movement patterns using this similar style
-			//random pattern, will try to move in any open direction every 2 seconds randomly
-			if (Math.random() < 0.3) {
-				if (Math.random() < 0.5) {
-					targetX = x - 8*6;
-				} else {
-					targetX = x + 8*6;
+		
+		if (movementPattern == 1) {
+			//sine movement 
+			setPlayerAsTarget();
+//			if (timer % 15 == 0) {
+				stepSizeX = 8*Math.sin(timer * Math.PI/100);
+				stepSizeY = 8;
+//			}
+		}
+		
+		if (movementPattern == 2) {
+			if (timer % 120 == 0) {
+				//implement different movement patterns using this similar style
+				//random pattern, will try to move in any open direction every 2 seconds randomly
+				if (Math.random() < 0.3) {
+					if (Math.random() < 0.5) {
+						targetX = x - 8*6;
+					} else {
+						targetX = x + 8*6;
+					}
 				}
-			}
-			if (Math.random() < 0.3) {
-				if (Math.random() < 0.5) {
-					targetY = y - 8*6;
-				} else {
-					targetY = y + 8*6;
+				if (Math.random() < 0.3) {
+					if (Math.random() < 0.5) {
+						targetY = y - 8*6;
+					} else {
+						targetY = y + 8*6;
+					}
 				}
 			}
 		}
-		moveSpeedThisFrame = (int) (stepSize * state.getGameState().getDeltaTime());
+		
+		moveSpeedThisFrame = (int) (stepSizeX * state.getGameState().getDeltaTime());
 		lastBehind = behind;
 		behind = false;
 		
 		move();
-		xOnScreen = x - gs.getCamera().getX();
-		yOnScreen = y - gs.getCamera().getY();
+//		determinePositionWithCamera();
+		updateFrameTicks();
+	}
+	
+	public void determinePositionWithCamera() {
+		xOnScreen = x - state.getGameState().getCamera().getX();
+		yOnScreen = y - state.getGameState().getCamera().getY();
 		if (xOnScreen > state.getMainWindow().getScreenWidth() + 768|| yOnScreen > state.getMainWindow().getScreenHeight() + 768
 		 || xOnScreen < -768 || yOnScreen < -768) {
 			setToRemove(true);
 		}
-		updateFrameTicks();
 	}
 	
 	public void updateFrameTicks() {
 		tickCount += ticksPerFrame;
 	}
 	
-	public int getXOnScreen() {
+	public double getXOnScreen() {
 		return xOnScreen;
 	}
 	
-	public int getYOnScreen() {
+	public double getYOnScreen() {
 		return yOnScreen;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	
@@ -354,7 +501,7 @@ public class Entity implements Drawable,EntityInterface {
 		text = s;
 	}
 	
-	public Entity(String texture, int x, int y, int width, int height,StartupNew m,String name) {
+	public Entity(String texture, double x, double y, int width, int height,StartupNew m,String name) {
 		this.spriteCoordinates = new SpritesheetCoordinates();
 		directionY = "down";
 		actionTaken = "idle";
@@ -387,10 +534,27 @@ public class Entity implements Drawable,EntityInterface {
 	
 	public void drawEntity(MainWindow m) {
 		initDrawEntity(m,texture);
-		Pose pose = getSpriteCoordinates().getPose(actionTaken, directionX,directionY);
-		int i = (int) tickCount % pose.getNumStates();
-		TileMetadata tm = pose.getStateByNum(i);
-		m.renderTile(xOnScreen, yOnScreen, width, height, tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
+		try {
+			Pose pose = getSpriteCoordinates().getPose(actionTaken, directionX,directionY);
+			int i = (int) tickCount % pose.getNumStates();
+			TileMetadata tm = pose.getStateByNum(i);
+			m.renderTile(xOnScreen, yOnScreen, width, height, tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
+		} catch (NullPointerException e) {
+			actionTaken = "idle";
+			directionX = "";
+			directionY = "down";
+			drawEntity(m);
+		}
+	}
+	
+	public void saveDirection() {
+		savedDirX = directionX;
+		savedDirY = directionY;
+	}
+	
+	public void restoreSavedDirection() {
+		directionX = savedDirX;
+		directionY = savedDirY;
 	}
 	
 	public void drawEntity(MainWindow m, int x, int y) {
@@ -449,7 +613,7 @@ public class Entity implements Drawable,EntityInterface {
 			}
 		}
 		
-		boolean collided = false;
+		collided = false;
 		if (!ignoreCollisions) {
 			int val = ((collision & 13) & 15);
 			switch(val) {
@@ -551,44 +715,44 @@ public class Entity implements Drawable,EntityInterface {
 		
 		if (colmask == 8 && directionX.equals("left")) {
 			deltaX = 0;
-			deltaY = 8;
+			deltaY = stepSizeY;
 			checkTileCollision();
 		}
 		if (colmask == 8 && directionY.equals("up")) {
-			deltaX = 8;
+			deltaX = stepSizeX;
 			deltaY = 0;
 			checkTileCollision();
 		}
 		
 		if (colmask == 1 && directionX.equals("right")) {
 			deltaX = 0;
-			deltaY = -8;
+			deltaY = -stepSizeY;
 			checkTileCollision();
 		}
 		if (colmask == 1 && directionY.equals("down")) {
-			deltaX = 8;
+			deltaX = stepSizeX;
 			deltaY = 0;
 			checkTileCollision();
 		}
 		
 		if (colmask == 4 && directionX.equals("right")) {
 			deltaX = 0;
-			deltaY = 8;
+			deltaY = stepSizeY;
 			checkTileCollision();
 		}
 		if (colmask == 4 && directionY.equals("up")) {
-			deltaX = -8;
+			deltaX = -stepSizeX;
 			deltaY = 0;
 			checkTileCollision();
 		}
 		
 		if (colmask == 2 && directionX.equals("left")) {
 			deltaX = 0;
-			deltaY = -8;
+			deltaY = -stepSizeY;
 			checkTileCollision();
 		}
 		if (colmask == 2 && directionY.equals("down")) {
-			deltaX = -8;
+			deltaX = -stepSizeX;
 			deltaY = 0;
 			checkTileCollision();
 		}
@@ -713,7 +877,7 @@ public class Entity implements Drawable,EntityInterface {
 		this.height *= 4;
 	}
 
-	public void applyMovementData(int x, int y, String actionTaken, String dirX, String dirY) {
+	public void applyMovementData(double x, double y, String actionTaken, String dirX, String dirY) {
 		this.targetX = x;
 		this.targetY = y;
 		atTargetPoint = false;

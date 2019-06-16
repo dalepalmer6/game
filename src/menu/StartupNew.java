@@ -160,8 +160,8 @@ public class StartupNew{
 	private float oldBGMEnd;
 	private Cutscene currentCutscene;
 	public ArrayList<String> textData;
-	private int savedXPos;
-	private int savedYPos;
+	private double savedXPos;
+	private double savedYPos;
 	private String savedMapName;
 	public String[] defaultNames = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
 	public String[] namesOfCharacters = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
@@ -174,6 +174,11 @@ public class StartupNew{
 	private boolean needAddSavedMenu;
 	private EnemyOptionPanel eop;
 	private int indexOfParty;
+	private boolean createNewFile;
+	private boolean restoreAudioWhenDone ;
+	private boolean switchedBackToOldBGM;
+	private boolean bgmEnded;
+	private int cameraShake;
 	
 	
 	public void setNeedAddSavedMenu(Menu m) {
@@ -229,6 +234,7 @@ public class StartupNew{
 		}
 		try {
 			if (!audioOverride) {
+				playOnce = true;
 				curBGM = path;
 				String propsFilePath = curBGM.substring(0,curBGM.indexOf("."));
 				BufferedReader br = new BufferedReader(new FileReader(new File(pathToMusic + propsFilePath)));
@@ -238,7 +244,7 @@ public class StartupNew{
 				bgmStart = Float.parseFloat(props[0]);
 				bgmEnd = Float.parseFloat(props[1]);
 				bgm = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream(pathToMusic + path));
-				bgm.playAsMusic(1.0f, 1.0f, false);
+				bgm.playAsMusic(1.0f, 1.0f, true);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -940,16 +946,25 @@ public class StartupNew{
 		input.setHoldable(b);
 	}
 	
+	public boolean getBGMEnded() {
+		return bgmEnded;
+	}
+	
+	public void resetBGMEnded() {
+		bgmEnded = false;
+	}
+	
 	public void setOldBGM() {
 		if (prevAudio != null) {
+			bgmEnded = true;
 			savedAudio = false;
 			bgm = prevAudio;
 			bgmStart = oldBGMStart;
 			bgmEnd = oldBGMEnd;
 //			bgm.setPosition(prevPos);
 			bgm.playAsMusic(1.0f,1f,false);
-//			prevAudio = null;
-//			prevPos = 0.0f;
+			prevAudio = null;
+			prevPos = 0.0f;
 		}
 	}
 	
@@ -958,6 +973,10 @@ public class StartupNew{
 	}
 	
 	public void update() {
+		if (restoreAudioWhenDone && !bgm.isPlaying()) {
+			restoreAudioWhenDone = false;
+			setOldBGM();
+		}
 		if (textEditor && menuStack.isEmpty()) {
 			Display.destroy();
 		}
@@ -1078,6 +1097,29 @@ public class StartupNew{
 //		}
 		
 		if (gameState != null) {
+			if (gameState.getFlag("lampDead") && !gameState.getFlag("dadFirstCall")) {
+				//move the camera crazy
+				if (timer % 30 == 0) {
+					cameraShake = (int) (30*Math.random());
+				}
+				gameState.getCamera().changeX(cameraShake);
+				gameState.getCamera().changeY(cameraShake);
+				setAudioOverride(false);
+				setBGM("poltergeist.ogg",true);
+				setAudioOverride(true);
+			}
+			if (gameState.getFlag("dadFirstCall") && !gameState.getFlag("adventureStartFlag")) {
+				setAudioOverride(false);
+				setBGM("phonering.ogg",true);
+				setAudioOverride(true);
+			}
+			if (gameState.getFlag("adventureStartFlag")) {
+				gameState.setFlag("adventureStartFlag",false);
+				gameState.setFlag("dadFirstCall",false);
+				gameState.setFlag("lampDead",false);
+				setAudioOverride(false);
+				setBGM(gameState.getMap().getBGM(),true);
+			}
 			input.setHoldable(true);
 			gameState.updatePartyMembers();
 			if (gameState.getFlag("buyingItem") && itemToBuy != null) {
@@ -1133,7 +1175,13 @@ public class StartupNew{
 				needToPop = false;
 				GameState gs = new GameState(this);
 				this.setGameState(gs);
-				gs.loadFromSaveFile("test");
+				if (!createNewFile) {
+					gs.loadFromSaveFile("test");
+				} else {
+					gs.createStartPosition();
+					gs.setFlag("nintenInParty");
+					gs.createAllPartyMembersInMem("");
+				}
 				gs.loadMapData();
 			}
 		}
@@ -1148,7 +1196,6 @@ public class StartupNew{
 			gameState.drawGameState();
 		}
 		getMainWindow().drawDrawables(drawables);
-		
 	}
 	
 	public void gameLoop(boolean running) {
@@ -1346,12 +1393,12 @@ public class StartupNew{
 	
 	public DoorEntity createWarpDoor() {
 		//public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
-		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,savedXPos,savedYPos,savedMapName,"");
+		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,(int)savedXPos,(int)savedYPos,savedMapName,"");
 	}
 
 	public DoorEntity createMagicantWarp() {
 		// TODO Auto-generated method stub
-		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,1000,1000,"magicant","");
+		return new DoorEntity("",gameState.getPlayer().getX(),gameState.getPlayer().getY(),256,256,this,1698*4,3389*4,"magicant","");
 	}
 
 	public void stopBGM() {
@@ -1393,6 +1440,18 @@ public class StartupNew{
 	}
 	
 	public int getPartyIndex() {
-		return indexOfParty;
+		int i = indexOfParty;
+		indexOfParty = -1;
+		return i;
+	}
+
+	public void createNewGameGameState() {
+		// TODO Auto-generated method stub
+		createNewFile = true;
+	}
+
+	public void setRestoreAudioWhenDone() {
+		// TODO Auto-generated method stub
+		restoreAudioWhenDone = true;
 	}
 }

@@ -13,7 +13,7 @@ public class EquipMenuItem extends TexturedMenuItem {
 	private ArrayList<PartyMember> party;
 	
 	public EquipMenuItem(StartupNew m, ArrayList<PartyMember> party, int ty) {
-		super("Equip",0,ty,96,96,m,"menu.png",46,0,14,14);
+		super("Equip",0,ty,14*4,14*4,m,"menu.png",46,0,14,14);
 		// TODO Auto-generated constructor stub
 		this.party = party;
 		targetY = 0;

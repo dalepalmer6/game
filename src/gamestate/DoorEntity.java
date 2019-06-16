@@ -23,7 +23,7 @@ public class DoorEntity extends Entity {
 	
 	public void interact() {}
 	
-	public void setNewParams(int x, int y, int w, int h, String name, String appFlag, String disFlag, String newMap) {
+	public void setNewParams(double x, double y, int w, int h, String name, String appFlag, String disFlag, String newMap) {
 		// TODO Auto-generated method stub
 		this.x = x;
 		this.y = y;
@@ -35,7 +35,7 @@ public class DoorEntity extends Entity {
 		this.newMap = newMap;
 	}
 	
-	public DoorEntity(String desc,int x, int y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
+	public DoorEntity(String desc,double x, double y, int width, int height, StartupNew m, int destX, int destY, String map,String text) {
 		super("door.png", x, y, width, height, m, "door");
 		this.destX = destX;
 		this.destY = destY;

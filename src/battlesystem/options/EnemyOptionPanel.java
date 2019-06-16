@@ -50,7 +50,9 @@ public class EnemyOptionPanel extends MenuItem {
 //			}
 		}
 		if (timer == 0) {
-			enemyOptions.get(entityToShake).setWidth(0);
+			if (killed != -1) {
+				enemyOptions.get(entityToShake).setWidth(0);
+			}
 			timer = -1;
 			killed = -1;
 		}

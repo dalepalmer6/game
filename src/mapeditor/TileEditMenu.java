@@ -50,7 +50,7 @@ public class TileEditMenu extends MapEditMenu {
 		drawables.add(tilePrev);
 		drawables.add(tileBar);
 		
-		state.loadAllTiles("img/tilesets/cave.png");
+		state.loadAllTiles("img/tilesets/onett.png");
 		
 		addMenuItem(tilePrev);
 		addMenuItem(tileBar);

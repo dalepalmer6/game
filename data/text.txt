@@ -12,7 +12,7 @@
 00B: @Oh, my! You're hurt! 
 00C: @Let's see... To get to the next level, you need... 
 00D: @Come back home whenever you want some more [FAVFOOD]. 
-00E: @Hmm, I see. Sounds like it must be a poltergeist of some sort. [PROMPTINPUT]@I'm not sure what to do about it, either. [PROMPTINPUT]@But your great-grandfather did study PSI at one point. [PROMPTINPUT]@Perhaps there's something in the basement that could help make sense of things. [PROMPTINPUT]@I know I put the basement key somewhere... [PROMPTINPUT]but I can't remember where. [PROMPTINPUT]@Anyway, you're our only hope. Now is the time for an adventure. [PROMPTINPUT]Go forth, [NINTEN]! Protect us all! 
+00E: [SETFLAG_adventureStartFlag]@Hmm, I see. Sounds like it must be a poltergeist of some sort. [PROMPTINPUT]@I'm not sure what to do about it, either. [PROMPTINPUT]@But your great-grandfather did study PSI at one point. [PROMPTINPUT]@Perhaps there's something in the basement that could help make sense of things. [PROMPTINPUT]@I know I put the basement key somewhere... [PROMPTINPUT]but I can't remember where. [PROMPTINPUT]@Anyway, you're our only hope. Now is the time for an adventure. [PROMPTINPUT]Go forth, [NINTEN]! Protect us all! 
 00F: 
 010: 
 011: [_014][_015][_01E][CHOOSE][CHOICE]Record[TEXT][_01B][CHOICE]Nothing[TEXT][_01D]

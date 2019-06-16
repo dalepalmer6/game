@@ -127,7 +127,7 @@ public class MainWindow {
 		GL11.glColor4f(1f,1f,1f,1f);
 	}
 	
-	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh) {
+	public void renderTile(double x, double y, int width, int height, float dx, float dy, float dw, float dh) {
 		renderTile(x,y,width,height,dx,dy,dw,dh,false);
 	}
 	
@@ -304,7 +304,7 @@ public class MainWindow {
 		useTransparency = true;
 	}
 	
-	public void renderTile(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+	public void renderTile(double x, double y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
 //		GL11.glColor4f(0.0f,0.0f,0.0f,0.0f);
 		if (useShader) { 
 			useShader();
@@ -332,13 +332,13 @@ public class MainWindow {
 	    	GL11.glBegin(GL11.GL_QUADS);
             
 			GL11.glTexCoord2f(xo,yo);
-			GL11.glVertex2f(-correction + scaleX*x, y);
+			GL11.glVertex2d(-correction + scaleX*x, y);
 			GL11.glTexCoord2f(xw, yo);
-			GL11.glVertex2f(-correction + scaleX*x + width, y);
+			GL11.glVertex2d(-correction + scaleX*x + width, y);
 			GL11.glTexCoord2f(xw,yw);
-			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
+			GL11.glVertex2d(-correction + scaleX*x + width, y + height);
 			GL11.glTexCoord2f(xo,yw);
-			GL11.glVertex2f(-correction + scaleX*x, y + height);
+			GL11.glVertex2d(-correction + scaleX*x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
         if (useTransparency) {
@@ -348,7 +348,7 @@ public class MainWindow {
         
 	}
 	
-	public void renderTiles(int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+	public void renderTiles(double x, double y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
 //		GL11.glColor4f(0.0f,0.0f,0.0f,0.0f);
 		if (useShader) { 
 			useShader();
@@ -371,13 +371,13 @@ public class MainWindow {
 	    	GL11.glBegin(GL11.GL_QUADS);
             
 			GL11.glTexCoord2f(xo,yo);
-			GL11.glVertex2f(-correction + scaleX*x, y);
+			GL11.glVertex2d(-correction + scaleX*x, y);
 			GL11.glTexCoord2f(xw, yo);
-			GL11.glVertex2f(-correction + scaleX*x + width, y);
+			GL11.glVertex2d(-correction + scaleX*x + width, y);
 			GL11.glTexCoord2f(xw,yw);
-			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
+			GL11.glVertex2d(-correction + scaleX*x + width, y + height);
 			GL11.glTexCoord2f(xo,yw);
-			GL11.glVertex2f(-correction + scaleX*x, y + height);
+			GL11.glVertex2d(-correction + scaleX*x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
         

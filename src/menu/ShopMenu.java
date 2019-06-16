@@ -55,7 +55,12 @@ public class ShopMenu extends Menu {
 	
 	public void reloadActionOnPop() {
 		menuItems.clear();
-		selling = false;
+//		selling = false;
+		int temp = -1;
+		if ((temp=state.getPartyIndex()) != -1) {
+			state.setIndexOfParty(temp);
+			selling = true;
+		}
 		addMenuItem(new DialogTextWindow(regreeting,state));
 	}
 	
@@ -87,6 +92,7 @@ public class ShopMenu extends Menu {
 	public void update(InputController input) {
 		super.update(input);
 		if (selling) {
+			selling = false;
 			Item item = ((GoodsSelectMenuItem) state.getSelectionStack().peek()).getItem();
 			String out = String.format(sellText,item.getValue()/2,item.getName(),item.getId(),state.getPartyIndex(),item.getValue()/2);
 			SimpleDialogMenu.createDialogBox(state,out);

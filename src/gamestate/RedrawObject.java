@@ -9,8 +9,8 @@ import menu.StartupNew;
 import tiles.TileInstance;
 
 public class RedrawObject {
-	int x;
-	int y;
+	double x;
+	double y;
 	int width;
 	int height;
 	int dx;
@@ -36,7 +36,7 @@ public class RedrawObject {
 	}
 	
 	
-	public RedrawObject(int x, int y, int width, int height, int dx, int dy, int dw, int dh,StartupNew state) {
+	public RedrawObject(double x, double y, int width, int height, int dx, int dy, int dw, int dh,StartupNew state) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -55,7 +55,7 @@ public class RedrawObject {
 		this.height = e.getHeight();
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	

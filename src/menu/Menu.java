@@ -26,6 +26,8 @@ public class Menu implements MenuInterface {
 	protected ArrayList<MenuItem> needToAdd = new ArrayList<MenuItem>();
 	protected ArrayList<MenuItem> needToRemove = new ArrayList<MenuItem>();
 	protected boolean backShouldExit = true;
+	protected boolean canRemove = true;
+	private boolean popping;
 //	private int targetX;
 //	private int targetY;
 	
@@ -43,6 +45,14 @@ public class Menu implements MenuInterface {
 		// TODO Auto-generated method stub
 //		if (!menuItems.contains(m))
 			needToAdd.add(m);
+	}
+	
+	public void setCanRemove(boolean b) {
+		this.canRemove = b;
+	}
+	
+	public boolean canRemove() {
+		return canRemove;
 	}
 	
 	public void setInput(String s) {
@@ -106,6 +116,18 @@ public class Menu implements MenuInterface {
 	public StartupNew getState() {
 		return state;
 	}
+	
+	public boolean getPopping() {
+		return popping;
+	}
+	
+	public void onPop() {
+		popping = true;
+		if (canRemove) {
+			state.getMenuStack().pop();
+		}
+	}
+	
 	public void updateAll(InputController input) {
 		// TODO Auto-generated method stub
 //		for (int i = menuItems.size()-1; i >= 0; i--) {
@@ -114,9 +136,9 @@ public class Menu implements MenuInterface {
 //			}
 //			break;
 //		}
-		if (backShouldExit ) {
+		if (backShouldExit) {
 			if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
-				state.getMenuStack().pop();
+				onPop();
 			}
 		}
 		

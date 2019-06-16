@@ -36,6 +36,17 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private boolean grid;
 	private boolean callUpdate = false;
 	
+	public void setTargetPosY(int newY) {
+		targetY = newY;
+		for (ArrayList<MenuItem> i : selections) {
+			for (MenuItem mi : i) {
+				if (mi != null) {
+					mi.setTargetPosY(newY);
+				}
+			}
+		}
+	}
+	
 	public void updateAnim() {
 		if (callUpdate) {
 			callUpdate = false;

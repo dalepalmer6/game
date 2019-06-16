@@ -37,15 +37,15 @@ public class Player extends CameraControllingEntity implements Controllable{
 		} 
 	}
 	
+	public void fillMovementData(double x, double y) {
+		for (MovementData md : movementData) {
+			md.setX(x);
+			md.setY(y);
+		}
+	}
+	
 	public void move() {
 		super.move();
-		if (deltaX != 0 || deltaY != 0) {
-			for(int i = movementData.length-1; i > 0; i--){
-				movementData[i] = movementData[i-1];
-		    }
-		    //record new position
-			movementData[0] = new MovementData(x,y,actionTaken,directionX,directionY);
-		}
 		if (forceAllowMovementY) {
 			actionTaken = "";
 			deltaX=0;
@@ -55,10 +55,20 @@ public class Player extends CameraControllingEntity implements Controllable{
 			}
 			directionY = "climb";
 		}
+		if (deltaX != 0 || deltaY != 0) {
+			for(int i = movementData.length-1; i > 0; i--){
+				movementData[i] = movementData[i-1];
+		    }
+		    //record new position
+			movementData[0] = new MovementData(x,y,actionTaken,directionX,directionY);
+		}
+		
 	}
 
 	public Player(int scale, Entity e, Camera c, StartupNew s) {
 		super(e.getTexture(),scale*e.getX(),scale*e.getY(),scale*e.getWidth(),scale*e.getHeight(),c,s,e.getName());
+		stepSizeX = 6;
+		stepSizeY = 6;
 		spriteCoordinates = e.getSpriteCoordinates();
 		resetMovement();
 	}
@@ -93,15 +103,25 @@ public class Player extends CameraControllingEntity implements Controllable{
 		deltaX = 0; deltaY = 0;
 //		int angle;
 		if (input.getSignals().get("UP")) {
-			angleDirection = 3*Math.PI/2;
-			deltaX += stepSize * Math.cos(angleDirection);
-			deltaY += stepSize * Math.sin(angleDirection);
-			directionY = "up";
+			if (state.getGameState().getFlag("teleporting") && directionY.equals("down")) {
+				
+			} else {
+				angleDirection = 3*Math.PI/2;
+				deltaX += stepSizeX * Math.cos(angleDirection);
+				deltaY += stepSizeY * Math.sin(angleDirection);
+				directionY = "up";
+			}
+			
 		} else if (input.getSignals().get("DOWN")) {
-			angleDirection = Math.PI/2;
-			deltaX += stepSize * Math.cos(angleDirection);
-			deltaY += stepSize * Math.sin(angleDirection);
-			directionY = "down";
+			if (state.getGameState().getFlag("teleporting") && directionY.equals("up")) {
+				
+			} else {
+				angleDirection = Math.PI/2;
+				deltaX += stepSizeX * Math.cos(angleDirection);
+				deltaY += stepSizeY * Math.sin(angleDirection);
+				directionY = "down";
+			
+			}
 		} else {
 			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("LEFT") || input.getSignals().get("RIGHT"))) {
 				directionY = "";
@@ -109,17 +129,26 @@ public class Player extends CameraControllingEntity implements Controllable{
 		} 
 		
 		if (input.getSignals().get("RIGHT")) {
-			angleDirection = 0;
-			deltaX += stepSize * Math.cos(angleDirection);
-			deltaY += stepSize * Math.sin(angleDirection);
-			if (!forceAllowMovementY)
-			directionX = "right";
+			if (state.getGameState().getFlag("teleporting") && directionX.equals("left")) {
+				
+			} else {
+				angleDirection = 0;
+				deltaX += stepSizeX * Math.cos(angleDirection);
+				deltaY += stepSizeY * Math.sin(angleDirection);
+				if (!forceAllowMovementY)
+				directionX = "right";
+			}
 		} else if (input.getSignals().get("LEFT")) {
-			angleDirection = Math.PI;
-			deltaX += stepSize * Math.cos(angleDirection);
-			deltaY += stepSize * Math.sin(angleDirection);
-			if (!forceAllowMovementY)
-			directionX = "left";
+			if (state.getGameState().getFlag("teleporting") && directionX.equals("right")) {
+				
+			} else {
+				angleDirection = Math.PI;
+				deltaX += stepSizeX * Math.cos(angleDirection);
+				deltaY += stepSizeY * Math.sin(angleDirection);
+				if (!forceAllowMovementY)
+				directionX = "left";
+			}
+			
 		} else {
 			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("UP") || input.getSignals().get("DOWN"))) {
 				directionX = "";
@@ -157,13 +186,6 @@ public class Player extends CameraControllingEntity implements Controllable{
 		}
 	}
 
-	public void setDeltaX(double dx) {
-		// TODO Auto-generated method stub
-		deltaX = dx;
-	}
 	
-	public void setDeltaY(double dy) {
-		deltaY = dy;
-	}
 	
 }

@@ -112,8 +112,8 @@ public class CutsceneData {
 				break;
 			}
 		}
-		int x = entity.getX();
-		int y = entity.getY();
+		double x = entity.getX();
+		double y = entity.getY();
 //		for (MovementData md : movements) {
 //			md.setX(x += md.getX());
 //			md.setY(y += md.getY());
@@ -123,10 +123,10 @@ public class CutsceneData {
 	public void moveTowardPlayer() {
 		//get the vector between entity and the player object and approach it in steps
 		Player p = state.getGameState().getPlayer();
-		int distX = entity.getX() - p.getX();
-		int distY = entity.getY() - p.getY();
-		int numStepsX = distX/8;
-		int numStepsY = distY/8;
+		double distX = entity.getX() - p.getX();
+		double distY = entity.getY() - p.getY();
+//		int numStepsX = distX/8;
+//		int numStepsY = distY/8;
 
 	}
 

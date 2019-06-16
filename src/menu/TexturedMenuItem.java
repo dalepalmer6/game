@@ -31,7 +31,7 @@ public class TexturedMenuItem extends MenuItem {
 	public void draw(MainWindow m) {
 		state.getMainWindow().setTexture("img\\" + texture);
 		if (hovered) {
-			m.renderTile(x-12,y-8,borderDW*6,borderDH*6,borderDX,borderDY,borderDW,borderDH);
+			m.renderTile(x-12,y-8,borderDW*4,borderDH*4,borderDX,borderDY,borderDW,borderDH);
 			m.renderTile(x,y,width,height,dx,hoveredDy,dw,dh);
 		} else {
 			m.renderTile(x,y,width,height,dx,dy,dw,dh);
