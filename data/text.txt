@@ -2172,8 +2172,21 @@
 87B: "[NINTEN]! We will meet again!" [PROMPTINPUT][03 01]
 87C: In the early 1900s, a dark shadow covered a small country town in rural America.
 87D: At that time, a young married couple vanished mysteriously from their home.
-87E: The man's name[WAIT20] was George, and the woman's name[WAIT20] was Maria.
+87E: The man's name was George, and the woman's name was Maria.
 87F: Two years later, as suddenly as he had left, George returned.
 880: He never told anyone where he had been or what he had done. But, he began an odd study, all by himself.
 881: As for his wife, Maria.[WAIT10].[WAIT10].[WAIT30][NEWLINE]She never returned.
 882: 80 years have passed since then.
+883: 
+884: @My doll is moving on its own...[PROMPTINPUT][NINTEN], I'm scared!
+885: @There's sound coming from the doll.[PROMPTINPUT]Do you hear it?
+886: @The doll stood up and stared directly into your eyes. [STARTBATTLE_1] [SETFLAG_dollDead] 
+887: @The doll moves no more.[PROMPTINPUT]@From inside the doll, you can hear a faint melody. [SETFLAG_melody1] [SETBGM_melody1.ogg] [_889] 
+889: @You took note of the melody.
+88A: 
+88B: 
+88C: 
+88D: 
+88E: 
+88F: 
+890: 
