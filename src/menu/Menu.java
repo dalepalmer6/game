@@ -152,6 +152,9 @@ public class Menu implements MenuInterface {
 		}
 		
 		for (MenuItem i : menuItems) {
+			if (i == null) {
+				continue;
+			}
 			i.updateAnim();
 		}
 		
@@ -184,6 +187,11 @@ public class Menu implements MenuInterface {
 	public void doDoneFadeOutAction() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean getCanUpdateGameState() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

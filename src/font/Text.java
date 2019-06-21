@@ -403,10 +403,15 @@ public class Text implements Drawable{
 		int scale = 4;
 		char[] chars = parsedString.toCharArray();
 		for (int i = 0; i < drawUntil+1; i++) {
-			
-//			if (i == 0 && c != '@') {
-////				curX += charList.getCharObjects().get(c).getDw()*scale;
-//			}
+			if (parsedString.equals("")) {
+				parsedString = " ";
+			}
+			if (i >= chars.length) {
+				continue;
+			}
+			if (i == 0 && chars[i] == '@') {
+				drawChar(m,i,'@',curX-4*4,curY);
+			}
 			if (controlCodes.containsKey(i)) {
 				String[] controls = controlCodes.get(i).split(",");
 				String newListOfControlCodes = "";
@@ -415,6 +420,10 @@ public class Text implements Drawable{
 //						curX = x + (int) charList.getCharObjects().get('@').getDw() + 2;
 						curX = x;
 						curY +=64;
+						if (chars[i] == '@') {
+							//draw it in the margin
+							drawChar(m,i,'@',curX-4*4,curY);
+						}
 						newListOfControlCodes += ",NEWLINE";
 					}
 					if (control.equalsIgnoreCase("PROMPTINPUT")) {
@@ -569,6 +578,12 @@ public class Text implements Drawable{
 						}
 						state.getMenuStack().peek().addMenuItem(choiceWindow);
 					}
+					if (control.startsWith("WARP_")) {
+						state.getMenuStack().pop();
+						String vars = control.substring(5);
+						String[] varsSplit = vars.split("_");
+						state.getGameState().createWarp(varsSplit[0],Integer.parseInt(varsSplit[1])*4,4*Integer.parseInt(varsSplit[2]));
+					}
 					if (control.startsWith("NUMSCROLL_")) {
 						int digitSize = Integer.parseInt(control.substring(10));
 						waitingForNumberInput = true;
@@ -629,31 +644,39 @@ public class Text implements Drawable{
 				if (chars.length == 0) {
 					return;
 				}
-				char c = chars[i];
-				if (charList.getCharObjects().get(c) == null) {
-					continue;
-				}
-				if (renderWindow != null) {
-					if (curY < renderWindow.getY()) {
-						continue;
-					}
+				if (chars[i] != '@') {
+					drawChar(m,i,chars[i],curX,curY);
+					curX += charList.getCharObjects().get(chars[i]).getDw()*4;
 				}
 				
-				m.renderTile(curX,curY,
-						(int) charList.getCharObjects().get(c).getDw()*scale,
-						(int) charList.getCharObjects().get(c).getDh()*scale,
-						charList.getCharObjects().get(c).getDx(),
-						charList.getCharObjects().get(c).getDy(),
-						charList.getCharObjects().get(c).getDw(),
-						charList.getCharObjects().get(c).getDh());
-				curX += scale + charList.getCharObjects().get(c).getDw()*scale;
-				if (i >= parsedString.length()-1) {
-					done = true;
-				}
 			}
 			
 		}
 		GL11.glColor3f(255,255,255);
+	}
+	
+	public void drawChar(MainWindow m,int i,char c, int curX,int curY) {
+//		char c = chars[i];
+		if (charList.getCharObjects().get(c) == null) {
+			return;
+		}
+		if (renderWindow != null) {
+			if (curY < renderWindow.getY()) {
+				return;
+			}
+		}
+		
+		m.renderTile(curX,curY,
+				(int) charList.getCharObjects().get(c).getDw()*4,
+				(int) charList.getCharObjects().get(c).getDh()*4,
+				charList.getCharObjects().get(c).getDx(),
+				charList.getCharObjects().get(c).getDy(),
+				charList.getCharObjects().get(c).getDw(),
+				charList.getCharObjects().get(c).getDh());
+		
+		if (i >= parsedString.length()-1) {
+			done = true;
+		}
 	}
 	
 	public void parseIfs() {
@@ -817,14 +840,14 @@ public class Text implements Drawable{
 		}
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		// TODO Auto-generated method stub
-		this.x = x;
+		this.x = (int) x;
 	}
 	
-	public void setY(int y) {
+	public void setY(double y) {
 //		this.y = y;
-		drawingY = y;
+		drawingY = (int) y;
 	}
 
 	public int getDrawUntil() {

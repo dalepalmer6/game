@@ -20,7 +20,7 @@ public class PresentEntity extends Entity{
 		text = "[FLAGISSET_present" + flagName + "]The box has been emptied.[ELSE][PLAYSFX_openpresent.wav][NINTEN] opened the present.[PROMPTINPUT]Inside there was " + item.getParticiple() + " " + item.getName() + ".[PROMPTINPUT][PLAYSFX_getitem.wav][ADDITEM_" + item.getId() + "][NINTEN] took it.[SETFLAG_present" + flagName + "][ENDIF] ";
 	}
 	
-	public void setNewParams(int x, int y, String name, int id) {
+	public void setNewParams(double x, double y, String name, int id) {
 		// TODO Auto-generated method stub
 		this.x = x;
 		this.y = y;

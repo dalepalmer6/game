@@ -33,7 +33,9 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 				stw.add(new GoodsSelectMenuItem(item,index,state,party,selling));
 			}
 		}
-		menuTitle.setText("Goods");
+		if (!state.inBattle) {
+			menuTitle.setText("Goods");
+		}
 	}
 	
 	public GoodsMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party) {
@@ -64,32 +66,46 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 			addMenuItem(descWindow);
 		}
 		index = 0;
-		menuTitle.setText("Goods");
+		if (!state.inBattle) {
+			menuTitle.setText("Goods");
+		}
+		
 	}
 	
 	public void update(InputController input) {
-		super.update(input);
+		
 		if (!backShouldExit && input.getSignals().get("BACK")) {
 			inventories.get(index).setDrawOnly(true);
 			backShouldExit = true;
 			menuItems.add(invisSelectItem);
 		}
 		
-		index = invisSelectItem.getIndex();
+		if (!state.inBattle) {
+			index = invisSelectItem.getIndex();
+			super.update(input);
+		} else {
+			index = state.battleMenu.getIndex()-1;
+		}
+		
 		if (party.get(index).getItemsList().get(0).getId() != 0) {
 			descWindow.setText(((GoodsSelectMenuItem) inventories.get(index).getSelectedItem()).getItem().getDescription());
 		}
 		
+		
 		menuItems.removeAll(inventories);
 		this.addToMenuItems(inventories.get(index));
 		
-		if (invisSelectItem.getCanLoadInventory()) {
-			if (party.get(index).getItemsList().get(0).getId() != 0) {
-				invisSelectItem.setCanLoadInventory(false);
-				inventories.get(index).setDrawOnly(false);
-				backShouldExit = false;
-				menuItems.remove(invisSelectItem);
+		if (!state.inBattle) {
+			if (invisSelectItem.getCanLoadInventory()) {
+				if (party.get(index).getItemsList().get(0).getId() != 0) {
+					invisSelectItem.setCanLoadInventory(false);
+					inventories.get(index).setDrawOnly(false);
+					backShouldExit = false;
+					menuItems.remove(invisSelectItem);
+				}
 			}
+		} else {
+			inventories.get(index).setDrawOnly(false);
 		}
 	}
 	

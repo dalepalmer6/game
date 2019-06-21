@@ -25,29 +25,35 @@ import menu.StartupNew;
 import tiles.MultiInstanceTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
-import tiles.types.Plain;
-import tiles.types.Tree;
 
 public class MapPreview extends MenuItem implements Controllable, Drawable, Hoverable, Clickable {
 	private Map map;
 	private ArrayList<ArrayList<Integer>> areaOfInterest;
-	private int x;
-	private int y;
 	private int widthInTiles;
 	private int heightInTiles;
 	public int viewX=0;
 	public int viewY=0;
-	private int width;
-	private int height;
 	private MapTool tileTool;
 	private int TILE_SIZE = 32;
 	private int instance = 0;
 	private TileHashMap tileMap;
 	private boolean holdableState = true;
 	private boolean drawGrid = true;
+	private Entity addedEntity;
 	
 	public void toggleDrawGrid() {
 		drawGrid = !drawGrid;
+	}
+	
+	public void setAddedEntity(Entity e) {
+		addedEntity = e;
+	}
+	
+	public void updateAnim() {
+		if (addedEntity != null) {
+			map.getEntities().add(addedEntity);
+		}
+		addedEntity = null;
 	}
 	
 	public int getViewX() {
@@ -71,11 +77,11 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		return map;
 	}
 	
-	public int getRightEdge() {
+	public double getRightEdge() {
 		return x + widthInTiles * TILE_SIZE;
 	}
 	
-	public int getLowerEdge() {
+	public double getLowerEdge() {
 		return y + heightInTiles * TILE_SIZE;
 	}
 	
@@ -85,14 +91,6 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	
 	public int getWidth() {
 		return width;
-	}
-	
-	public int getX() {
-		return x;
-	}
-	
-	public int getY() {
-		return y;
 	}
 	
 	public int getTileSize() {
@@ -169,6 +167,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 		this.y = y;
 		this.widthInTiles = 30+2;
 		this.heightInTiles = 20+2;
+		targetY = y;
 		this.width = (-2 + this.widthInTiles) * TILE_SIZE;
 		this.height = (-2 + this.heightInTiles) * TILE_SIZE;
 		this.tileMap = tm;
@@ -178,9 +177,9 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 	//can toggle this off!
 	public void drawGrid(MainWindow m) {
 		m.setTexture("img\\line.png");
-		for (int i = this.x; i <= this.x + width ; i+= TILE_SIZE) {
+		for (int i = (int) this.x; i <= this.x + width ; i+= TILE_SIZE) {
 			//for every row
-			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
+			for (int j = (int) this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
 				m.renderTile(this.x,j,width,1,1,1,1,1);
 			}
@@ -190,9 +189,9 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 
 	public Point getMouseCoordinates() {
 		//relative to the tool
-		int x = Mouse.getX() - this.x;
-		int y = Display.getHeight() - Mouse.getY() - this.y;
-		return new Point(x, y);
+		double x = Mouse.getX() - this.x;
+		double y = Display.getHeight() - Mouse.getY() - this.y;
+		return new Point((int)x, (int)y);
 	}
 	
 	public Point getTilePosition() {

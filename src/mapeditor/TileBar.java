@@ -48,11 +48,11 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		return height;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -64,8 +64,8 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 
 	public TileBar(int maxWidthTiles, int maxHeightTiles, TileHashMap tm, MapPreview mapPreview, StartupNew state) {
 		// set location
-		this.x = mapPreview.getX();
-		this.y = mapPreview.getLowerEdge() + 0 * TILE_SIZE;
+		this.x = (int) mapPreview.getX();
+		this.y = (int) (mapPreview.getLowerEdge() + 0 * TILE_SIZE);
 //		state.getTextureAtlas().setRectByName("img/tiles.png");
 //		this.MAX_HEIGHT_IN_TILES = state.textures.get("img/tiles.png").getTextureHeight() / 16;
 //		this.MAX_WIDTH_IN_TILES = state.textures.get("img/tiles.png").getTextureWidth() / 16;

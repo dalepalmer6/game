@@ -54,8 +54,8 @@ public class PSIPickMenu extends Menu {
 		this.setToRemove(ppConsumptionWindow);
 		String desc = ((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription();
 		String ppUse = "Cost: " + ((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getPPConsumption();
-		ppConsumptionWindow = new TextWindow(true,ppUse,classificationWindow.getX(),classificationWindow.getY() + (classificationWindow.getHeight()+32)*4,2,1,state);
-		descWindow = new TextWindow(true,desc,ppConsumptionWindow.getX() + (ppConsumptionWindow.getWidth()+32)*2,classificationWindow.getY()+(classificationWindow.getHeight()+32)*4,(classificationWindow.getWidth() + psiSTW.getWidth() - 32)*4/32 - (ppConsumptionWindow.getWidth()-32)*4/32,2,state);
+		ppConsumptionWindow = new TextWindow(true,ppUse,(int)classificationWindow.getX(),(int)classificationWindow.getY() + (classificationWindow.getHeight()+32)*4,2,1,state);
+		descWindow = new TextWindow(true,desc,(int)ppConsumptionWindow.getX() + (ppConsumptionWindow.getWidth()+32)*2,(int)classificationWindow.getY()+(classificationWindow.getHeight()+32)*4,(classificationWindow.getWidth() + psiSTW.getWidth() - 32)*4/32 - (ppConsumptionWindow.getWidth()-32)*4/32,2,state);
 		
 		addToMenuItems(descWindow);
 		addToMenuItems(ppConsumptionWindow);

@@ -58,6 +58,8 @@ public class EquipmentEditMenuItem extends MenuItem{
 		}
 		if (atLeastOne) {
 			((EquipsMenu)state.getMenuStack().peek()).setSearchInventorySTW(stw);
+		} else {
+			((EquipsMenu)state.getMenuStack().peek()).setSearchInventorySTW(null);
 		}
 		return null;
 	}

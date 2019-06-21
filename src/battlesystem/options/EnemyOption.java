@@ -18,11 +18,11 @@ public class EnemyOption extends MenuItem {
 		return enemy;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	

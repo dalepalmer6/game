@@ -105,7 +105,7 @@ public class ShopMenu extends Menu {
 		stw = new SelectionTextWindow(0,0,6,8,state);
 		prices = new ArrayList<TextLabel>();
 		for (ShopMenuItem i : saleItems) {
-			prices.add(new TextLabel("$" + i.getItem().getValue() + "",stw.getX() + stw.getWidth()*4,stw.getCurrentOpenY(),state));
+			prices.add(new TextLabel("$" + i.getItem().getValue() + "",(int) (stw.getX() + stw.getWidth()*4),stw.getCurrentOpenY(),state));
 			stw.add(i);
 		}
 //		addMenuItem(stw);

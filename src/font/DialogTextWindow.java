@@ -9,21 +9,77 @@ import menu.StartupNew;
 public class DialogTextWindow extends TextWindowWithPrompt {
 	private String name;
 	private TextLabel textName;
+	private String textString;
+	private boolean textInitted;
+	private boolean closing;
 	
 	public DialogTextWindow(String s, int x, int y, int width, int height, StartupNew state) {
 		super(s,x,y,width,height,state);
+		targetY = y;
+		textString = s;
 	}
 	
 	public DialogTextWindow(String s, StartupNew state) {
-		super(s,128,792,24,2,state);
+		super(s,0,792,29,3,state);
+		y = state.getMainWindow().getScreenHeight();
+		targetY = 792;
+		textString = s;
 //		textName = new Text(name,x,y-160,0,0,state.charList);
 	} 
 	
 	public DialogTextWindow(String s, String name, StartupNew state) {
-		super(s,128,792,24,2,state);
+		super(s,0,792,29,3,state);
+		y = state.getMainWindow().getScreenHeight();
+		targetY = 792;
 		this.name = name;
-		textName = new TextLabel(name,x+TEXT_START_X,y-52,state);
+		textString = s;
 	} 
+	
+	public void approachTargetPos() {
+		// TODO Auto-generated method stub
+		if (targetY > y) {
+			y+=32;
+//			if (textInitted) {
+//				text.setY(text.getY()+8);
+//				textName.setY(text.getY()+8);
+//			}
+			
+		} else if (targetY < y) {
+			y-=32;
+//			if (textInitted) {
+//				text.setY(text.getY()-8);
+//				textName.setY(text.getY()-8);
+//			}
+		}
+	}
+	
+	public void next() {
+		text.setFreeze(false);
+		if (text.getDrawState()) {
+			closing = true;
+		}
+	}
+	
+	public void updateAnim() {
+		approachTargetPos();
+		if (targetY == y && !textInitted) {
+			textInitted = true;
+			textName = new TextLabel(name,(int)x+24,(int)y-52,state);
+			this.text = new Text(shouldDrawAll,textString,(int)x+TEXT_START_X,(int)y+TEXT_START_Y,this.width,this.height,m.charList);
+			this.text.setRenderWindow(this);
+			text.setState(state);
+		}
+		if (textInitted) {
+			super.updateAnim();
+		}
+		if (closing) {
+			targetY = state.getMainWindow().getScreenHeight();
+			state.getMenuStack().peek().setToRemove(textName);
+		}
+		if (closing && targetY == y) {
+			state.getMenuStack().pop();
+		}
+	}
 	
 	public void drawBlackWindow(MainWindow m) {
 		//start at x = 0, to screenwidth, at y
@@ -57,10 +113,13 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 	public void draw(MainWindow m) {
 		initDrawWindow(m);
 		drawBlackWindow(m);
-		if (name != null) {
+		if (name != null && textInitted) {
 			drawNameWindow(m);
 		}
-		drawText(m);
+		if (textInitted) {
+			drawText(m);
+		}
+		
 	}
 	
 }

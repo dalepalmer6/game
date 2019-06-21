@@ -131,7 +131,7 @@ public class MainWindow {
 		renderTile(x,y,width,height,dx,dy,dw,dh,false);
 	}
 	
-	public void renderAnimation(Texture t, int x, int y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
+	public void renderAnimation(Texture t, double x, double y, int width, int height, float dx, float dy, float dw, float dh, boolean needToFlip) {
 		if (useShader) { 
 		} 
 		else {ARBShaderObjects.glUseProgramObjectARB(0);}
@@ -152,13 +152,13 @@ public class MainWindow {
 	    	GL11.glBegin(GL11.GL_QUADS);
             
 			GL11.glTexCoord2f(xo,yo);
-			GL11.glVertex2f(-correction + scaleX*x, y);
+			GL11.glVertex2d(-correction + scaleX*x, y);
 			GL11.glTexCoord2f(xw, yo);
-			GL11.glVertex2f(-correction + scaleX*x + width, y);
+			GL11.glVertex2d(-correction + scaleX*x + width, y);
 			GL11.glTexCoord2f(xw,yw);
-			GL11.glVertex2f(-correction + scaleX*x + width, y + height);
+			GL11.glVertex2d(-correction + scaleX*x + width, y + height);
 			GL11.glTexCoord2f(xo,yw);
-			GL11.glVertex2f(-correction + scaleX*x, y + height);
+			GL11.glVertex2d(-correction + scaleX*x, y + height);
             GL11.glEnd();
         GL11.glPopMatrix();
 
@@ -436,7 +436,10 @@ public class MainWindow {
 //		drawables = sortDrawables(drawables);
 		// draws all the objects that need to be drawn
 		for (DrawableObject d : drawables) {
-			d.draw(this);
+			if (d != null) {
+				d.draw(this);
+			}
+			
 		}
 	}
 	

@@ -31,11 +31,10 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 		this.index = 0;
 		this.lockedIn = true;
 		reload();
-		addMenuItem(invisSelectItem);
-		menuItems.add(psiSTW);
-		addMenuItem(classificationWindow);
-		menuItems.addAll(labels);
-		
+//		addMenuItem(invisSelectItem);
+//		menuItems.add(psiSTW);
+//		addMenuItem(classificationWindow);
+//		menuItems.addAll(labels);
 	}
 	
 	public void update(InputController input) {
@@ -71,32 +70,34 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 //			updateSTW = true;
 //		}
 		
-		index = invisSelectItem.getIndex();
+		if (!state.inBattle) {
+			index = invisSelectItem.getIndex();
+		} else {
+			index = state.battleMenu.getIndex()-1;
+		}
 		if (party.get(index).getItemsList().get(0).getId() != 0) {
 //			descWindow.setText(((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription());
 		}
 		
 		if (lastClassWindowSelection != classificationWindow.getSelectedItem()) {
-			
 			menuItems.remove(psiSTW);
 			enumPSIForMember();
 		}
 		
 		lastClassWindowSelection = classificationWindow.getSelectedItem();
+
+	}
+	
+	public void enterPSIMenu() {
+//		invisSelectItem.setCanLoadInventory(false);
+		classificationWindow.setDrawOnly(true);
+		psiSTW.setDrawOnly(false);
+		backShouldExit = false;
+		setToRemove(invisSelectItem);
+	}
+	
+	public void exitPSIMenu() {
 		
-		if (invisSelectItem.getCanLoadInventory()) {
-			if (party.get(index).getItemsList().get(0).getId() != 0) {
-				invisSelectItem.setCanLoadInventory(false);
-				classificationWindow.setDrawOnly(true);
-				psiSTW.setDrawOnly(false);
-				backShouldExit = false;
-				menuItems.remove(invisSelectItem);
-			}
-		}
-		
-//		for (TextLabel tl : labels) {
-//			addToMenuItems(tl);
-//		}
 	}
 	
 	@Override
@@ -104,7 +105,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 		if (!state.inBattle) {
 			super.reload();
 		}
-		
+		menuItems.remove(classificationWindow);
 		classificationWindow = new SelectionTextWindow(256,128,3,4,state);
 		addMenuItem(classificationWindow);
 		for (PSIClassification psic : state.psiClassList.getPSIClassifications()) {
@@ -115,8 +116,11 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 		
 		enumPSIForMember();
 		
-		invisSelectItem = new InvisibleMenuItem(state,party.size());
-		addToMenuItems(invisSelectItem);
+//		if (!state.inBattle) {
+//			invisSelectItem = new InvisibleMenuItem(state,party.size());
+//			addToMenuItems(invisSelectItem);
+//		}
+
 	}
 	
 	public void enumPSIForMember() {
@@ -151,7 +155,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 				j++;
 			}
 			if (atLeastOne) {
-				TextLabel tl = new TextLabel(pf.getName(),psiSTW.getX() + psiSTW.getTextStartX() + 16,psiSTW.getY()+y,state);
+				TextLabel tl = new TextLabel(pf.getName(),(int)psiSTW.getX() + psiSTW.getTextStartX() + 16,(int)psiSTW.getY()+y,state);
 				labels.add(tl);
 				addToMenuItems(tl);
 				atLeastOne = false;

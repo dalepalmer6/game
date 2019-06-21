@@ -21,7 +21,6 @@ import tiles.MultiInstanceTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
 import tiles.TileInstance;
-import tiles.types.Tree;
 
 public class Map {
 	private String mapId;

@@ -237,7 +237,7 @@ public class BattleAction {
 								int index = (int) (Math.random() * (double) targets.size());
 								setDamageDealt(itemToUse.useInBattle(actor,targets.get(index)));
 							} else {
-								damageDealt = 777;
+								damageDealt = -1; // a miss
 								result = "";
 							}
 							if (needToBreak) {
@@ -618,6 +618,9 @@ public class BattleAction {
 	public void setEnemyActionIndex(EnemyAction e, ArrayList<BattleEntity> players, ArrayList<BattleEntity> enemies) {
 		// TODO Auto-generated method stub
 		enemyAction = e;
+		/*
+		 * Converts an enemy action to the corresponding battle action.
+		 * */
 		if (enemyAction.getAction() == 30) {
 			usedAction = "bash";
 			continuous = false;

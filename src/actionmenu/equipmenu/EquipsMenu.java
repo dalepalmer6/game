@@ -2,6 +2,7 @@ package actionmenu.equipmenu;
 
 import java.util.ArrayList;
 
+import actionmenu.BackingBar;
 import actionmenu.PlayerInfoWindow;
 import actionmenu.goodsmenu.GoodsSelectMenuItem;
 import actionmenu.statusmenu.TextWindowWithLabels;
@@ -33,6 +34,7 @@ public class EquipsMenu extends PlayerInfoWindow {
 	public EquipsMenu(StartupNew m, ArrayList<PartyMember> party) {
 		super(m,party);
 		reload();
+		loadCurrentPCData();
 		addMenuItem(descWindow);
 		addMenuItem(stats);
 	}
@@ -46,12 +48,17 @@ public class EquipsMenu extends PlayerInfoWindow {
 		if (!backShouldExit && input.getSignals().get("BACK")) {
 			needEquipmentSTW = true;
 			inventories.get(index).setDrawOnly(false);
+			menuItems.remove(inventoryEquips);
 			inventoryEquips = null;
 //			menuItems.remove(menuItems.size()-1);
 			backShouldExit = true;
 			menuItems.add(invisSelectItem);
 		}
 		
+		loadCurrentPCData();
+	}
+	
+	public void loadCurrentPCData() {
 		if (statsAndVals != null) {
 			menuItems.removeAll(statsAndVals);
 		}
@@ -151,6 +158,7 @@ public class EquipsMenu extends PlayerInfoWindow {
 	}
 
 	public void reload() {
+//		addMenuItem(new BackingBar(state));
 		inventoryEquips = null;
 		for (MenuItem mi : menuItems) {
 			setToRemove(mi);
@@ -185,10 +193,10 @@ public class EquipsMenu extends PlayerInfoWindow {
 		int startY = stw.getTextStartY();
 		int startX = stw.getTextStartX()+16;
 		int stepY = stw.getStepForwardY();
-		weaponLabel = new TextLabel("Weapon",stw.getX() + startX,stw.getY() + startY,state);
-		bodyLabel = new TextLabel("Body",stw.getX() + startX,stw.getY() + startY + stepY,state);
-		headLabel = new TextLabel("Head",stw.getX() + startX,stw.getY() + startY + 2*stepY,state);
-		otherLabel = new TextLabel("Other",stw.getX() + startX,stw.getY() + startY + 3*stepY,state);
+		weaponLabel = new TextLabel("Weapon",(int)stw.getX() + startX,(int)stw.getY() + startY,state);
+		bodyLabel = new TextLabel("Body",(int)stw.getX() + startX,(int)stw.getY() + startY + stepY,state);
+		headLabel = new TextLabel("Head",(int)stw.getX() + startX,(int)stw.getY() + startY + 2*stepY,state);
+		otherLabel = new TextLabel("Other",(int)stw.getX() + startX,(int)stw.getY() + startY + 3*stepY,state);
 		labels = new ArrayList<TextLabel>();
 		labels.add(weaponLabel);
 		labels.add(bodyLabel);
@@ -203,7 +211,12 @@ public class EquipsMenu extends PlayerInfoWindow {
 
 	public void setSearchInventorySTW(SelectionTextWindow stw) {
 		// TODO Auto-generated method stub
-		inventoryEquips = stw;
-		addToMenuItems(inventoryEquips);
+		if (stw != null) {
+			inventoryEquips = stw;
+			addToMenuItems(inventoryEquips);
+		} else {
+			needEquipmentSTW = true;
+			invisSelectItem.setCanLoadInventory(false);
+		}
 	}
 }

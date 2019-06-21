@@ -6,16 +6,16 @@ import canvas.Drawable;
 import canvas.MainWindow;
 
 public class DrawableObject implements Drawable {
-	protected int x;
-	protected int y;
+	protected double x;
+	protected double y;
 	protected int width;
 	protected int height;
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	public int getWidth() {

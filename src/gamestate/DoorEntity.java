@@ -87,7 +87,7 @@ public class DoorEntity extends Entity {
 	
 	public void act() {
 		for (Entity e : interactables) {
-			if (e instanceof Player || e instanceof TrainEntity) {
+			if (e instanceof CameraControllingEntity) {
 				//remove the door from the gamestate
 //				state.getGameState().getEntityList().remove(this);
 //				if (state.getMenuStack().peek() != null || state.getMenuStack().peek() instanceof TrainCutscene) {
@@ -115,6 +115,11 @@ public class DoorEntity extends Entity {
 								state.getGameState().getEntityList().clear();
 								state.getGameState().getEntityList().addAll(players);
 							} else if (e instanceof TrainEntity) {
+								e.setCoordinates(destX, destY);
+								e.setAtTargetPoint();
+								state.getGameState().getEntityList().clear();
+								state.getGameState().getEntityList().add(e);
+							} else if (e instanceof IntroEntity) {
 								e.setCoordinates(destX, destY);
 								e.setAtTargetPoint();
 								state.getGameState().getEntityList().clear();

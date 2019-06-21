@@ -26,16 +26,16 @@ public class PauseMenuSelectionWindow extends SelectionTextWindow {
 		targetY = 0;
 		this.party = party;
 		currentOpenX = 256;
-		currentOpenY = y+16;
+		currentOpenY = (int) (y+16);
 		add(new GoodsMenuItem(state,party,-128),0,0);
 		currentOpenX = 352;
-		currentOpenY = y+16;
+		currentOpenY = (int) (y+16);
 		add(new EquipMenuItem(state,party,-128),1,0);
 		currentOpenX = 448;
-		currentOpenY = y+16;
+		currentOpenY = (int) (y+16);
 		add(new PSIMenuItem(state,party,-128),2,0);
 		currentOpenX = 544;
-		currentOpenY = y+16;
+		currentOpenY = (int) (y+16);
 		add(new StatusMenuItem(state,party,-128),3,0);
 	}
 	

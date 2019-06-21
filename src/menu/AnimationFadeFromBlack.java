@@ -43,6 +43,6 @@ public class AnimationFadeFromBlack extends Animation {
 	
 	public void draw(MainWindow m) {
 //		m.setTexture(state.getPathToAnims() + texture);
-		m.renderNonTextured(x,y,width,height,alpha);
+		m.renderNonTextured((int)x,(int)y,width,height,alpha);
 	}
 }

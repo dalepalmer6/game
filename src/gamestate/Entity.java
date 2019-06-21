@@ -316,7 +316,7 @@ public class Entity implements Drawable,EntityInterface {
 			}
 			
 			if (Math.abs(deltaX-0) <= 0.0001 && Math.abs(deltaY-0) <= 0.0001) {
-				atTargetPoint = true;
+				setAtTargetPoint();
 			}
 		} 
 		
@@ -757,19 +757,6 @@ public class Entity implements Drawable,EntityInterface {
 			checkTileCollision();
 		}
 		
-//		if (
-//				//corners still dont work entirely (see tree corners)
-//				(((collisiont1 & 2)&15) ==0 && ((collisiont2 & 2)&15) ==0 &&
-//				((collisiont1 & 1)&15) ==0 && ((collisiont2 & 1)&15) ==0) ||
-//				
-//				(((collisiont3 & 2)&15) ==0 && ((collisiont4 & 2)&15) == 0 && 
-//				((collisiont4 & 1)&15) == 0 && ((collisiont4 & 1)&15) == 0) ||
-//				
-//				(((collisiont1 & 4)&15) == 4 && ((collisiont2 & 4)&15) == 4 &&
-//				((collisiont3 & 4)&15) == 4 && ((collisiont4 & 4)&15) == 4)) {
-////			stageForRedraw();
-//		}
-//		
 		if ((colmask & 15) != 0) {
 			return true;
 		}
@@ -779,19 +766,6 @@ public class Entity implements Drawable,EntityInterface {
 	public void handleInput(InputController input) {
 		
 	} 
-	
-//	public boolean checkCollisionsWithEntity(Entity e) {
-//		int leftEdge = this.x + deltaX;
-//		int rightEdge = this.x + this.width + deltaX;
-//		int upperEdge = this.y + this.height*3/4 + deltaY;
-//		int lowerEdge = this.y + this.height + deltaY;
-//		boolean collision = false;
-//		if ((rightEdge >= e.x + e.deltaX)) {
-//			System.out.println(this.toString() + " is col w/ " + e.toString());
-//			collision = true;
-//		}
-//		return collision;
-//	}
 	
 	public String toString() {
 		return name;
@@ -941,7 +915,7 @@ public class Entity implements Drawable,EntityInterface {
 		yOnScreen += arg1;
 	}
 
-	public void setNewParams(int x, int y, int w, int h, String name, String texture, String appFlag, String disFlag) {
+	public void setNewParams(double x, double y, int w, int h, String name, String texture, String appFlag, String disFlag) {
 		// TODO Auto-generated method stub
 		this.x = x;
 		this.y = y;

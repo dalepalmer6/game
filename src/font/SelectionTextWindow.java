@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import battlesystem.FeatherMenuItem;
 import canvas.Controllable;
 import canvas.MainWindow;
 import global.InputController;
@@ -35,6 +36,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	private boolean maxHeightReached;
 	private boolean grid;
 	private boolean callUpdate = false;
+	private MenuItem featherMenuItem;
+	private boolean setFirstCursorPos = false;
 	
 	public void setTargetPosY(int newY) {
 		targetY = newY;
@@ -48,6 +51,12 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void updateAnim() {
+		if (!setFirstCursorPos && selections.get(0).size() != 0) {
+			setFirstCursorPos = true;
+			featherMenuItem.setX(selections.get(selectedY).get(selectedX).getX());
+			featherMenuItem.setY(selections.get(selectedY).get(selectedX).getY());
+		}
+		
 		if (callUpdate) {
 			callUpdate = false;
 			update();
@@ -57,18 +66,22 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 			while (selectedY >= yEnd) {
 				yStart++;
 				yEnd++;
+				setFirstCursorPos = false;
 			}
 			while (selectedY < yStart) {
 				yStart--;
 				yEnd--;
+				setFirstCursorPos = false;
 			}
 			while (yEnd > selections.size()) {
 				yStart = 0;
 				yEnd = 4;
+				setFirstCursorPos = false;
 			}
 			while (yStart < 0) {
 				yEnd = selections.size();
 				yStart = yEnd - 4;
+				setFirstCursorPos = false;
 			}
 			int y = 32;
 			for (int i = yStart; i < yEnd; i++) {
@@ -84,7 +97,9 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				y += 64;
 			}
 		}
-		
+//		featherMenuItem.setX(selections.get(selectedY).get(selectedX).getX());
+//		featherMenuItem.setY(selections.get(selectedY).get(selectedX).getY());
+		featherMenuItem.updateAnim();
 		
 		for (ArrayList<MenuItem> list : selections) {
 			for (MenuItem i : list) {
@@ -116,9 +131,9 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		}
 	}
 	
-	public void setCurrentOpen(int x, int y) {
-		this.currentOpenX = this.x + x;
-		this.currentOpenY = this.y + y;
+	public void setCurrentOpen(double x, double y) {
+		this.currentOpenX = (int) (this.x + x);
+		this.currentOpenY = (int) (this.y + y);
 	}
 	
 	public void resetIndex() {
@@ -128,8 +143,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	
 	public void clearSelections() {
 		selections.clear();
-		currentOpenX = this.x + this.TEXT_START_X + 16;
-		currentOpenY = this.y + this.TEXT_START_Y;
+		currentOpenX = (int) (this.x + this.TEXT_START_X + 16);
+		currentOpenY = (int) (this.y + this.TEXT_START_Y);
 		index = 0;
 		dimX = 1;
 		dimY = 1;
@@ -143,6 +158,13 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public MenuItem getSelectedItem() {
+		
+		while (selectedY >= selections.size()) {
+			updateIndex("U");
+		}
+		while (selectedX >= selections.get(selectedY).size()) {
+			updateIndex("L");
+		}
 		if (selections.get(selectedY).get(selectedX) == null) {
 			selectedY = 0;
 			selectedX = 0;
@@ -185,11 +207,13 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		this.orientation = orientation;
 		dimX = 1;
 		dimY = 1;
-		currentOpenX = this.x + this.TEXT_START_X;
-		currentOpenY = this.y + this.TEXT_START_Y;
+		currentOpenX = (int) (this.x + this.TEXT_START_X);
+		currentOpenY = (int) (this.y + this.TEXT_START_Y);
 		ArrayList<MenuItem> firstRow = new ArrayList<MenuItem>(1);
 		selections = new ArrayList<ArrayList<MenuItem>>();
 		selections.add(firstRow);
+		featherMenuItem = new FeatherMenuItem("",0,0,64,64,state,"battlechoicefeather.png",0,0,16,16);
+//		addMenuItem(featherMenuItem);
 	}
 	
 	public void createGrid(int x, int y) {
@@ -218,7 +242,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		switch (orientation) {
 		case "vertical":
 			if (currentOpenY > this.y + this.getHeight()*4 + (2*TILE_SIZE)) {
-				currentOpenY = this.y + this.TEXT_START_Y;
+				currentOpenY = (int) (this.y + this.TEXT_START_Y);
 				currentOpenX += stepForwardX;
 				dimX++;
 				index = 0;
@@ -241,7 +265,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 			break;
 		case "horizontal" :
 			if (currentOpenX > this.x + this.getWidth()*4) {
-				currentOpenX = this.x + this.TEXT_START_X;
+				currentOpenX = (int) (this.x + this.TEXT_START_X);
 				currentOpenY += stepForwardY;
 				selections.add(new ArrayList<MenuItem>());
 				dimY++;
@@ -325,6 +349,8 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 					}
 					break;
 		}
+		featherMenuItem.setX(selections.get(selectedY).get(selectedX).getX());
+		featherMenuItem.setY(selections.get(selectedY).get(selectedX).getY());
 	}
 	
 	public void appendOutput(String s) {
@@ -345,6 +371,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void update() {
+		
 		String t = selections.get(selectedY).get(selectedX).prepareToExecute();
 		
 		if (killWhenComplete) {
@@ -362,12 +389,15 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		// TODO Auto-generated method stub
 		drawWindow(m);
 		drawSelections(m);
-		drawCursor(m);
+//		drawCursor(m);
+		if (!drawOnly) {
+			featherMenuItem.draw(m);
+		}
+		
 	}
 	
 	public void drawSelections(MainWindow mw) {
 		Text.initDrawText(mw);
-		int scale = 2;
 //		int i = yStart;
 //		for (ArrayList<MenuItem> mis : selections) {
 		if (!grid) {
@@ -407,14 +437,14 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		if (selections.size() == 0) {
 			return -100;
 		}
-		return selections.get(0).get(0).getX();
+		return (int) selections.get(0).get(0).getX();
 	}
 	
 	public int cursorStartPositionY() {
 		if (selections.size() == 0) {
 			return -100;
 		}
-		return selections.get(0).get(0).getY();
+		return (int) selections.get(0).get(0).getY();
 	}
 	
 	public int getYStart() {
@@ -428,7 +458,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	public void drawCursor(MainWindow m) {
 //		selectedIndexX = overallIndex / dimY;
 //		selectedIndexY = overallIndex % dimY;
-		if (!drawOnly) {
+//		if (!drawOnly) {
 			CharacterData cursor = this.m.charList.getCharObjects().get('@');
 //			m.renderTile(cursorStartPositionX() + selectedIndexX*stepForwardX,  cursorStartPositionY() + selectedIndexY*stepForwardY,
 //					(int)cursor.getDw()*4,(int)cursor.getDh()*4,
@@ -438,7 +468,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 					(int)cursor.getDw()*8,(int)cursor.getDh()*8,
 					cursor.getDx(),cursor.getDy(),
 					cursor.getDw()*2,cursor.getDh()*2);
-		}
+//		}
 		
 	}
 	

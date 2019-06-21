@@ -16,7 +16,7 @@ public class TextWindow extends MenuItem implements Drawable{
 	public Text text;
 	private double tickCount;
 	private double ticksPerFrame = 0.5;
-	protected int TEXT_START_X = 24;
+	protected int TEXT_START_X = 48;
 	protected int TEXT_START_Y = 24;
 	protected long createdAt;
 	protected long lastTime;
@@ -48,7 +48,6 @@ public class TextWindow extends MenuItem implements Drawable{
 //			text.setY(text.getY()-8);
 		}
 	}
-
 	
 	public void setX(int dx) {
 		text.setX(dx + TEXT_START_X);
@@ -79,6 +78,10 @@ public class TextWindow extends MenuItem implements Drawable{
 		this(shouldDrawAll,s,x,y,15,6,m);
 	}
 	
+	public boolean getCanUpdateGameState() {
+		return false;
+	}
+	
 	public TextWindow(boolean shouldDrawAll, String s, int x, int y, int width, int height, StartupNew m) {
 		super("",x,y,m);
 		this.tickCount = 0;
@@ -99,7 +102,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		int tileHeight = height/TILE_SIZE;
 		int xCoord = 0;
 		int yCoord = 0;
-		int xPos = x;
+		int xPos = (int) x;
 		int yPos = drawingY;
 		//draw top left corner
 		m.renderTile(xPos,yPos,
@@ -121,7 +124,7 @@ public class TextWindow extends MenuItem implements Drawable{
 				xCoord,yCoord,
 				TILE_SIZE,TILE_SIZE);
 		for (int i = 0; i < tileHeight; i++) {
-			xPos = x;
+			xPos = (int) x;
 			yPos += 64;
 			xCoord = 0;
 			yCoord = TILE_SIZE;
@@ -148,7 +151,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		}
 		xCoord = 0;
 		yCoord = 2*TILE_SIZE;
-		xPos = x;
+		xPos = (int) x;
 		yPos += 32;
 		//draw top left corner
 		m.renderTile(xPos,yPos,

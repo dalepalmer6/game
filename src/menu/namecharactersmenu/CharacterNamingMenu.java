@@ -59,7 +59,7 @@ public class CharacterNamingMenu extends Menu{
 			state.getMenuStack().clear();
 			state.getMenuStack().push(m);
 			DialogTextWindow dtw = new DialogTextWindow("[_87C][_87D][_87E][_87F][_880][_881][STOPBGM][_882] ",150,150,22,15,state);
-			m.addMenuItem(dtw);
+//			m.addMenuItem(dtw);
 			return;
 		}
 		CharacterNameInputMenu m = new CharacterNameInputMenu(state,index);

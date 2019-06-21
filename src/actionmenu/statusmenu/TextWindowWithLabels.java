@@ -32,7 +32,7 @@ public class TextWindowWithLabels extends TextWindow implements Controllable {
 	}
 	
 	public void createLabel(String s, int x, int y) {
-		TextLabel tl = new TextLabel(s,this.x + x,this.y + y,state);
+		TextLabel tl = new TextLabel(s,(int)this.x + x,(int)this.y + y,state);
 		labels.add(tl);
 	}
 	
@@ -65,4 +65,5 @@ public class TextWindowWithLabels extends TextWindow implements Controllable {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 }

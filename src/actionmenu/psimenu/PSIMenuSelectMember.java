@@ -69,7 +69,7 @@ public class PSIMenuSelectMember extends Menu {
 				j++;
 			}
 			if (atLeastOne) {
-				TextLabel tl = new TextLabel(pf.getName(),psiSTW.getX() + psiSTW.getTextStartX() + 16,y,state);
+				TextLabel tl = new TextLabel(pf.getName(),(int)psiSTW.getX() + psiSTW.getTextStartX() + 16,(int)y,state);
 				labels .add(tl);
 				addToMenuItems(tl);
 				atLeastOne = false;

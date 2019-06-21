@@ -2,6 +2,7 @@ package gamestate;
 
 import font.SimpleDialogMenu;
 import global.InputController;
+import menu.AnimationMenu;
 import menu.Menu;
 import menu.StartupNew;
 
@@ -12,6 +13,7 @@ public class Cutscene extends Menu {
 	private String text;
 	protected boolean reverseOrder;
 	private boolean ended;
+	private boolean lastTriggerWasText;
 	
 	public Cutscene(StartupNew m,CutsceneData cd) {
 		super(m);
@@ -36,19 +38,36 @@ public class Cutscene extends Menu {
 	
 	public void doCutscene() {
 		boolean canGoIn = false;
+		if (state.getMenuStack().peek() instanceof AnimationMenu) {
+			return;
+		}
 		if (cutsceneData.getEntity() != null) {
 			canGoIn = cutsceneData.getEntity().getAtTargetPoint();
+			if (!state.getMenuStack().isEmpty()) {
+				if (!(state.getMenuStack().peek() instanceof AnimationMenu) && !state.getMenuStack().peek().getCanUpdateGameState()) {
+					canGoIn = false;
+				}
+			}
 		} else {
 			canGoIn = true;
 		}
-		if (canGoIn && state.getMenuStack().isEmpty()) {
+		if (lastTriggerWasText) {
+			if (state.getMenuStack().isEmpty()) {
+				lastTriggerWasText = false;
+				canGoIn = true;
+			} else {
+				canGoIn = canGoIn || false;
+			}
+		}
+		if (canGoIn) {
 			curMovement = cutsceneData.getMovementData();
-			if (cutsceneData.getEntity() != null) {
+			if (cutsceneData.getEntity() != null && curMovement != null) {
 				cutsceneData.getEntity().setAtTargetPoint(false);
 			}
 			
 			text = cutsceneData.getString();
 			if (text != null) {
+				lastTriggerWasText=true;
 				SimpleDialogMenu.createDialogBox(state,text);
 			} 
 			else if (curMovement != null){

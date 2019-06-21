@@ -13,8 +13,6 @@ import tiles.ChangeWithFlagTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
 import tiles.TileInstance;
-import tiles.types.Plain;
-import tiles.types.Tree;
 
 public class MapRenderer extends DrawableObject implements Drawable{
 	private Map map;

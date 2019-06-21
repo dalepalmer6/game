@@ -68,8 +68,8 @@ public class MapEditMenu extends Menu {
 		addMenuItem(new GridToggleButton("Grid",140*4,0,m));
 		addMenuItem(new DoorEnumButton(1500,0,m));
 		addMenuItem(new BackButton(m));
-		addMenuItem(new ScrollLeftButton("L", tilebar.getX()-30, tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
-		addMenuItem(new ScrollRightButton("R", tilebar.getX() + tilebar.getWidth(), tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
+//		addMenuItem(new ScrollLeftButton("L", tilebar.getX()-30, tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
+//		addMenuItem(new ScrollRightButton("R", tilebar.getX() + tilebar.getWidth(), tilebar.getY() + tilebar.getHeight()/2,30,30,m,tilebar));
 		toolInfoWindow = new ToolInfoWindow(state, mapPreview.getTool());
 //		toolInfoWindow.setTool();
 		addMenuItem(toolInfoWindow);

@@ -27,9 +27,9 @@ public class TilePreview extends MenuItem implements Controllable, Drawable, Hov
 	
 	public void drawGrid(MainWindow m) {
 		m.setTexture("img\\line.png");
-		for (int i = this.x; i <= this.x + width ; i+= 64) {
+		for (int i = (int) this.x; i <= this.x + width ; i+= 64) {
 			//for every row
-			for (int j = this.y; j <= this.y + height; j+= 64) {
+			for (int j = (int) this.y; j <= this.y + height; j+= 64) {
 				//for every column
 				m.renderTile(this.x,j,width,1,1,1,1,1);
 			}
@@ -62,8 +62,8 @@ public class TilePreview extends MenuItem implements Controllable, Drawable, Hov
 	
 	public Point getMouseCoordinates() {
 		//relative to the tool
-		int x = Mouse.getX() - this.x;
-		int y = Display.getHeight() - Mouse.getY() - this.y;
+		int x = (int) (Mouse.getX() - this.x);
+		int y = (int) (Display.getHeight() - Mouse.getY() - this.y);
 		return new Point(x, y);
 	}
 	

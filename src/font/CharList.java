@@ -23,6 +23,13 @@ public class CharList {
 		int deltaX = 16;
 		int deltaY = 24;
 		
+		for (int i = 0; i < widths.length; i++) {
+			widths[i] = widths[i]+1;
+			if (chars[i] == 'a') {
+				widths[i] = widths[i]-1;
+			}
+		}
+		
 		specialCharObjects.put("alpha",new CharacterData(' ',360,52,5,9));
 		specialCharObjects.put("beta",new CharacterData(' ',376,52,4,9));
 		specialCharObjects.put("gamma",new CharacterData(' ',392,52,6,9));

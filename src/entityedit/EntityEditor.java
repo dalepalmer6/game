@@ -67,6 +67,7 @@ public class EntityEditor {
 	private JLabel xyLabel;
 	private JTextArea textArea;
 	private boolean done;
+	private ArrayList<Entity> entitiesInMemory;
 	
 	public void commitCurrentEntity() {
 		String name = nameTextField.getText();
@@ -74,8 +75,8 @@ public class EntityEditor {
 		int height = Integer.parseInt(heightTextField.getText());
 		String appFlag = appearTextField.getText();
 		String disFlag = disappearTextField.getText();
-		int x = Integer.parseInt(xTextField.getText());
-		int y = Integer.parseInt(yTextField.getText());
+		double x = Double.parseDouble(xTextField.getText());
+		double y = Double.parseDouble(yTextField.getText());
 		String texture = (String) textureComboBox.getSelectedItem();
 		String text = textArea.getText();
 		
@@ -122,9 +123,13 @@ public class EntityEditor {
 			entities.add(pe);
 			pe.setSpriteCoords(state.getEntityFromEnum("present").getSpriteCoordinates());
 		}
-		entityComboBox.removeAllItems();
+//		entityComboBox.removeAllItems();
 		for (Entity e : entities) {
-			entityComboBox.addItem(e);
+			if (!entitiesInMemory.contains(e)) {
+				entitiesInMemory.add(e);
+				entityComboBox.addItem(e);
+			}
+			
 		}
 		
 		if (entity != null) {
@@ -162,7 +167,6 @@ public class EntityEditor {
 	}
 	
 	public void updateAllFieldsWithEntity(Entity entity) {
-		
 		nameTextField.setText(entity.getName());
 		widthTextField.setText(entity.getWidth() + "");
 		heightTextField.setText(entity.getHeight() + "");
@@ -193,6 +197,7 @@ public class EntityEditor {
 			enemy3TextField.setText(((EnemySpawnEntity) entity).getRates()[2] + "");
 			enemy4TextField.setText(((EnemySpawnEntity) entity).getRates()[3] + "");
 		}
+		frame.revalidate();
 	}
 	
 	
@@ -225,6 +230,7 @@ public class EntityEditor {
 		this.state = state;
 		initialize();
 		setMap(((MapEditMenu)state.getMenuStack().peek()).getMapPreview().getMap());
+		entitiesInMemory = new ArrayList<Entity>();
 		reload();
 		frame.setVisible(true);
 	}
@@ -460,7 +466,7 @@ public class EntityEditor {
 				// TODO Auto-generated method stub
 				Entity e = state.allEntities.get("ninten").createCopy(0,0,24,32,"NewEntityName");
 				e.setText("New Entity");
-				map.getEntities().add(e);
+				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(e);
 				reload();
 				updateAllFields();
 			}
@@ -476,7 +482,7 @@ public class EntityEditor {
 			public void actionPerformed(ActionEvent ev) {
 				// TODO Auto-generated method stub
 				DoorEntity e = new DoorEntity("Description",0,0,32,32,state,0,0,"podunk","Text");
-				map.getEntities().add(e);
+				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(e);
 				reload();
 				updateAllFields();
 			}
@@ -492,7 +498,7 @@ public class EntityEditor {
 			public void actionPerformed(ActionEvent ev) {
 				// TODO Auto-generated method stub
 				HotSpot e = new HotSpot("Description",0,0,32,32,state,0,0,"podunk","Text","Cutscene Name");
-				map.getEntities().add(e);
+				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(e);
 				updateAllFields();
 			}
 			
@@ -508,7 +514,7 @@ public class EntityEditor {
 				// TODO Auto-generated method stub
 				Entity e = new EnemySpawnEntity(0,0,32,32,state,"");
 				e.setText("New Entity");
-				map.getEntities().add(e);
+				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(e);
 				reload();
 				updateAllFields();
 			}
@@ -523,7 +529,7 @@ public class EntityEditor {
 				// TODO Auto-generated method stub
 				PresentEntity pe = new PresentEntity(0,0,0,"New Present",state);
 				pe.setSpriteCoords(state.getEntityFromEnum("present").getSpriteCoordinates());
-				map.getEntities().add(pe);
+				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(pe);
 				reload();
 				updateAllFields();
 			}

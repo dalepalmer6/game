@@ -23,13 +23,13 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
 	protected StartupNew state;
-	private int savedX;
-	private int savedY;
+	private double savedX;
+	private double savedY;
 	protected double shakeApplyY = 0;
 	protected int drawingY;
 	protected boolean hovered;
-	protected int targetX;
-	protected int targetY;
+	protected double targetX;
+	protected double targetY;
 	
 	public int getWidthOfText() {
 		return textObject.getWidth();
@@ -64,10 +64,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	public Color getBGColor(){
 		return this.bgColor;
 	}
-	public int getX(){
+	public double getX(){
 		return x;
 	}
-	public int getY(){
+	public double getY(){
 		return y;
 	}
 	public int getWidth(){
@@ -76,11 +76,11 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	public int getHeight(){
 		return height;
 	}
-	public void setX(int x){
+	public void setX(double x){
 		this.x = x;
 		this.textObject.setX(x);
 	}
-	public void setY(int y){
+	public void setY(double y){
 		this.y = y;
 		this.textObject.setY(y);
 	}
@@ -97,24 +97,25 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.bgColor = color;
 	}
 	
-	public MenuItem(String t, int x, int y, StartupNew m) {
+	public MenuItem(String t, double x, double y, StartupNew m) {
 		state = m;
 		text = t;
 		this.x = x;
 		this.y = y;
 		targetX = x;
 		targetY = y;
-		textObject = new Text(true,t,x,y,0,0,state.charList);
+		textObject = new Text(true,t,(int)x,(int)y,0,0,state.charList);
 		textObject.setAsSingleString();
 	}
 	
-	public MenuItem(String t, int x, int y, int width, int height, StartupNew m) {
+	public MenuItem(String t, double x, double y, int width, int height, StartupNew m) {
 		state = m;
 		text = t;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		targetY = y;
 		this.textObject = new Text(true,t,width,height,width,height,m.charList);
 		
 	}

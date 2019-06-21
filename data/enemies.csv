@@ -1,23 +1,23 @@
 ﻿Id,Name,HP,PP,OFF,DEF,VIT,IQ,SPEED,GUTS,LUCK,EXP,MONEY,Texture,Entity,Drops,Percent,Actions,BGM,Battle BG,Predicate,Resistances
 0,Null,1,1,1,1,1,1,1,1,1,1,1,doll.png,dog,,,0,dangerous foe.ogg,001.png, ,0
-1,Doll,12,0,4,5,3,1,5,1,0,10,50,doll.png,dog,,,0,dangerous foe.ogg,001.png,the,0
-2,Lamp,6,0,3,5,1,3,5,3,0,3,3,lamp.png,dog,,,0,dangerous foe.ogg,002.png,the,0
-3,Rat,10,0,4,8,6,1,5,7,0,3,2,rat.png,mouse,,,0,dangerous foe.ogg,003.png,a,0
-4,Centipede,12,0,4,12,3,40,17,1,0,1,1,redcenti.png,caterpillar,,,0,dangerous foe.ogg,004.png,a,0
-5,Crow,22,0,8,12,8,1,12,10,0,3,4,crow.png,crow,,,0,dangerous foe.ogg,005.png,a,0
-6,Hippie,25,0,8,14,3,1,6,3,0,6,35,hippie.png,hippie,,,0,dangerous foe.ogg,006.png,the,0
-7,Pseudo Zombie,30,0,16,16,10,5,12,7,0,8,12,pseudozombie.png,ninten,,,0,dangerous foe.ogg,007.png,the,0
-8,Garden Snake,18,0,6,8,5,1,10,1,0,2,8,snake.png,snake,,,0,dangerous foe.ogg,008.png,a,0
-9,Stray Dog,16,0,8,10,8,2,12,8,0,4,10,dog.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-10,Redneck,20,0,8,12,6,1,2,4,0,5,20,wally.png,dog,,,0,dangerous foe.ogg,008.png,the,0
-11,Ghost,20,0,12,24,6,5,22,15,0,5,10,ghost.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-12,Mr. Batty,20,0,8,10,8,5,5,8,0,4,7,greenbat.png,dog,,,0,dangerous foe.ogg,008.png, ,0
-13,Alligator,30,0,18,22,10,10,15,5,0,21,18,croc.png,dog,,,0,dangerous foe.ogg,008.png,an,0
-14,Bionic Centipede,35,0,16,32,15,60,28,30,0,18,14,biocenti.png,caterpillar,,,0,dangerous foe.ogg,008.png,a,0
-15,Elephant,70,0,20,34,30,5,10,8,0,60,99,elephant.png,dog,,,0,dangerous foe.ogg,008.png,an,0
-16,Fly,10,0,1,40,32,10,40,40,0,1,1,fly.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-17,Gorilla,40,0,20,26,35,5,15,20,0,23,52,gorilla.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-18,Hyena,30,0,10,16,10,18,22,5,0,12,20,hyena.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-19,Tiger,35,0,26,24,40,5,20,20,0,24,47,tiger.png,dog,,,0,dangerous foe.ogg,008.png,a,0
-20,Starman Junior,52,16,32,52,35,20,35,30,0,30,5,starmanjr.png,dog,,,0,dangerous foe.ogg,008.png,the,0
-21,Fuck the Rat Garbage Killing Themselves Kitties,2000,0,16,24,15,15,42,40,0,150,5,garbagerat.png,dog,,,19,sans.ogg,joke.png, ,15
+1,Doll,12,0,4,5,3,1,5,1,0,10,50,doll.png,dog,,,47_46,dangerous foe.ogg,001.png,the,0
+2,Lamp,6,0,3,5,1,3,5,3,0,3,3,lamp.png,dog,,,46_4,dangerous foe.ogg,002.png,the,0
+3,Rat,10,0,4,8,6,1,5,7,0,3,2,rat.png,mouse,,,32_2,dangerous foe.ogg,003.png,a,0
+4,Centipede,12,0,4,12,3,40,17,1,0,1,1,redcenti.png,caterpillar,,,46,dangerous foe.ogg,004.png,a,0
+5,Crow,22,0,8,12,8,1,12,10,0,3,4,crow.png,crow,,,5_40_46,dangerous foe.ogg,005.png,a,0
+6,Hippie,25,0,8,14,3,1,6,3,0,6,35,hippie.png,hippie,,,46_48_41_49,dangerous foe.ogg,006.png,the,0
+7,Pseudo Zombie,30,0,16,16,10,5,12,7,0,8,12,pseudozombie.png,ninten,,,33_50_51,dangerous foe.ogg,007.png,the,0
+8,Garden Snake,18,0,6,8,5,1,10,1,0,2,8,snake.png,snake,,,50,dangerous foe.ogg,008.png,a,0
+9,Stray Dog,16,0,8,10,8,2,12,8,0,4,10,dog.png,dog,,,2,dangerous foe.ogg,008.png,a,0
+10,Redneck,20,0,8,12,6,1,2,4,0,5,20,wally.png,dog,,,46_41,dangerous foe.ogg,008.png,the,0
+11,Ghost,20,0,12,24,6,5,22,15,0,5,10,ghost.png,dog,,,46_42,dangerous foe.ogg,008.png,a,0
+12,Mr. Batty,20,0,8,10,8,5,5,8,0,4,7,greenbat.png,dog,,,35_46,dangerous foe.ogg,008.png, ,0
+13,Alligator,30,0,18,22,10,10,15,5,0,21,18,croc.png,dog,,,30_46,dangerous foe.ogg,008.png,an,0
+14,Bionic Centipede,35,0,16,32,15,60,28,30,0,18,14,biocenti.png,caterpillar,,,46_37,dangerous foe.ogg,008.png,a,0
+15,Elephant,70,0,20,34,30,5,10,8,0,60,99,elephant.png,dog,,,33_46,dangerous foe.ogg,008.png,an,0
+16,Fly,10,0,1,40,32,10,40,40,0,1,1,fly.png,dog,,,29_46_42,dangerous foe.ogg,008.png,a,0
+17,Gorilla,40,0,20,26,35,5,15,20,0,23,52,gorilla.png,dog,,,46_41_14,dangerous foe.ogg,008.png,a,0
+18,Hyena,30,0,10,16,10,18,22,5,0,12,20,hyena.png,dog,,,34_2_42,dangerous foe.ogg,008.png,a,0
+19,Tiger,35,0,26,24,40,5,20,20,0,24,47,tiger.png,dog,,,2_7_20,dangerous foe.ogg,008.png,a,0
+20,Starman Junior,52,16,32,52,35,20,35,30,0,30,5,starmanjr.png,dog,,,46_14_19_19,dangerous foe.ogg,008.png,the,0
+21,Fuck the Rat Garbage Killing Themselves Kitties,2000,0,16,24,15,15,42,40,0,150,5,garbagerat.png,dog,,,20_21_22_23_24_25_26_27,sans.ogg,joke.png, ,15

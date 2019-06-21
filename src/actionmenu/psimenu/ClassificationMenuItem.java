@@ -13,7 +13,7 @@ public class ClassificationMenuItem extends MenuItem {
 	}
 	
 	public String execute() {
-		
+		((PSIMenuOutOfBattle) state.getMenuStack().peek()).enterPSIMenu();
 		return null;
 	}
 	

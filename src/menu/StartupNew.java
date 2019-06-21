@@ -77,7 +77,6 @@ import tiles.ChangeWithFlagTile;
 import tiles.MultiInstanceTile;
 import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
-import tiles.types.*;
 
 public class StartupNew{
 	private long sleepTime = 1000L / 60L;
@@ -179,7 +178,12 @@ public class StartupNew{
 	private boolean switchedBackToOldBGM;
 	private boolean bgmEnded;
 	private int cameraShake;
+	private boolean setStartFlags;
+	private boolean doneIntro;
 	
+	public void setStartFlags() {
+		setStartFlags = true;
+	}
 	
 	public void setNeedAddSavedMenu(Menu m) {
 		needToAddMenu = m;
@@ -895,10 +899,10 @@ public class StartupNew{
 			menuStack = new MenuStack();
 				Menu m = new MainMenu(this);
 					SelectionTextWindow STW = new SelectionTextWindow(mainWindow.getScreenWidth()/2 - (2*64),mainWindow.getScreenHeight()-(7*64),4,3,this);
-					STW.add(new NewGameMenuItem(STW.getX(),STW.getY() + 16,this));
-					STW.add(new ContinueMenuItem(STW.getX(),STW.getY() + 48,this));
-					STW.add(new OptionsMenuItem(STW.getX(),STW.getY() + 80,this));
-					STW.add(new MapPreviewTestButton(STW.getX(),STW.getY() + 112,this));
+					STW.add(new NewGameMenuItem((int) STW.getX(),(int) STW.getY() + 16,this));
+					STW.add(new ContinueMenuItem((int) STW.getX(),(int) STW.getY() + 48,this));
+					STW.add(new OptionsMenuItem((int) STW.getX(),(int) STW.getY() + 80,this));
+					STW.add(new MapPreviewTestButton((int) STW.getX(),(int) STW.getY() + 112,this));
 				m.addMenuItem(STW);
 			menuStack.push(m);
 			//test the music
@@ -1097,26 +1101,28 @@ public class StartupNew{
 //		}
 		
 		if (gameState != null) {
-			if (gameState.getFlag("lampDead") && !gameState.getFlag("dadFirstCall")) {
+			if (gameState.getFlag("lampDead") && !gameState.getFlag("dollDead")) {
 				//move the camera crazy
-				if (timer % 30 == 0) {
-					cameraShake = (int) (30*Math.random());
-				}
-				gameState.getCamera().changeX(cameraShake);
-				gameState.getCamera().changeY(cameraShake);
+//				if (timer % 30 == 0) {
+//					cameraShake = (int) (30*Math.random());
+//				}
+//				gameState.getCamera().changeX(cameraShake);
+//				gameState.getCamera().changeY(cameraShake);
 				setAudioOverride(false);
 				setBGM("poltergeist.ogg",true);
 				setAudioOverride(true);
 			}
-			if (gameState.getFlag("dadFirstCall") && !gameState.getFlag("adventureStartFlag")) {
+			if (gameState.getFlag("dollDead") && !gameState.getFlag("dadFirstCall")) {
 				setAudioOverride(false);
+//				setAudioOverride(true);
+			}
+			if (gameState.getFlag("dadFirstCall") && !gameState.getFlag("adventureStartFlag")) {
 				setBGM("phonering.ogg",true);
 				setAudioOverride(true);
 			}
 			if (gameState.getFlag("adventureStartFlag")) {
 				gameState.setFlag("adventureStartFlag",false);
-				gameState.setFlag("dadFirstCall",false);
-				gameState.setFlag("lampDead",false);
+//				gameState.setFlag("dadFirstCall",false);
 				setAudioOverride(false);
 				setBGM(gameState.getMap().getBGM(),true);
 			}
@@ -1156,6 +1162,14 @@ public class StartupNew{
 			gameState.update(input);
 		}
 		
+		if (!menuStack.isEmpty()) {
+			if (menuStack.peek().getCanUpdateGameState()) {
+				gameState.update(input);
+//				gameState.updateEntities(input,true);
+			}
+		}
+		
+		
 		for (DrawableObject d : drawables) {
 			if (d instanceof SelectionTextWindow || d instanceof InvisibleMenuItem) {
 				input.setHoldable(false);
@@ -1168,6 +1182,12 @@ public class StartupNew{
 //			}
 		}
 		
+//		if (setStartFlags) {
+//			setStartFlags = false;
+////			gameState.createStartPosition();
+//			
+//		}
+		
 		if (menuStack.peek() instanceof AnimationMenu && gameState == null) {
 			if (((AnimationMenu)menuStack.peek()).isComplete()) {
 				menuStack.pop();
@@ -1177,12 +1197,12 @@ public class StartupNew{
 				this.setGameState(gs);
 				if (!createNewFile) {
 					gs.loadFromSaveFile("test");
-				} else {
-					gs.createStartPosition();
-					gs.setFlag("nintenInParty");
-					gs.createAllPartyMembersInMem("");
+					gameState.loadMapData();
+				}else {
+//					gs.loadFromSaveFile("test");
+					setAudioOverride(true);
+					gameState.setDoIntro(true);
 				}
-				gs.loadMapData();
 			}
 		}
 	}
@@ -1453,5 +1473,14 @@ public class StartupNew{
 	public void setRestoreAudioWhenDone() {
 		// TODO Auto-generated method stub
 		restoreAudioWhenDone = true;
+	}
+
+	public void setDoneIntro() {
+		// TODO Auto-generated method stub
+		doneIntro = true;
+	}
+	
+	public boolean getDoneIntro() {
+		return doneIntro;
 	}
 }

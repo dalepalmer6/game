@@ -14,6 +14,7 @@ import battlesystem.options.Defend;
 import battlesystem.options.EnemyOption;
 import battlesystem.options.EnemyOptionPanel;
 import battlesystem.options.Goods;
+import actionmenu.GoodsMenuItem;
 import actionmenu.PSIMenuItem;
 import battlesystem.options.RunAway;
 import canvas.Controllable;
@@ -35,6 +36,7 @@ import menu.DrawableObject;
 import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
+import menu.TexturedMenuItem;
 
 public class BattleMenu extends Menu {
 	private BattleMenuSelectionTextWindow actionMenu;
@@ -85,6 +87,7 @@ public class BattleMenu extends Menu {
 	private boolean allActionsMade;
 	private ArrayList<BattleEntity> deadEntities;
 	private boolean forceWaitForPrompt;
+	private TexturedMenuItem youWon;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -144,6 +147,23 @@ public class BattleMenu extends Menu {
 		waitToStart = true;
 	}
 	
+	public void createActionMenu() {
+		actionMenu = new BattleMenuSelectionTextWindow(state.getMainWindow().getScreenWidth()/2 - (10/2)*72,32,10,2,state);
+		actionMenu.setSteps(160,0);
+		Bash bashButton = new Bash("Bash",0,0,state);
+		actionMenu.add(bashButton);
+		GoodsMenuItem goodsButton = new GoodsMenuItem(state,state.getGameState().getPartyMembers(),0);
+		actionMenu.add(goodsButton);
+//		PSI psiButton = new PSI("PSI",0,0,state);
+		PSIMenuItem psiButton = new PSIMenuItem(state,state.getGameState().getPartyMembers(),0);
+		actionMenu.add(psiButton);
+		Defend statusButton = new Defend("Guard",0,0,state);
+		actionMenu.add(statusButton);
+		RunAway runButton = new RunAway("Run Away",0,0,state);
+		actionMenu.add(runButton);
+//		actionMenu.setKillWhenComplete();
+	}
+	
 	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
 		//set the state to draw all menus at once, to facilitate the menu system
 		deadEntities = new ArrayList<BattleEntity>();
@@ -157,8 +177,9 @@ public class BattleMenu extends Menu {
 		//create a battle menu
 		state.getMenuStack().push(this);
 		MainWindow mainWindow = state.getMainWindow();
-		actionMenu = new BattleMenuSelectionTextWindow(mainWindow.getScreenWidth()/2 - (10/2)*72,32,10,2,state);
-		actionMenu.setSteps(160,0);
+		
+		createActionMenu();
+		
 		enemies = new ArrayList<BattleEntity>();
 		for (EnemyEntity ee : enemyEntities) {
 			enemies.addAll(ee.getEnemiesList());
@@ -175,20 +196,8 @@ public class BattleMenu extends Menu {
 				state.setEOP(eop);
 		state.setBGM(((Enemy)enemies.get(0)).getBGM());
 		generateGreeting();
-		actionMenu.setKillWhenComplete();
-		battleActions = new HashMap<BattleEntity, BattleAction>();
 		
-		Bash bashButton = new Bash("Bash",0,0,state);
-		actionMenu.add(bashButton);
-		Goods goodsButton = new Goods("Goods",0,0,state);
-		actionMenu.add(goodsButton);
-//		PSI psiButton = new PSI("PSI",0,0,state);
-		PSIMenuItem psiButton = new PSIMenuItem(state,state.getGameState().getPartyMembers(),0);
-		actionMenu.add(psiButton);
-		Defend statusButton = new Defend("Guard",0,0,state);
-		actionMenu.add(statusButton);
-		RunAway runButton = new RunAway("Run Away",0,0,state);
-		actionMenu.add(runButton);
+		battleActions = new HashMap<BattleEntity, BattleAction>();
 		
 		partyMembers = state.getGameState().getPartyMembers();
 		party = new ArrayList<BattleEntity>();
@@ -271,13 +280,13 @@ public class BattleMenu extends Menu {
 				if (currentBattleAction.getTarget() instanceof PCBattleEntity) {
 					int index = party.indexOf(currentBattleAction.getTarget());
 					PlayerStatusWindow psw = pswList.get(index);
-					x = psw.getX() + psw.getWidth()/2;
-					y = psw.getY() + psw.getHeight()/2;
+					x = (int) (psw.getX() + psw.getWidth()/2);
+					y = (int) (psw.getY() + psw.getHeight()/2);
 				} else {
 					int index = enemies.indexOf(currentBattleAction.getTarget());
 					EnemyOption eo = eop.getEnemyOptions().get(index);
-					x = eo.getX() + eo.getWidth()/2;
-					y = eo.getY() + eo.getHeight()/2;
+					x = (int) (eo.getX() + eo.getWidth()/2);
+					y = (int) (eo.getY() + eo.getHeight()/2);
 					eop.setToShake(index);
 					if (currentBattleAction.getTarget().getStats().getStat("CURHP") <= 0) {
 						eop.setKilled(index);
@@ -371,18 +380,20 @@ public class BattleMenu extends Menu {
 		menuItems.remove(actionMenu);
 		ended = true;
 		getNext = false;
-		prompt = createTextWindow("YOU WON!");
+		prompt = createTextWindow(" ");
+		youWon = new TexturedMenuItem("You win",prompt.getX() + prompt.getWidth()*2 - (74*4/2),prompt.getY() + 64,74*4,8*4,state,"battlehud.png",128,21,74,8);
 //		prompt.setPollForActionsOnExit();
 		for (int i = 0; i < partyMembers.size(); i++) {
 			partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"),party.get(i).getState());
 		}
 		readyToDisplay = true;
-		battleSceneEnd = false;
+//		battleSceneEnd = false;
 		doOnce = false;
 		displayRecExp = true;
 	}
 	
 	public void showWinnings() {
+		menuItems.remove(youWon);
 		getNext = false;
 		int awardEXP = expPool/calculateAlivePartyMembers();
 		state.getGameState().addFundsToBank(moneyGained);
@@ -501,6 +512,10 @@ public class BattleMenu extends Menu {
 		state.setDrawAllMenus(false);
 		state.getGameState().setInvincibleCounter();
 		state.setNeedAddSavedMenu(state.getSavedMenu());
+	}
+	
+	public int getIndex() {
+		return indexMembers;
 	}
 	
 	public void update(InputController input) {
@@ -627,6 +642,7 @@ public class BattleMenu extends Menu {
 						return;
 					}
 				}
+				createActionMenu();
 				addToMenuItems(actionMenu);
 				needMenu = false;
 			}
@@ -704,6 +720,10 @@ public class BattleMenu extends Menu {
 		if (readyToDisplay) {
 			windowStack.clear();
 			addToMenuItems(prompt);
+			if (battleSceneEnd) {
+				battleSceneEnd = false;
+				addToMenuItems(youWon);
+			}
 			readyToDisplay = false;
 			prompt.setGetNext();
 //			if (currentBattleAction != null) {

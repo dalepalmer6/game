@@ -90,6 +90,8 @@ public class GameState {
 	private String initialMapName;
 	private boolean loadOriginalStats;
 	private int teleportFailedTimer = -1;
+	private boolean doIntro;
+	private boolean loadedNewGameData;
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -617,14 +619,41 @@ private void addPartyMembersNeeded() {
 		}
 	}
 	
+	public boolean getDoIntro() {
+		return doIntro;
+	}
 	
 	public void update(InputController input) {
-		createParty();
-		for (Entity e : savedParty) {
-			if (!entities.contains(e)) {
-				entities.add(e);
+		if (state.getDoneIntro() && !loadedNewGameData) {
+			loadedNewGameData = true;
+			setDoIntro(false);
+			setFlag("nintenInParty");
+			createAllPartyMembersInMem("");
+			state.setAudioOverride(false);
+			initialX = -1;
+			initialY = -1;
+			loadMapData();
+			entities.clear();
+		}
+		if (doIntro) {
+			for (Entity e : entities) {
+				e.setIgnoreCollisions(true);
+			}
+			if (state.getCutscene() == null && !state.getDoneIntro()) {
+				Cutscene cs = new IntroCutscene(state,new CutsceneData(state,"maps/intro.cs",null));
+				state.setCutscene(cs);
+				cs.loadEntityToCutsceneData();
 			}
 		}
+		if (!doIntro) {
+			createParty();
+			for (Entity e : savedParty) {
+				if (!entities.contains(e) && !getFlag("train")) {
+					entities.add(e);
+				}
+			}
+		}
+		
 		boolean entitiesCanMove = true;
 		if (getFlag("train") && !trainAdded) {
 			//replace the party with a single train entity which extends the CameraControllingEntity
@@ -638,7 +667,7 @@ private void addPartyMembersNeeded() {
 			trainAdded = true;
 		} else if (!getFlag("train") && trainAdded) {
 			entities.remove(train);
-			entities.addAll(savedParty);
+//			entities.addAll(savedParty);
 			for (Entity e : savedParty) {
 				e.setXY(train.getX(),train.getY());
 				e.fillMovementData(train.getX(),train.getY());
@@ -750,22 +779,23 @@ private void addPartyMembersNeeded() {
 		updateTiles();
 		//get all entities that belong in the map (in the viewport bounds)
 		
-		
-		for (Entity e : map.getEntitiesInView((int)camera.getX(), (int)camera.getY())) {
-			if (!entities.contains(e) && entityReady(e)) {
-				entities.add(e);
-			} else if (entities.contains(e) && getFlag(e.getDisappearFlag())) {
-				e.setToRemove(true);
-			}
-			for (Entity entityFromMap : map.getEntities()) {
-				if (!map.getEntitiesInView((int)camera.getX(),(int) camera.getY()).contains(entityFromMap)) {
-					entityFromMap.setToRemove(true);
+		if (!doIntro) {
+			for (Entity e : map.getEntitiesInView((int)camera.getX(), (int)camera.getY())) {
+				if (!entities.contains(e) && entityReady(e)) {
+					entities.add(e);
+				} else if (entities.contains(e) && getFlag(e.getDisappearFlag())) {
+					e.setToRemove(true);
+				}
+				for (Entity entityFromMap : map.getEntities()) {
+					if (!map.getEntitiesInView((int)camera.getX(),(int) camera.getY()).contains(entityFromMap)) {
+						entityFromMap.setToRemove(true);
+					}
 				}
 			}
 		}
 		
 		sort();
-		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
+		if (state.getMenuStack().isEmpty() || state.getMenuStack().peek().getCanUpdateGameState() || state.getMenuStack().peek() instanceof AnimationMenu || state.getMenuStack().peek() instanceof Cutscene) {
 			if (teleportFailedTimer == -1) {
 				updatePlayer(input);
 				updateEntities(input,entitiesCanMove);
@@ -1071,6 +1101,32 @@ private void addPartyMembersNeeded() {
 		// TODO Auto-generated method stub
 		for (Entity e : entities) {
 			e.determinePositionWithCamera();
+		}
+	}
+	
+	public void createWarp(String dest, int x, int y) {
+		Entity testTeleport=null;
+		if (player != null) {
+			testTeleport = new DoorEntity("",player.getX(),player.getY(),300,300,state,x,y,dest,"");
+			testTeleport.addToInteractables(player);
+		} else {
+			testTeleport = new DoorEntity("",entities.get(0).getX(),entities.get(0).getY(),300,300,state,x,y,dest,"");
+			testTeleport.addToInteractables(entities.get(0));
+		}
+		entities.add(testTeleport);
+	}
+
+	public void setDoIntro(boolean b) {
+		// TODO Auto-generated method stub
+		doIntro = b;
+		if (doIntro) {
+			currentMapName = "podunk";
+			initialX = 438*4;
+			initialY = 675*4;
+			loadMapData();
+			Entity cameraEntity = new IntroEntity("ninten.png",1000*4,2500*4,32,32,camera,state,"cameraguy");
+			cameraEntity.setSpriteCoords(state.allEntities.get("ninten").getSpriteCoordinates());
+			entities.add(cameraEntity);
 		}
 	}
 	

@@ -41,9 +41,9 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	
 	public PlayerInfoWindow(StartupNew state, ArrayList<PartyMember> party) {
 		super(state);
+		this.party = party;
 		addMenuItem(new BackingBar(state));
 		if (!state.inBattle) {
-			this.party = party;
 			reload();
 			for(MenuItem m : partyIcons) {
 				addMenuItem(m);
@@ -56,6 +56,7 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	
 	public void reload() {
 		backShouldExit = true;
+		addToMenuItems(new BackingBar(state));
 		if (partyIcons == null) {
 			partyIcons = new ArrayList<MenuItem>();
 			int j = 0;
@@ -90,7 +91,12 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	}
 	
 	public void update(InputController input) {
-		index = invisSelectItem.getIndex();
+		if (!state.inBattle) {
+			index = invisSelectItem.getIndex();
+		} else {
+			index = state.battleMenu.getIndex()-1;
+		}
+		
 		int i = 0;
 		for (MenuItem pi : partyIcons) {
 			if (i == index) {

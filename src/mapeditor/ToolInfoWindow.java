@@ -24,14 +24,14 @@ public class ToolInfoWindow extends MenuItem {
 	
 	public ToolInfoWindow(StartupNew state, MapTool tool) {
 		super("",1600,300,2,6,state);
-		toolWindow = new TextWindow(true,"Tool Info",x,y,width,height,state);
+		toolWindow = new TextWindow(true,"Tool Info",(int)x,(int)y,width,height,state);
 		toolWindow.setIgnoreCodes();
 	}
 	
 	public void draw(MainWindow m) {
 		toolWindow.draw(m);
 		if (tool != null) {
-			tool.draw(m,toolWindow.getX(), toolWindow.getY());
+			tool.draw(m,(int)toolWindow.getX(), (int)toolWindow.getY());
 		}
 		
 	}

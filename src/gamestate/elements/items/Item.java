@@ -122,9 +122,9 @@ public class Item{
 	
 	public int setShield(BattleEntity target, int type) {
 		target.setShield(type);
-		usedString += "User became enveloped by a ";
+		usedString += target.getName() + " became enveloped by a ";
 		switch (type) {
-			case 1: usedString += "shield."; break;
+			case 1: usedString += "power shield."; break;
 			case 2: usedString += "psychic shield."; break;
 			case 3: usedString += "reflective power shield."; break;
 		}
@@ -431,7 +431,7 @@ public class Item{
 				causeStatus(target,damageVariable);
 				break;
 			case 28:
-				//steal
+				usedString = "Steal result text";
 				break;
 			case 29:
 				setShield(target,damageVariable);

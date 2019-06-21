@@ -24,10 +24,10 @@ import tiles.PremadeTileObject;
 import tiles.SingleInstanceTile;
 
 public class EntityBar extends MenuItem implements Hoverable, Clickable{
-	private int x;
-	private int y;
-	private int width;
-	private int height;
+//	private int x;
+//	private int y;
+//	private int width;
+//	private int height;
 	private int viewX = 0;
 	private int viewY = 0;
 	private int widthInTiles;
@@ -51,11 +51,11 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		return height;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	public Point getMouseCoordinates() {
@@ -70,6 +70,7 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 		this.tileBar = tilebar;
 		this.x = mapPreview.getRightEdge() + 3*TILE_SIZE;
 		this.y = mapPreview.getY() + 3*TILE_SIZE;
+		targetY = y;
 //		state.getTextureAtlas().setRectByName("img/entities.png");
 		this.state= state;
 		this.mapPreview = mapPreview;
@@ -116,9 +117,9 @@ public class EntityBar extends MenuItem implements Hoverable, Clickable{
 	}
 	
 	public void drawGrid(MainWindow m) {
-		for (int i = this.x; i <= this.x + width; i+= TILE_SIZE) {
+		for (int i = (int) this.x; i <= this.x + width; i+= TILE_SIZE) {
 			//for every row
-			for (int j = this.y; j <= this.y + height; j+= TILE_SIZE) {
+			for (int j = (int) this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
 				m.renderTile(this.x,j,width,1,1,1,1,1);
 			}

@@ -117,6 +117,9 @@ public class EnemySpawnEntity extends Entity {
 							ArrayList<Enemy> picked = new ArrayList<Enemy>();
 							picked.add(enemies.get(j));
 							EnemyEntity en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
+//							while (en.checkCollisions()) {
+//								en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
+//							}
 							Entity eStatic = state.allEntities.get("redDressLady");
 							en.setSpriteCoords(eStatic.getSpriteCoordinates());
 							spawned.add(en);
