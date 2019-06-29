@@ -29,7 +29,7 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 	
 	public DialogTextWindow(String s, String name, StartupNew state) {
 		super(s,0,792,29,3,state);
-		y = state.getMainWindow().getScreenHeight();
+		y = 1080;//state.getMainWindow().getScreenHeight();
 		targetY = 792;
 		this.name = name;
 		textString = s;

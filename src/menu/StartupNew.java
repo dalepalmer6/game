@@ -233,11 +233,15 @@ public class StartupNew{
 	}
 	
 	public void setBGM(String path, boolean shouldSaveAudio) {
+		if (audioOverride) {
+			return;
+		}
 		if (curBGM.equals(path)) {
 			return;
 		}
 		try {
 			if (!audioOverride) {
+//				gameState.getMap().setBGM(path);
 				playOnce = true;
 				curBGM = path;
 				String propsFilePath = curBGM.substring(0,curBGM.indexOf("."));
@@ -977,6 +981,9 @@ public class StartupNew{
 	}
 	
 	public void update() {
+//		if (menuStack.isEmpty()) {
+//			setBGM(gameState.getMap().getBGM(),false);
+//		}
 		if (restoreAudioWhenDone && !bgm.isPlaying()) {
 			restoreAudioWhenDone = false;
 			setOldBGM();
@@ -1101,31 +1108,41 @@ public class StartupNew{
 //		}
 		
 		if (gameState != null) {
-			if (gameState.getFlag("lampDead") && !gameState.getFlag("dollDead")) {
-				//move the camera crazy
-//				if (timer % 30 == 0) {
-//					cameraShake = (int) (30*Math.random());
+//			if (!gameState.getFlag("adventureStartFlag")) {
+//				if (gameState.getFlag("playPoltergeist")) {
+//					//move the camera crazy
+////					if (timer % 30 == 0) {
+////						cameraShake = (int) (30*Math.random());
+////					}
+////					gameState.getCamera().changeX(cameraShake);
+////					gameState.getCamera().changeY(cameraShake);
+//					gameState.setFlag("audioChanged",true);
+//					if (gameState.getFlag("audioChanged")) {
+//						
+//					}
+//					gameState.getMap().setBGM("poltergeist.ogg");
+////					setAudioOverride(true);
 //				}
-//				gameState.getCamera().changeX(cameraShake);
-//				gameState.getCamera().changeY(cameraShake);
-				setAudioOverride(false);
-				setBGM("poltergeist.ogg",true);
-				setAudioOverride(true);
-			}
-			if (gameState.getFlag("dollDead") && !gameState.getFlag("dadFirstCall")) {
-				setAudioOverride(false);
-//				setAudioOverride(true);
-			}
-			if (gameState.getFlag("dadFirstCall") && !gameState.getFlag("adventureStartFlag")) {
-				setBGM("phonering.ogg",true);
-				setAudioOverride(true);
-			}
-			if (gameState.getFlag("adventureStartFlag")) {
-				gameState.setFlag("adventureStartFlag",false);
-//				gameState.setFlag("dadFirstCall",false);
-				setAudioOverride(false);
-				setBGM(gameState.getMap().getBGM(),true);
-			}
+//				if (gameState.getFlag("dollDead")) {
+////					setAudioOverride(false);
+//					gameState.setFlag("audioChanged",false);
+//					gameState.setFlag("playPoltergeist",false);
+////					setBGM(gameState.getMap().getBGM(),true);
+//					gameState.getMap().restoreBGM();
+//				}
+//				if (gameState.getFlag("dadFirstCall")) {
+//					gameState.getMap().setBGM("phonering.ogg");
+////					setAudioOverride(true);
+//				}
+//				if (gameState.getFlag("adventureStartFlag")) {
+////					gameState.setFlag("dadFirstCall",false);
+////					setAudioOverride(false);
+//					gameState.setFlag("audioChanged",false);
+//					gameState.getMap().restoreBGM();
+////					setBGM(gameState.getMap().getBGM(),true);
+//				}
+//			}
+			
 			input.setHoldable(true);
 			gameState.updatePartyMembers();
 			if (gameState.getFlag("buyingItem") && itemToBuy != null) {

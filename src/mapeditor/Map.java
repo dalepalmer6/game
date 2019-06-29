@@ -49,6 +49,11 @@ public class Map {
 	private String pathToTilesets;
 	
 	private boolean ignoreTiles;
+	private String actualBGM;
+	
+	public String getActualBGM() {
+		return actualBGM;
+	}
 	
 	public ArrayList<ArrayList<Integer>> getLayerMap() {
 		return layerMap;
@@ -230,8 +235,8 @@ public class Map {
 			parseMapBase(new File(pathToCurrentMap + "base.map"));
 			parseMapFG(new File(pathToCurrentMap + "fg.map"));
 			parseMapBG(new File(pathToCurrentMap + "bg.map"));
-			state.setBGM(bgm,true);
-			state.playBGM();
+//			state.setBGM(bgm,true);
+//			state.playBGM();
 		}
 		
 		
@@ -819,5 +824,15 @@ public class Map {
 	public void setIgnoreTiles(boolean b) {
 		// TODO Auto-generated method stub
 		ignoreTiles = b;
+	}
+
+	public void setBGM(String path) {
+		// TODO Auto-generated method stub
+		this.actualBGM = bgm;
+		this.bgm = path;
+	}
+	
+	public void restoreBGM() {
+		this.bgm = actualBGM;
 	}
 }

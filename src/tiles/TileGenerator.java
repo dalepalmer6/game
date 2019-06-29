@@ -1,9 +1,11 @@
 package tiles;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class TileGenerator {
 	private ArrayList<TileInstance> tiles;
+	private ArrayList<Rectangle> colRectangles;
 	
 	public void addTileInstance(int x, int y, int w, int h) {
 		addTileInstance(x,y,w,h,new int[] {	1,1,1,1,

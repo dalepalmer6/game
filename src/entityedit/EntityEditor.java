@@ -106,7 +106,7 @@ public class EntityEditor {
 			((EnemySpawnEntity)entity).setNewParams(x,y,width,height,name,enemyIndex1,enemyIndex2,enemyIndex3,enemyIndex4,percent1,percent2,percent3,percent4);
 		} else {
 			//entity
-			entity.setNewParams(x,y,width,height,name,texture,appFlag,disFlag);
+			entity.setNewParams(x,y,width,height,name,texture + ".png",appFlag,disFlag);
 			entity.setText(text);
 		}
 	}
@@ -171,7 +171,7 @@ public class EntityEditor {
 		widthTextField.setText(entity.getWidth() + "");
 		heightTextField.setText(entity.getHeight() + "");
 		disappearTextField.setText(entity.getDisappearFlag());
-		appearTextField.setText(entity.getDisappearFlag());
+		appearTextField.setText(entity.getAppearFlag());
 		xTextField.setText(entity.getX() + "");
 		yTextField.setText(entity.getY() + "");
 		textureComboBox.setSelectedItem(entity.getTexture().substring(0,entity.getTexture().indexOf(".png")));

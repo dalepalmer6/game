@@ -283,13 +283,13 @@
 11A: @Oh, okay. Just don't run in the halls. 
 11B: @Show me what you have. [PROMPTINPUT]@You better not be carrying anything dangerous... 
 11C: 
-11D: @Who's there?! [PROMPTINPUT]@I'm not coming out! [PROMPTINPUT]@You're just gonna pick on me if I do! 
-11E: @You want to be my friend?! [PROMPTINPUT]@Then do you promise not to tell that I took explosives from the science lab? 
+11D: @Who's there?! [PROMPTINPUT]@I'm not coming out! [PROMPTINPUT]@You're just gonna pick on me if I do!
+11E: @You want to be my friend?! [PROMPTINPUT]@Then do you promise not to tell that I took explosives from the science lab?[PROMPTINPUT]@I'm coming out now![SETFLAG_showLloyd]
 11F: @I'm coming out now. 
 120: @I'm [LOID]. [PROMPTINPUT]@I heard they make Bottle Rockets at the Sweet Little Factory south of here... [PROMPTINPUT]I wanna launch one really bad! 
 121: @You must be exhausted. You should stay the night! 
 122: 
-123: @Wow! [PROMPTINPUT]@So this is a Bottle Rocket! I heard so much about them! [PROMPTINPUT]@I should be able to make more of these now. [PROMPTINPUT]@Come with me to the science lab. 
+123: @Wow! [PROMPTINPUT]@So this is a Bottle Rocket![PROMPTINPUT]@I heard so much about them! [PROMPTINPUT]@I should be able to make more of these now. [PROMPTINPUT]@Come with me to the science lab. 
 124: @[LOID]: OK! Now I just flip this switch and... Oh!
 125: @[LOID]: I may be a wimp, but now it's my turn to fight! [PROMPTINPUT]@[TEDDY]! You can take it easy in here. 
 126: @I'm a weird teacher who secretly lives in this school. [PROMPTINPUT]Yes, I admit I'm weird. [PROMPTINPUT]@I need funding for my research. [PROMPTINPUT]@Would you be willing to buy one of my inventions? 
@@ -394,10 +394,10 @@
 189: @It's really important. 
 18A: @Hello, this is [NINTEN]'s father. Thank you for always looking after him. [PROMPTINPUT]@I thought it would be nice to at least know your name. [PROMPTINPUT]@So, if you could tell me, that'd be great. 
 18B: @Thank you for your time. [PROMPTINPUT]@I'm a busy man myself, so I must be going now. Goodbye! 
-18C: @[NINTEN]... right? 
-18D: @Come on, quit joking around. 
-18E: @I've been waiting for you. [PROMPTINPUT]@I need your help to find my mom. [PROMPTINPUT]@Let's start by seeing what's happening in the town of Easter. 
-18F: @You know, I had a dream about someone who looked just like you... 
+18C: @[NINTEN]... right?[CHOOSE][CHOICE]Yes[TEXT][_18E][CHOICE]No[TEXT][_18D]
+18D: @Come on, quit joking around. [CHOOSE][CHOICE]Yes[TEXT][_18E][CHOICE]No[TEXT][_18D]
+18E: @You know, I had a dream about someone who looked just like you...[PROMPTINPUT]@I've been waiting for you. [PROMPTINPUT]@I need your help to find my mom. [PROMPTINPUT]@Let's start by seeing what's happening in the town of Easter.[PROMPTINPUT][ADDMEMBER_ANA]
+18F: 
 190: @[NINTEN]... Please stay with me. 
 191: @No! Stay with me... [PROMPTINPUT]Please... 
 192: @It's so quiet here. [PROMPTINPUT]@Would you like to dance? 
@@ -2177,16 +2177,16 @@
 880: He never told anyone where he had been or what he had done. But, he began an odd study, all by himself.
 881: As for his wife, Maria.[WAIT10].[WAIT10].[WAIT30][NEWLINE]She never returned.
 882: 80 years have passed since then.
-883: 
+883: [NEWLINE]The absolute fear that the jesus one caused was immense.[NEWLINE]It was almost too much for the one to handle in the end and a hero's life was sacrificed in order to take its place.
 884: @My doll is moving on its own...[PROMPTINPUT][NINTEN], I'm scared!
 885: @There's sound coming from the doll.[PROMPTINPUT]Do you hear it?
 886: @The doll stood up and stared directly into your eyes. [STARTBATTLE_1] [SETFLAG_dollDead] 
 887: @The doll moves no more.[PROMPTINPUT]@From inside the doll, you can hear a faint melody. [SETFLAG_melody1] [SETBGM_melody1.ogg] [_889] 
-889: @You took note of the melody.
+888: @You took note of the melody.
+889: 
 88A: 
 88B: 
 88C: 
 88D: 
 88E: 
 88F: 
-890: 

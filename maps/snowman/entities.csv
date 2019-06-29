@@ -1,2 +1,5 @@
 TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
-ninten,1410,1327,24,32,[SETFLAG_train][SET_TRAIN_RIDE_0:33]Testing the train.,NewEntityName, , 
+ninten,1410.0,1327.0,24,32,[SETFLAG_train][SET_TRAIN_RIDE_0:33]Testing the train.,NewEntityName, , 
+ninten,2402.0,1011.0,24,32,New Entity,NewEntityName, , 
+ninten,3856.0,974.0,24,32,New Entity,NewEntityName, , 
+ana,0.0,0.0,24,32,[_18C],[ANA], , anaInParty

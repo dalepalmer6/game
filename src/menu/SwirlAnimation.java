@@ -19,7 +19,9 @@ public class SwirlAnimation extends Animation {
 	public SwirlAnimation(StartupNew m, ArrayList<EnemyEntity> enemyEntities) {
 		super(m,"swirl",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight());
 		state.saveAudio();
+		state.setAudioOverride(false);
 		state.setBGM("swirlgreen.ogg");
+		state.setAudioOverride(true);
 		ticksPerFrame = 0.5d;
 //		enemies = new ArrayList<EnemyEntity>();
 		enemies = enemyEntities;
@@ -30,7 +32,9 @@ public class SwirlAnimation extends Animation {
 	public SwirlAnimation(StartupNew m, EnemyEntity enemyEntity) {
 		super(m,"swirl",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight());
 		state.saveAudio();
+		state.setAudioOverride(false);
 		state.setBGM("swirlgreen.ogg");
+		state.setAudioOverride(true);
 		ticksPerFrame = 0.5d;
 		enemies = new ArrayList<EnemyEntity>();
 		enemies.add(enemyEntity);

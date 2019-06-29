@@ -87,6 +87,9 @@ public class DoorEntity extends Entity {
 	
 	public void act() {
 		for (Entity e : interactables) {
+//			if (state.getGameState().getFlag("teleportingIn")) {
+//				return;
+//			}
 			if (e instanceof CameraControllingEntity) {
 				//remove the door from the gamestate
 //				state.getGameState().getEntityList().remove(this);

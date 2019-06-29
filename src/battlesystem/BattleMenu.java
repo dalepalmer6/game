@@ -185,16 +185,18 @@ public class BattleMenu extends Menu {
 			enemies.addAll(ee.getEnemiesList());
 		}
 		//for each enemy in the battle, draw them on the canvas
-				EnemyOptionPanel eop = new EnemyOptionPanel(state);
-				this.eop = eop;
-				int j = 0;
-				for (BattleEntity e : enemies) {
-					eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
-							state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
-					j++;
-				} 
-				state.setEOP(eop);
+		EnemyOptionPanel eop = new EnemyOptionPanel(state);
+		this.eop = eop;
+		int j = 0;
+		for (BattleEntity e : enemies) {
+			eop.addEnemyOption(new EnemyOption((Enemy) e,state.getMainWindow().getScreenWidth()/2  - (e.getWidth())*enemies.size()/2 + (e.getWidth() + 32)*j,
+			state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
+			j++;
+		} 
+		state.setEOP(eop);
+		state.setAudioOverride(false);
 		state.setBGM(((Enemy)enemies.get(0)).getBGM());
+		state.setAudioOverride(true);
 		generateGreeting();
 		
 		battleActions = new HashMap<BattleEntity, BattleAction>();
@@ -376,7 +378,9 @@ public class BattleMenu extends Menu {
 //	}
 //	
 	public void createYouWin() {
+		state.setAudioOverride(false);
 		state.setBGM("you win.ogg");
+		state.setAudioOverride(true);
 		menuItems.remove(actionMenu);
 		ended = true;
 		getNext = false;
@@ -509,6 +513,8 @@ public class BattleMenu extends Menu {
 			ee.setToRemove(true);
 		}
 		state.inBattle = false;
+		state.setAudioOverride(false);
+		state.getGameState().setFlag("audioChanged",false);
 		state.setDrawAllMenus(false);
 		state.getGameState().setInvincibleCounter();
 		state.setNeedAddSavedMenu(state.getSavedMenu());

@@ -921,6 +921,7 @@ public class Entity implements Drawable,EntityInterface {
 		this.y = y;
 		this.width = w;
 		this.height = h;
+		this.texture = texture;
 		this.name = name;
 		this.appearFlag = appFlag;
 		this.disappearFlag = disFlag;

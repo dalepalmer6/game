@@ -92,6 +92,7 @@ public class GameState {
 	private int teleportFailedTimer = -1;
 	private boolean doIntro;
 	private boolean loadedNewGameData;
+	private String savedBGM;
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -318,10 +319,32 @@ public class GameState {
 		}
 	}
 	
+	public void saveBGMFromMap() {
+		savedBGM = map.getBGM();
+	}
+	
 	public void loadMapData() {
+		boolean override = false;
+		if (map != null) {
+			if (map.getBGM() != null && savedBGM != null) {
+				if (!map.getBGM().equals(savedBGM)) {
+					//save the override bgm and overwrite them
+					override = true;
+					saveBGMFromMap();
+				}
+			}
+			
+		}
 		loadMap(4);
+//		if (override) {
+//			map.setBGM(map.getBGM());
+//		} else if (savedBGM != null) {
+//			state.setBGM(savedBGM);
+//		}
+		
 		state.setBGM(map.getBGM());
-		state.playBGM();
+		
+//		state.playBGM();
 		if (player == null) {
 			createPlayer(4);
 		}
@@ -624,6 +647,19 @@ private void addPartyMembersNeeded() {
 	}
 	
 	public void update(InputController input) {
+		if (input.getSignals().get("ENTER")) {
+			//debug to get teleport coordinates
+			try {
+				PrintWriter pw = new PrintWriter(new File("outputsCoords" + currentMapName + ".txt"));
+				pw.print(player.getX() + "," + player.getY());
+				pw.flush();
+				pw.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		if (state.getDoneIntro() && !loadedNewGameData) {
 			loadedNewGameData = true;
 			setDoIntro(false);
@@ -1124,7 +1160,7 @@ private void addPartyMembersNeeded() {
 			initialX = 438*4;
 			initialY = 675*4;
 			loadMapData();
-			Entity cameraEntity = new IntroEntity("ninten.png",1000*4,2500*4,32,32,camera,state,"cameraguy");
+			Entity cameraEntity = new IntroEntity("ninten.png",803*4,3356*4,32,32,camera,state,"cameraguy");
 			cameraEntity.setSpriteCoords(state.allEntities.get("ninten").getSpriteCoordinates());
 			entities.add(cameraEntity);
 		}

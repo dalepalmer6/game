@@ -102,10 +102,12 @@ int index;
 						Menu m = new Menu(state);
 						SelectionTextWindow stw = new SelectionTextWindow(0,0,10,10,state);
 						/*make this its own method and get the destinations from a different place*/
-						stw.add(new TeleportDestinationMenuItem("Podunk",200,200,"podunk",state));
-						stw.add(new TeleportDestinationMenuItem("Merrysville",200,200,"merrysville",state));
-						stw.add(new TeleportDestinationMenuItem("Snowman",200,200,"snowman",state));
-						stw.add(new TeleportDestinationMenuItem("Reindeer",200,200,"reindeer",state));
+						stw.add(new TeleportDestinationMenuItem("My Home",338*4,266*4,"podunk",state));
+						stw.add(new TeleportDestinationMenuItem("Podunk",1544*4,3168*4,"podunk",state));
+						stw.add(new TeleportDestinationMenuItem("Merrysville",1735*4,2161*4,"merrysville",state));
+						stw.add(new TeleportDestinationMenuItem("Reindeer",1675*4,1613*4,"reindeer",state));
+						stw.add(new TeleportDestinationMenuItem("Spookane",2015*4,1591*4,"spookane",state));
+						stw.add(new TeleportDestinationMenuItem("Snowman",2313*4,972*4,"snowman",state));
 						m.addMenuItem(stw);
 						state.getMenuStack().push(m);
 						break;
