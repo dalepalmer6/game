@@ -43,8 +43,8 @@
 02A: @I knew it... 
 02B: @I'm so scared I'm about to wet my pants... 
 02C: @Boy, that was scary... 
-02D: @ZOMBIE![STARTBATTLE_7]
-02E: @Heheheh...! You get to be a zombie too! [STARTBATTLE_7]
+02D: @ZOMBIE![STARTBATTLE_7] @The zombie returned to the earth.
+02E: @Heheheh...! You get to be a zombie too! [STARTBATTLE_7] @The zombie returned to the earth.
 02F: @There must be someone controlling the dead... 
 030: @Not too shabby, youngster! 
 031: @Are the zombies going to take over our town too? 
@@ -77,7 +77,7 @@
 04C: @I have plenty of extra zoo keys. [PROMPTINPUT]@Here, have another. 
 04D: @As you can see, all our animals have escaped. 
 04E: @All we have left is this canary chick. [PROMPTINPUT]Interested in buying it?[CHOOSE][CHOICE]Yes[TEXT][_04F][CHOICE]No[TEXT][_050] 
-04F: @Then how about for [MONEYSIGN]85? [CHOOSE][CHOICE]Yes[TEXT][_051][CHOICE]No[TEXT][_052]
+04F: @Then how about for [MONEYSIGN]85? [ddCHOOSE][CHOICE]Yes[TEXT][_051][CHOICE]No[TEXT][_052]
 050: @Yeah, I don't blame you. [PROMPTINPUT]It doesn't even know any songs. 
 051: @Thanks! Take extra good care of it![SETFLAG_haveCanary] 
 052: @How about for free, then? C'mon, take it.[SETFLAG_haveCanary] 
@@ -99,14 +99,14 @@
 062: @It sounds like Laura the songbird has remembered her song. [PROMPTINPUT]@Have you learned her melody, too? 
 063: @Well, that's no good. 
 064: @In song there is strength. [PROMPTINPUT]True words, indeed. 
-065: @I'm Pippi. I'm lost. You're really brave, huh? 
-066: @You're such a goofball! Hahaha! 
+065: @I'm Pippi. I'm lost. You're really brave, huh? [CHOOSE][CHOICE]Yeah[TEXT]@Oh, you didn't have to answer. [PROMPTINPUT]You're such a cutie...[CHOICE]Not really[TEXT]@You're such a goofball! Hahaha!
+066: 
 067: @You're really brave. I hope we meet again sometime, don't you? 
 068: @Oh, I'm so happy! [PROMPTINPUT]@Here, this badge can be a symbol of our bond. [PROMPTINPUT]Take it with you. 
 069: @I guess you already have a special someone, huh... 
 06A: @Well, I guess this is bye for now. [PROMPTINPUT]@Come by my house later to pick up an item of mine. [PROMPTINPUT]@By the way... do you think my socks are too short? 
 06B: 
-06C: @Oh, you didn't have to answer. [PROMPTINPUT]You're such a cutie... 
+06C: 
 06D: @Kyakyakya! (You're a big doo-doo head!) 
 06E: @[NINTEN] heard a voice... [PROMPTINPUT]@"Where is the god's tail?" 
 06F: @Whoa, those are some weird clothes you have on there. [PROMPTINPUT]@I bet you'll attract monsters dressed like that! 
@@ -284,7 +284,7 @@
 11B: @Show me what you have. [PROMPTINPUT]@You better not be carrying anything dangerous... 
 11C: 
 11D: @Who's there?! [PROMPTINPUT]@I'm not coming out! [PROMPTINPUT]@You're just gonna pick on me if I do!
-11E: @You want to be my friend?! [PROMPTINPUT]@Then do you promise not to tell that I took explosives from the science lab?[PROMPTINPUT]@I'm coming out now![SETFLAG_showLloyd]
+11E: @You want to be my friend?! [PROMPTINPUT]@Then do you promise not to tell that I took explosives from the science lab?[PROMPTINPUT]@I'm coming out now![SETFLAG_showLloyd] 
 11F: @I'm coming out now. 
 120: @I'm [LOID]. [PROMPTINPUT]@I heard they make Bottle Rockets at the Sweet Little Factory south of here... [PROMPTINPUT]I wanna launch one really bad! 
 121: @You must be exhausted. You should stay the night! 
@@ -896,7 +896,7 @@
 37F: @[NINTEN] peered into the telescope. 
 380: @The ocean was beautiful. 
 381: @Something sparkled on the island in the distance! 
-382: @Something leapt out of the capsule![STARTBATTLE_19] The animals of the Zoo appear to have calmed down.[SETFLAG_starmanJrDead]   
+382: @Something leapt out of the capsule![STARTBATTLE_20] The animals of the Zoo appear to have calmed down.[SETFLAG_starmanJrDead]   
 383: @[ANA]: Dad... Goodbye for now... [PROMPTINPUT]The next time I see you, Mom will be with me! [PROMPTINPUT]...Please pray for us. 
 384: 
 385: @Who are you talking to? 
@@ -2184,9 +2184,9 @@
 887: @The doll moves no more.[PROMPTINPUT]@From inside the doll, you can hear a faint melody. [SETFLAG_melody1] [SETBGM_melody1.ogg] [_889] 
 888: @You took note of the melody.
 889: 
-88A: 
-88B: 
-88C: 
-88D: 
+88A: @I am the King of the Rats.[WAIT60][NEWLINE]@I watch over the rats from all over the world.[PROMPTINPUT]@I can tell just by looking into your eyes that you seek more than just a friendly conversation.[WAIT60][NEWLINE]@Am I wrong?[CHOOSE][CHOICE]Yes[TEXT]@Maybe I was wrong, but your eyes do show determination.[CHOICE]No[TEXT]@I see.[WAIT30] I knew we would not see eye to eye.   [STARTBATTLE_106][SETFLAG_killedRatKing] 
+88B: @I surrender! [WAIT30] Please! [WAIT30][NEWLINE]Do not hurt my brethren![PROMPTINPUT][WAIT120][NEWLINE]@[WAIT30].[WAIT30].[WAIT30].[WAIT60] A huge rat?[NEWLINE][WAIT15]@I see what has transpired here today.
+88C: @[NINTEN],[WAIT15] return home at once.[PROMPTINPUT]@Only then will everything become clear.
+88D: @Do you hear that?
 88E: 
 88F: 

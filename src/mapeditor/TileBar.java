@@ -39,6 +39,8 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	private int TILE_SIZE = 32;
 	private ArrayList<ArrayList<Tile>> currentTilesOfInterest;
 	private int tilesize;
+	private TileBarMoveButton down;
+	private TileBarMoveButton up;
 
 	public int getWidth() {
 		return width;
@@ -79,6 +81,10 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		if (mapPreview != null) {
 			 tilesize = mapPreview.getTileSize();
 		}
+		up = new TileBarMoveButton("",(double) (x + width + 32), (double) y,state,this);
+		up.setAction("U");
+		down = new TileBarMoveButton("",(double) (x + width + 32), (double) (y + height - 64),state,this);
+		down.setAction("D");
 	}
 	
 	public TileBar(int maxWidthTiles, int maxHeightTiles, TileHashMap tm, StartupNew state) {
@@ -92,6 +98,10 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		this.width = widthInTiles * TILE_SIZE;
 		this.height = heightInTiles * TILE_SIZE;
 		tilesize = 32;
+		up = new TileBarMoveButton("",(double) (x + width + 32), (double) y,state,this);
+		up.setAction("U");
+		down = new TileBarMoveButton("",(double) (x + width + 32), (double) (y + height - 64),state,this);
+		down.setAction("D");
 	}
 
 	public Point getTilePosition() {
@@ -149,29 +159,39 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 	public void getTilesOfInterest() {
 		MainWindow m = state.getMainWindow();
 //		m.setTexture(mapPreview.getMap().getTileset());
-		this.MAX_HEIGHT_IN_TILES = state.tilesetTexture.getTextureHeight() / 16;
-		this.MAX_WIDTH_IN_TILES = state.tilesetTexture.getTextureWidth() / 16;
+//		this.MAX_HEIGHT_IN_TILES = state.tilesetTexture.getTextureHeight() / 32;
+//		this.MAX_WIDTH_IN_TILES = state.tilesetTexture.getTextureWidth() / 32;
 //		this.MAX_HEIGHT_IN_TILES = 32;
 //		this.MAX_WIDTH_IN_TILES = 8;
 //		Texture t = m.getTexture();
-		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 16;
+		int numTilesX = state.getTextureAtlas().getCurrentRectangle().width / 32;
 		ArrayList<ArrayList<Tile>> tiles = new ArrayList<ArrayList<Tile>>();
 		// start from viewX,viewY as i, and increment by 1 each time while i <
-		// widthInTiles
 		ArrayList<Tile> row = new ArrayList<Tile>();
 		for (int j = viewY; j < this.heightInTiles + viewY; j++) {
 			for (int i = viewX; i < widthInTiles + viewX; i++) {
-				int curId = i + (j * widthInTiles);
-				row.add(tileMap.getTile(curId));
+				try {
+					int curId = i + (j * widthInTiles);
+					row.add(tileMap.getTile(curId));
+				} 
+				catch(NullPointerException err) {
+					row.add(tileMap.getTile(0));
+				}
 			}
 			tiles.add(row);
 			row = new ArrayList<Tile>();
 		}
 		currentTilesOfInterest = tiles;
+		
+		
 	}
 
 	public Tile getCurrentTileFromInterestList(int x, int y) {
-		return currentTilesOfInterest.get(y).get(x);
+		try {
+			return currentTilesOfInterest.get(y).get(x);
+		} catch (IndexOutOfBoundsException err) {
+			return tileMap.getTile(0);
+		}
 	}
 
 	public void drawTiles() {
@@ -180,8 +200,8 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D,state.tilesetTexture.getTextureID());
 //		Tile.initDrawTiles(m, mapPreview.getMap().getTileset());
-		for (int i = 0; i < this.widthInTiles; i++) {
-			for (int j = 0; j < this.heightInTiles; j++) {
+		for (int i = viewX; i < viewX + this.widthInTiles; i++) {
+			for (int j = viewY; j < viewY + this.heightInTiles; j++) {
 				int drawingX = (i) * TILE_SIZE;
 				int drawingY = (j) * TILE_SIZE;
 				Tile tile = getCurrentTileFromInterestList(i, j);
@@ -222,35 +242,40 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void updateAnim() {
+		state.getMenuStack().peek().addToMenuItems(down);
+		state.getMenuStack().peek().addToMenuItems(up);
+	}
 
 	public void updateView(String movement) {
-		if (movement.equals("L")) {
-			if (viewX != 0) {
-				this.viewX--;
-			} else {
-				System.err.println("View is already at beginning.");
-			}
-
-		} else if (movement.equals("R")) {
-			if (widthInTiles + viewX < MAX_WIDTH_IN_TILES) {
-				// expand the map in the right
-				System.out.println(viewX);
-				this.viewX++;
-
-			} else {
-				System.err.println("View is already at the end of the file");
-			}
-		} else if (movement.equals("U")) {
+//		if (movement.equals("L")) {
+//			if (viewX != 0) {
+//				this.viewX--;
+//			} else {
+//				System.err.println("View is already at beginning.");
+//			}
+//
+//		} else if (movement.equals("R")) {
+//			if (viewX < MAX_WIDTH_IN_TILES) {
+//				// expand the map in the right
+//				System.out.println(viewX);
+//				this.viewX++;
+//
+//			} else {
+//				System.err.println("View is already at the end of the file");
+//			}
+//		} 
+		if (movement.equals("U")) {
 			if (viewY != 0) {
 				this.viewY--;
-
 			} else {
 				System.err.println("View is already at the end of the file");
 			}
 		} else if (movement.equals("D")) {
-			if (heightInTiles + viewY >= MAX_HEIGHT_IN_TILES) {
+			if (true) {
 				this.viewY++;
-
+				System.err.println("MOVING DOWN");
 			} else {
 				System.err.println("View is already at the end of the file");
 			}
@@ -266,11 +291,6 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 		} else if (t instanceof SingleInstanceTile || t instanceof MultiInstanceTile) {
 			((MapEditMenu)state.getMenuStack().peek()).setTool(new SingleTile(t, state));
 		}
-//		if (t instanceof PremadeTileObject) {
-//			mapPreview.setTool(new PremadeTileObjectTool(t, state));
-//		} else if (t instanceof SingleInstanceTile || t instanceof MultiInstanceTile) {
-//			mapPreview.setTool(new SingleTile(t, state));
-//		}
 		return null;
 	}
 }

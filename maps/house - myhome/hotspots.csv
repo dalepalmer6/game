@@ -1,2 +1,3 @@
 Hotspot Name,x,y,width,height,cutscene name,APPEARFLAG,DISAPPEARFLAG
 rat test,362.0,536.0,25,256,01.cs, ,lampDead
+Description,336.0,630.0,32,136,02.cs,killedRatKing,ratDead

@@ -143,9 +143,6 @@ public class Text implements Drawable{
 			reparseForWidths();
 			reparseForHeights();
 		}
-//		parseCodes();
-//		reparseForWidths();
-//		reparseForHeights();
 	}
 	
 	public void parseCodes() {
@@ -290,7 +287,7 @@ public class Text implements Drawable{
 			addToWidths = true;
 			if (controlCodes.containsKey(i)){
 				String thisControlCode = controlCodes.get(i);
-				if (thisControlCode.equals("NEWLINE") || thisControlCode.equals("PROMPTINPUT")) {
+				if (thisControlCode.contains("NEWLINE") || thisControlCode.contains("NEWLINE_TOO_LONG") || thisControlCode.contains("PROMPTINPUT")) {
 					currentWordWidth = 0;
 					currentWidth = 0;
 					indexOfLastSpace = i;
@@ -307,9 +304,9 @@ public class Text implements Drawable{
 				this.width = currentWidth + currentWordWidth;
 			}
 			else if (currentWidth + currentWordWidth > this.width*4 + 32) {
-				String controlCode = "NEWLINE";
+				String controlCode = "NEWLINE_TOO_LONG";
 				if (controlCodes.containsKey(indexOfLastSpace)) {
-					controlCode = "NEWLINE," + controlCodes.get(indexOfLastSpace);
+					controlCode = "NEWLINE_TOO_LONG," + controlCodes.get(indexOfLastSpace);
 				}
 				controlCodes.put(indexOfLastSpace,controlCode);
 				
@@ -357,7 +354,7 @@ public class Text implements Drawable{
 //					//note that currently this clears the text window
 //					curY = y;
 //				}
-				if (cc.equals("NEWLINE") || cc.equals("PROMPTINPUT")) {
+				if (cc.equals("NEWLINE") || cc.equals("NEWLINE_TOO_LONG") || cc.equals("PROMPTINPUT")) {
 					curY+=64;
 					if (curY + 64 > y + (this.height + 16) * 4) {
 						cc = cc + ",SHIFTTEXTUP";
@@ -416,7 +413,7 @@ public class Text implements Drawable{
 				String[] controls = controlCodes.get(i).split(",");
 				String newListOfControlCodes = "";
 				for (String control : controls) {
-					if (control.equalsIgnoreCase("NEWLINE")) {
+					if (control.equalsIgnoreCase("NEWLINE") || control.equalsIgnoreCase("NEWLINE_TOO_LONG")) {
 //						curX = x + (int) charList.getCharObjects().get('@').getDw() + 2;
 						curX = x;
 						curY +=64;
@@ -424,7 +421,7 @@ public class Text implements Drawable{
 							//draw it in the margin
 							drawChar(m,i,'@',curX-4*4,curY);
 						}
-						newListOfControlCodes += ",NEWLINE";
+						newListOfControlCodes += "," + control;
 					}
 					if (control.equalsIgnoreCase("PROMPTINPUT")) {
 						saveStart = i;
@@ -464,9 +461,42 @@ public class Text implements Drawable{
 						newListOfControlCodes += "," + control;
 					}
 					if (control.startsWith("STARTBATTLE_")) {
-						drawStart = i;
-						state.saveCurrentDialogMenu();
+//						drawStart = i;
+						drawStart = 0;
+						drawUntil = 1;
+						parsedString = parsedString.substring(i);
+						int whiteSpaceRemoved = 0;
 						controlCodes.put(i,controlCodes.get(i).replaceFirst(Pattern.quote("," + control),""));
+						while (parsedString.substring(0,1).equals(" ")) {
+							parsedString = parsedString.substring(1);
+							whiteSpaceRemoved++;
+						}
+						if (parsedString.length() == 0) {
+							done = true;
+							return;
+						}
+						HashMap<Integer,String> newCCs = new HashMap<Integer,String>();
+						for (int x : controlCodes.keySet()) {
+							String controlCode = controlCodes.get(x);
+							if (controlCode.contains("NEWLINE_TOO_LONG")) {
+								controlCode = controlCode.replaceAll(Pattern.quote("NEWLINE_TOO_LONG"),"");
+								parsedString = parsedString.substring(0,x - i - whiteSpaceRemoved) + " " + parsedString.substring(x - i - whiteSpaceRemoved);
+							}
+							if (controlCode.contains("SHIFTTEXTUP")) {
+								controlCode = controlCode.replaceAll(Pattern.quote("SHIFTTEXTUP"),"");
+							}
+							newCCs.put(x - i - whiteSpaceRemoved,controlCode);
+						}
+						
+						i = 0;
+						
+						controlCodes = newCCs;
+						
+						reparseForWidths();
+						reparseForHeights();
+						
+						state.saveCurrentDialogMenu();
+						
 						state.saveAudio();
 						String enemyListString = control.substring(12);
 						BattleMenu bm = new BattleMenu(state);
@@ -645,6 +675,10 @@ public class Text implements Drawable{
 					return;
 				}
 				if (chars[i] != '@') {
+					if (charList.getCharObjects().get(chars[i]) == null) {
+						GL11.glColor3f(255,255,255);
+						return;
+					}
 					drawChar(m,i,chars[i],curX,curY);
 					curX += charList.getCharObjects().get(chars[i]).getDw()*4;
 				}

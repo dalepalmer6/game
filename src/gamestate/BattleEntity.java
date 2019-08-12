@@ -40,7 +40,19 @@ public class BattleEntity {
 	//2 - psi
 	//3 - power shield
 	private int shieldCharge; //num hits the shield will endure
-	private String predicate = "";
+	protected String predicate = "";
+	
+	public void consumePP(int usedPP) {
+		
+	}
+	
+	public boolean hasEnoughPP(int usedPP) {
+		if (stats.getStat("CURPP") < usedPP) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	public String getResistanceString() {
 		String resists = name;

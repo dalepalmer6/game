@@ -6,27 +6,40 @@ import canvas.MainWindow;
 import menu.StartupNew;
 
 public class EnemySpawnEntity extends Entity {
+	private int index;
 	private ArrayList<EnemyEntity> spawned;
 	private ArrayList<Enemy> enemies;
 	private float[] rates;
 	private boolean done;
 	
+	public int getIndex() {
+		return index;
+	}
+	
 	public void draw(MainWindow m) {}
 	
-	public void setNewParams(double x, double y, int w, int h, String name, int v1, int v2, int v3, int v4, float p1, float p2, float p3, float p4) {
-		// TODO Auto-generated method stub
+//	public void setNewParams(double x, double y, int w, int h, String name, int v1, int v2, int v3, int v4, float p1, float p2, float p3, float p4) {
+//		// TODO Auto-generated method stub
+//		this.x = x;
+//		this.y = y;
+//		this.width = w;
+//		this.height = h;
+//		this.name = name;
+//		this.enemies = new ArrayList<Enemy>();
+//		enemies.add(state.enemies.get(v1));
+//		enemies.add(state.enemies.get(v2));
+//		enemies.add(state.enemies.get(v3));
+//		enemies.add(state.enemies.get(v4));
+//		rates = new float[]{p1,p2,p3,p4};
+//		
+//	}
+	
+	public void setNewParams(int index, double x, double y, int w, int h) {
+		this.index = index;
 		this.x = x;
 		this.y = y;
 		this.width = w;
 		this.height = h;
-		this.name = name;
-		this.enemies = new ArrayList<Enemy>();
-		enemies.add(state.enemies.get(v1));
-		enemies.add(state.enemies.get(v2));
-		enemies.add(state.enemies.get(v3));
-		enemies.add(state.enemies.get(v4));
-		rates = new float[]{p1,p2,p3,p4};
-		
 	}
 	
 	public ArrayList<Enemy> getEnemies() {
@@ -51,34 +64,40 @@ public class EnemySpawnEntity extends Entity {
 	}
 	
 	public String toString() {
-		String value = "#\n";
-		value += getName() + "\n";
-		value += getX() + "," + getY() + "," + getWidth() + "," + getHeight() + "\n";
-		for (Enemy e : enemies) {
-			if (e == null) {
-				break;
-			}
-			value += e.getId() + ",";
-		}
-		value += "\n";
-		for (float val : rates) {
-			value += val + ",";
-		}
-		value += "\n";
+		String value = "";
+		value += index + "," + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + "\n";
+//		for (Enemy e : enemies) {
+//			if (e == null) {
+//				break;
+//			}
+//			value += e.getId() + ",";
+//		}
+//		value += "\n";
+//		for (float val : rates) {
+//			value += val + ",";
+//		}
+//		value += "\n";
 		return value;
 	}
 	
-	public EnemySpawnEntity(double x, double y, int w, int h,StartupNew state, String name) {
+	public EnemySpawnEntity(int index,double x, double y, int w, int h,StartupNew state, String name) {
 		super("enemySpawn.png",x,y,w,h,state,name);
 		this.spriteCoordinates = new SpritesheetCoordinates();
 		spriteCoordinates.setPose("idle_down");
 		spriteCoordinates.addStateToPose("idle_down",0,0,12,12);
+		EnemySpawnGroup esg = state.enemySpawnGroups.get(index);
+		int[] ids = esg.getEnemies();
+		rates = esg.getPercents();
 		enemies = new ArrayList<Enemy>();
-		enemies.add(state.enemies.get(0));
-		enemies.add(state.enemies.get(0));
-		enemies.add(state.enemies.get(0));
-		enemies.add(state.enemies.get(0));
-		rates = new float[] {0f,0f,0f,0f};
+		if (!state.justTextData) {
+			for (int i = 0; i < ids.length; i++) {
+				enemies.add(state.enemies.get(ids[i]));
+			}
+		}
+		
+		this.index = index;
+//		rates = new float[] {0f,0f,0f,0f};
+		
 	}
 	
 	public String getName() {
@@ -140,15 +159,15 @@ public class EnemySpawnEntity extends Entity {
 		}
 	}
 	
-	public void setRates(float[] x) {
-		rates = x;
-	}
-	
-	public void setEnemies(String[] enemyNames) {
-		enemies = new ArrayList<Enemy>();
-		for (String name : enemyNames) {
-			enemies.add(state.enemies.get(Integer.parseInt(name)));
-		}
-	}
+//	public void setRates(float[] x) {
+//		rates = x;
+//	}
+//	
+//	public void setEnemies(String[] enemyNames) {
+//		enemies = new ArrayList<Enemy>();
+//		for (String name : enemyNames) {
+//			enemies.add(state.enemies.get(Integer.parseInt(name)));
+//		}
+//	}
 	
 }

@@ -17,7 +17,8 @@ public class Enemy extends BattleEntity {
 	private int id;
 	private EnemyAction[] actions;
 	private String battleBG;
-	private String battleBGM; 
+	private String battleBGM;
+	private int maxAllies = 0; 
 	
 	public int getMoneyYield() {
 		return moneyYield;
@@ -34,6 +35,8 @@ public class Enemy extends BattleEntity {
 		enemyCopy.setBGM(battleBGM);
 		enemyCopy.setBattleBG(battleBG);
 		enemyCopy.setResistances(resistances);
+		enemyCopy.setMaxAllies(maxAllies);
+		enemyCopy.setPredicate(predicate);
 		return enemyCopy;
 	}
 	
@@ -100,6 +103,15 @@ public class Enemy extends BattleEntity {
 	public String getBGM() {
 		// TODO Auto-generated method stub
 		return battleBGM;
+	}
+
+	public void setMaxAllies(int numberAllies) {
+		// TODO Auto-generated method stub
+		this.maxAllies  = numberAllies;
+	}
+	
+	public int getMaxAllies() {
+		return maxAllies;
 	}
 
 	

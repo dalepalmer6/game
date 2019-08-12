@@ -1,0 +1,8 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+toSnowman,2033.0,167.0,32,32,snowman,2561,427,Text, , 
+room1to2,1487.0,384.0,8,32,sewer,1170,384,Text, , 
+room2to1,1258.0,384.0,8,32,sewer,1575,382,Text, , 
+room2to3,797.0,164.0,32,32,sewer,2978,197,Text, , 
+room3to2,2974.0,164.0,32,32,sewer,806,196,Text, , 
+room2to4,445.0,164.0,32,32,sewer,2981,543,Text, , 
+room4to2,2974.0,516.0,32,32,sewer,452,192,Text, , 

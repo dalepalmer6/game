@@ -10,8 +10,17 @@ public class LayerFGButton extends ButtonMenuItem {
 		super("FG", x, y,w,h, m);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public void updateAnim() {		
+		if (on) {
+			createTextWindow("FG *");
+		} else {
+			createTextWindow("FG");
+		}
+	}
 
 	public String execute() {
+		toggle();
 		Map m = ((MapEditMenu) this.state.getMenuStack().peek()).getMap();
 		System.out.println("Setting to fg");
 		m.setChangeMap("FG");

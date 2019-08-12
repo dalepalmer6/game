@@ -47,6 +47,7 @@ import font.TextWindowWithPrompt;
 import gamestate.Cutscene;
 import gamestate.DoorEntity;
 import gamestate.Enemy;
+import gamestate.EnemySpawnGroup;
 import gamestate.Entity;
 import gamestate.EntityStats;
 import gamestate.GameState;
@@ -68,6 +69,7 @@ import global.TextureAtlas;
 import mapeditor.MapPreview;
 import mapeditor.Tile;
 import mapeditor.TileHashMap;
+import menu.continuemenu.SelectSaveFileMenu;
 import menu.mainmenu.ContinueMenuItem;
 import menu.mainmenu.MainMenu;
 import menu.mainmenu.MapPreviewTestButton;
@@ -120,6 +122,7 @@ public class StartupNew{
 	public ArrayList<PSIAttack> psi;
 	public PSIClassificationList psiClassList;
 	public HashMap<Integer,Enemy> enemies;
+	public HashMap<Integer,EnemySpawnGroup> enemySpawnGroups;
 	private Map<String, BufferedImage> animations = new HashMap<String,BufferedImage>();
 	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
@@ -180,6 +183,12 @@ public class StartupNew{
 	private int cameraShake;
 	private boolean setStartFlags;
 	private boolean doneIntro;
+	private String saveFileName;
+	public boolean justTextData;
+	
+	public void setSaveFileName(String s) {
+		saveFileName = s;
+	}
 	
 	public void setStartFlags() {
 		setStartFlags = true;
@@ -241,8 +250,7 @@ public class StartupNew{
 		}
 		try {
 			if (!audioOverride) {
-//				gameState.getMap().setBGM(path);
-				playOnce = true;
+				playOnce = false;
 				curBGM = path;
 				String propsFilePath = curBGM.substring(0,curBGM.indexOf("."));
 				BufferedReader br = new BufferedReader(new FileReader(new File(pathToMusic + propsFilePath)));
@@ -263,7 +271,7 @@ public class StartupNew{
 				e1.printStackTrace();
 			}
 			bgm.playAsMusic(1.0f, 1.0f, false);
-			playOnce = false;
+			playOnce = true;
 		}
 	}
 	
@@ -329,6 +337,36 @@ public class StartupNew{
 	
 	public mapeditor.Map loadMap(String mapname) { 
 		return new mapeditor.Map(mapname,34,34, null, this,true);
+	}
+	
+	public void loadAllEnemyGroups() {
+		int x = 0;
+		enemySpawnGroups = new HashMap<Integer,EnemySpawnGroup>();
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader("data/enemygroups.data"));
+			String rowIds = "";
+			String rowPercents = "";
+			while ((rowIds  = br.readLine()) != null) {
+				String[] enemyIds = rowIds.split(",");
+				rowPercents = br.readLine();
+				String[] spawnPercs = rowPercents.split(",");
+				int[] ids = new int[enemyIds.length];
+				float[] percs = new float[spawnPercs.length];
+				for (int i = 0; i < enemyIds.length; i++) {
+					ids[i] = Integer.parseInt(enemyIds[i]);
+				}
+				for (int i = 0; i < spawnPercs.length; i++) {
+					percs[i] = Float.parseFloat(spawnPercs[i]);
+				}
+				EnemySpawnGroup esg = new EnemySpawnGroup(x,ids,percs,this);
+				enemySpawnGroups.put(x,esg);
+				x++;
+			}
+			
+		} catch(IOException e) {
+			
+		}
 	}
 	
 	public void loadAllPSI() {
@@ -762,6 +800,7 @@ public class StartupNew{
 				String battleBG = data[19];
 				String predicate = data[20];
 				String resist = data[21];
+				int numberAllies = Integer.parseInt(data[22]);
 				EnemyAction[] enemyActions = new EnemyAction[potentialEnemyActions.length];
 				for (int x = 0; x < potentialEnemyActions.length; x++) {
 					enemyActions[x] = this.enemyActions.get(Integer.parseInt(potentialEnemyActions[x]));
@@ -773,6 +812,7 @@ public class StartupNew{
 				e.setBGM(bgm);
 				e.setBattleBG(battleBG);
 				e.setResistances(Integer.parseInt(resist));
+				e.setMaxAllies(numberAllies);
 				if (predicate.equals(" ")) {
 					e.setPredicate("");
 				} else {
@@ -867,6 +907,7 @@ public class StartupNew{
 	}
 	
 	public void init(boolean justTextData) {
+		this.justTextData = justTextData;
 		if (justTextData) {
 			textEditor = true;
 			namesOfCharacters=defaultNames;
@@ -876,6 +917,7 @@ public class StartupNew{
 			loadAllStrings();
 			loadAllEntities();
 			loadAllItems();
+			loadAllEnemyGroups();
 			menuStack = new MenuStack();
 			selectionStack = new SelectionStack();
 		} else {
@@ -893,6 +935,7 @@ public class StartupNew{
 			loadAllEnemyActions();
 			loadAllEnemies();
 			loadAllStrings();
+			loadAllEnemyGroups();
 			
 			setBGM("motherearth.ogg");
 			textureAtlas.getTexture().bind();
@@ -1068,6 +1111,10 @@ public class StartupNew{
 			}
 		}
 		
+		if (!(menuStack.peek() instanceof BattleMenu) && inBattle && !(menuStack.peek() instanceof AnimationMenu)) {
+			battleMenu.update(input);
+		}
+		
 		if (inBattle && eop != null) {
 			if (!(menuStack.peek() instanceof SelectTargetMenu)) {
 				eop.setSelected(-2);
@@ -1108,6 +1155,7 @@ public class StartupNew{
 //		}
 		
 		if (gameState != null) {
+			gameState.updateTimer();
 //			if (!gameState.getFlag("adventureStartFlag")) {
 //				if (gameState.getFlag("playPoltergeist")) {
 //					//move the camera crazy
@@ -1157,16 +1205,17 @@ public class StartupNew{
 				itemToBuy = null;
 			}
 			if (gameState.getFlag("saveGame")) {
-				try {
+//				try {
 					gameState.setFlag("saveGame",false);
-					gameState.saveData();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					menuStack.push(new SelectSaveFileMenu(this));
+//					gameState.saveData(saveFileName);
+//				} catch (FileNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 			if (doTeleportRoutine)  {
 				doTeleportRoutine = false;
@@ -1205,6 +1254,7 @@ public class StartupNew{
 //			
 //		}
 		
+		//change this from AnimationMenu to when a boolean is set
 		if (menuStack.peek() instanceof AnimationMenu && gameState == null) {
 			if (((AnimationMenu)menuStack.peek()).isComplete()) {
 				menuStack.pop();
@@ -1213,7 +1263,7 @@ public class StartupNew{
 				GameState gs = new GameState(this);
 				this.setGameState(gs);
 				if (!createNewFile) {
-					gs.loadFromSaveFile("test");
+					gs.loadFromSaveFile(saveFileName);
 					gameState.loadMapData();
 				}else {
 //					gs.loadFromSaveFile("test");
@@ -1459,6 +1509,10 @@ public class StartupNew{
 	public void saveCurrentDialogMenu() {
 		// TODO Auto-generated method stub
 		savedMenu = menuStack.peek();
+	}
+	
+	public void clearSavedMenu() {
+		savedMenu = null;
 	}
 
 	public void addSavedMenu(boolean b) {

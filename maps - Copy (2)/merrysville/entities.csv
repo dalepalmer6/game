@@ -1,0 +1,5 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,336.0,171.0,24,32,New Entity,NewEntityName, , 
+ninten,392.0,1854.0,24,32,[SETFLAG_train][SET_TRAIN_RIDE_0:33]Testing the train.,NewEntityName, , 
+ninten,1529.0,4383.0,24,32,New Entity,NewEntityName, , 
+ninten,1311.0,3383.0,24,32,New Entity,NewEntityName, , 

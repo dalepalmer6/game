@@ -36,7 +36,11 @@ public class SingleEntity extends MapTool {
 	public SingleEntity(Entity e,StartupNew state) {
 		super(state);
 		this.entity = e;
-		this.toolInfo = entity.getInfoForTool();
+		try {
+			this.toolInfo = entity.getInfoForTool();
+		} catch(NullPointerException err) {
+			
+		}
 //		associatedButtons.add(new NewEntityButton(500,0,159,31,state));
 //		associatedButtons.add(new NewDoorButton(700,0,159,31,state));
 //		associatedButtons.add(new NewHotSpotButton(900,0,159,31,state));

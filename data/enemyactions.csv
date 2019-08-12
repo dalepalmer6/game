@@ -27,7 +27,7 @@
 25,wanted to attack your sweater,30,0,2
 26,is purring and acting cuddly,30,0,2
 27,is staring attentively,30,0,2
-28,is cripping tall[WAIT10].[WAIT10].[WAIT10]. It was ineffective,30,0,2
+28,is cripping tall[WAIT10].[WAIT10].[WAIT10]. It was ineffective.,30,0,2
 29,called for help!,30,0,2
 30,approached slowly!,30,0,2
 31,said some threatening words!,30,0,2
@@ -48,6 +48,10 @@
 46,attacks!,26,0,2
 47,lashed out with its power cord!,26,0,2
 48,is meditating.,30,0,2
-49,Used a Bull Horn.[WAIT30][NEWLINE]@Your momma's calling for you!,30,0,2
+49,Used a Bull Horn.[WAIT30][NEWLINE]@Your mommy's calling for you!,30,0,2
 50,bit down hard!,26,0,2
 51,used a scratching attack!,26,0,2
+52,looked confused.,30,0,2
+53,begged you to stop.,30,0,2
+54,doesn't know what to do.,30,0,2
+55,considered giving up.,30,0,2

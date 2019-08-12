@@ -5,8 +5,11 @@ import global.MenuStack;
 import menu.Animation;
 import menu.AnimationFadeToBlack;
 import menu.AnimationMenu;
+import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
+import menu.continuemenu.LoadSavedFileMenu;
+import menu.namecharactersmenu.CharacterNamingMenu;
 
 public class ContinueMenuItem extends MenuItem {
 	private static String text = "Continue";
@@ -16,10 +19,13 @@ public class ContinueMenuItem extends MenuItem {
 	}
 	
 	public String execute() {
-		System.out.println("Loading a previous game.");
-		AnimationMenu an = new AnimationMenu(state);
-		an.createAnimMenu();
-		state.getMenuStack().push(an);
+//		System.out.println("Loading a previous game.");
+//		AnimationMenu an = new AnimationMenu(state);
+//		an.createAnimMenu();
+//		state.getMenuStack().push(an);
+//		state.getMenuStack().pop();
+		Menu m = new LoadSavedFileMenu(state);
+		state.getMenuStack().push(m);
 		return null;
 	}
 	

@@ -28,7 +28,7 @@ public class Item{
 	protected int damageVariable;
 	private boolean inBattle;
 	private boolean outBattle;
-	private boolean consume = true;
+	protected boolean consume = true;
 	
 	public int getActionType() {
 		return action;
@@ -590,12 +590,20 @@ public class Item{
 			pm.setStats(targetBE.getStats().getStat("CURHP"),targetBE.getStats().getStat("CURPP"),targetBE.getState());
 		}
 		if (consume) {
-			user.getItemsList().remove(this);
+			consume(user);
 		}
 		
 		return result;
 	}
 
+	public void consume(PartyMember user) {
+		user.getItemsList().remove(this);
+	}
+	
+	public void consume(BattleEntity user) {
+		
+	}
+	
 	public int getValue() {
 		// TODO Auto-generated method stub
 		return value;

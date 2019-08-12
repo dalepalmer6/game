@@ -13,8 +13,6 @@ import menu.StartupNew;
 public class CharacterNamingMenu extends Menu{
 	private int curX = 10;
 	private int curY = 10;
-	private SelectionTextWindow stw;
-	private int selectedIndex;
 	private String inputtedName;
 	private int index;
 	private int changeIndex=0;

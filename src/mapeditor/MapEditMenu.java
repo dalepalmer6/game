@@ -17,6 +17,11 @@ public class MapEditMenu extends Menu {
 	private ToolInfoWindow toolInfoWindow;
 	private ArrayList<ButtonMenuItem> currentToolButtons;
 	protected MapTool prevTool;
+	private TileBar tilebar;
+	
+	public TileBar getTileBar() {
+		return tilebar;
+	}
 	
 	public Map getMap() {
 		return map;
@@ -38,17 +43,20 @@ public class MapEditMenu extends Menu {
 		return prevTool;
 	}
 	
+	
 	public void update(InputController input) {
 		prevTool.update(input);
 		currentToolButtons = prevTool.getAssociatedButtons();
 		toolInfoWindow.setTool(prevTool);
 		toolInfoWindow.setText(prevTool.getToolInfo());
 		prevTool.update(input);
+		tilebar.updateAnim();
 		if (prevTool != null) {
 			menuItems.removeAll(prevTool.getAssociatedButtons());
 		}
 		
 		for (ButtonMenuItem mi : currentToolButtons) {
+			mi.updateAnim();
 			addMenuItem(mi);
 		}
 		mapPreview.setTool(prevTool);
@@ -59,7 +67,7 @@ public class MapEditMenu extends Menu {
 		this.map = new Map("podunk",34,34, tm, state);
 		prevTool = new MapTool(state);
 		mapPreview = new MapPreview(TILE_SIZE,3 * TILE_SIZE,3 * TILE_SIZE, map, tm,state);
-		TileBar tilebar = new TileBar(48,8,tm, mapPreview,state);
+		tilebar = new TileBar(48,8,tm, mapPreview,state);
 		addMenuItem(mapPreview);
 		addMenuItem(tilebar);
 		addMenuItem(new EntityBar(16,8,mapPreview,tilebar,state));

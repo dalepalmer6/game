@@ -7,11 +7,13 @@ import mapeditor.LayerFGButton;
 import mapeditor.MapEditMenu;
 import mapeditor.MapPreview;
 import mapeditor.Tile;
+import menu.ButtonMenuItem;
 import menu.StartupNew;
 import tiles.PremadeTileObject;
 
 public class SingleTile extends MapTool {
 	protected Tile tile;
+	private ButtonMenuItem buttonOn = null;
 	
 //	public void draw(MainWindow m, int x, int y) {
 //		tile.getInstance(0).draw(m);
@@ -32,6 +34,17 @@ public class SingleTile extends MapTool {
 	
 	public void setButtons(StartupNew state) {
 		
+	}
+	
+	public void update(InputController input) {
+		for (ButtonMenuItem bm : associatedButtons) {
+			if (bm.isOn() && bm != buttonOn) {
+				if (buttonOn != null) {
+					buttonOn.toggle();
+				}
+				buttonOn = bm;
+			}
+		}
 	}
 	
 	public SingleTile(Tile tile, StartupNew state) {

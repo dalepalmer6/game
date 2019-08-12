@@ -6,6 +6,7 @@ import battlesystem.BattleMenu;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
 import gamestate.EnemyEntity;
+import gamestate.Entity;
 import gamestate.TileMetadata;
 
 public class SwirlAnimation extends Animation {
@@ -38,9 +39,64 @@ public class SwirlAnimation extends Animation {
 		ticksPerFrame = 0.5d;
 		enemies = new ArrayList<EnemyEntity>();
 		enemies.add(enemyEntity);
+		state.getGameState().setMaxAllies(enemyEntity.getMaxAllies());
 		state.getGameState().setBattleEnemyList(enemies);
 		state.getGameState().setEnemiesCanJoin(true);
+		ArrayList<EnemyEntity> enemyEntities = new ArrayList<EnemyEntity>();
+		//todo move this
+		for (Entity e : state.getGameState().getEntityList()) {
+//			ArrayList<Entity> removeThese = new ArrayList<Entity>();
+			if (e instanceof EnemyEntity) {
+				enemyEntities.add((EnemyEntity) e);
+			}
+		}
+		state.getGameState().saveEnemyEntities(enemyEntities);
+		enemyEntities = sort(enemyEntities);
+		
+		state.getGameState().getEntityList().removeAll(enemyEntities);
+		
+		//take the first MAXALLIES enemies
+		int numAllies = state.getGameState().getMaxAllies();
+		ArrayList<EnemyEntity> enemiesThatCanJoin = new ArrayList<EnemyEntity>();
+		for (int i = 0; i < numAllies; i++) {
+			if (i >= enemyEntities.size()) {
+				break;
+			}
+			EnemyEntity en = enemyEntities.get(i);
+			if (en == enemyEntity) {
+				numAllies += 1;
+			}
+			enemiesThatCanJoin.add(en);
+		}
+		
+		state.getGameState().getEntityList().addAll(enemiesThatCanJoin);
+//		state.getGameState().getEntityList().add(enemyEntity);
 	}
+	
+	ArrayList<EnemyEntity> sort(ArrayList<EnemyEntity> entities)
+    {
+        int n = entities.size();
+ 
+        // One by one move boundary of unsorted subarray
+        for (int i = 0; i < n-1; i++)
+        {
+            // Find the minimum element in unsorted array
+            int min_idx = i;
+            for (int j = i+1; j < n; j++)
+                if (entities.get(j).getDistanceFromPlayer()
+                		< entities.get(min_idx).getDistanceFromPlayer())
+                    min_idx = j;
+ 
+            // Swap the found minimum element with the first
+            // element
+            EnemyEntity temp = entities.get(min_idx);
+            entities.remove(min_idx);
+            entities.add(min_idx, entities.get(i));
+            entities.remove(i);
+            entities.add(i,temp);
+        }
+        return entities;
+    }
 	
 	public void startBattle() {
 		state.getMenuStack().peek().setToRemove(this);

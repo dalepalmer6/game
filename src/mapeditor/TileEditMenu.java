@@ -13,10 +13,15 @@ public class TileEditMenu extends MapEditMenu {
 	private TilePreview tilePrev;
 	private TileBar tileBar;
 	private ArrayList<TextLabel> colValues;
+	private TextLabel valueMI;
 	@Override
 	public void update(InputController input) {
 		Tile t = ((SingleTile) prevTool).getTile();
 		tilePrev.setTile(t);
+		tileBar.updateAnim();
+		
+		menuItems.remove(valueMI);
+		menuItems.add(valueMI = new TextLabel("" + tilePrev.getColEditValue(),0,0,state));
 		
 		menuItems.removeAll(colValues);
 		colValues = new ArrayList<TextLabel>();
@@ -47,10 +52,12 @@ public class TileEditMenu extends MapEditMenu {
 		tilePrev = new TilePreview("",400,500,state);
 		tileBar = new TileBar(48,8,state.tileMap,state);
 		
+		valueMI = new TextLabel("" + tilePrev.getColEditValue(),0,0,state);
+		
 		drawables.add(tilePrev);
 		drawables.add(tileBar);
 		
-		state.loadAllTiles("img/tilesets/onett.png");
+		state.loadAllTiles("img/tilesets/cave.png");
 		
 		addMenuItem(tilePrev);
 		addMenuItem(tileBar);

@@ -93,6 +93,24 @@ public class GameState {
 	private boolean doIntro;
 	private boolean loadedNewGameData;
 	private String savedBGM;
+	private int maxAlliesCanJoin;
+	private List<EnemyEntity> savedEnemyEntities;
+	private long timer;
+	
+	public long getTimePlayed() {
+		return timer;
+	}
+	
+	public String getFormattedTimePlayed() {
+		//the timer represents the number of frames elapsed in gameplay.
+		//use % and / to get mins and hours -> divide by 60 to get seconds
+		String time = "";
+		long secs = timer / 60;
+		long mins = secs / 60;
+		long hours = secs / 3600;
+		time = String.format("%02d : %02d",hours, mins);
+		return time;
+	}
 	
 	public void teleportRoutine() {
 		//during the teleport routine, increase the counter by 1 per frame, increasing movement
@@ -166,6 +184,7 @@ public class GameState {
 		map.parseMap(scale,currentMapName);
 		System.out.println("Successfully loaded.");
 		AnimationMenu m = new AnimationMenuFadeFromBlack(state);
+		state.setBGM(map.getBGM());
 		m.createAnimMenu();
 		state.getMenuStack().push(m);
 	}
@@ -253,7 +272,10 @@ public class GameState {
 		this.timeCreated = System.nanoTime();
 		lastSavedMap = m;
 		this.entities = new ArrayList<Entity>();
-		this.currentMapName = m.getMapId();
+		if (m != null) {
+			this.currentMapName = m.getMapId();
+		}
+		timer = 0;
 		this.state = s;
 		this.camera = new Camera(state);
 		this.map = m;
@@ -288,6 +310,7 @@ public class GameState {
 				int funds = Integer.parseInt(data[3]);
 				int fundsInBank = Integer.parseInt(data[4]);
 				int fundsDeposited = Integer.parseInt(data[5]);
+				long timer = Long.parseLong(data[6]);
 				
 				currentMapName = mapName;
 				initialX = x;
@@ -297,6 +320,7 @@ public class GameState {
 				this.funds = funds;
 				this.bankFunds = fundsInBank;
 				this.depositedFunds = fundsDeposited;
+				this.timer = timer;
 				
 				f = new File(path + "flags");
 				br = new BufferedReader(new FileReader(f));
@@ -319,22 +343,33 @@ public class GameState {
 		}
 	}
 	
+	public String getMapName() {
+		return currentMapName;
+	}
+	
+	public String getNintenName() {
+		return partyMembers.get("NINTEN").getName();
+	}
+	
+	public int getNintenLevel() {
+		return partyMembers.get("NINTEN").getStats().getStat("LVL");
+	}
+	
 	public void saveBGMFromMap() {
 		savedBGM = map.getBGM();
 	}
 	
 	public void loadMapData() {
 		boolean override = false;
-		if (map != null) {
-			if (map.getBGM() != null && savedBGM != null) {
-				if (!map.getBGM().equals(savedBGM)) {
-					//save the override bgm and overwrite them
-					override = true;
-					saveBGMFromMap();
-				}
-			}
-			
-		}
+//		if (map != null) {
+//			if (map.getBGM() != null && savedBGM != null) {
+//				if (!map.getBGM().equals(savedBGM)) {
+//					//save the override bgm and overwrite them
+//					override = true;
+//					saveBGMFromMap();
+//				}
+//			}
+//		}
 		loadMap(4);
 //		if (override) {
 //			map.setBGM(map.getBGM());
@@ -378,21 +413,6 @@ private void addPartyMembersNeeded() {
 			addPartyMember("PIPPI");
 		}
 	}
-
-//	public void createTestEnemy() {
-//		ArrayList<Enemy> testList = new ArrayList<Enemy>();
-//		Entity eStatic = state.allEntities.get("redDressLady");
-//		Enemy test2 = state.enemies.get("Lamp").clone();
-//		testList.add(test2);
-//		EnemyEntity ee = new EnemyEntity(1500, 2600, 24*4,32*4,state,testList);
-//		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
-//		this.entities.add(ee);
-//		test2 = state.enemies.get("Stray Dog").clone();
-//		testList.add(test2);
-//		ee = new EnemyEntity(1100, 2600, 24*4,32*4,state,testList);
-//		ee.setSpriteCoords(eStatic.getSpriteCoordinates());
-//		this.entities.add(ee);
-//	}
 	
 	void sort()
     {
@@ -547,7 +567,7 @@ private void addPartyMembersNeeded() {
 			}
 		}
 		
-		//check if certain items are in your inventory
+		//check if certain items are in your inventory like Bottle Rockets or Ana's hat.
 	}
 	
 	public void updateTiles() {
@@ -646,6 +666,10 @@ private void addPartyMembersNeeded() {
 		return doIntro;
 	}
 	
+	public void updateTimer() {
+		timer++;
+	}
+	
 	public void update(InputController input) {
 		if (input.getSignals().get("ENTER")) {
 			//debug to get teleport coordinates
@@ -658,7 +682,6 @@ private void addPartyMembersNeeded() {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		if (state.getDoneIntro() && !loadedNewGameData) {
 			loadedNewGameData = true;
@@ -723,7 +746,7 @@ private void addPartyMembersNeeded() {
 			entitiesCanMove = false;
 			teleportTimer-=160/60;
 //			for (Entity player : savedParty) {
-				player.setDeltaX(-187.5*(Math.pow(0.5,counter++/8)));
+				player.setDeltaX(-250*(Math.pow(0.5,counter++/8)));
 				player.update(this);
 				player.setIgnoreCollisions(true);
 				if (teleportTimer <= 0) {
@@ -866,7 +889,9 @@ private void addPartyMembersNeeded() {
 			if (e.getNeedToRemoveState()) {
 				e.setToRemove(false);
 				e.kill();
-				entities.remove(e);
+				while (entities.contains(e)) {
+					entities.remove(e);
+				}
 				continue;
 			}
 //			checkEntityCollisions();
@@ -976,8 +1001,17 @@ private void addPartyMembersNeeded() {
 		enemiesCanJoin = b;
 	}
 
+	public void setMaxAllies(int maxAlliesCanJoin) {
+		this.maxAlliesCanJoin = maxAlliesCanJoin;
+	}
+	
+	public int getMaxAllies() {
+		return maxAlliesCanJoin;
+	}
+	
 	public boolean getEnemiesCanJoin() {
 		// TODO Auto-generated method stub
+		
 		return enemiesCanJoin;
 	}
 
@@ -1029,10 +1063,10 @@ private void addPartyMembersNeeded() {
 		funds -= amt;
 	}
 
-	public void saveData() throws IOException {
+	public void saveData(String saveName) throws IOException {
 		//write all flags to a file
 		File file;
-		String savedataLoc = "savedata/test/";
+		String savedataLoc = "savedata/" + saveName + "/";
 		file = new File(savedataLoc);
 		file.mkdirs();
 		file = new File(savedataLoc + "flags");
@@ -1069,7 +1103,7 @@ private void addPartyMembersNeeded() {
 		file = new File(savedataLoc + "sys");
 		file.createNewFile();
 		PrintWriter pw = new PrintWriter(file);
-		pw.println(currentMapName + "," + player.getX()/4 + "," + player.getY()/4 + "," + funds + "," + bankFunds + "," + depositedFunds);
+		pw.println(currentMapName + "," + player.getX()/4 + "," + player.getY()/4 + "," + funds + "," + bankFunds + "," + depositedFunds + "," + timer);
 		pw.flush();
 		pw.close();
 		initialX = player.getX();
@@ -1164,6 +1198,18 @@ private void addPartyMembersNeeded() {
 			cameraEntity.setSpriteCoords(state.allEntities.get("ninten").getSpriteCoordinates());
 			entities.add(cameraEntity);
 		}
+	}
+
+	public void restoreEnemyEntities() {
+		// TODO Auto-generated method stub
+		if (savedEnemyEntities != null) {
+			entities.addAll(savedEnemyEntities);
+		}
+		
+	}
+	
+	public void saveEnemyEntities(List<EnemyEntity> savedEnemies) {
+		savedEnemyEntities = savedEnemies;
 	}
 	
 }

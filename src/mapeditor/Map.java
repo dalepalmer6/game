@@ -51,6 +51,10 @@ public class Map {
 	private boolean ignoreTiles;
 	private String actualBGM;
 	
+	public String getMapLayer() {
+		return currentMapLayer;
+	}
+	
 	public String getActualBGM() {
 		return actualBGM;
 	}
@@ -171,7 +175,7 @@ public class Map {
 			pw.flush();
 			pw.close();
 			pw = new PrintWriter(new File(pathToMaps + mapId + "/enemyspawns.data"));
-			String writeEnemyData = "";
+			String writeEnemyData = "index,x,y,width,height\n";
 			for (Entity e : entitiesInMap) {
 				if (e instanceof EnemySpawnEntity) {
 					writeEnemyData += e.toString();
@@ -285,31 +289,17 @@ public class Map {
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader(ent));
+			br.readLine(); //skip headers
 			String row = "";
 			while ((row = br.readLine()) != null) {
-				if (row.equals("#")) {
-					//read next four lines
-					row = br.readLine();
-					String name = row;
-					row = br.readLine();
 					String[] mapdata = row.split(",");
-					double x = Double.parseDouble(mapdata[0]);
-					double y = Double.parseDouble(mapdata[1]);
-					int w = Integer.parseInt(mapdata[2]);
-					int h = Integer.parseInt(mapdata[3]);
-					row = br.readLine();
-					String[] names = row.split(",");
-					row = br.readLine();
-					String[] percents = row.split(",");
-					float[] percentsFloats = new float[percents.length];
-					for (int i = 0; i < percents.length; i++) {
-						percentsFloats[i] = Float.parseFloat(percents[i]);
-					}
-					EnemySpawnEntity ese = new EnemySpawnEntity(x*scale,y*scale,w*scale,h*scale,state,name);
-					ese.setRates(percentsFloats);
-					ese.setEnemies(names);
+					int index = Integer.parseInt(mapdata[0]);
+					double x = Double.parseDouble(mapdata[1]);
+					double y = Double.parseDouble(mapdata[2]);
+					int w = Integer.parseInt(mapdata[3]);
+					int h = Integer.parseInt(mapdata[4]);
+					EnemySpawnEntity ese = new EnemySpawnEntity(index,x*scale,y*scale,w*scale,h*scale,state,"EnemyGroup" + index);
 					entitiesInMap.add(ese);
-				}
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -319,6 +309,45 @@ public class Map {
 			e.printStackTrace();
 		}
 	}
+	
+//	public void parseEnemySpawns(File ent,int scale) {
+//		BufferedReader br;
+//		try {
+//			br = new BufferedReader(new FileReader(ent));
+//			String row = "";
+//			while ((row = br.readLine()) != null) {
+//				if (row.equals("#")) {
+//					//read next four lines
+//					row = br.readLine();
+//					String name = row;
+//					row = br.readLine();
+//					String[] mapdata = row.split(",");
+//					double x = Double.parseDouble(mapdata[0]);
+//					double y = Double.parseDouble(mapdata[1]);
+//					int w = Integer.parseInt(mapdata[2]);
+//					int h = Integer.parseInt(mapdata[3]);
+//					row = br.readLine();
+//					String[] names = row.split(",");
+//					row = br.readLine();
+//					String[] percents = row.split(",");
+//					float[] percentsFloats = new float[percents.length];
+//					for (int i = 0; i < percents.length; i++) {
+//						percentsFloats[i] = Float.parseFloat(percents[i]);
+//					}
+//					EnemySpawnEntity ese = new EnemySpawnEntity(x*scale,y*scale,w*scale,h*scale,state,name);
+//					ese.setRates(percentsFloats);
+//					ese.setEnemies(names);
+//					entitiesInMap.add(ese);
+//				}
+//			}
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	public void parseDoors(File ent,int scale) {
 		BufferedReader br;

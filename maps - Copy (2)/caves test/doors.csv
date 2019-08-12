@@ -1,0 +1,9 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+Description,320,482,32,32,zoo,6082,2077,Text, , 
+Description,1889,159,32,32,graveyard,1659,346,Text, , 
+Description,2049,254,32,32,caves test,1275,746,Text, , 
+Description,747,964,9,24,caves test,1213,264,Text, , 
+Description,1230,239,9,32,caves test,744,996,Text, , 
+Description,1293,718,9,32,caves test,2055,291,Text, , 
+Description,0,0,32,32,podunk,0,0,Text, , 
+Description,0,0,32,32,podunk,0,0,Text, , 

@@ -25,6 +25,10 @@ public class TilePreview extends MenuItem implements Controllable, Drawable, Hov
 	private Tile currentTile;
 	private int currentCollisionEditValue = 1;
 	
+	public int getColEditValue() {
+		return currentCollisionEditValue;
+	}
+	
 	public void drawGrid(MainWindow m) {
 		m.setTexture("img\\line.png");
 		for (int i = (int) this.x; i <= this.x + width ; i+= 64) {
@@ -122,6 +126,12 @@ public class TilePreview extends MenuItem implements Controllable, Drawable, Hov
 			executeRightClick();
 		} else if (input.getSignals().get("MOUSE_LEFT_DOWN")) {
 			execute();
+		} else if (input.getSignals().get("UP")) {
+			currentCollisionEditValue = 2;
+		} else if (input.getSignals().get("DOWN")) {
+			currentCollisionEditValue = 1;
+		} else if (input.getSignals().get("LEFT")) {
+			currentCollisionEditValue = 8;
 		}
 	}
 	

@@ -104,7 +104,8 @@ public class CutsceneData {
 	
 	public void loadEntity() {
 		if (entityName.equals("null")) {
-			return;
+			entity = new Entity(" ",0,0,0,0,state," ");
+//			return;
 		}
 		for (Entity e : state.getGameState().getEntityList()) {
 			if (e.getName().equals(entityName)) {

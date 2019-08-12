@@ -1,0 +1,5 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+Description,843.0,247.0,9,32,merrysville,1314,3756,Text, , 
+Description,233.0,260.0,9,32,merrysville buildings,203,630,Text, , 
+Description,169.0,615.0,8,32,merrysville buildings,264,282,Text, , 
+Description,0.0,0.0,32,32,podunk,0,0,Text, , 

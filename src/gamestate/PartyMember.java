@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import actionmenu.equipmenu.TextLabel;
+import battlesystem.menu.psi.PSIAttackMenuItem;
 import gamestate.elements.items.EquipmentItem;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.psi.PSIFamily;
 import menu.StartupNew;
 
 public class PartyMember {
@@ -26,6 +29,19 @@ public class PartyMember {
 	private StartupNew state;
 	private int index;
 	private String saveFile;
+	
+	public void consumePP(int usedPP) {
+		baseStats.replaceStat("CURPP",stats.getStat("CURPP") - usedPP);
+		updateStats();
+	}
+	
+	public boolean hasEnoughPP(int usedPP) {
+		if (stats.getStat("CURPP") < usedPP) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	public void setIndex(int i) {
 		this.index = i;
@@ -119,6 +135,19 @@ public class PartyMember {
 		return knownPSI;
 	}
 	
+	public ArrayList<PSIAttack> getKnownPSIList() {
+		ArrayList<PSIAttack> psiList = new ArrayList<PSIAttack>();
+		int i = 0;
+		for (PSIAttack psi : state.psi) {
+			long comparator = (long) Math.pow(2,i);
+			if ((comparator & knownPSI) == comparator) {
+				psiList.add(psi);
+			}
+			i++;
+		}
+		return psiList;
+	}
+	
 	public ArrayList<Item> getItemsList() {
 		return items;
 	}
@@ -196,6 +225,7 @@ public class PartyMember {
 	
 	public PCBattleEntity createBattleEntity() {
 		PCBattleEntity be = new PCBattleEntity("",name,id,stats,state,status);
+		be.setPartyMember(this);
 		be.setItems(items);
 		return be;
 	}

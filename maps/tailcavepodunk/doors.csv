@@ -1,2 +1,8 @@
 DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
 Description,320.0,482.0,32,32,podunk,4039,426,Text, , 
+toGraveyard,1888.0,163.0,32,32,graveyard,1628,394,Text, , 
+firstDoor,2049.0,261.0,32,32,tailcavepodunk,1267,743,Text, , 
+returnToFirstRoom,1290.0,723.0,32,32,tailcavepodunk,2056,286,Text, , 
+secondRoomToThird,736.0,964.0,32,32,tailcavepodunk,1211,264,Text, , 
+thirdRoomToSecond,1225.0,245.0,32,32,tailcavepodunk,745,988,Text, , 
+Description,0.0,0.0,32,32,podunk,0,0,Text, , 

@@ -1,0 +1,4 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,678.0,587.0,24,32,[FLAGISSET_lloydGarbageSpokenTo][_11E][ELSE][_11D][SETFLAG_lloydGarbageSpokenTo][ENDIF],Lloyd,,showLloyd
+loid,678.0,587.0,24,32,[FLAGISSET_haveBottleRocket][_123][ELSE][_120][ENDIF],[LLOYD],showLloyd,lloydInParty
+ninten,0.0,0.0,24,32,New Entity,NewEntityName, , 

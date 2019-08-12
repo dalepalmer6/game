@@ -1,5 +1,5 @@
 DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
-toMerrysville,145,244,12,52,merrysville,4220,3176,text, , 
-to reindeerleft,2411,243,9,52,reindeer,288,296,text, , 
-to spookane right,147,572,12,52,spookane,3250,1128,text, , 
-to Snowman,2412,562,20,52,snowman,256,348,text, , 
+toMerrysville,145.0,244.0,12,52,merrysville,4220,3176,text, , 
+to reindeerleft,2411.0,243.0,9,52,reindeer,288,296,text, , 
+to spookane right,147.0,572.0,12,52,spookane,3250,1128,text, , 
+to Snowman,2412.0,562.0,20,52,snowman,256,348,text, , 

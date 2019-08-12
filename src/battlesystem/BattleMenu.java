@@ -135,13 +135,21 @@ public class BattleMenu extends Menu {
 		windowStack = new ArrayList<MenuItem>();
 	}
 	
+	public String predicateToUpperCase(String p) {
+		if (p.equals("") || p.equals(" ")) {
+			return "";
+		}
+		return p.substring(0,1).toUpperCase() + p.substring(1) + " ";
+	}
+	
 	public void generateGreeting() {
 		String greeting = enemies.get(0).getPredicate();
+		greeting = predicateToUpperCase(greeting);
 		greeting += enemies.get(0).getName();
 		if (enemies.size() > 1) {
 			greeting += " and cohorts";
 		}
-		greeting += " suddenly attacked";
+		greeting += " suddenly attacked"; // unique string?
 		greeting += ".";
 		setPromptGreet(greeting);
 		waitToStart = true;
@@ -152,15 +160,14 @@ public class BattleMenu extends Menu {
 		actionMenu.setSteps(160,0);
 		Bash bashButton = new Bash("Bash",0,0,state);
 		actionMenu.add(bashButton);
-		GoodsMenuItem goodsButton = new GoodsMenuItem(state,state.getGameState().getPartyMembers(),0);
+		GoodsMenuItem goodsButton = new GoodsMenuItem(state,partyMembers.get(indexMembers-1),0);
 		actionMenu.add(goodsButton);
-//		PSI psiButton = new PSI("PSI",0,0,state);
-		PSIMenuItem psiButton = new PSIMenuItem(state,state.getGameState().getPartyMembers(),0);
+		PSIMenuItem psiButton = new PSIMenuItem(state,partyMembers,0);
 		actionMenu.add(psiButton);
 		Defend statusButton = new Defend("Guard",0,0,state);
 		actionMenu.add(statusButton);
-		RunAway runButton = new RunAway("Run Away",0,0,state);
-		actionMenu.add(runButton);
+//		RunAway runButton = new RunAway("Run Away",0,0,state);
+//		actionMenu.add(runButton);
 //		actionMenu.setKillWhenComplete();
 	}
 	
@@ -176,9 +183,6 @@ public class BattleMenu extends Menu {
 		state.battleMenu = this;
 		//create a battle menu
 		state.getMenuStack().push(this);
-		MainWindow mainWindow = state.getMainWindow();
-		
-		createActionMenu();
 		
 		enemies = new ArrayList<BattleEntity>();
 		for (EnemyEntity ee : enemyEntities) {
@@ -373,14 +377,10 @@ public class BattleMenu extends Menu {
 		return turnStack.isEmpty();
 	}
 	
-//	public void update(InputController input) {
-//		
-//	}
-//	
 	public void createYouWin() {
 		state.setAudioOverride(false);
 		state.setBGM("you win.ogg");
-		state.setAudioOverride(true);
+//		state.setAudioOverride(true);
 		menuItems.remove(actionMenu);
 		ended = true;
 		getNext = false;
@@ -467,7 +467,7 @@ public class BattleMenu extends Menu {
 				if (newPP != 0)
 				levelupString += "Max PP went up by " + newPP + ".[PROMPTINPUT]";
 				if (newPSI != oldPSI) {
-					levelupString += "[PLAYSFX_psilearn.wav]" + pm.getName() + " learned a new PSI ability through battle.[PROMPTINPUT]";
+					levelupString += "[PLAYSFX_psilearn.wav]" + pm.getName() + " acquired a new PSI ability through battle.[PROMPTINPUT]";
 					pm.setKnownPSI(newPSI);
 				}
 				
@@ -503,18 +503,18 @@ public class BattleMenu extends Menu {
 	public void doDoneFadeOutAction() {
 		// TODO Auto-generated method stub
 		killBattleMenu();
+		state.setAudioOverride(false);
+		state.setBGM(state.getGameState().getMap().getBGM());
 	}
 	
 	public void killBattleMenu() {
 		state.getMenuStack().pop();
 		state.setShouldFadeIn();
-		state.setOldBGM();
+		state.getGameState().restoreEnemyEntities();
 		for (EnemyEntity ee : enemyEntities) {
 			ee.setToRemove(true);
 		}
 		state.inBattle = false;
-		state.setAudioOverride(false);
-		state.getGameState().setFlag("audioChanged",false);
 		state.setDrawAllMenus(false);
 		state.getGameState().setInvincibleCounter();
 		state.setNeedAddSavedMenu(state.getSavedMenu());
@@ -539,6 +539,7 @@ public class BattleMenu extends Menu {
 		}
 		int numAliveParty = 0;
 		if (kill && getNext) {
+			//TODO create the game over routine and go here
 			endBattleRoutine();
 		}
 		
@@ -549,7 +550,6 @@ public class BattleMenu extends Menu {
 					if (!((e.getState() & 16) == 16)) {
 						if (e.getStats().getStat("CURHP") <= 0) {
 							alertDeadEntity = true;
-//							locked = true;
 							deadEntities.add(e);
 							break;
 						}
@@ -575,6 +575,8 @@ public class BattleMenu extends Menu {
 					getNext = true;
 					getNextPrompt = false;
 					getResultText = false;
+					state.addSavedMenu(false);
+					state.clearSavedMenu();
 				}
 			}
 			
@@ -725,7 +727,7 @@ public class BattleMenu extends Menu {
 		
 		if (readyToDisplay) {
 			windowStack.clear();
-			addToMenuItems(prompt);
+			addMenuItem(prompt);
 			if (battleSceneEnd) {
 				battleSceneEnd = false;
 				addToMenuItems(youWon);

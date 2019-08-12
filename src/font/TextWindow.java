@@ -94,6 +94,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		this.text.setState(state);
 		this.m = m;
 		this.shouldDrawAll = shouldDrawAll;
+		drawingY = y;
 	}
 	
 	public void drawWindow(MainWindow m) {

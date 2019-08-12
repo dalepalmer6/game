@@ -1,0 +1,4 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+podunk exit,5084,4072,96,32,podunk,1391,178,hello, , 
+exit to magicant caves,6204,2022,28,136,podunk,2629,577,hello, , 
+toHouse,4632,1965,12,8,warden house,502,298,, , 

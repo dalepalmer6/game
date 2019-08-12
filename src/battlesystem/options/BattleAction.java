@@ -286,6 +286,7 @@ public class BattleAction {
 			case "item" : 	if (itemToUse.getActionType() == 0 || itemToUse.getActionType() == 1) {
 								isHealing = true;
 							} 
+							itemToUse.consume(actor);
 							if (targetAll) {
 								if (index >= targets.size()) {
 									state.battleMenu.setGetNextPrompt();
@@ -429,6 +430,7 @@ public class BattleAction {
 			case "run":		battleString = "Tried to run... but failed!";
 							break;
 			case "psi":		
+							itemToUse.consume(actor);
 							if (actor instanceof PCBattleEntity) {
 								state.setSFX("psicast.wav");
 								state.playSFX();

@@ -26,6 +26,7 @@ public class EnemyEntity extends Entity {
 		this.enemys = clones;
 		stepSizeX =4;
 		stepSizeY =4;
+		movementPattern = 4;
 	}
 	
 //	public void update(GameState gs) {
@@ -36,6 +37,10 @@ public class EnemyEntity extends Entity {
 	
 	public ArrayList<Enemy> getEnemiesList() {
 		return enemys;
+	}
+	
+	public int getMaxAllies() {
+		return enemys.get(0).getMaxAllies();
 	}
 
 	@Override

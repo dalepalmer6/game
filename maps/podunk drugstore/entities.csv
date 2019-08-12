@@ -1,7 +1,7 @@
 TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
-ninten,357,182,24,32,[_058],returnLady, , 
-ninten,988,212,24,32,[_05B],returnLady, , 
-ninten,968,564,24,32,[_04d][PROMPTINPUT][_04e],returnLady, , 
-ninten,440,564,24,32,TEXT,returnLady, , 
-ninten,931,564,24,32,TEXT,returnLady, , 
-ninten,0,0,24,32,TEXT,returnLady, , 
+ninten,357.0,182.0,24,32,[_058],returnLady, , 
+ninten,988.0,212.0,24,32,[_05B],returnLady, , 
+ninten,968.0,564.0,24,32,[_04d][PROMPTINPUT][_04e],returnLady, , 
+ninten,440.0,564.0,24,32,TEXT,returnLady, , 
+ninten,931.0,564.0,24,32,TEXT,returnLady, , 
+ninten,0.0,0.0,24,32,TEXT,returnLady, , 

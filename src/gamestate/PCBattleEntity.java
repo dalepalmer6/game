@@ -10,11 +10,20 @@ import menu.StartupNew;
 public class PCBattleEntity extends BattleEntity {
 	private String id; //use to get the sprite to draw on top of the window
 	private ArrayList<Item> items;
+	private PartyMember partyMember;
+	
+	public void consumePP(int usedPP) {
+		partyMember.consumePP(usedPP);
+	}
 	
 	public PCBattleEntity(String texture, String name, String id, EntityStats stats, StartupNew state,int status) {
 		super(texture,name,stats,state);
 		this.id = id;
 		this.status = status;
+	}
+	
+	public void setPartyMember(PartyMember pm) {
+		this.partyMember = pm;
 	}
 	
 	public String getId() {
@@ -39,6 +48,10 @@ public class PCBattleEntity extends BattleEntity {
 	
 	public ArrayList<Item> getItems() {
 		return items;
+	}
+	
+	public void consumeItem(Item i) {
+		partyMember.consumeItem(i);
 	}
 	
 }

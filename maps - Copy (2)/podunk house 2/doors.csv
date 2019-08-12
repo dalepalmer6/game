@@ -1,0 +1,9 @@
+DESCRIPTION,X,Y,WIDTH,HEIGHT,DESTINATION_MAP,DESTX,DESTY,TEXT,APPEARFLAG,DISAPPEARFLAG
+toPodunk,780,250,8,8,podunk,1368,3381,, , 
+lobbyToHall,295,215,8,8,podunk house 2,476,598,, , 
+lobbyToATM,685,247,8,8,podunk house 2,914,576,, , 
+hallToRoom1,365,571,8,8,podunk house 2,1153,205,, , 
+hallToRoom2,0,0,8,8,podunk house 2,0,0,, , 
+room1ToHall,908,570,8,8,podunk house 2,360,578,, , 
+room2ToHall,1129,208,8,8,podunk house 2,0,0,, , 
+hallToLobby,496,600,8,8,podunk house 2,316,231,, , 

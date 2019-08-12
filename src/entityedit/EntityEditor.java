@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import gamestate.DoorEntity;
 import gamestate.Enemy;
 import gamestate.EnemySpawnEntity;
+import gamestate.EnemySpawnGroup;
 import gamestate.Entity;
 import gamestate.HotSpot;
 import gamestate.PresentEntity;
@@ -41,10 +42,11 @@ public class EntityEditor {
 
 	private JFrame frame;
 	private JTextField nameTextField;
-	private JTextField enemy1TextField;
-	private JTextField enemy2TextField;
-	private JTextField enemy3TextField;
-	private JTextField enemy4TextField;
+//	private JTextField enemy1TextField;
+//	private JTextField enemy2TextField;
+//	private JTextField enemy3TextField;
+//	private JTextField enemy4TextField;
+	private JComboBox<EnemySpawnGroup> enemySpawnGroupComboBox;
 	private JTextField heightTextField;
 	private JTextField widthTextField;
 	private JTextField disappearTextField;
@@ -86,10 +88,10 @@ public class EntityEditor {
 		
 		int item = itemComboBox.getSelectedIndex();
 		
-		int enemyIndex1 = enemy1ComboBox.getSelectedIndex();
-		int enemyIndex2 = enemy2ComboBox.getSelectedIndex();
-		int enemyIndex3 = enemy3ComboBox.getSelectedIndex();
-		int enemyIndex4 = enemy4ComboBox.getSelectedIndex();
+//		int enemyIndex1 = enemy1ComboBox.getSelectedIndex();
+//		int enemyIndex2 = enemy2ComboBox.getSelectedIndex();
+//		int enemyIndex3 = enemy3ComboBox.getSelectedIndex();
+//		int enemyIndex4 = enemy4ComboBox.getSelectedIndex();
 		
 		
 		if (entity instanceof DoorEntity && !(entity instanceof HotSpot)) {
@@ -99,11 +101,12 @@ public class EntityEditor {
 		} else if (entity instanceof PresentEntity) {
 			((PresentEntity)entity).setNewParams(x,y,name,item);
 		} else if (entity instanceof EnemySpawnEntity) {
-			float percent1 = Float.parseFloat(enemy1TextField.getText());
-			float percent2 = Float.parseFloat(enemy2TextField.getText());
-			float percent3 = Float.parseFloat(enemy3TextField.getText());
-			float percent4 = Float.parseFloat(enemy4TextField.getText());
-			((EnemySpawnEntity)entity).setNewParams(x,y,width,height,name,enemyIndex1,enemyIndex2,enemyIndex3,enemyIndex4,percent1,percent2,percent3,percent4);
+			int index = (((EnemySpawnGroup)enemySpawnGroupComboBox.getSelectedItem()).getIndex());
+			((EnemySpawnEntity)entity).setNewParams(index,x,y,width,height);
+//			float percent2 = Float.parseFloat(enemy2TextField.getText());
+//			float percent3 = Float.parseFloat(enemy3TextField.getText());
+//			float percent4 = Float.parseFloat(enemy4TextField.getText());
+//			((EnemySpawnEntity)entity).setNewParams(x,y,width,height,name,enemyIndex1,enemyIndex2,enemyIndex3,enemyIndex4,percent1,percent2,percent3,percent4);
 		} else {
 			//entity
 			entity.setNewParams(x,y,width,height,name,texture + ".png",appFlag,disFlag);
@@ -146,13 +149,16 @@ public class EntityEditor {
 			for (String e : state.allEntities.keySet()) {
 				textureComboBox.addItem(e);
 			}
-			for (int n : state.enemies.keySet()) {
-				Enemy en = state.enemies.get(n);
-				enemy1ComboBox.addItem(en.getName());
-				enemy2ComboBox.addItem(en.getName());
-				enemy3ComboBox.addItem(en.getName());
-				enemy4ComboBox.addItem(en.getName());
+			for (int esg : state.enemySpawnGroups.keySet()) {
+				enemySpawnGroupComboBox.addItem(state.enemySpawnGroups.get(esg));
 			}
+//			for (int n : state.enemies.keySet()) {
+//				Enemy en = state.enemies.get(n);
+//				enemy1ComboBox.addItem(en.getName());
+//				enemy2ComboBox.addItem(en.getName());
+//				enemy3ComboBox.addItem(en.getName());
+//				enemy4ComboBox.addItem(en.getName());
+//			}
 			done = true;
 		}
 		
@@ -187,15 +193,16 @@ public class EntityEditor {
 			itemComboBox.setSelectedIndex(((PresentEntity) entity).getItemId());
 		}
 		if (entity instanceof EnemySpawnEntity) {
-			int value = 0;
-			enemy1ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
-			enemy2ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
-			enemy3ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
-			enemy4ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
-			enemy1TextField.setText(((EnemySpawnEntity) entity).getRates()[0] + "");
-			enemy2TextField.setText(((EnemySpawnEntity) entity).getRates()[1] + "");
-			enemy3TextField.setText(((EnemySpawnEntity) entity).getRates()[2] + "");
-			enemy4TextField.setText(((EnemySpawnEntity) entity).getRates()[3] + "");
+//			int value = 0;
+			enemySpawnGroupComboBox.setSelectedItem(state.enemySpawnGroups.get(((EnemySpawnEntity) entity).getIndex()));
+//			enemy1ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
+//			enemy2ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
+//			enemy3ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
+//			enemy4ComboBox.setSelectedIndex(((EnemySpawnEntity) entity).getEnemies().get(1).getId());
+//			enemy1TextField.setText(((EnemySpawnEntity) entity).getRates()[0] + "");
+//			enemy2TextField.setText(((EnemySpawnEntity) entity).getRates()[1] + "");
+//			enemy3TextField.setText(((EnemySpawnEntity) entity).getRates()[2] + "");
+//			enemy4TextField.setText(((EnemySpawnEntity) entity).getRates()[3] + "");
 		}
 		frame.revalidate();
 	}
@@ -308,21 +315,25 @@ public class EntityEditor {
 		lblEnemyList.setBounds(328, 50, 116, 16);
 		panel.add(lblEnemyList);
 		
-		enemy1ComboBox = new JComboBox();
-		enemy1ComboBox.setBounds(456, 47, 85, 22);
-		panel.add(enemy1ComboBox);
+		enemySpawnGroupComboBox = new JComboBox<EnemySpawnGroup>();
+		enemySpawnGroupComboBox.setBounds(456, 47, 200, 22);
+		panel.add(enemySpawnGroupComboBox);
 		
-		enemy2ComboBox = new JComboBox();
-		enemy2ComboBox.setBounds(456, 78, 85, 22);
-		panel.add(enemy2ComboBox);
-		
-		enemy3ComboBox = new JComboBox();
-		enemy3ComboBox.setBounds(456, 104, 85, 22);
-		panel.add(enemy3ComboBox);
-		
-		enemy4ComboBox = new JComboBox();
-		enemy4ComboBox.setBounds(456, 133, 85, 22);
-		panel.add(enemy4ComboBox);
+//		enemy1ComboBox = new JComboBox();
+//		enemy1ComboBox.setBounds(456, 47, 85, 22);
+//		panel.add(enemy1ComboBox);
+//		
+//		enemy2ComboBox = new JComboBox();
+//		enemy2ComboBox.setBounds(456, 78, 85, 22);
+//		panel.add(enemy2ComboBox);
+//		
+//		enemy3ComboBox = new JComboBox();
+//		enemy3ComboBox.setBounds(456, 104, 85, 22);
+//		panel.add(enemy3ComboBox);
+//		
+//		enemy4ComboBox = new JComboBox();
+//		enemy4ComboBox.setBounds(456, 133, 85, 22);
+//		panel.add(enemy4ComboBox);
 		
 		JLabel lblItem = new JLabel("Item");
 		lblItem.setBounds(328, 194, 56, 16);
@@ -340,25 +351,23 @@ public class EntityEditor {
 		lblNewLabel_10.setBounds(328, 252, 56, 16);
 		panel.add(lblNewLabel_10);
 		
-		enemy1TextField = new JTextField();
-		enemy1TextField.setBounds(553, 47, 56, 22);
-		panel.add(enemy1TextField);
-		enemy1TextField.setColumns(10);
 		
-		enemy2TextField = new JTextField();
-		enemy2TextField.setBounds(553, 75, 56, 22);
-		panel.add(enemy2TextField);
-		enemy2TextField.setColumns(10);
+//		enemySpawnGroupComboBox.setColumns(10);
 		
-		enemy3TextField = new JTextField();
-		enemy3TextField.setBounds(553, 104, 56, 22);
-		panel.add(enemy3TextField);
-		enemy3TextField.setColumns(10);
-		
-		enemy4TextField = new JTextField();
-		enemy4TextField.setBounds(553, 133, 56, 22);
-		panel.add(enemy4TextField);
-		enemy4TextField.setColumns(10);
+//		enemy2TextField = new JTextField();
+//		enemy2TextField.setBounds(553, 75, 56, 22);
+//		panel.add(enemy2TextField);
+//		enemy2TextField.setColumns(10);
+//		
+//		enemy3TextField = new JTextField();
+//		enemy3TextField.setBounds(553, 104, 56, 22);
+//		panel.add(enemy3TextField);
+//		enemy3TextField.setColumns(10);
+//		
+//		enemy4TextField = new JTextField();
+//		enemy4TextField.setBounds(553, 133, 56, 22);
+//		panel.add(enemy4TextField);
+//		enemy4TextField.setColumns(10);
 		
 		JButton setDestinationButton = new JButton("Set Destination");
 		setDestinationButton.setBounds(559, 335, 160, 25);
@@ -512,8 +521,8 @@ public class EntityEditor {
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				// TODO Auto-generated method stub
-				Entity e = new EnemySpawnEntity(0,0,32,32,state,"");
-				e.setText("New Entity");
+				Entity e = new EnemySpawnEntity(0,0,0,32,32,state,"");
+				e.setText("New Enemy Group // this is never shown anyways");
 				((MapEditMenu)state.getMenuStack().peek()).getMapPreview().setAddedEntity(e);
 				reload();
 				updateAllFields();

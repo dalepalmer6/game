@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import actionmenu.goodsmenu.GoodsMenu;
 import actionmenu.goodsmenu.GoodsMenuOutOfBattle;
 import actionmenu.goodsmenu.InventorySelectionTextWindows;
+import battlesystem.menu.GoodsMenuInBattle;
 import gamestate.PartyMember;
 import menu.MenuItem;
 import menu.StartupNew;
@@ -18,6 +19,12 @@ public class GoodsMenuItem extends TexturedMenuItem {
 		this.party = party;
 		targetY = 0;
 	}
+	
+	public GoodsMenuItem(StartupNew state, PartyMember pm, int ty) {
+		super("Goods",32,ty,14*4,14*4,state,"menu.png",32,0,14,14);
+		this.party = new ArrayList<PartyMember>();
+		this.party.add(pm);
+	}
 
 	public String execute() {
 		//create the goods Menu
@@ -26,8 +33,14 @@ public class GoodsMenuItem extends TexturedMenuItem {
 //		state.setSFX("window.wav");
 //		state.playSFX();
 		
-		GoodsMenuOutOfBattle piw = new GoodsMenuOutOfBattle(state,party);
-		state.getMenuStack().push(piw);
+		if (state.inBattle) {
+			GoodsMenuInBattle gmib = new GoodsMenuInBattle(state,party.get(0));
+			state.getMenuStack().push(gmib);
+		}
+		else {
+			GoodsMenuOutOfBattle piw = new GoodsMenuOutOfBattle(state,party);
+			state.getMenuStack().push(piw);
+		}
 		
 //		InventorySelectionTextWindows istws = new InventorySelectionTextWindows(state,party);
 //		istws.createMenu();

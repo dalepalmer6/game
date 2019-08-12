@@ -6,8 +6,6 @@ import gamestate.elements.items.Item;
 import menu.Animation;
 
 public class PSIAttack extends Item{
-	private int ppCost;
-	private String animation;
 	private Animation anim;
 	private String classification;
 	private String family;
@@ -16,17 +14,27 @@ public class PSIAttack extends Item{
 	
 	public PSIAttack(int id, String name, String desc, int type, int action, String animation,String classification,String family,String stage, int ppUsed) {
 		super(id,name,desc,type,action,-1,"",0,0);
-		ppCost = 0;
-		this.animation = animation;
+//		ppCost = 0;
+//		this.animation = animation;
 		this.classification = classification;
 		this.family = family;
 		this.stage = stage;
 		this.ppUsed = ppUsed;
+		this.consume = true;
 	}
 	
 	public int getPPConsumption() {
 		return ppUsed;
 	}
+	
+	public void consume(PartyMember user) {
+		user.consumePP(this.ppUsed);
+	}
+	
+	public void consume(BattleEntity user) {
+		user.getStats().replaceStat("CURPP",user.getStats().getStat("CURPP") - ppUsed);
+	}
+	
 	
 	public void setMinMaxDmg(int min, int max) {
 		this.damageUpperBound = max;

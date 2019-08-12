@@ -3,166 +3,118 @@ package actionmenu.psimenu;
 import java.util.ArrayList;
 
 import actionmenu.PlayerInfoWindow;
-import actionmenu.equipmenu.TextLabel;
-import actionmenu.goodsmenu.GoodsSelectMenuItem;
-import actionmenu.goodsmenu.InvisibleMenuItem;
+import battlesystem.menu.psi.PSIAttackMenuItem;
 import font.SelectionTextWindow;
+import font.TextWindow;
 import gamestate.PartyMember;
+import gamestate.elements.UsableOutOfBattle;
+import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
-import gamestate.psi.PSIClassification;
-import gamestate.psi.PSIFamily;
+import gamestate.elements.psi.PSIAttackUsableOutOfBattle;
 import global.InputController;
-import menu.MenuItem;
 import menu.StartupNew;
 
 public class PSIMenuOutOfBattle extends PlayerInfoWindow {
-	private SelectionTextWindow psiSTW;
-	private SelectionTextWindow classificationWindow;
-//	private ArrayList<SelectionTextWindow> psiLists;
-	private ArrayList<TextLabel> labels = new ArrayList<TextLabel>();
-	private boolean lockedIn;
-	private PartyMember currentPartyMember;
-	private int classId;
-	private MenuItem lastClassWindowSelection;
+	private ArrayList<SelectionTextWindow> inventories;
+	private TextWindow descWindow;
+	
+	public void reloadActionOnPop() {
+//		inventories = new ArrayList<SelectionTextWindow>();
+		int j = 0;
+		for (SelectionTextWindow stw:  inventories) {
+//			SelectionTextWindow base = new SelectionTextWindow(0,0,0,0,state);
+			stw.clearSelections();
+			stw.setCurrentOpen(stw.getTextStartX(),stw.getTextStartY());
+//			stw.setTextStart(base.getTextStartX()+96,base.getTextStartY());
+			stw.setSteps(680,0);
+			stw.setDrawOnly(false);
+			PartyMember pm = party.get(j++);
+			for (PSIAttack psi : pm.getKnownPSIList()) {
+				if (psi instanceof UsableOutOfBattle) {
+					stw.add(new PSIAttackMenuItem(psi,psi.getFamily() + " " + psi.getStage(),0,0,state,party,index));
+				}
+			}
+		}
+		if (!state.inBattle) {
+			menuTitle.setText("PSI");
+		}
+	}
 	
 	public PSIMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party) {
+		this(state,party,false);
+	}
+	
+	public PSIMenuOutOfBattle(StartupNew state, ArrayList<PartyMember> party,boolean selling) {
 		super(state,party);
-		this.party = party;
-		this.index = 0;
-		this.lockedIn = true;
-		reload();
-//		addMenuItem(invisSelectItem);
-//		menuItems.add(psiSTW);
-//		addMenuItem(classificationWindow);
-//		menuItems.addAll(labels);
+		inventories = new ArrayList<SelectionTextWindow>();
+		for (int i = 0; i < party.size(); i++) {
+			PartyMember pm = party.get(i);
+			SelectionTextWindow stw = new SelectionTextWindow("horizontal",256,128,20,9,state);
+			stw.setCurrentOpen(stw.getTextStartX()+96,stw.getTextStartY());
+			stw.setTextStart(stw.getTextStartX()+96,stw.getTextStartY());
+			stw.setSteps(680,0);
+			stw.setDrawOnly(true);
+			for (PSIAttack psi : pm.getKnownPSIList()) {
+				if (psi instanceof UsableOutOfBattle) {
+					stw.add(new PSIAttackMenuItem(psi,psi.getFamily() + " " + psi.getStage(),0,0,state,party,index));
+				}
+					
+			}
+			index++;
+			inventories.add(stw);
+			descWindow = new TextWindow(true," ",256,128+11*64,20,1,state);
+			//add a TexturedMenuItem that draws the item's picture
+			addMenuItem(descWindow);
+		}
+		index = 0;
+		if (!state.inBattle) {
+			menuTitle.setText("PSI");
+		}
+		
 	}
 	
 	public void update(InputController input) {
-		int x = 0;
-		int maxY = 0;
-		for (TextLabel tl : labels) {
-			setToRemove(tl);
-		}
-		if (labels.size() <= psiSTW.getYEnd()) {
-			maxY = labels.size();
-		} else {
-			maxY = psiSTW.getYEnd();
-		}
-		for (int i = psiSTW.getYStart(); i < maxY; i++) {
-			MenuItem mi = labels.get(i);
-			//psiSTW.getX() + psiSTW.getTextStartX() + 16,psiSTW.getY()+y
-			mi.setY(psiSTW.getY() + 32 + (x++)*64);
-			addToMenuItems(mi);
-		}
-		
-		if (!state.inBattle) {
-			super.update(input);
-		}
 		
 		if (!backShouldExit && input.getSignals().get("BACK")) {
-			psiSTW.setDrawOnly(true);
-			classificationWindow.setDrawOnly(false);
+			inventories.get(index).setDrawOnly(true);
 			backShouldExit = true;
 			menuItems.add(invisSelectItem);
 		}
-//		boolean updateSTW = false;
-//		if (invisSelectItem.getIndex() != index) {
-//			updateSTW = true;
-//		}
 		
 		if (!state.inBattle) {
 			index = invisSelectItem.getIndex();
+			super.update(input);
 		} else {
 			index = state.battleMenu.getIndex()-1;
 		}
-		if (party.get(index).getItemsList().get(0).getId() != 0) {
-//			descWindow.setText(((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription());
+		
+		if (party.get(index).getItemsList().get(0).getId() != 0 && !inventories.get(index).drawOnly()) {
+			descWindow.setText(((PSIAttackMenuItem) inventories.get(index).getSelectedItem()).getPSI().getDescription());
+		} else {
+			descWindow.setText("");
 		}
 		
-		if (lastClassWindowSelection != classificationWindow.getSelectedItem()) {
-			menuItems.remove(psiSTW);
-			enumPSIForMember();
+		
+		menuItems.removeAll(inventories);
+		this.addToMenuItems(inventories.get(index));
+		
+		if (inventories.get(index).isEmpty()) {
+			//add a menu item to the center saying "No Known Skills"
+			inventories.get(index).setDrawOnly(true);
+			return;
 		}
 		
-		lastClassWindowSelection = classificationWindow.getSelectedItem();
-
-	}
-	
-	public void enterPSIMenu() {
-//		invisSelectItem.setCanLoadInventory(false);
-		classificationWindow.setDrawOnly(true);
-		psiSTW.setDrawOnly(false);
-		backShouldExit = false;
-		setToRemove(invisSelectItem);
-	}
-	
-	public void exitPSIMenu() {
-		
-	}
-	
-	@Override
-	public void reload() {
 		if (!state.inBattle) {
-			super.reload();
-		}
-		menuItems.remove(classificationWindow);
-		classificationWindow = new SelectionTextWindow(256,128,3,4,state);
-		addMenuItem(classificationWindow);
-		for (PSIClassification psic : state.psiClassList.getPSIClassifications()) {
-			classificationWindow.add(new ClassificationMenuItem(state,psic));
-		}
-		PartyMember pm = party.get(0);
-		psiSTW = new PSISelectionTextWindow(256+192,128,15,3,state,pm);
-		
-		enumPSIForMember();
-		
-//		if (!state.inBattle) {
-//			invisSelectItem = new InvisibleMenuItem(state,party.size());
-//			addToMenuItems(invisSelectItem);
-//		}
-
-	}
-	
-	public void enumPSIForMember() {
-		currentPartyMember = party.get(index);
-		classId = classificationWindow.getSelectedIndex();
-		ArrayList<PSIFamily> psiFams = state.psiClassList.getPSIClassifications().get(classId).getFamilies();
-		psiSTW.clearSelections();
-		psiSTW.createGrid(5,15);
-		if (backShouldExit) {
-			psiSTW.setDrawOnly(true);
-		}
-		
-		labels = new ArrayList<TextLabel>();
-		this.addToMenuItems(psiSTW);
-		long knownPSI = currentPartyMember.getKnownPSI();
-
-		int x = 288;
-		int y = 32;
-		boolean atLeastOne = false;;
-		int i = 0;
-		int j = 0;
-		for (PSIFamily pf : psiFams) {
-			j = 0;
-			for (PSIAttack attack : pf.getStages()) {
-				psiSTW.setCurrentOpen(x+=32*2,y);
-				long comparator = (long) Math.pow(2,attack.getId());
-				if ((comparator & knownPSI) == comparator) {
-					atLeastOne = true;
-					psiSTW.add(new PSIAttackMenuItem(attack,0,0,state,party,index),j,i);
+			if (invisSelectItem.getCanLoadInventory()) {
+				if (party.get(index).getItemsList().get(0).getId() != 0) {
+					invisSelectItem.setCanLoadInventory(false);
+					inventories.get(index).setDrawOnly(false);
+					backShouldExit = false;
+					menuItems.remove(invisSelectItem);
 				}
-				
-				j++;
 			}
-			if (atLeastOne) {
-				TextLabel tl = new TextLabel(pf.getName(),(int)psiSTW.getX() + psiSTW.getTextStartX() + 16,(int)psiSTW.getY()+y,state);
-				labels.add(tl);
-				addToMenuItems(tl);
-				atLeastOne = false;
-			}
-			x = 288;
-			y += 32*2;
-			i++;
+		} else {
+			inventories.get(index).setDrawOnly(false);
 		}
 	}
 	

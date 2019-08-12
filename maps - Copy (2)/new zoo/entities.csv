@@ -1,0 +1,2 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,612.0,844.0,24,32,[FLAGISSET_haveZooKey]Eek![PROMPTINPUT]The monkey ran off with the Zoo Key.[PROMPTINPUT]Upon inspection it appears the gate is broken anyways![SETFLAG_usedZooKey][PROMPTINPUT]I guess I can go in?[ELSE]EEK![PROMPTINPUT]The monkey seems hostile.[PROMPTINPUT]Better stay away...[ENDIF],ninten, ,zooGateOpen

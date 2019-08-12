@@ -1,0 +1,3 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+ninten,461.0,305.0,24,32,[FLAGISSET_lloydGarbageSpokenTo][_11E][ELSE][_11D][SETFLAG_lloydGarbageSpokenTo] [ENDIF],[LLOYD], ,showLloyd
+loid,461.0,305.0,24,32,[FLAGISSET_haveBottleRocket][_123][ELSE][_120][ENDIF],[LLOYD],showLloyd,lloydInParty

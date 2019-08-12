@@ -55,7 +55,7 @@ public class Entity implements Drawable,EntityInterface {
 	protected long timer;
 	protected boolean forceAllowMovementY;
 	boolean collided;
-	private int movementPattern = 0;
+	protected int movementPattern = -1;
 	private String savedDirX;
 	private String savedDirY;
 	
@@ -412,25 +412,60 @@ public class Entity implements Drawable,EntityInterface {
 	}
 	
 	public void setPlayerAsTarget() {
-		Player player = state.getGameState().getPlayer();
+		Player player = getPlayer();
 		targetX = player.getX();
 		targetY = player.getY();
+	}
+	
+	public double getDistanceFromPlayer() {
+		Player player = getPlayer();
+		return Math.sqrt(Math.pow(player.x - this.x,2) + Math.pow(player.y - this.y,2));
+	}
+	
+	public Player getPlayer() {
+		return state.getGameState().getPlayer();
+	}
+	
+	public void goIdle() {
+		targetY = -1;
+		targetX = -1;
+		deltaX = 0;
+		deltaY = 0;
+		actionTaken = "idle";
 	}
 	
 	public void update(GameState gs) {
 		forceAllowMovementY = false;
 		timer++;
 		
+		if (movementPattern == 0) {
+			//approach the player whenever they are moving and when distance is low enough
+			Player player = getPlayer();
+			if (getDistanceFromPlayer() < 512) {
+				if (player.deltaX != 0 || player.deltaY != 0 ) {
+					setPlayerAsTarget();
+					stepSizeX = 2 + 8*Math.sin(timer * Math.PI/50);
+					stepSizeY = 4;
+				}
+			} else {
+				goIdle();
+			}
+		}
+		
 		if (movementPattern == 1) {
-			//sine movement 
-			setPlayerAsTarget();
-//			if (timer % 15 == 0) {
-				stepSizeX = 8*Math.sin(timer * Math.PI/100);
-				stepSizeY = 8;
-//			}
+			//sine movement, slower for crows
+			Player player = getPlayer();
+			if (player.deltaX != 0 || player.deltaY != 0) {
+				setPlayerAsTarget();
+				stepSizeX = 2 + 8*Math.sin(timer * Math.PI/50);
+				stepSizeY = 4;
+			} else {
+				goIdle();
+			}
 		}
 		
 		if (movementPattern == 2) {
+			//random movement for npcs
 			if (timer % 120 == 0) {
 				//implement different movement patterns using this similar style
 				//random pattern, will try to move in any open direction every 2 seconds randomly
@@ -451,6 +486,58 @@ public class Entity implements Drawable,EntityInterface {
 			}
 		}
 		
+		if (movementPattern == 3) {
+			//starman movement, move around in large increments instantly (teleporting type)
+			Player player = getPlayer();
+			if (getDistanceFromPlayer() < 1024) {
+				if (timer % 120 == 0) {
+					//every 2 seconds
+					stepSizeX = stepSizeY = 256;
+					if (this.x < player.x) {
+						this.targetX = this.x + 256;
+					} else if (this.x > player.x) {
+						this.targetX = this.x - 256;
+					}
+					
+					if (this.y < player.y) {
+						this.targetY = this.y + 256;
+					} else if (this.y > player.y) {
+						this.targetY = this.y - 256;
+					}
+				} else {
+					stepSizeX = stepSizeY = 0;
+					goIdle();
+				}
+			}
+		}
+		
+		if (movementPattern == 4) {
+			//move left and right slowly until you're close enough, then approach player semi quickly
+			if (getDistanceFromPlayer() < 512) {
+				setPlayerAsTarget();
+				stepSizeX = 4;
+				stepSizeY = 4;
+			} else {
+				//move left and right
+				goIdle();
+				directionY = "";
+				if (timer % 10 == 0) {
+					//swap dir
+					if (directionX.equals("left")) {
+						directionX = "right";
+					} else {
+						directionX = "left";
+					}
+				}
+			}
+		}
+			
+		if (movementPattern == 5) {
+			setPlayerAsTarget();
+			stepSizeX = 4;
+			stepSizeY = 4;
+		}
+			
 		moveSpeedThisFrame = (int) (stepSizeX * state.getGameState().getDeltaTime());
 		lastBehind = behind;
 		behind = false;

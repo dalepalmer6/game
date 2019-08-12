@@ -1,0 +1,5 @@
+TEXTURE,X,Y,WIDTH,HEIGHT,TEXT,NAME,APPEARFLAG,DISAPPEARFLAG
+mouse,3052.0,562.0,24,32,[FLAGISSET_killedRatKing][_88C][ELSE][_88A][_88B][ENDIF],Rat Ruler, , 
+mouse,3047.0,189.0,24,32,New Entity,Rat, , 
+mouse,2953.0,240.0,24,32,New Entity,Rat, , 
+mouse,2902.0,594.0,24,32,New Entity,Rat, , 

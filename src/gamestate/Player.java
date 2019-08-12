@@ -92,9 +92,6 @@ public class Player extends CameraControllingEntity implements Controllable{
 				interactables.get(i).interact();
 				setDirectionDuringAct(interactables.get(0));
 			} 
-//			else {
-//				SimpleDialogMenu.createDialogBox(state,"Nothing here.");
-//			}
 	}
 	
 	@Override

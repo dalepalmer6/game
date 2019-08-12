@@ -130,12 +130,6 @@ public class Menu implements MenuInterface {
 	
 	public void updateAll(InputController input) {
 		// TODO Auto-generated method stub
-//		for (int i = menuItems.size()-1; i >= 0; i--) {
-//			if ( menuItems.get(i) instanceof Controllable) {
-//				((Controllable) menuItems.get(i)).handleInput(input);
-//			}
-//			break;
-//		}
 		if (backShouldExit) {
 			if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
 				onPop();

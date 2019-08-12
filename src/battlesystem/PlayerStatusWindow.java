@@ -20,12 +20,16 @@ public class PlayerStatusWindow extends MenuItem {
 	private String statusCondition;
 	private double tickCount = 0;
 	private double ticksPerFrame = 0.25;
-	private int[] offsetX = {0,0,0};
+	private int[] HPoffsetX = {0,0,0};
+	private int[] PPoffsetX = {0,0,0};
 	private char[] HPdigitsArray = {'0','0','0'};
-	private double counter = 0;
-	private double[] counters = {0,0,0};
-	private boolean animating;
-	private int editing = 0; // 3 bits, 7 is all three
+	private char[] PPdigitsArray = {'0','0','0'};
+	private double[] countersHP = {0,0,0};
+	private double[] countersPP = {0,0,0};
+	private boolean animatingHP;
+	private boolean animatingPP;
+	private int editingHP = 0; // 3 bits, 7 is all three
+	private int editingPP = 0;
 	private PCBattleEntity battleEntity;
 	private Entity avatar;
 	
@@ -39,16 +43,28 @@ public class PlayerStatusWindow extends MenuItem {
 			avatar.moveOnScreen(0,32);
 		}
 		tickCount += ticksPerFrame;
-		if (tickCount % 1 == 0 && !animating) {
+		if (tickCount % 1 == 0 && !animatingHP) {
 			if (targetHP != HP) {
 				if (targetHP > HP) {
 					HP++;
 				} else {
 					HP--;
 				}
-				counters[2] = 0;
-				editing = 0;
-				animating = true;
+				countersHP[2] = 0;
+				editingHP = 0;
+				animatingHP = true;
+			}
+		}
+		if (tickCount % 1 == 0 && !animatingPP) {
+			if (targetPP != PP) {
+				if (targetPP > PP) {
+					PP++;
+				} else {
+					PP--;
+				}
+				countersPP[2] = 0;
+				editingPP = 0;
+				animatingPP = true;
 			}
 		}
 	}
@@ -67,6 +83,11 @@ public class PlayerStatusWindow extends MenuItem {
 			digits = "0" + digits;
 		}
 		HPdigitsArray = digits.toCharArray();
+		digits = PP + "";
+		while (digits.length() < 3) {
+			digits = "0" + digits;
+		}
+		PPdigitsArray = digits.toCharArray();
 		targetHP = HP;
 		targetPP = PP;
 		this.x = x;
@@ -122,20 +143,20 @@ public class PlayerStatusWindow extends MenuItem {
 //		m.renderTile(this.x+save,drawingY + overallY,32,32,16,16,8,8);
 //	}
 	
-	public void drawDigit(MainWindow m,int digit, int offsetX, double x, double y) {
+	public void drawDigit(MainWindow m,int digit, int PPoffsetX, double x, double y) {
 		int coordX = 0;
 		int coordY = 0;
 		switch (digit) {
-			case 0: coordX = 0 + offsetX; coordY = 72; break; 
-			case 1: coordX = 72+ offsetX; coordY = 72; break;
-			case 2: coordX = 144+ offsetX; coordY = 72; break;
-			case 3: coordX = 216+ offsetX; coordY = 72; break;
-			case 4: coordX = 288+ offsetX; coordY = 72; break;
-			case 5: coordX = 360+ offsetX; coordY = 72; break;
-			case 6: coordX = 432+ offsetX; coordY = 72; break;
-			case 7: coordX = 504+ offsetX; coordY = 72; break;
-			case 8: coordX = 576+ offsetX; coordY = 72; break;
-			case 9: coordX = 648+ offsetX; coordY = 72; break;
+			case 0: coordX = 0 + PPoffsetX; coordY = 72; break; 
+			case 1: coordX = 72+ PPoffsetX; coordY = 72; break;
+			case 2: coordX = 144+ PPoffsetX; coordY = 72; break;
+			case 3: coordX = 216+ PPoffsetX; coordY = 72; break;
+			case 4: coordX = 288+ PPoffsetX; coordY = 72; break;
+			case 5: coordX = 360+ PPoffsetX; coordY = 72; break;
+			case 6: coordX = 432+ PPoffsetX; coordY = 72; break;
+			case 7: coordX = 504+ PPoffsetX; coordY = 72; break;
+			case 8: coordX = 576+ PPoffsetX; coordY = 72; break;
+			case 9: coordX = 648+ PPoffsetX; coordY = 72; break;
 		}
 		m.renderTile(x,y,8*4,8*4,coordX,coordY,8,8);
 	}
@@ -149,11 +170,7 @@ public class PlayerStatusWindow extends MenuItem {
 //	}
 	
 	
-	public void drawHealth(MainWindow m) {
-		int hp = HP;
-//		drawHPIndicator(m);
-		System.out.println(tickCount);
-		
+	public void drawHealth(MainWindow m) {	
 		String digits = String.valueOf(HP);
 		while (digits.length() < 3) {
 			digits = "0" + digits;
@@ -162,18 +179,18 @@ public class PlayerStatusWindow extends MenuItem {
 		HPdigitsArray = digits.toCharArray();
 		double x = this.x + (29*4);
 		double y = this.drawingY + (24*4);
-		if (editing == 0) {
+		if (editingHP == 0) {
 			for (int i = 0; i < HPdigitsArray.length; i++) {
 				char c;
 				if((c = HPdigitsArray[i]) != oldDigitsArray[i]) {
 					if (i == 0) {
-						editing |= 1;
+						editingHP |= 1;
 					}
 					if (i == 1) {
-						editing |= 2;
+						editingHP |= 2;
 					}
 					if (i == 2) {
-						editing |= 4;
+						editingHP |= 4;
 					}
 				}
 			}
@@ -181,72 +198,147 @@ public class PlayerStatusWindow extends MenuItem {
 		
 		for (int i = 0; i < HPdigitsArray.length; i++) {
 			char c = HPdigitsArray[i];
-			if (((editing & (1 << i)) == (1 << i))) {
-				if (c != oldDigitsArray[i] || animating) {
+			if (((editingHP & (1 << i)) == (1 << i))) {
+				if (c != oldDigitsArray[i] || animatingHP) {
 					//scroll the digit to the value
-					if (counters[i] % 8 == 0) {
-						offsetX[i] = 63;
-					} else if (counters[i] % 8 == 1 ) {
-						offsetX[i] = 54;
-					} else if (counters[i] % 8 == 2 ) {
-						offsetX[i] = 45;
-					} else if (counters[i] % 8 == 3 ) {
-						offsetX[i] = 36;
-					} else if (counters[i] % 8 == 4) {
-						offsetX[i] = 27;
-					} else if (counters[i] % 8 == 5) {
-						offsetX[i] = 18;
-					} else if (counters[i] % 8 == 6) {
-						offsetX[i] = 9;
-					} else if (counters[i] % 8 == 7) {
-						offsetX[i] = 0;
-						editing = 0;
-						animating = false;
+					if (countersHP[i] % 8 == 0) {
+						HPoffsetX[i] = 63;
+					} else if (countersHP[i] % 8 == 1 ) {
+						HPoffsetX[i] = 54;
+					} else if (countersHP[i] % 8 == 2 ) {
+						HPoffsetX[i] = 45;
+					} else if (countersHP[i] % 8 == 3 ) {
+						HPoffsetX[i] = 36;
+					} else if (countersHP[i] % 8 == 4) {
+						HPoffsetX[i] = 27;
+					} else if (countersHP[i] % 8 == 5) {
+						HPoffsetX[i] = 18;
+					} else if (countersHP[i] % 8 == 6) {
+						HPoffsetX[i] = 9;
+					} else if (countersHP[i] % 8 == 7) {
+						HPoffsetX[i] = 0;
+						editingHP = 0;
+						animatingHP = false;
 					}
 					if (battleEntity.getDefending()) {
-						counters[i]+=0.5;
+						countersHP[i]+=0.5;
 					} else {
-						counters[i]+=1;
+						countersHP[i]+=1;
 					}
 				}
-				if (animating) {
+				if (animatingHP) {
 //					if (battleEntity.getDefending()) {
-//						counters[0] += 0.5;
-//						counters[1] += 0.5;
-//						counters[2] += 0.5;
+//						countersHP[0] += 0.5;
+//						countersHP[1] += 0.5;
+//						countersHP[2] += 0.5;
 //					} else {
-//						counters[0]+=1;
-//						counters[1]+=1;
-//						counters[2]+=1;
+//						countersHP[0]+=1;
+//						countersHP[1]+=1;
+//						countersHP[2]+=1;
 //					}
 				}
 				if (targetHP > HP) {
-					offsetX[i] *= -1;
+					HPoffsetX[i] *= -1;
 				}
 			}
 			
-			drawDigit(m,Integer.parseInt(String.valueOf(c)),offsetX[i], x,y);
+			drawDigit(m,Integer.parseInt(String.valueOf(c)),HPoffsetX[i], x,y);
 			x += 8*4;
 		}
-		
-		
 	}
 	
-	public void drawPP(MainWindow m) {
-		int pp = PP;
-//		drawPPIndicator(m);
-		String digits = String.valueOf(pp);
+	public void drawPP(MainWindow m) {	
+		String digits = String.valueOf(PP);
 		while (digits.length() < 3) {
 			digits = "0" + digits;
 		}
-		char[] digitsArray = digits.toCharArray();
-		double x = this.x + 29*4;
-		double y = this.drawingY + 34*4;
-		for (char c : digitsArray) {
-			drawDigit(m,Integer.parseInt(String.valueOf(c)),0, x,y);
+		char[] oldDigitsArray = PPdigitsArray;
+		PPdigitsArray = digits.toCharArray();
+		double x = this.x + (29*4);
+		double y = this.drawingY + (34*4);
+		if (editingPP == 0) {
+			for (int i = 0; i < PPdigitsArray.length; i++) {
+				char c;
+				if((c = PPdigitsArray[i]) != oldDigitsArray[i]) {
+					if (i == 0) {
+						editingPP |= 1;
+					}
+					if (i == 1) {
+						editingPP |= 2;
+					}
+					if (i == 2) {
+						editingPP |= 4;
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < PPdigitsArray.length; i++) {
+			char c = PPdigitsArray[i];
+			if (((editingPP & (1 << i)) == (1 << i))) {
+				if (c != oldDigitsArray[i] || animatingPP) {
+					//scroll the digit to the value
+					if (countersPP[i] % 8 == 0) {
+						PPoffsetX[i] = 63;
+					} else if (countersPP[i] % 8 == 1 ) {
+						PPoffsetX[i] = 54;
+					} else if (countersPP[i] % 8 == 2 ) {
+						PPoffsetX[i] = 45;
+					} else if (countersPP[i] % 8 == 3 ) {
+						PPoffsetX[i] = 36;
+					} else if (countersPP[i] % 8 == 4) {
+						PPoffsetX[i] = 27;
+					} else if (countersPP[i] % 8 == 5) {
+						PPoffsetX[i] = 18;
+					} else if (countersPP[i] % 8 == 6) {
+						PPoffsetX[i] = 9;
+					} else if (countersPP[i] % 8 == 7) {
+						PPoffsetX[i] = 0;
+						editingPP = 0;
+						animatingPP = false;
+					}
+					if (battleEntity.getDefending()) {
+						countersPP[i]+=0.5;
+					} else {
+						countersPP[i]+=1;
+					}
+				}
+				if (animatingPP) {
+//					if (battleEntity.getDefending()) {
+//						countersPP[0] += 0.5;
+//						countersPP[1] += 0.5;
+//						countersPP[2] += 0.5;
+//					} else {
+//						countersPP[0]+=1;
+//						countersPP[1]+=1;
+//						countersPP[2]+=1;
+//					}
+				}
+				if (targetPP > PP) {
+					PPoffsetX[i] *= -1;
+				}
+			}
+			
+			drawDigit(m,Integer.parseInt(String.valueOf(c)),PPoffsetX[i], x,y);
 			x += 8*4;
 		}
 	}
+	
+//	public void drawPP(MainWindow m) {
+//		int pp = PP;
+////		drawPPIndicator(m);
+//		String digits = String.valueOf(pp);
+//		while (digits.length() < 3) {
+//			digits = "0" + digits;
+//		}
+//		char[] digitsArray = digits.toCharArray();
+//		double x = this.x + 29*4;
+//		double y = this.drawingY + 34*4;
+//		for (char c : digitsArray) {
+//			drawDigit(m,Integer.parseInt(String.valueOf(c)),0, x,y);
+//			x += 8*4;
+//		}
+//	}
 	
 	public void draw(MainWindow m) {
 		avatar.draw(m);

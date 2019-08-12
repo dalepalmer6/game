@@ -1,9 +1,9 @@
 package battlesystem.options;
 
 import actionmenu.goodsmenu.GoodsMenu;
-import actionmenu.psimenu.PSIMenuSelectMember;
-import actionmenu.psimenu.PSIPickMenu;
 import battlesystem.BattleMenu;
+import battlesystem.menu.psi.PSIMenuSelectMember;
+import battlesystem.menu.psi.PSIPickMenu;
 import battlesystem.options.itemsmenu.ItemMenuItem;
 import battlesystem.options.psimenu.PSIAttackMenuItem;
 import font.SelectionTextWindow;
