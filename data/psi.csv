@@ -19,7 +19,7 @@
 17,PK Thunder [SC_gamma],A PSI attack that generates three shocking jolts of electricity. Each jolt deals 170 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_gamma] ,170,170,24
 18,PK Thunder [SC_omega],A PSI attack that generates four shocking jolts of electricity. Each jolt deals 180 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,pkthundergo,Offense,PK Thunder,[SC_omega] ,180,180,30
 19,PK Thunder [SC_sigma],An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,undef,Offense,PK Thunder,[SC_sigma] ,200,200,46
-20,4th D. Slip,The user creates a rift by which the party can escape from the current battle. Has a higher chance of success than simply running away.,0,TRUE,TRUE,41,undef,Other,4th Dimens. Slip,[SC_alpha] ,0,0,12
+20,4th D. Slip,The user creates a rift by which the party can escape from the current battle. Has a higher chance of success than simply running away.,0,TRUE,FALSE,41,undef,Other,4th Dimens. Slip,[SC_alpha] ,0,0,12
 21,Super Healing,Fully restores a fainted target to full HP.,0,TRUE,TRUE,2,undef,Healing,Super Healing,[SC_alpha] ,0,0,35
 22,Healing [SC_alpha],A PSI healing technique that cures the body of poison and cold.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_alpha] ,4092,4092,6
 23,Healing [SC_beta],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_beta] ,3608,3608,12
@@ -32,7 +32,7 @@
 30,PSI Shield [SC_beta],Creates a shield against PSI attacks[COMMA] causing PSI damage to be reduced by half.,1,TRUE,FALSE,29,psishieldb,Assist,PSI Shield,[SC_beta] ,2,2,28
 31,Teleport [SC_alpha],Visit a previously discovered location. Requires substantial room to gather enough speed.,-1,FALSE,TRUE,20,undef,Other,Teleport,[SC_alpha] ,0,0,2
 32,Teleport [SC_beta],No desc.,-1,FALSE,TRUE,21,undef,Other,Teleport,[SC_beta] ,0,0,8
-33,Telepathy,Telepathically communicate with things.,-1,FALSE,TRUE,22,undef,Other, ,Telepathy,0,0,1
+33,Telepathy,Telepathically communicate with things.,-1,FALSE,TRUE,22,undef,Other,Telepathy, ,0,0,1
 34,PK Beam [SC_alpha],Weak beam attack.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_alpha] ,40,80,3
 35,PK Beam [SC_beta],Strong beam attack.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_beta],120,160,9
 36,PK Beam [SC_gamma],Chance of instant death.,2,TRUE,FALSE,17,enemypsi,Offense,PK Beam,[SC_gamma],999,999,24
