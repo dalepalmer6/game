@@ -4,7 +4,7 @@
 2,used a biting attack!,26,0,2
 3,vented exhaust fumes.,27,4,3
 4,is staring menacingly.,30,0,2
-5,stole %s.,28,0,2
+5,tried to steal!,28,0,2
 6,fired the tank cannon!,26,0,3
 7,scratched with its claws.,26,0,2
 8,went berserk!,26,0,3
@@ -48,10 +48,16 @@
 46,attacks!,26,0,2
 47,lashed out with its power cord!,26,0,2
 48,is meditating.,30,0,2
-49,Used a Bull Horn.[WAIT30][NEWLINE]@Your mommy's calling for you!,30,0,2
+49,pulled out a Bull Horn.[WAIT30][NEWLINE]@Your mommy's calling for you!,30,0,2
 50,bit down hard!,26,0,2
 51,used a scratching attack!,26,0,2
 52,looked confused.,30,0,2
 53,begged you to stop.,30,0,2
 54,doesn't know what to do.,30,0,2
 55,considered giving up.,30,0,2
+56,sprayed poison gas!,27,2,2
+57,sprayed stone gas!,27,8,2
+58,sprayed exhaust fumes!,27,4,2
+59,sprayed sleep gas!,27,256,2
+60,sprayed cold inducing gas!,27,1,2
+61,sprayed paralysis gas!,27,512,2

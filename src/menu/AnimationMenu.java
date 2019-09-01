@@ -8,6 +8,7 @@ public class AnimationMenu extends Menu {
 	public AnimationMenu(StartupNew m) {
 		super(m);
 		// TODO Auto-generated constructor stub
+		canRemove = false;
 	}
 	
 	public boolean isComplete() {

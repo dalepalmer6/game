@@ -47,6 +47,17 @@ public class EnemyEntity extends Entity {
 	public void act() {
 		for (Entity e : interactables) {
 			if (e instanceof Player && !state.getGameState().isInvincible()) {
+				
+				if (((Player) e).running) {
+					
+					//logic to instant win against the enemy
+					
+					//for now, just kill the enemy
+					this.setToRemove(true);
+					return;
+					
+				}
+				
 				if (state.getGameState().getEnemiesCanJoin()) {
 					state.getGameState().addEnemyToBattleList(this);
 				} else if (state.getGameState().getCanEncounter()) {

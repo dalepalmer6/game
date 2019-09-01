@@ -16,6 +16,7 @@ public class SwirlAnimation extends Animation {
 	private boolean fadeOut;
 	private boolean readyToStart;
 	private AnimationFadeToBlack ftb;
+	ArrayList<EnemyEntity> enemyEntities = new ArrayList<EnemyEntity>();
 	
 	public SwirlAnimation(StartupNew m, ArrayList<EnemyEntity> enemyEntities) {
 		super(m,"swirl",0,0,m.getMainWindow().getScreenWidth(),m.getMainWindow().getScreenHeight());
@@ -27,7 +28,8 @@ public class SwirlAnimation extends Animation {
 //		enemies = new ArrayList<EnemyEntity>();
 		enemies = enemyEntities;
 		state.getGameState().setBattleEnemyList(enemies);
-//		state.getGameState().setEnemiesCanJoin(true);
+		state.getGameState().setEnemiesCanJoin(false);
+		calculateEnemiesThatCanJoin(enemyEntities.get(0));
 	}
 	
 	public SwirlAnimation(StartupNew m, EnemyEntity enemyEntity) {
@@ -39,21 +41,22 @@ public class SwirlAnimation extends Animation {
 		ticksPerFrame = 0.5d;
 		enemies = new ArrayList<EnemyEntity>();
 		enemies.add(enemyEntity);
-		state.getGameState().setMaxAllies(enemyEntity.getMaxAllies());
+		state.getMainWindow().setBattleTexture(null,null,null);
 		state.getGameState().setBattleEnemyList(enemies);
 		state.getGameState().setEnemiesCanJoin(true);
-		ArrayList<EnemyEntity> enemyEntities = new ArrayList<EnemyEntity>();
-		//todo move this
-		for (Entity e : state.getGameState().getEntityList()) {
-//			ArrayList<Entity> removeThese = new ArrayList<Entity>();
-			if (e instanceof EnemyEntity) {
-				enemyEntities.add((EnemyEntity) e);
-			}
-		}
+		calculateEnemiesThatCanJoin(enemyEntity);
+//		state.getGameState().getEntityList().add(enemyEntity);
+	}
+	
+	public void calculateEnemiesThatCanJoin(EnemyEntity enemyEntity) {
+		state.getGameState().setMaxAllies(enemyEntity.getMaxAllies());
+		ArrayList<EnemyEntity> enemyEntities = state.getGameState().getEnemyEntities();
 		state.getGameState().saveEnemyEntities(enemyEntities);
 		enemyEntities = sort(enemyEntities);
 		
 		state.getGameState().getEntityList().removeAll(enemyEntities);
+		
+		this.enemyEntities = enemyEntities;
 		
 		//take the first MAXALLIES enemies
 		int numAllies = state.getGameState().getMaxAllies();
@@ -70,7 +73,6 @@ public class SwirlAnimation extends Animation {
 		}
 		
 		state.getGameState().getEntityList().addAll(enemiesThatCanJoin);
-//		state.getGameState().getEntityList().add(enemyEntity);
 	}
 	
 	ArrayList<EnemyEntity> sort(ArrayList<EnemyEntity> entities)
@@ -99,6 +101,7 @@ public class SwirlAnimation extends Animation {
     }
 	
 	public void startBattle() {
+		state.getGameState().getEntityList().removeAll(this.enemyEntities);
 		state.getMenuStack().peek().setToRemove(this);
 		state.getGameState().setEnemiesCanJoin(false);
 		BattleMenu m = new BattleMenu(state);

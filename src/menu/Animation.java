@@ -30,6 +30,7 @@ public class Animation extends MenuItem {
 	private Texture textureSlick;
 	protected AnimationCoordinates coordinates;
 	protected double tickCount = 0;
+//	protected double ticksPerFrame = 0.34;
 	protected double ticksPerFrame = 0.34;
 	protected TileMetadata tm;
 	protected boolean complete;
@@ -122,7 +123,7 @@ public class Animation extends MenuItem {
 		
 		if (tickCount >= coordinates.getPose(0).getNumStates()-1) {
 			state.getMenuStack().peek().setToRemove(this);
-			((BattleMenu)state.getMenuStack().peek()).setGetResultText();
+			state.battleMenu.setGetResultText();
 //			((BattleMenu)state.getMenuStack().peek()).getCurrentActiveBattleAction().setComplete();
 			tickCount = 0;
 //			((BattleMenu)state.getMenuStack().peek()).getCurrentAction().setComplete();

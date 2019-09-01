@@ -96,6 +96,7 @@ public class GameState {
 	private int maxAlliesCanJoin;
 	private List<EnemyEntity> savedEnemyEntities;
 	private long timer;
+	private boolean canRun;
 	
 	public long getTimePlayed() {
 		return timer;
@@ -634,6 +635,7 @@ private void addPartyMembersNeeded() {
 		}
 		return false;
 	}
+	
 	public void createParty() {
 		while (numPartyMembers < party.size() && !getFlag("train")) {
 			savedParty = new ArrayList<Entity>();
@@ -670,7 +672,12 @@ private void addPartyMembersNeeded() {
 		timer++;
 	}
 	
+	public boolean canRun() {
+		return canRun && state.getMenuStack().isEmpty();
+	}
+	
 	public void update(InputController input) {
+		canRun = true;
 		if (input.getSignals().get("ENTER")) {
 			//debug to get teleport coordinates
 			try {
@@ -883,6 +890,18 @@ private void addPartyMembersNeeded() {
 		}
 	}
 	
+	public ArrayList<EnemyEntity> getEnemyEntities() {
+		ArrayList<EnemyEntity> entys = new ArrayList<EnemyEntity>();
+		//todo move this
+		for (Entity e : state.getGameState().getEntityList()) {
+//			ArrayList<Entity> removeThese = new ArrayList<Entity>();
+			if (e instanceof EnemyEntity) {
+				entys.add((EnemyEntity) e);
+			}
+		}
+		return entys;
+	}
+	
 	public void updateEntities(InputController input, boolean entitiesCanMove) {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
@@ -1025,7 +1044,10 @@ private void addPartyMembersNeeded() {
 		if (!enemies.contains(e)) {
 			enemies.add(e);
 		}
-		
+	}
+	
+	public void resetNumEntities() {
+		numEnemies = 0;
 	}
 
 	public void addNumEntities(int size) {

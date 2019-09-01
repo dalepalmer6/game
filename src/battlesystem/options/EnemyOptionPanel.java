@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
@@ -26,6 +30,7 @@ public class EnemyOptionPanel extends MenuItem {
 	private int entityToShake;
 	private int timer = -1;
 	private int killed = -1;
+	private Texture palette;
 	
 	public void setSelected(int i) {
 		selected = i;
@@ -90,6 +95,7 @@ public class EnemyOptionPanel extends MenuItem {
 			try {
 				String texture = enemyOptions.get(0).getEnemy().getBattleBG();
 				battleBGTexture = BufferedImageUtil.getTexture("", ImageIO.read(new File("img/battlebgs/" + texture)));
+				palette = BufferedImageUtil.getTexture("", ImageIO.read(new File("img/" + "palettetest.png")));
 				BufferedReader br = new BufferedReader(new FileReader(new File("img/battlebgs/" + texture.substring(0,texture.indexOf(".")))));
 				String row = br.readLine();
 				String[] split = row.split(",");
@@ -116,7 +122,7 @@ public class EnemyOptionPanel extends MenuItem {
 	public void drawBG(MainWindow m) {
 //		m.setUseShader(true);
 //		m.setTexture("img\\battlebg.png");
-		m.setBattleTexture(battleBGTexture,battleBGVars);
+		m.setBattleTexture(battleBGTexture,battleBGVars,palette);
 		m.setUseShader(true);
 		m.drawBattleBG();
 //		m.renderTile(0,0,m.getScreenWidth(),m.getScreenHeight(),0,0,256,256);

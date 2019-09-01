@@ -37,6 +37,8 @@ public class Entity implements Drawable,EntityInterface {
 	protected int height;
 	protected double stepSizeX = 8;
 	protected double stepSizeY = 8;
+	protected double runningStepSizeX = stepSizeX * 1.25;
+	protected double runningStepSizeY = stepSizeY * 1.25;
 	protected StartupNew state;
 	protected ArrayList<Entity> interactables;
 	private long delta;
@@ -58,6 +60,10 @@ public class Entity implements Drawable,EntityInterface {
 	protected int movementPattern = -1;
 	private String savedDirX;
 	private String savedDirY;
+	protected boolean running;
+	protected boolean crouch;
+	protected long crouchTimer = 0; //when this reaches 30, on release, it will allow you to run
+	protected boolean canRun;
 	
 	public void setIgnoreCollisions(boolean b) {
 		// TODO Auto-generated method stub
@@ -278,8 +284,9 @@ public class Entity implements Drawable,EntityInterface {
 					ignoreDiagX = true;
 					deltaX = Math.abs(targetX - x);
 				}
-				actionTaken="walking";
-				directionX = "right";
+				setMovementAction("right",null);
+//				actionTaken="walking";
+//				directionX = "right";
 			} else if (x > targetX){
 				deltaX = -stepSizeX;
 				if (x + deltaX < targetX) {
@@ -287,8 +294,8 @@ public class Entity implements Drawable,EntityInterface {
 					deltaX = Math.abs(targetX - x)*-1;
 				}
 				
-				actionTaken="walking";
-				directionX = "left";
+				setMovementAction("left",null);
+//				directionX = "left";
 			} 
 			
 			
@@ -303,16 +310,16 @@ public class Entity implements Drawable,EntityInterface {
 					deltaY = Math.abs(y - targetY);
 				}
 				
-				actionTaken="walking";
-				directionY = "down";
+				setMovementAction(null,"down");
+//				directionY = "down";
 			} else if (y > targetY) {
 				deltaY = -stepSizeY;
 				if (y + deltaY < targetY) {
 					ignoreDiagY = true;
 					deltaY = Math.abs(y - targetY)*-1;
 				}
-				actionTaken="walking";
-				directionY = "up";
+				setMovementAction(null,"up");
+//				directionY = "up";
 			}
 			
 			if (Math.abs(deltaX-0) <= 0.0001 && Math.abs(deltaY-0) <= 0.0001) {
@@ -352,6 +359,27 @@ public class Entity implements Drawable,EntityInterface {
 		y += deltaY;
 	}
 	
+	public void setMovementAction(String dx, String dy) {
+		if (running) {
+			actionTaken = "run";
+		} else {
+			actionTaken = "walking";
+		}
+		
+		if (dx != null) {
+			directionX = dx;
+		} else {
+			directionX = "";
+		}
+		
+		if (dy != null) {
+			directionY = dy;
+		} else {
+			directionY = "";
+		}
+		
+	}
+
 	public void setAtTargetPoint() {
 		atTargetPoint = true;
 		targetX = -1;

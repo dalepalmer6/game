@@ -21,11 +21,11 @@
 19,PK Thunder [SC_sigma],An ultimate PSI attack that generates five shocking jolts of electricity. Each jolt deals 200 points of damage to a foe[COMMA] but have a low accuracy.,3,TRUE,FALSE,10,undef,Offense,PK Thunder,[SC_sigma] ,200,200,46
 20,4th D. Slip,The user creates a rift by which the party can escape from the current battle. Has a higher chance of success than simply running away.,0,TRUE,FALSE,41,undef,Other,4th Dimens. Slip,[SC_alpha] ,0,0,12
 21,Super Healing,Fully restores a fainted target to full HP.,0,TRUE,TRUE,2,undef,Healing,Super Healing,[SC_alpha] ,0,0,35
-22,Healing [SC_alpha],A PSI healing technique that cures the body of poison and cold.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_alpha] ,4092,4092,6
-23,Healing [SC_beta],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_beta] ,3608,3608,12
-24,Healing [SC_gamma],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone. Also has a small chance of reviving a fainted ally.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_gamma] ,3096,3096,24
-25,Healing [SC_omega],A PSI healing technique that cures the body of all status afflictions[COMMA] and resurrects a fainted party member to half of their maximum HP.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_omega] ,3096,3096,32
-26,Healing [SC_sigma],An ultimate PSI healing technique that cures all status afflictions on the party. Revives all fainted party members to half HP.,1,TRUE,TRUE,2,undef,Healing,Healing,[SC_sigma] ,0,0,40
+22,Healing [SC_alpha],A PSI healing technique that cures the body of poison and cold.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_alpha] ,69,69,6
+23,Healing [SC_beta],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_beta] ,359,359,12
+24,Healing [SC_gamma],A PSI healing technique that cures the body of poison[COMMA] cold[COMMA] stone. Also has a small chance of reviving a fainted ally.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_gamma] ,895,895,24
+25,Healing [SC_omega],A PSI healing technique that cures the body of all status afflictions[COMMA] and resurrects a fainted party member to half of their maximum HP.,0,TRUE,TRUE,2,undef,Healing,Healing,[SC_omega] ,895,895,32
+26,Healing [SC_sigma],An ultimate PSI healing technique that cures all status afflictions on the party. Revives all fainted party members to half HP.,1,TRUE,TRUE,2,undef,Healing,Healing,[SC_sigma] ,895,895,40
 27,Shield [SC_alpha],Creates a shield against physical attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,shieldb,Assist,Shield,[SC_alpha] ,1,1,16
 28,Shield [SC_beta],Creates a shield against physical attacks[COMMA] causing physical damage to be reduced by half.,1,TRUE,FALSE,29,shieldb,Assist,Shield,[SC_beta] ,1,1,28
 29,PSI Shield [SC_alpha],Creates a shield against PSI attacks[COMMA] causing partial damage nullification.,0,TRUE,FALSE,29,psishielda,Assist,PSI Shield,[SC_alpha] ,2,2,16
@@ -49,12 +49,12 @@
 47,PSI Darkness [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,PSI Darkness,[SC_omega],2,2,25
 48,PSI Block [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,PSI Block,[SC_alpha],128,128,5
 49,PSI Block [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,PSI Block,[SC_omega],128,128,15
-50,Offense Up [SC_alpha],No desc.,0,TRUE,FALSE,5,defdowna,Assist,Offense Up,[SC_alpha],15,30,6
-51,Offense Up [SC_omega],No desc.,1,TRUE,FALSE,5,defdowno,Assist,Offense Up,[SC_omega],15,30,20
-52,Defense Up [SC_alpha],No desc.,0,TRUE,FALSE,6,defdowna,Assist,Defense Up,[SC_alpha],15,30,3
-53,Defense Up [SC_omega],No desc.,1,TRUE,FALSE,6,defdowno,Assist,Defense Up,[SC_omega],15,30,13
-54,Quick Up [SC_alpha],No desc.,0,TRUE,FALSE,4,defdowna,Assist,Quick Up,[SC_alpha],15,30,3
-55,Quick Up [SC_omega],No desc.,1,TRUE,FALSE,4,defdowno,Assist,Quick Up,[SC_omega],15,30,13
+50,Offense Up [SC_alpha],No desc.,0,TRUE,FALSE,5,defdowna,Assist,Offense Up,[SC_alpha],15,-30,6
+51,Offense Up [SC_omega],No desc.,1,TRUE,FALSE,5,defdowno,Assist,Offense Up,[SC_omega],15,-30,20
+52,Defense Up [SC_alpha],No desc.,0,TRUE,FALSE,6,defdowna,Assist,Defense Up,[SC_alpha],15,-30,3
+53,Defense Up [SC_omega],No desc.,1,TRUE,FALSE,6,defdowno,Assist,Defense Up,[SC_omega],15,-30,13
+54,Quick Up [SC_alpha],No desc.,0,TRUE,FALSE,4,defdowna,Assist,Quick Up,[SC_alpha],15,-30,3
+55,Quick Up [SC_omega],No desc.,1,TRUE,FALSE,4,defdowno,Assist,Quick Up,[SC_omega],15,-30,13
 56,Brainshock [SC_alpha],No desc.,2,TRUE,FALSE,27,undef,Assist,Brainshock,[SC_alpha],32,32,5
 57,Brainshock [SC_omega],No desc.,3,TRUE,FALSE,27,undef,Assist,Brainshock,[SC_omega],32,32,15
 58,Shield Off [SC_alpha],No desc.,2,TRUE,FALSE,36,undef,Assist,Shield Off,[SC_alpha],0,0,8

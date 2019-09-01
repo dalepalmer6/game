@@ -31,6 +31,10 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	protected double targetX;
 	protected double targetY;
 	
+	public void setState(StartupNew state) {
+		this.state = state;
+	}
+	
 	public int getWidthOfText() {
 		return textObject.getWidth();
 	}
@@ -116,8 +120,20 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.width = width;
 		this.height = height;
 		targetY = y;
+//		if (!t.equals("")) {
 		this.textObject = new Text(true,t,width,height,width,height,m.charList);
+//		}
 		
+		
+	}
+	
+	public MenuItem( double x, double y, int width, int height, StartupNew m) {
+		state = m;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		targetY = y;
 	}
 	
 	public void setText(String t) {
@@ -174,10 +190,15 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		// TODO Auto-generated method stub
 		if (targetY > y) {
 			y+=8;
-			textObject.setY(textObject.getY()+8);
+			if (textObject != null) {
+				textObject.setY(textObject.getY()+8);
+			}
+			
 		} else if (targetY < y) {
 			y-=8;
-			textObject.setY(textObject.getY()-8);
+			if (textObject != null) {
+				textObject.setY(textObject.getY()-8);
+			}
 		}
 	}
 

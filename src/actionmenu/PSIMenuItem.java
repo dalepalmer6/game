@@ -20,7 +20,8 @@ public class PSIMenuItem extends TexturedMenuItem {
 	}
 	
 	public PSIMenuItem(StartupNew state, PartyMember pm, int ty) {
-		super("PSI",64,ty,14*4,14*4,state,"menu.png",60,0,14,14);
+		super("PSI",64,ty,16*4,16*4,state,"battlehud.png",48,16,16,16);
+		setHovered(48,0,16,16);
 		this.party = new ArrayList<PartyMember>();
 		this.party.add(pm);
 		targetY = 0;
@@ -35,7 +36,7 @@ public class PSIMenuItem extends TexturedMenuItem {
 			PSIMenuOutOfBattle psim = new PSIMenuOutOfBattle(state,party);
 			state.getMenuStack().push(psim);
 		}
-		
+//		
 		return null;
 	}
 }

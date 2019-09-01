@@ -44,7 +44,43 @@ public class Player extends CameraControllingEntity implements Controllable{
 		}
 	}
 	
+	public void swapStepSizes() {
+		double tempX = stepSizeX;
+		double tempY = stepSizeY;
+		stepSizeX = runningStepSizeX;
+		stepSizeY = runningStepSizeY;
+	}
+	
 	public void move() {
+		if (crouch) {
+			actionTaken = "crouch";
+			if (crouchTimer == 20) {
+				canRun = true;
+			} else {
+				crouchTimer++;
+				System.out.println("Crouch " + crouchTimer);
+			}
+		}
+		
+		if (running) {
+			actionTaken = "run";
+			if (directionX.equals("left")) {
+				deltaX = -runningStepSizeX;
+			} else if (directionX.equals("right")) {
+				deltaX = runningStepSizeX;
+			} else {
+				deltaX = 0;
+			}
+			
+			if (directionY.equals("up")) {
+				deltaY = -runningStepSizeY;
+			} else if (directionY.equals("down")) {
+				deltaY = runningStepSizeY;
+			} else {
+				deltaY = 0;
+			}
+		}
+		
 		super.move();
 		if (forceAllowMovementY) {
 			actionTaken = "";
@@ -96,9 +132,8 @@ public class Player extends CameraControllingEntity implements Controllable{
 	
 	@Override
 	public void handleInput(InputController input) {
-//		input.setHoldable(true);
+		System.out.println(input.getSignals().get("BACK"));
 		deltaX = 0; deltaY = 0;
-//		int angle;
 		if (input.getSignals().get("UP")) {
 			if (state.getGameState().getFlag("teleporting") && directionY.equals("down")) {
 				
@@ -150,7 +185,38 @@ public class Player extends CameraControllingEntity implements Controllable{
 			if (state.getGameState().getFlag("teleporting") && (input.getSignals().get("UP") || input.getSignals().get("DOWN"))) {
 				directionX = "";
 			}
-		}  
+		}
+		
+		if (running) {
+			if (input.getSignals().get("BACK")) {
+				running = false;
+			}
+		}
+		
+		if (state.getGameState().canRun()) {
+			if (input.getSignals().get("BACK")) {
+				crouch = true;
+			} else {
+				if (canRun) {
+					canRun = false;
+					running = true;
+					crouch = false;
+					crouchTimer = 0;
+				} else {
+					crouch = false;
+					crouchTimer = 0;
+				}
+			}
+		}	
+		
+		if (crouch && input.getSignals().get("BACK")) {
+			if (input.anyKeyDownExcept("BACK")) {
+				canRun = false;
+				running = false;
+				crouch = false;
+				crouchTimer = 0;
+			}
+		}
 		
 		if (input.getSignals().get("ENTER")) {
 			enterButtonDown = true;

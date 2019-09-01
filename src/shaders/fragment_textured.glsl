@@ -1,7 +1,9 @@
 #version 150 core
 
 uniform sampler2D texture_diffuse;
+uniform sampler2D texture_color_palette;	// 8x1 palette
 uniform float time;
+uniform float frames;
 uniform float amplitudex;
 uniform float amplitudey;
 uniform float freqx;
@@ -29,7 +31,13 @@ vec2 distorsion(vec2 p)
 	return res;
 }
 
+vec4 swapPaletteColor(vec4 colorIndex)
+{
+	vec4 texel = texture2D(texture_color_palette,vec2((colorIndex.x)/10.0,colorIndex.y));
+	//vec4 texel = texture2D(texture_color_palette,vec2(mod(-0.5 + (colorIndex.x + time),11)/11.0,colorIndex.y/8.0));
+	return texel;
+}
+
 void main(void) {
-	 gl_FragColor = texture2D(texture_diffuse,distorsion(pass_TextureCoord));
-	 
+	gl_FragColor = swapPaletteColor(texture2D(texture_diffuse,distorsion(pass_TextureCoord)));
 }

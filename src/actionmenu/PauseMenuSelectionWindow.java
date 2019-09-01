@@ -9,8 +9,7 @@ import menu.MenuItem;
 import menu.StartupNew;
 
 public class PauseMenuSelectionWindow extends SelectionTextWindow {
-	ArrayList<PartyMember> party;
-//	TextLabel moneyLabel;
+	protected ArrayList<PartyMember> party;
 	
 	@Override
 	public void add(MenuItem m, int x, int y) {
@@ -20,11 +19,7 @@ public class PauseMenuSelectionWindow extends SelectionTextWindow {
 		selections.get(y).add(x,m);
 	}
 	
-	public PauseMenuSelectionWindow(StartupNew m, ArrayList<PartyMember> party) {
-		super("horizontal",0,0,50,2,m);
-		y = -128;
-		targetY = 0;
-		this.party = party;
+	public void createButtons() {
 		currentOpenX = 256;
 		currentOpenY = (int) (y+16);
 		add(new GoodsMenuItem(state,party,-128),0,0);
@@ -37,6 +32,14 @@ public class PauseMenuSelectionWindow extends SelectionTextWindow {
 		currentOpenX = 544;
 		currentOpenY = (int) (y+16);
 		add(new StatusMenuItem(state,party,-128),3,0);
+	}
+	
+	public PauseMenuSelectionWindow(StartupNew m, ArrayList<PartyMember> party) {
+		super("horizontal",0,0,50,2,m);
+		y = -128;
+		targetY = 0;
+		this.party = party;
+		createButtons();
 	}
 	
 	public void setTargetPosY(int newY) {

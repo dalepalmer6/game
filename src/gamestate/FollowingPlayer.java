@@ -4,11 +4,17 @@ import menu.StartupNew;
 
 public class FollowingPlayer extends Entity {
 	private int indexInParty;
+	private Player player;
 	
 	public void move() {
 		checkCollisions();
+		
+		if (player.running) {
+			this.running = true;
+		}
+		
 //		if (state.getGameState().getPlayer().deltaX != 0 || state.getGameState().getPlayer().deltaY != 0) {
-			MovementData[] dataArr = state.getGameState().getPlayer().movementData;
+			MovementData[] dataArr = this.player.movementData;
 			MovementData data = dataArr[12*indexInParty];
 			x = data.getX();
 			y = data.getY();
@@ -36,6 +42,7 @@ public class FollowingPlayer extends Entity {
 		super(e.getTexture(),e.getX(),e.getY(),e.getWidth()*scale,scale*e.getHeight(),m,e.getName());
 		spriteCoordinates = e.getSpriteCoordinates();
 		indexInParty = i;
+		this.player = state.getGameState().getPlayer();
 	}
 	
 }

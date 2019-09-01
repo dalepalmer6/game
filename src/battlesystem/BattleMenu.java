@@ -39,7 +39,7 @@ import menu.StartupNew;
 import menu.TexturedMenuItem;
 
 public class BattleMenu extends Menu {
-	private BattleMenuSelectionTextWindow actionMenu;
+//	private BattleMenuSelectionTextWindow actionMenu;
 	private ArrayList<PartyMember> partyMembers;
 	private ArrayList<BattleEntity> party;
 	private BattleAction currentAction;
@@ -88,6 +88,7 @@ public class BattleMenu extends Menu {
 	private ArrayList<BattleEntity> deadEntities;
 	private boolean forceWaitForPrompt;
 	private TexturedMenuItem youWon;
+	private BattleActionMenu actionMenu;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -122,9 +123,9 @@ public class BattleMenu extends Menu {
 		battleActions.put(b,e);
 	}
 	
-	public SelectionTextWindow getActionMenu() {
-		return actionMenu;
-	}
+//	public SelectionTextWindow getActionMenu() {
+//		return actionMenu;
+//	}
 	
 	public EnemyOptionPanel getEnemyOptionPanel() {
 		return eop;
@@ -156,19 +157,13 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void createActionMenu() {
-		actionMenu = new BattleMenuSelectionTextWindow(state.getMainWindow().getScreenWidth()/2 - (10/2)*72,32,10,2,state);
-		actionMenu.setSteps(160,0);
-		Bash bashButton = new Bash("Bash",0,0,state);
-		actionMenu.add(bashButton);
-		GoodsMenuItem goodsButton = new GoodsMenuItem(state,partyMembers.get(indexMembers-1),0);
-		actionMenu.add(goodsButton);
-		PSIMenuItem psiButton = new PSIMenuItem(state,partyMembers,0);
-		actionMenu.add(psiButton);
-		Defend statusButton = new Defend("Guard",0,0,state);
-		actionMenu.add(statusButton);
-//		RunAway runButton = new RunAway("Run Away",0,0,state);
-//		actionMenu.add(runButton);
-//		actionMenu.setKillWhenComplete();
+		BattleActionMenu bam = new BattleActionMenu(state,partyMembers,indexMembers-1);
+		bam.createMenu();
+		state.getMenuStack().push(bam);
+		if (indexMembers - 1 != 0 || actionMenu != null) {
+			bam.setDoAnim(false);
+		}
+		actionMenu = bam;
 	}
 	
 	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
@@ -281,26 +276,16 @@ public class BattleMenu extends Menu {
 				return;
 			} else {
 				//get the x y coordinates to put the damage
-				int x = 0;
-				int y = 0;
-				if (currentBattleAction.getTarget() instanceof PCBattleEntity) {
-					int index = party.indexOf(currentBattleAction.getTarget());
-					PlayerStatusWindow psw = pswList.get(index);
-					x = (int) (psw.getX() + psw.getWidth()/2);
-					y = (int) (psw.getY() + psw.getHeight()/2);
-				} else {
-					int index = enemies.indexOf(currentBattleAction.getTarget());
-					EnemyOption eo = eop.getEnemyOptions().get(index);
-					x = (int) (eo.getX() + eo.getWidth()/2);
-					y = (int) (eo.getY() + eo.getHeight()/2);
-					eop.setToShake(index);
-					if (currentBattleAction.getTarget().getStats().getStat("CURHP") <= 0) {
-						eop.setKilled(index);
-					}
-				}
-				DamageMenuItem mi = new DamageMenuItem(currentBattleAction.getDamageDealt(),x,y,state);
+				
+				DamageMenuItem mi = getDamageMenuItem(currentBattleAction.getDamageDealt(), currentBattleAction.getTarget());
+				
 				mi.setDisallowAutoProgress(disallowAutoProgress);
 				mi.setIsHealing(currentBattleAction.isHealing());
+				
+				if (currentBattleAction.isSmash()) {
+					SmashMenuItem smi = new SmashMenuItem(mi.getX(),mi.getY(),71*4,15*4,state,"battlehud.png",284,0,71,15);
+					addMenuItem(smi);
+				}
 				
 				addMenuItem(mi);
 			}
@@ -321,8 +306,33 @@ public class BattleMenu extends Menu {
 		}
 	}
 	
+	public DamageMenuItem getDamageMenuItem(int dmg, BattleEntity target) {
+		int x = 0;
+		int y = 0;
+		if (target instanceof PCBattleEntity) {
+			int index = party.indexOf(target);
+			PlayerStatusWindow psw = pswList.get(index);
+			x = (int) (psw.getX() + psw.getWidth()/2);
+			y = (int) (psw.getY() + psw.getHeight()/2);
+		} else {
+			int index = enemies.indexOf(target);
+			EnemyOption eo = eop.getEnemyOptions().get(index);
+			x = (int) (eo.getX() + eo.getWidth()/2);
+			y = (int) (eo.getY() + eo.getHeight()/2);
+			eop.setToShake(index);
+			if (currentBattleAction.getTarget().getStats().getStat("CURHP") <= 0) {
+				eop.setKilled(index);
+			}
+		}
+		DamageMenuItem mi = new DamageMenuItem(dmg,x,y,state);
+		return mi;
+	}
+	
 	public void setPromptDead() {
 		String text = "";
+//		while (state.getMenuStack().peek() != this) {
+//			state.getMenuStack().pop();
+//		}
 		if (deadEntity instanceof PCBattleEntity) {
 			text = "[PLAYSFX_die.wav]" + deadEntity.getName() + " got hurt and collapsed!";
 		} else {
@@ -332,17 +342,27 @@ public class BattleMenu extends Menu {
 		for (MenuItem i : menuItems) {
 			if (i instanceof TextWindow) {
 				setToRemove(i);
-				if (i == actionMenu) {
-					indexMembers--;
-					while ((party.get(indexMembers).getState() & 16) == 16) {
-						indexMembers++;
-						if (indexMembers >= party.size()) {
-							break;
-						}
-					}
-					prompt.setNeedMenuOnExit();
+//				if (i == actionMenu) { // original
+			}
+		}
+		if (actionMenu != null) { // try fix
+			if (state.getMenuStack().peek() != actionMenu) {
+				do {
+					state.getMenuStack().pop();
+				} while (state.getMenuStack().peek() != actionMenu);
+			}
+			if (state.getMenuStack().peek() == actionMenu) {
+				state.getMenuStack().pop();
+			}
+			
+			indexMembers--;
+			while (!checkIfPlayerCanAct(party.get(indexMembers))) {
+				indexMembers++;
+				if (indexMembers >= party.size()) {
+					break;
 				}
 			}
+			prompt.setNeedMenuOnExit();
 		}
 		//flavor text for enemy or party members
 		
@@ -359,6 +379,10 @@ public class BattleMenu extends Menu {
 	
 	public void setPromptPartyDead() {
 		prompt = createTextWindow("You lost the battle.");
+		while (state.getMenuStack().peek() != this) {
+			state.getMenuStack().pop();
+		}
+		actionMenu = null;
 		getResultText = false;
 		getNextPrompt = false;
 		readyToDisplay = true;
@@ -405,7 +429,7 @@ public class BattleMenu extends Menu {
 		levelupString = "";
 		int index = 0;
 		for (PartyMember pm : partyMembers) {
-			if ((party.get(index++).getState() & 16) == 16) {
+			if (!checkIfPlayerCanAct(party.get(index++))) {
 				continue;
 			}
 			pm.addExp(awardEXP);
@@ -510,6 +534,11 @@ public class BattleMenu extends Menu {
 	public void killBattleMenu() {
 		state.getMenuStack().pop();
 		state.setShouldFadeIn();
+		
+		for (BattleEntity be : party) {
+			be.applyBattleWear();
+		}
+		
 		state.getGameState().restoreEnemyEntities();
 		for (EnemyEntity ee : enemyEntities) {
 			ee.setToRemove(true);
@@ -547,7 +576,7 @@ public class BattleMenu extends Menu {
 			if (getNextPrompt || getResultText) {
 				for (int i = 0; i < enemies.size(); i++) {
 					BattleEntity e = enemies.get(i);
-					if (!((e.getState() & 16) == 16)) {
+					if (checkIfPlayerCanAct(e)) {
 						if (e.getStats().getStat("CURHP") <= 0) {
 							alertDeadEntity = true;
 							deadEntities.add(e);
@@ -558,7 +587,7 @@ public class BattleMenu extends Menu {
 				for (int i = 0; i < party.size(); i++) {
 					BattleEntity e = party.get(i);
 					PlayerStatusWindow psw = pswList.get(i);
-					if (!((e.getState() & 16) == 16)) {
+					if (checkIfPlayerCanAct(e)) {
 						if (psw.getHP() <= 0) {
 							alertDeadEntity = true;
 //							locked = true;
@@ -616,6 +645,7 @@ public class BattleMenu extends Menu {
 				state.setDrawAllMenus(false);
 				state.getGameState().reloadInitialMap();
 				state.getGameState().setCanEncounter(true);
+				state.getGameState().resetNumEntities();
 			}
 			
 			if (enemies.size() == 0) {
@@ -633,6 +663,7 @@ public class BattleMenu extends Menu {
 					if (((be.getState() & 16) != 16)) {
 						turnStack.add(be);
 					}
+					be.setDefend(false);
 				}
 				sortTurnStackBySpeed();
 			}
@@ -640,24 +671,30 @@ public class BattleMenu extends Menu {
 			if (needMenu && !locked) {
 				windowStack.clear();
 				partyMember = party.get(indexMembers++);
-				while ((partyMember.getState() & 16) == 16) {
+				while (!checkIfPlayerCanAct(partyMember)) {
 					if (indexMembers < party.size()) {
 //						indexMembers++;
 						partyMember = party.get(indexMembers++);
 					} else {
 						needMenu = false;
 						doneActionSelect = true;
+//						actionMenu = null;
 						return;
 					}
 				}
 				createActionMenu();
-				addToMenuItems(actionMenu);
+//				addToMenuItems(actionMenu);
 				needMenu = false;
 			}
 			
+			if (!doneActionSelect && state.getMenuStack().peek() == this && actionMenu != null) {
+				state.getMenuStack().push(actionMenu);
+			}
+			
 			if (doneActionSelect && !locked) {
-				setToRemove(actionMenu);
+				state.getMenuStack().remove(actionMenu);
 				doneActionSelect = false;
+//				actionMenu = null;
 				addBattleAction(partyMember,currentAction);
 				if (indexMembers < party.size()) {
 					needMenu = true;
@@ -675,7 +712,10 @@ public class BattleMenu extends Menu {
 					}
 					allActionsMade = true;
 				}
-				
+			}
+			
+			if (allActionsMade) {
+				actionMenu = null;
 			}
 			
 			if (!locked && allActionsMade && getNextPrompt && !alertDeadEntity && enemies.size() > 0) {
@@ -722,6 +762,7 @@ public class BattleMenu extends Menu {
 				if (i == indexMembers-1 && i >= 0) {
 					pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5)-32);
 				}
+				menuItems.addAll(pswList.get(i).getStatusIcons());
 			}
 		}
 		
@@ -751,7 +792,7 @@ public class BattleMenu extends Menu {
 	private int calculateAlivePartyMembers() {
 		int i =0;
 		for (BattleEntity be : party) {
-			if (((be.getState() & 16) != 16)) {
+			if (checkIfPlayerCanAct(be)) {
 				i++;
 			}
 		}
@@ -837,7 +878,7 @@ public class BattleMenu extends Menu {
 				if (ba.getTarget().equals(deadEntity)) {
 //					if (ba.getActor() instanceof PCBattleEntity) {
 						for (BattleEntity pbe : party) {
-							if (!((pbe.getState() & 16) == 16)) {
+							if (checkIfPlayerCanAct(pbe)) {
 								battleActions.get(be).setTargets(party,pbe,false);
 							}
 						}
@@ -867,25 +908,34 @@ public class BattleMenu extends Menu {
 		getNextPrompt  = true;
 	}
 	
-	public void popWindowStackAndRemoveMI(MenuItem i) {
-		if (windowStack.size() != 0) {
-			needToRemove.add(i);
-			addToMenuItems(windowStack.remove(windowStack.size()-1));
-		} else {
+	public boolean checkIfPlayerCanAct(BattleEntity player) {
+		boolean value = false;
+		value = (player.getState() & 16) != 16 && (player.getState() & 8) != 8;
+		return value;
+	}
+	
+	public void popWindowStackAndRemoveMI() {
+//		if (windowStack.size() != 0) {
+////			needToRemove.add(i);
+////			addToMenuItems(windowStack.remove(windowStack.size()-1));
+//			state.getMenuStack().push(actionMenu);
+//		} else {
 			if (indexMembers > 1) {
 				boolean atLeastOne = false;
 				for (int x = indexMembers-2; x >= 0; x--) {
-					if ((party.get(x).getState() & 16) != 16) {
+					if (checkIfPlayerCanAct(party.get(x))) {
 						atLeastOne = true;
 					}
 				}
 				if (!atLeastOne) {
 					return;
 				}
-				needToRemove.add(actionMenu);
+//				needToRemove.add(actionMenu);
+				state.getMenuStack().pop();
 				needMenu = true;
+//				actionMenu = null;
 				indexMembers-=2;
-				while ((party.get(indexMembers).getState() & 16) == 16) {
+				while (!checkIfPlayerCanAct(party.get(indexMembers))) {
 					indexMembers--;
 				}
 				if (indexMembers >= party.size()) {
@@ -895,7 +945,7 @@ public class BattleMenu extends Menu {
 				}
 			}
 			
-		}
+//		}
 	}
 	
 

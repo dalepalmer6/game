@@ -12,7 +12,7 @@ public class DamageMenuItem extends MenuItem {
 	private boolean alive = true;
 	private double xMovement;
 	private boolean isHealing;
-	private boolean damageOverTime;
+	private boolean damageOverTime; //from status conditions
 	private boolean damage;
 	int killTime = 120;
 	private boolean disallowProgress;
@@ -49,6 +49,38 @@ public class DamageMenuItem extends MenuItem {
 			case 8: coordX = 200; coordY = 0; break;
 			case 9: coordX = 209; coordY = 0; break;
 		}
+		
+		if (isHealing) {
+			switch (digit) {
+				case 0: coordX = 284; coordY = 24; break; 
+				case 1: coordX = 293; coordY = 24; break;
+				case 2: coordX = 302; coordY = 24; break;
+				case 3: coordX = 311; coordY = 24; break;
+				case 4: coordX = 320; coordY = 24; break;
+				case 5: coordX = 329; coordY = 24; break;
+				case 6: coordX = 338; coordY = 24; break;
+				case 7: coordX = 347; coordY = 24; break;
+				case 8: coordX = 356; coordY = 24; break;
+				case 9: coordX = 365; coordY = 24; break;
+			}
+		}
+		
+		
+		if (damageOverTime) {
+			switch (digit) {
+				case 0: coordX = 284; coordY = 15; break; 
+				case 1: coordX = 293; coordY = 15; break;
+				case 2: coordX = 302; coordY = 15; break;
+				case 3: coordX = 311; coordY = 15; break;
+				case 4: coordX = 320; coordY = 15; break;
+				case 5: coordX = 329; coordY = 15; break;
+				case 6: coordX = 338; coordY = 15; break;
+				case 7: coordX = 347; coordY = 15; break;
+				case 8: coordX = 356; coordY = 15; break;
+				case 9: coordX = 365; coordY = 15; break;
+			}
+		}
+		
 		m.renderTile(curX,y,9*4,9*4,coordX,coordY,9,9);
 	}
 	
@@ -79,22 +111,25 @@ public class DamageMenuItem extends MenuItem {
 		}
 		if (aliveTime > 30 && alive) {
 			BattleMenu bm = state.battleMenu;
-			if (!disallowProgress) {
-				if (bm.turnStackIsEmpty() && bm.getCurrentActiveBattleAction().isComplete()) {
-					bm.setPollForActions();
-				}
-				if (bm.getCurrentActiveBattleAction().isComplete()) {
-					bm.setGetNextPrompt();
-				} else {
-					if (bm.getCurrentActiveBattleAction().isContinuous()&& bm.getCurrentActiveBattleAction().needAnim() && !bm.getCurrentActiveBattleAction().isComplete()) {
-						bm.setGetAnimation(true);
-					} else {
-						bm.setGetResultText();
+			if (!damageOverTime) {
+				if (!disallowProgress) {
+					if (bm.turnStackIsEmpty() && bm.getCurrentActiveBattleAction().isComplete()) {
+						bm.setPollForActions();
 					}
-					
+					if (bm.getCurrentActiveBattleAction().isComplete()) {
+						bm.setGetNextPrompt();
+					} else {
+						if (bm.getCurrentActiveBattleAction().isContinuous()&& bm.getCurrentActiveBattleAction().needAnim() && !bm.getCurrentActiveBattleAction().isComplete()) {
+							bm.setGetAnimation(true);
+						} else {
+							bm.setGetResultText();
+						}
+						
+					}
+					alive = false;
 				}
-				alive = false;
 			}
+			
 		}
 		approachTargetPos();
 		aliveTime++;
@@ -103,7 +138,7 @@ public class DamageMenuItem extends MenuItem {
 	public void approachTargetPos() {
 		// TODO Auto-generated method stub
 		//move in a downward parabola
-		if (isHealing) {
+		if (isHealing || damageOverTime) {
 			if (targetY < y) {
 				y -= 8;
 			}
@@ -126,6 +161,13 @@ public class DamageMenuItem extends MenuItem {
 	public void setIsHealing(boolean h) {
 		// TODO Auto-generated method stub
 		isHealing = h;
+		targetY = y - 64;
+		killTime = 60;
+	}
+	
+	public void setDamageOverTime(boolean h) {
+		// TODO Auto-generated method stub
+		damageOverTime = h;
 		targetY = y - 64;
 		killTime = 60;
 	}

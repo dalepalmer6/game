@@ -1112,7 +1112,7 @@ public class StartupNew{
 		}
 		
 		if (!(menuStack.peek() instanceof BattleMenu) && inBattle && !(menuStack.peek() instanceof AnimationMenu)) {
-			battleMenu.update(input);
+			battleMenu.updateAll(input);
 		}
 		
 		if (inBattle && eop != null) {

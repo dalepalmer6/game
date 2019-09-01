@@ -2,16 +2,20 @@ package battlesystem.options;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import battlesystem.BattleMenu;
+import battlesystem.DamageMenuItem;
 import gamestate.BattleEntity;
 import gamestate.Enemy;
 import gamestate.PCBattleEntity;
+import gamestate.StatusConditions;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
 import menu.Animation;
 import menu.EnemyAction;
 import menu.StartupNew;
+import menu.TexturedMenuItem;
 
 public class BattleAction {
 	private BattleEntity actor;
@@ -39,13 +43,23 @@ public class BattleAction {
 	private int continuousCounter = 0;
 	private String flavorTextAttack;
 	private boolean thunderWillHit = true;
+	private boolean isSmash = false;
+	private boolean damageOverTime;
+	
+	public boolean doingNothing() {
+		return doNothing;
+	}
+	
+	public boolean isSmash() {
+		return isSmash;
+	}
 	
 	public boolean isComplete() {
 		return completed;
 	}
 	
 	public void createAnim(StartupNew state) throws IOException {
-		BattleMenu bm = (BattleMenu) state.getMenuStack().peek();
+		BattleMenu bm = state.battleMenu;
 		switch(usedAction) {
 			case "psi" : //draw anim only if the psi has an animation
 				Animation anim = ((PSIAttack)itemToUse).getAnimation();
@@ -62,23 +76,12 @@ public class BattleAction {
 					anim.createAnimation();
 				}
 				
-//				if (anim.getTexture().equals("undef")) {
-//					
-//					if (!targetAll) {
-////						bm.getCurrentActiveBattleAction().setComplete();
-//					}
-////					
-//					break;
-//				}
-//				
 				state.getMenuStack().peek().addToMenuItems(anim);
 				state.setCurrentAnimation(anim.getTexture() + ".png");
-//				state.createAtlas();
 				anim.bindAnimToTwo();
 				anim.updateAnim();
 				break;
 			default : 	bm.setGetResultText();
-//				bm.getCurrentActiveBattleAction().setComplete();
 				break;
 		}
 		
@@ -99,11 +102,12 @@ public class BattleAction {
 		int damage;
 		
 		//critrate
-		int guts = user.getStats().getStat("GUTS");
-		double critRate = Math.max(1/20,guts/500);
+		double guts = user.getStats().getStat("GUTS");
+		double critRate = Math.max(1f/20f,guts/500);
 		if (critRand < critRate) {
-			//set the SMAAAAAAASH text to display, make a big deal.
-			result += "SMAAAAAAAASH!!![NEWLINE]";
+			//set the SMAAAAAAASH text to display, use graphic/TMI, make a big deal.
+//			result += "SMAAAAAAAASH!!![NEWLINE]";
+			isSmash = true;
 			damage = Math.max(1,((4*userOff)-targetDef));
 		} else {
 			damage = Math.max(1,((atkLevel * userOff) - targetDef));
@@ -112,9 +116,10 @@ public class BattleAction {
 			}
 			damage = (int) ((1+randAdjust) * damage);
 		}
-		double dodgeRate = (2*targetSpd - userSpd)/500;
+		double dodgeRate = ((double) (2*targetSpd - userSpd))/500d;
 		if (dodgeRand < dodgeRate) {
-			return target.getName() + " dodged swiftly!";
+			state.setSFX("miss.wav");
+			return String.format("%s dodged swiftly!",target.getName());
 		}
 		damage = Math.max(1,damage);
 		
@@ -329,28 +334,39 @@ public class BattleAction {
 		this.itemToUse = item;
 	}
 	
+	public boolean isDamageOverTime() {
+		return damageOverTime;
+	}
+	
 	public String getBattleActionString() {
 		String battleString = "";
 		
 		boolean statusLock = false;
-		if ((actor.getState() & 256) == 256) {
-			//sleep
+		
+		List<StatusConditions> conditions = StatusConditions.getAfflictedStatus(actor.getState());
+		
+		if (conditions.contains(StatusConditions.SLEEP)) {
+			//SLEEP
 			if (!battleString.equals("")) {
 				battleString += "[PROMPTINPUT]";
 			}
-			actor.incrementSleepTimer();
-			if (Math.random() * Math.min(0,actor.getSleepTimer()) < 0.33) {
-				actor.removeStatus(256);
+			
+			if (Math.random() <= 0.33 * actor.getSleepTimer()) {
+				actor.removeStatus(StatusConditions.SLEEP.getIndex());
 				battleString += actor.getName() + " woke up.";
-			} 
+				actor.resetSleepTimer();
+			}
 			else {
-				battleString += actor.getName() + " is fast asleep.";
-				doNothing = true;
+				battleString += String.format(StatusConditions.SLEEP.getActionString(),actor.getName());
+				actor.incrementSleepTimer();
+				doNothing = !StatusConditions.SLEEP.canMove();
+				usedAction = "fail";
 				statusLock = true;
 			}
+			
 		}
 		
-		if ((actor.getState() & 4) == 4) {
+		if (conditions.contains(StatusConditions.ASTHMA)) {
 			//asthma
 			if (usedAction.equals("item")) {
 				
@@ -358,24 +374,24 @@ public class BattleAction {
 				if (!battleString.equals("")) {
 					battleString += "[PROMPTINPUT]";
 				}
-				battleString += actor.getName() + " couldn't stop coughing.";
-				doNothing = true;
+				battleString += String.format(StatusConditions.ASTHMA.getActionString(),actor.getName());
+				doNothing = !StatusConditions.ASTHMA.canMove();
+				usedAction = "fail";
 				statusLock = true;
 				if (Math.random() < 0.30) {
-					battleString += "[PROMPTINPUT][PLAYSFX_healedbeta.wav]" + actor.getName() + " was cured of asthma.";
+					battleString += "[PROMPTINPUT][PLAYSFX_healedbeta.wav]" + actor.getName() + " recovered from the asthma attack.";
 					actor.removeStatus(4);
 				}
 			}
 		}
 		
-		if ((actor.getState() & 8) == 8) {
-			//stone - dont even show their turn
+		if (conditions.contains(StatusConditions.STONE)) {
 			if (!battleString.equals("")) {
 				battleString += "[PROMPTINPUT]";
 			}
-			battleString += actor.getName() + " is unable to move.";
-			actor.takeDamage(16,0);
-			doNothing = true;
+			battleString += String.format(StatusConditions.STONE.getActionString(),actor.getName());
+			doNothing = !StatusConditions.STONE.canMove();
+			usedAction = "fail";
 			statusLock = true;
 		}
 		
@@ -383,28 +399,25 @@ public class BattleAction {
 			return battleString;
 		}
 		
-		if ((actor.getState() & 1) == 1) {
-			//cold
+		if (conditions.contains(StatusConditions.COLD)) {
 			if (!battleString.equals("")) {
 				battleString += "[PROMPTINPUT]";
 			}
-			battleString += actor.getName() + " sneezed and took damage.";
-			actor.takeDamage(4,0);
+			double dmg = 5 + 5 - Math.random()*10;
+			battleString += String.format(StatusConditions.COLD.getActionString(),actor.getName());
+			actor.takeDamage((int) dmg,16);
+			createDOTMenuItem((int)dmg,actor);
 		}
 		
-//		if ((actor.getState() & 2) == 2) {
-//			//psn
-//			if (!battleString.equals("")) {
-//				battleString += "[PROMPTINPUT]";
-//			}
-//			battleString += actor.getName() + " took damage from poison.";
-//			actor.takeDamage(16,0);
-//		}
-		
-		
-		//2 - blind
-		//4 - asthma
-		//8 - stone
+		if (conditions.contains(StatusConditions.POISON)) {
+			if (!battleString.equals("")) {
+				battleString += "[PROMPTINPUT]";
+			}
+			double dmg = 20 + 4 - Math.random()*8;
+			battleString += String.format(StatusConditions.POISON.getActionString(),actor.getName());
+			actor.takeDamage((int) dmg,16);
+			createDOTMenuItem((int)dmg,actor);
+		}
 		
 		
 		if (!battleString.equals("")) {
@@ -427,7 +440,7 @@ public class BattleAction {
 								battleString += " attacks!";//use flavor text
 							}
 							break;
-			case "run":		battleString = "Tried to run... but failed!";
+			case "run":		battleString = "Tried to run... but failed!"; // needs logic, is broken.
 							break;
 			case "psi":		
 							itemToUse.consume(actor);
@@ -466,10 +479,10 @@ public class BattleAction {
 							battleString += ".[NEWLINE]";
 //							battleString += itemToUse.useInBattle(actor,recipient);
 							break;
-			case "defend":	battleString = actor.getName() + " took a defensive stance.";
+			case "defend":	battleString += actor.getName() + " took a defensive stance.";
 							doNothing = true;
 							break;
-			case "enemyaction" : battleString = useEnemyAction(); 
+			case "enemyaction" : battleString += useEnemyAction(); 
 							usedAction = "item";
 							break;
 		}
@@ -477,25 +490,15 @@ public class BattleAction {
 		return battleString;
 	}
 	
+	public DamageMenuItem createDOTMenuItem(int dmg, BattleEntity target) {
+		DamageMenuItem mi = state.battleMenu.getDamageMenuItem(dmg,target);
+		mi.setDamageOverTime(true);
+		state.battleMenu.addMenuItem(mi);
+		return mi;
+	}
+	
 	public String useEnemyAction() {
 		itemToUse = enemyAction.getItemRepresentation();
-//		if (itemToUse.getActionType() == 30) {
-//			usedAction = "bash";
-//			doNothing = true;
-//			flavorTextAttack = enemyAction.getText();
-//			return getBattleActionString();
-//		}
-//		else if (itemToUse.getActionType() == 26) {
-//			//is a bash
-//			usedAction = "bash";
-//			flavorTextAttack = enemyAction.getText();
-//			return getBattleActionString();
-//		} else if (itemToUse.getActionType() == 35) {
-//			//is a psi
-//			usedAction = "psi";
-//			itemToUse = state.psi.get(enemyAction.getUseVariable());
-//			return getBattleActionString();
-//		}
 		return actor.getName() + " " + enemyAction.getText() + ".";
 	}
 	
@@ -598,11 +601,6 @@ public class BattleAction {
 			targetAll = true;
 			targets = party;
 		}
-//		if (targetAll) {
-//			this.targets = party;
-//		} else {
-//			this.recipient = 
-//		}
 	}
 	
 	public void setTargets(ArrayList<BattleEntity> targets, BattleEntity target, boolean all) {

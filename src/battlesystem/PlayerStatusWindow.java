@@ -1,10 +1,14 @@
 package battlesystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import canvas.MainWindow;
 import font.Text;
 import gamestate.BattleEntity;
 import gamestate.Entity;
 import gamestate.PCBattleEntity;
+import gamestate.StatusConditions;
 import menu.MenuItem;
 import menu.StartupNew;
 
@@ -17,7 +21,9 @@ public class PlayerStatusWindow extends MenuItem {
 	private int PP;
 	private int targetHP;	//target values that the window will scroll gradually to
 	private int targetPP;
-	private String statusCondition;
+//	private String statusCondition;
+	private int status;
+	private int lastStatus;
 	private double tickCount = 0;
 	private double ticksPerFrame = 0.25;
 	private int[] HPoffsetX = {0,0,0};
@@ -32,15 +38,43 @@ public class PlayerStatusWindow extends MenuItem {
 	private int editingPP = 0;
 	private PCBattleEntity battleEntity;
 	private Entity avatar;
+	private ArrayList<MenuItem> statusMenuItems;
+	
+	public ArrayList<MenuItem> getStatusIcons() {
+		return statusMenuItems;
+	}
 	
 	public void updateAnim() {
+		status = battleEntity.getState();
+		if (lastStatus != status) {
+			//recreate the menuItems
+			for (MenuItem mi : statusMenuItems) {
+				state.getMenuStack().peek().setToRemove(mi);
+			}
+			statusMenuItems.clear();
+			List<StatusConditions> statuses = StatusConditions.getAfflictedStatus(status);
+			for (StatusConditions s : statuses) {
+				if (s != StatusConditions.NORMAL) {
+					MenuItem mi = s.getIcon(avatar.getX(),avatar.getY() - 64);
+					mi.setState(state);
+					statusMenuItems.add(mi);
+				}
+			}
+		}
+		lastStatus = status;
 		super.updateAnim();
 		if (targetY < y) {
 			y-=8;
-			avatar.moveOnScreen(0,-32);
+			avatar.moveOnScreen(0,-64);
+			for (MenuItem mi : statusMenuItems) {
+				mi.setTargetPosY((int) mi.getY() - 32);
+			}
 		} else if (targetY > y) {
 			y+=8;
-			avatar.moveOnScreen(0,32);
+			avatar.moveOnScreen(0,64);
+			for (MenuItem mi : statusMenuItems) {
+				mi.setTargetPosY((int) mi.getY() + 32);
+			}
 		}
 		tickCount += ticksPerFrame;
 		if (tickCount % 1 == 0 && !animatingHP) {
@@ -72,6 +106,9 @@ public class PlayerStatusWindow extends MenuItem {
 	public PlayerStatusWindow(BattleEntity be, int x, int y,StartupNew state) {
 		super(be.getName(),x,y,0,0,state);
 		battleEntity = (PCBattleEntity) be;
+		status = battleEntity.getState();
+		statusMenuItems = new ArrayList<MenuItem>();
+		lastStatus = status;
 		avatar = state.allEntities.get(battleEntity.getId().toLowerCase()).createCopy(x+96,y-15,96,128,"copy");
 		avatar.setXYOnScreen(x+80,y);
 		textName = new Text(true,be.getName(),((int)this.x+64),((int)this.y+64),100,100,state.charList);
@@ -112,37 +149,6 @@ public class PlayerStatusWindow extends MenuItem {
 		m.renderTile(x,y,60*4,59*4,224,0,60,59);
 	}
 	
-//	public void drawWindow(MainWindow m) {
-//		//shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charLis
-//		
-//		int step = 8*4;
-//		int save = 0;
-//		int overallY = 0;
-//		m.renderTile(this.x, drawingY, 32,32, 0,0,8,8);
-//		for (int x = step; x < width-step; x+=step) {
-//			m.renderTile(this.x + x, drawingY, 32,32, 8,0,8,8);
-//			save = x + step;
-//		}
-//		m.renderTile(this.x + save, drawingY + overallY, 32,32, 16,0,8,8);
-//		overallY+=step;
-//		
-//		for (int y = step; y <= height-step; y+=step) {
-//			m.renderTile(this.x, drawingY + y,32,32,0,8,8,8);
-//			for (int x = step; x < width; x+=step) {
-//				m.renderTile(this.x+x, drawingY+y, 32,32,8,8,8,8);
-//				save = x;
-//			}
-//			m.renderTile(this.x + save, drawingY + y, 32,32, 16,8,8,8);
-//			overallY+=step;
-//		}
-//		
-//		m.renderTile(this.x,drawingY + overallY,32,32,0,16,8,8);
-//		for (int x = step; x < width-step; x += step) {
-//			m.renderTile(this.x+x, drawingY + overallY,32,32,8,16,8,8);
-//		}
-//		m.renderTile(this.x+save,drawingY + overallY,32,32,16,16,8,8);
-//	}
-	
 	public void drawDigit(MainWindow m,int digit, int PPoffsetX, double x, double y) {
 		int coordX = 0;
 		int coordY = 0;
@@ -171,7 +177,7 @@ public class PlayerStatusWindow extends MenuItem {
 	
 	
 	public void drawHealth(MainWindow m) {	
-		String digits = String.valueOf(HP);
+		String digits = String.valueOf(Math.min(999,HP));
 		while (digits.length() < 3) {
 			digits = "0" + digits;
 		}
@@ -248,7 +254,7 @@ public class PlayerStatusWindow extends MenuItem {
 	}
 	
 	public void drawPP(MainWindow m) {	
-		String digits = String.valueOf(PP);
+		String digits = String.valueOf(Math.min(999,PP));
 		while (digits.length() < 3) {
 			digits = "0" + digits;
 		}

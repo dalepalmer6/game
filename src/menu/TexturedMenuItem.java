@@ -25,7 +25,28 @@ public class TexturedMenuItem extends MenuItem {
 		this.borderDY = 0;
 		this.borderDW = 18;
 		this.borderDH = 16;
-		this.hoveredDy = dy + 14;
+		this.hoveredDy = dy + dh;
+	}
+	
+	public TexturedMenuItem(double x, double y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh) {
+		super(x,y,width,height,state);
+		this.texture = texture;
+		this.dx = dx;
+		this.dy = dy;
+		this.dw = dw;
+		this.dh = dh;
+		this.borderDX = 88;
+		this.borderDY = 0;
+		this.borderDW = 18;
+		this.borderDH = 16;
+		this.hoveredDy = dy + dh;
+	}
+	
+	public void setHovered(int hdx, int hdy, int hdw, int hdh) {
+		this.borderDX = hdx;
+		this.borderDY = hdy;
+		this.borderDW = hdw;
+		this.borderDH = hdh;
 	}
 	
 	public void draw(MainWindow m) {

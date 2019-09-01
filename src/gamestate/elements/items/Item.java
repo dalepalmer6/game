@@ -1,12 +1,16 @@
 package gamestate.elements.items;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import font.SelectionTextWindow;
+import font.TextUtil;
 import gamestate.BattleEntity;
 import gamestate.DoorEntity;
+import gamestate.EntityStats;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
+import gamestate.StatusConditions;
 import gamestate.elements.Usable;
 import gamestate.elements.psi.PSIAttack;
 import menu.Menu;
@@ -181,99 +185,133 @@ public class Item{
 	
 	public int healStatus(BattleEntity be, int status) {
 		//TODO do this
-		int beStatus = be.getState();
-		if ((beStatus & 16) == 16 && (status & 16) == 0) {
-			healTarget(be,be,30);
+		boolean healed = false;
+		ArrayList<StatusConditions> statusesHealed = StatusConditions.getAfflictedStatus(status);
+		ArrayList<StatusConditions> statusesAffected = StatusConditions.getAfflictedStatus(be.getState());
+		statusesHealed.remove(StatusConditions.NORMAL);
+		statusesAffected.remove(StatusConditions.NORMAL);
+		usedString = "[PLAYSFX_healedbeta.wav]";
+		for (StatusConditions s : statusesHealed) {
+			if (statusesAffected.contains(s)) {
+				usedString += String.format("%s %s[PROMPTINPUT]",be.getName(),s.getCureText());
+				healed = true;
+			}
+			if (be.removeStatus(s.getIndex()) && s.equals(StatusConditions.DEAD)) {
+				healTarget(be,be,30);
+			} 
 		}
-		beStatus &= status;
-		if (beStatus != be.getState()) {
-			usedString = "[PLAYSFX_healedbeta.wav]" + be.getName() + " recovered their status.";
-		} else {
+		
+		if (!healed) {
 			usedString = "Nothing happened.";
 		}
-		be.setStatus(beStatus);
+		
 		return 0;
+//		boolean[] affected = new boolean[statusesHealed.size()];
+//		for (int i = 0; i < affected.length; i++) {
+//			affected[i] = (be.getState() & status) == 0;
+//		}
+//		int beStatus = be.getState();
+//		if ((beStatus & 16) == 16 && (status & 16) == 0) {
+//			healTarget(be,be,30);
+//		}
+//		beStatus &= status;
+//		if (beStatus != be.getState()) {
+//			usedString = String.format("[PLAYSFX_healedbeta.wav]%s",be.getName());;
+//		} else {
+//			usedString = "Nothing happened.";
+//		}
+//		for (int i = 0; i < affected.length; i++) {
+//			if (affected[i]) {
+//				usedString += "[PROMPTINPUT]" + statusesHealed.get(i);
+//			}
+//		}
+//		be.setStatus(beStatus);
+//		return 0;
 	}
 	
 	public int causeStatus(BattleEntity be, int status) {
 		//TODO do this
-//		int beStatus = be.getState();
-		if (be.addStatus(status)) {
-			usedString = be.getName();
-			if ((status & 1) == 1) {
-				usedString += " ?? ";
-			}
-			if ((status & 2) == 2) {
-				usedString += " ?? ";
-			}
-			if ((status & 4) == 4) {
-				usedString += " started having an asthma attack! ";
-			}
-			if ((status & 8) == 8) {
-				usedString += " ?? ";
-			}
-			if ((status & 16) == 16) {
-				usedString = be.getName() + " was killed ";
-			}
-			if ((status & 32) == 32) {
-				usedString += " ?? ";
-			}
-			if ((status & 64) == 64) {
-				usedString += " ?? ";
-			}
-			if ((status & 128) == 128) {
-				usedString += " amnesia ";
-			}
-			if ((status & 256) == 256) {
-				usedString += " sleep ";
-			}
-			if ((status & 512) == 512) {
-				usedString += " paralysis ";
-			}
-			usedString = usedString.substring(0,usedString.length()-1) + ".";
+		if (Math.random() > 0.25) {
+			usedString += StatusConditions.getFailed();
+			return 0;
+		}
+		
+		StatusConditions cond = StatusConditions.getStatusCondition(status);
+		
+		if (be.addStatus(cond)) {
+			usedString += String.format(cond.getInitText(),be.getName());
 		} else {
-			usedString = be.getName() + " was unaffected.";
+			usedString += String.format(StatusConditions.getAlreadyAffected(),be.getName());
 		}
 		return 0;
 	}
 	
-	public int changeIQ(BattleEntity be, int diff) {
-		int oldIQ = be.getStats().getStat("IQ");
-		be.getStats().replaceStat("IQ",oldIQ + diff);
-		usedString = "[PLAYSFX_statsup.wav]" + be.getName() + "'s IQ increased by " + diff + ".";
+	public int changeStat(BattleEntity be, int diff, String stat) {
+		int oldStat = be.getStats().getStat(stat);
+		be.getStats().replaceStat(stat,oldStat + diff);
+		String sfxPlay = null;
+		String changeType = null;
+		if (diff < 0) {
+			sfxPlay = "[PLAYSFX_statsdown.wav]";
+			changeType = "decreased";
+		} else if (diff > 0) {
+			sfxPlay = "[PLAYSFX_statsup.wav]";
+			changeType = "increased";
+		} else {
+			sfxPlay = "";
+			changeType = "did not change";
+		}
+		String name = be.getName();
+		String pluralContext = "'s";
+		String statName = stat; //convert to real name
+		int difference = Math.abs(diff);
+		String end = "";
+		if (diff != 0) {
+			end = String.format("%s by %d",changeType,diff);
+		} else {
+			end = changeType;
+		}
+		
+		usedString += String.format("%s%s%s %s %s.",sfxPlay,name,pluralContext,statName,changeType,difference);
 		return 0;
 	}
 	
-	public int changeVit(BattleEntity be, int diff) {
-		int oldVit = be.getStats().getStat("VIT");
-		be.getStats().replaceStat("VIT",oldVit + diff);
-		usedString = "[PLAYSFX_statsup.wav]" + be.getName() + "'s vitality increased by " + diff + ".";
-		return 0;
-	}
-	
-	public int changeSpeed(BattleEntity be, int diff) {
-		int oldSpd = be.getStats().getStat("SPD");
-		be.getStats().replaceStat("SPD",oldSpd + diff);
-		usedString = "[PLAYSFX_statsup.wav]" + be.getName() + "'s speed increased by " + diff + ".";
-		return 0;
-	}
-	
-	public int changeOffense(BattleEntity be, int diff) {
-		int oldAtk = be.getStats().getStat("ATK");
-		be.getStats().replaceStat("ATK",oldAtk + diff);
-		usedString = "[PLAYSFX_statsup.wav]" + be.getName() + "'s offense increased by " + diff + ".";
-		return 0;
-	}
-	
-	public int changeGuts(BattleEntity be, int diff) {
-		int oldGuts = be.getStats().getStat("GUTS");
-		be.getStats().replaceStat("GUTS",oldGuts + diff);
-		usedString = "[PLAYSFX_statsup.wav]" + be.getName() + "'s guts increased by " + diff + ".";
+	public int changeStatInBattle(BattleEntity be, int diff, String stat) {
+		//only allow a stat to be modified up to 1.25x in the final version of this method
+		int oldStat = be.getBattleStats().getStat(stat);
+		be.getBattleStats().replaceStat(stat,oldStat * (1 - (diff/100)));
+		
+		int difference = be.getBattleStats().getStat(stat) - oldStat;
+		
+		String sfxPlay = null;
+		String changeType = null;
+		if (difference < 0) {
+			sfxPlay = "[PLAYSFX_statsdown.wav]";
+			changeType = "decreased";
+		} else if (difference > 0) {
+			sfxPlay = "[PLAYSFX_statsup.wav]";
+			changeType = "increased";
+		} else {
+			sfxPlay = "";
+			changeType = "did not change";
+		}
+		String name = be.getName();
+		String pluralContext = TextUtil.getPluralForm(name);
+		String statName = EntityStats.statNames.get(stat); //convert to real name
+//		int difference = Math.abs(diff);
+		String end = "";
+		if (difference != 0) {
+			end = String.format("%s by %d",changeType,diff);
+		} else {
+			end = changeType;
+		}
+		
+		usedString += String.format("%s%s%s %s %s.",sfxPlay,name,pluralContext,statName,end,difference);
 		return 0;
 	}
 	
 	public int useBread(BattleEntity user) {
-		//transform the bread and store the x,y and map name
+		//transform the bread item and store the x,y and map name
 		int index = ((PCBattleEntity)user).getItems().indexOf(this);
 		((PCBattleEntity) user).getItems().set(index, user.getSystemState().items.get(86));
 		user.getSystemState().saveCoordinates();
@@ -281,26 +319,28 @@ public class Item{
 	}
 	
 	public int useBreadCrumbs(BattleEntity user) {
-		//create a door with the saved coordinates
+		//create a door with the saved coordinates at your position
 		DoorEntity door = user.getSystemState().createWarpDoor();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}
 	
 	public int goToEveLoc(BattleEntity user) {
+		//warp to Eve's resting place
 		DoorEntity door = user.getSystemState().createWarpDoor();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}
 	
 	public int goToMagicant(BattleEntity user) {
+		//action to warp to magicant
 		DoorEntity door = user.getSystemState().createMagicantWarp();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}
 	
 	public int useBigBag(BattleEntity user, BattleEntity target) {
-		
+		//uses a Magic Herb, but the Big Bag is used
 		return 0;
 	}
 	
@@ -324,37 +364,13 @@ public class Item{
 			case 3: 			causeStatus(target,damageVariable);
 								usedString = "[PLAYSFX_condition.wav]" + target.getName() + " is suffering from a status.";
 								break;
-			case 4: changeSpeedInBattle(target,damageVariable); 
-			usedString = "";
-			if (damageVariable < 0) {
-				usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s speed decreased by " + -1*damageVariable + ".";
-			} else {
-				usedString += "[PLAYSFX_statsup.wav]" + target.getName() + "'s speed increased by " + damageVariable + ".";;
-			}
+			case 4: changeStatInBattle(target,-damageVariable,"SPD");
 			break;
-			case 5: changeOffenseInBattle(target,damageVariable);
-			usedString = "";
-			if (damageVariable < 0) {
-				usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s offense decreased by " + -1*damageVariable + ".";
-			} else {
-				usedString += "[PLAYSFX_statsup.wav]" + target.getName() + "'s offense increased by " + damageVariable + ".";;
-			}
+			case 5: changeStatInBattle(target,-damageVariable,"ATK");
 			break;
-			case 6: changeDefenseInBattle(target,damageVariable);
-			usedString = "";
-			if (damageVariable < 0) {
-				usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s defense decreased by " + -1*damageVariable + ".";
-			} else {
-				usedString += "[PLAYSFX_statsup.wav]" + target.getName() + "'s defense increased by " + damageVariable + ".";;
-			}
+			case 6: changeStatInBattle(target,-damageVariable,"DEF");
 			break;
-			case 7: changeGutsInBattle(target,damageVariable);
-			usedString = "";
-			if (damageVariable < 0) {
-				usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s guts decreased by " + -1*damageVariable + ".";
-			} else {
-				usedString += "[PLAYSFX_statsup.wav]" + target.getName() + "'s guts increased by " + damageVariable + ".";;
-			}
+			case 7: changeStatInBattle(target,-damageVariable,"GUTS");
 			break;
 			case 8: result += dealDamage(user,target,"ice"); 
 			
@@ -366,22 +382,22 @@ public class Item{
 			
 			break;
 			case 11: useBread(user); 
-			usedString += user.getName() + " began dropping crumbs.";
+				usedString += String.format("%s began to drop a trail of crumbs.",user.getName());
+				break;
+			case 12: changeStat(target,damageVariable,"GUTS");
+//			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s guts increased by " + damageVariable + ".";
 			break;
-			case 12: changeGuts(target,damageVariable);
-			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s guts increased by " + damageVariable + ".";
+			case 13: changeStat(target,damageVariable,"VIT");
+//			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s vitality increased by " + damageVariable + ".";
 			break;
-			case 13: changeVit(target,damageVariable);
-			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s vitality increased by " + damageVariable + ".";
+			case 14: changeStat(target,damageVariable,"IQ");
+//			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s IQ increased by " + damageVariable + ".";
 			break;
-			case 14: changeIQ(target,damageVariable);
-			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s IQ increased by " + damageVariable + ".";
+			case 15: changeStat(target,damageVariable,"SPD");
+//			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s speed increased by " + damageVariable + ".";
 			break;
-			case 15: changeSpeed(target,damageVariable);
-			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s speed increased by " + damageVariable + ".";
-			break;
-			case 16: changeOffense(target,damageVariable);
-			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s offense increased by " + damageVariable + ".";
+			case 16: changeStat(target,damageVariable,"ATK");
+//			usedString += "[PLAYSFX_statsdown.wav]" + target.getName() + "'s offense increased by " + damageVariable + ".";
 			break;
 			case 17: result += dealDamage(user,target,"null");
 			break;
@@ -434,7 +450,7 @@ public class Item{
 				causeStatus(target,damageVariable);
 				break;
 			case 28:
-				usedString = "Steal result text";
+				attemptToSteal(user,target);
 				break;
 			case 29:
 				setShield(target,damageVariable);
@@ -461,10 +477,10 @@ public class Item{
 				setShield(target,0);
 				break;
 			case 37:
-				changeDefenseInBattle(target,-damageVariable);
+				changeStatInBattle(target,-damageVariable,"DEF");
 				break;
 			case 38:
-				changeOffenseInBattle(target,-damageVariable);
+				changeStatInBattle(target,-damageVariable,"ATK");
 				break;
 			case 39:
 				//unused
@@ -482,28 +498,38 @@ public class Item{
 		return result;
 	}
 	
-	private int changeGutsInBattle(BattleEntity target, int damageVariable2) {
-		// TODO Auto-generated method stub
-		
-		return  0;
-	}
-
-	private int changeDefenseInBattle(BattleEntity target, int damageVariable2) {
-		// TODO Auto-generated method stub
-		
-		return  0;
-	}
-
-	private int changeOffenseInBattle(BattleEntity target, int damageVariable2) {
-		// TODO Auto-generated method stub
-		
-		return  0;
-	}
-
-	private int changeSpeedInBattle(BattleEntity target, int damageVariable2) {
-		// TODO Auto-generated method stub
-		
-		return  0;
+	private void attemptToSteal(BattleEntity user, BattleEntity target) {
+		PCBattleEntity pbe = null;
+		if (target instanceof PCBattleEntity) {
+			pbe = (PCBattleEntity) target;
+			List<Item> items = pbe.getItems();
+			int size = items.size();
+			Item item = null;
+			ArrayList<Item> stealables = new ArrayList<Item>();
+			double rate = Math.random();
+			for (Item i : items) {
+				//look for all stealable items in the inventory i.e. items with value != 0
+				if (i.getValue() == 0) {
+					continue;
+				} else {
+					stealables.add(i);
+				}
+			}
+			if (stealables.size() == 0) {
+				usedString = String.format("%s has no items to steal.",pbe.getName());
+				return;
+			}
+			if (rate <= 0.3) {
+				int index = (int) (Math.random() * stealables.size());
+				item = stealables.get(index);
+				pbe.consumeItem(item);
+				usedString = String.format("%s stole %s %s from %s!",user.getName(),item.getParticiple(),item.getName(),pbe.getName()); 
+			} else {
+				usedString = String.format("%s failed to steal anything!",user.getName());
+			}
+		} else {
+			usedString = "ERROR: Item Steal Feature not Implemented for Party.";
+		}
 	}
 
 	public int useInBattle(BattleEntity user, BattleEntity target) {
@@ -520,7 +546,6 @@ public class Item{
 	}
 	
 	public String useOutBattle(PartyMember pm) {
-		
 		return null;
 	}
 	

@@ -11,15 +11,18 @@ import menu.MenuItem;
 import menu.StartupNew;
 
 public class ActionMenu extends Menu {
-	private PauseMenuSelectionWindow stw;
-	private ArrayList<PartyMember> party;
-	private TextLabel moneyLabel;
-	private TextWindow buttonLabel;
+	protected PauseMenuSelectionWindow stw;
+	protected ArrayList<PartyMember> party;
+	protected TextLabel moneyLabel;
+	protected TextWindow buttonLabel;
+	protected BackingBar backingBar;
+	protected boolean doAnim;
 	
 	public ActionMenu(StartupNew m, ArrayList<PartyMember> party) {
 		super(m);
 		this.party = party;
 		canRemove = false;
+		doAnim = true;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -32,23 +35,31 @@ public class ActionMenu extends Menu {
 		state.setSFX("closestart.wav");
 	}
 	
+	public void createSTW() {
+		stw = new PauseMenuSelectionWindow(state,party);
+	}
+	
 	public void createMenu() {
 		state.setSFX("openstart.wav");
 		state.playSFX();
-		MenuItem backingBar = new BackingBar(state);
-		backingBar.setY(-128);
-		backingBar.setTargetPosY(0);
+		backingBar = new BackingBar(state);
 		addMenuItem(backingBar);
-		stw = new PauseMenuSelectionWindow(state,party);
-		stw.setTargetPosY(0);
+		createSTW();
 		addMenuItem(stw);
 		state.getMenuStack().push(this);
 		moneyLabel = new TextLabel("$" + state.getGameState().getFundsOnHand(),832,-128+16,state);
-		moneyLabel.setTargetPosY(16);
 		addMenuItem(moneyLabel);
 		buttonLabel = new TextWindow(true,"Test",128+128*10,-128,2,0,state);
-		buttonLabel.setTargetPosY(0);
 		addMenuItem(buttonLabel);
+//		if (doAnim) {
+			backingBar.setY(-128);
+			backingBar.setTargetPosY(0);
+			moneyLabel.setTargetPosY(16);
+			buttonLabel.setTargetPosY(0);
+			stw.setTargetPosY(0);
+//		} else {
+//			
+//		}
 	}
 	
 	public void update(InputController input) {

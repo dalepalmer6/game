@@ -1,6 +1,7 @@
 package actionmenu.statusmenu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import actionmenu.PlayerInfoWindow;
 import actionmenu.goodsmenu.GoodsMenu;
@@ -11,6 +12,7 @@ import font.SelectionTextWindow;
 import font.TextWindow;
 import gamestate.EntityStats;
 import gamestate.PartyMember;
+import gamestate.StatusConditions;
 import gamestate.elements.items.Item;
 import global.InputController;
 import menu.Menu;
@@ -50,43 +52,48 @@ public class StatusMenu extends PlayerInfoWindow {
 			EntityStats pmStats = pm.getStats();
 //			twwl.setDrawOnly(true);
 			twwl.createLabel(pm.getName(),32,16);
+			
+			List<StatusConditions> conds = StatusConditions.getAfflictedStatus(pmStats.getStatus());
+			
+			twwl.createLabel(conds.get(0).getName(),256,16);
+			
 			twwl.createLabel("Level",32,64);
 			twwl.createLabel("" + pmStats.getStat("LVL"),(int)twwl.getX() + twwl.getWidth(),64);
-			twwl.createLabel("Offense",32,128);
-			twwl.createLabel("" + pmStats.getStat("ATK"),(int)twwl.getX() + twwl.getWidth(),128);
-			twwl.createLabel("Defense",32,192);
-			twwl.createLabel("" + pmStats.getStat("DEF"),(int)twwl.getX() + twwl.getWidth(),192);
-			twwl.createLabel("IQ",32,256);
-			twwl.createLabel("" + pmStats.getStat("IQ"),(int)twwl.getX() + twwl.getWidth(),256);
-			twwl.createLabel("Speed",32,320);
-			twwl.createLabel("" + pmStats.getStat("SPD"),(int)twwl.getX() + twwl.getWidth(),320);
-			twwl.createLabel("Guts",32,384);
-			twwl.createLabel("" + pmStats.getStat("GUTS"),(int)twwl.getX() + twwl.getWidth(),384);
-			twwl.createLabel("Vitality",32,448);
-			twwl.createLabel("" + pmStats.getStat("VIT"),(int)twwl.getX() + twwl.getWidth(),448);
-			twwl.createLabel("Luck",32,512);
-			twwl.createLabel("" + pmStats.getStat("LUCK"),(int)twwl.getX() + twwl.getWidth(),512);
-			twwl.createLabel("Current EXP",32,576);
-			twwl.createLabel("" + pmStats.getStat("CURXP"),(int)twwl.getX() + twwl.getWidth(),576);
-			twwl.createLabel("EXP To Next Level",32,640); // needs calculation
-			twwl.createLabel("inf",(int)twwl.getX() + twwl.getWidth(),640); // needs calculation
+			twwl.createLabel("Offense",32,112);
+			twwl.createLabel("" + pmStats.getStat("ATK"),(int)twwl.getX() + twwl.getWidth(),112);
+			twwl.createLabel("Defense",32,160);
+			twwl.createLabel("" + pmStats.getStat("DEF"),(int)twwl.getX() + twwl.getWidth(),160);
+			twwl.createLabel("IQ",32,208);
+			twwl.createLabel("" + pmStats.getStat("IQ"),(int)twwl.getX() + twwl.getWidth(),208);
+			twwl.createLabel("Speed",32,256);
+			twwl.createLabel("" + pmStats.getStat("SPD"),(int)twwl.getX() + twwl.getWidth(),256);
+			twwl.createLabel("Guts",32,304);
+			twwl.createLabel("" + pmStats.getStat("GUTS"),(int)twwl.getX() + twwl.getWidth(),304);
+			twwl.createLabel("Vitality",32,352);
+			twwl.createLabel("" + pmStats.getStat("VIT"),(int)twwl.getX() + twwl.getWidth(),352);
+			twwl.createLabel("Luck",32,400);
+			twwl.createLabel("" + pmStats.getStat("LUCK"),(int)twwl.getX() + twwl.getWidth(),400);
+			twwl.createLabel("Current EXP",32,448);
+			twwl.createLabel("" + pmStats.getStat("CURXP"),(int)twwl.getX() + twwl.getWidth(),448);
+			twwl.createLabel("EXP To Next Level",32,496); // needs calculation
+			twwl.createLabel("inf",(int)twwl.getX() + twwl.getWidth(),496); // needs calculation
 			
 			twwl.createLabel("HP",(int)twwl.getX() + twwl.getWidth()*2 - 96,64);
 			twwl.createLabel("" + pmStats.getStat("CURHP") + "/" + pmStats.getStat("HP"),(int)twwl.getX() + twwl.getWidth()*3,64);
-			twwl.createLabel("PP",(int)twwl.getX() + twwl.getWidth()*2 - 96,128);
-			twwl.createLabel("" + pmStats.getStat("CURPP") + "/" + pmStats.getStat("PP"),(int)twwl.getX() + twwl.getWidth()*3,128);
+			twwl.createLabel("PP",(int)twwl.getX() + twwl.getWidth()*2 - 96,112);
+			twwl.createLabel("" + pmStats.getStat("CURPP") + "/" + pmStats.getStat("PP"),(int)twwl.getX() + twwl.getWidth()*3,112);
 			
 			twwl.createLabel("Weapon",(int)twwl.getX() + twwl.getWidth()*2 - 96,256);
 			twwl.createLabel(pm.getEquips().get(0).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,256);
-			twwl.createLabel("Body",(int)twwl.getX() + twwl.getWidth()*2 - 96,320);
-			twwl.createLabel(pm.getEquips().get(1).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,320);
-			twwl.createLabel("Head",(int)twwl.getX() + twwl.getWidth()*2 - 96,384);
-			twwl.createLabel(pm.getEquips().get(2).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,384);
-			twwl.createLabel("Other",(int)twwl.getX() + twwl.getWidth()*2 - 96,448);
-			twwl.createLabel(pm.getEquips().get(3).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,448);
+			twwl.createLabel("Body",(int)twwl.getX() + twwl.getWidth()*2 - 96,304);
+			twwl.createLabel(pm.getEquips().get(1).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,304);
+			twwl.createLabel("Head",(int)twwl.getX() + twwl.getWidth()*2 - 96,352);
+			twwl.createLabel(pm.getEquips().get(2).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,352);
+			twwl.createLabel("Other",(int)twwl.getX() + twwl.getWidth()*2 - 96,400);
+			twwl.createLabel(pm.getEquips().get(3).getName(),(int)twwl.getX() + twwl.getWidth()*3 - 256,400);
 			
-			twwl.createLabel("Skills",(int)twwl.getX() + twwl.getWidth()*2 - 96,576);
-			twwl.createLabel("Skill Type",(int)twwl.getX() + twwl.getWidth()*3,576);
+			twwl.createLabel("Skills",(int)twwl.getX() + twwl.getWidth()*2 - 96,496);
+			twwl.createLabel("Skill Type",(int)twwl.getX() + twwl.getWidth()*3,496);
 			statuses.add(twwl);
 		}
 		confirmAction = new TextWindow(true,"Push 'CONFIRM' to see learned PSI.",256,128+11*64,20,1,state);

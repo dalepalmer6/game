@@ -13,40 +13,49 @@ public class CameraControllingEntity extends Entity {
 		double THRESHOLD = 0.0001d;
 		if (Math.abs(dy-0) < THRESHOLD && Math.abs(dx-0) < THRESHOLD) {
 			this.updateActionTaken("idle");
-		} else {
-			this.updateActionTaken("walking");
-		}
+		} 
+//		else {
+//			this.updateActionTaken("walking");
+//		}
 		if (dy < 0 && Math.abs(dx-0) < THRESHOLD) {
-			directionX = "";
-			directionY = "up";
+//			directionX = "";
+//			directionY = "up";
+			setMovementAction(null,"up");
 		}
 		else if (dy > 0 && Math.abs(dx-0) < THRESHOLD) {
-			directionX = "";
-			directionY = "down";
+//			directionX = "";
+//			directionY = "down";
+			setMovementAction(null,"down");
 		}
 		else if (dx > 0 && Math.abs(dy-0) < THRESHOLD) {
-			directionY = "";
-			directionX = "right";
+//			directionY = "";
+//			directionX = "right";
+			setMovementAction("right",null);
 		}
 		else if (dx < 0 && Math.abs(dy-0) < THRESHOLD) {
-			directionY = "";
-			directionX = "left";
+//			directionY = "";
+//			directionX = "left";
+			setMovementAction("left",null);
 		}
 		else if (dy < 0 && dx < 0) {
-			directionY = "up";
-			directionX = "left";
+//			directionY = "up";
+//			directionX = "left";
+			setMovementAction("left","up");
 		}
 		else if (dy > 0 && dx > 0) {
-			directionY = "down";
-			directionX = "right";
+//			directionY = "down";
+//			directionX = "right";
+			setMovementAction("right","down");
 		}
 		else if (dx > 0 && dy < 0) {
-			directionX = "right";
-			directionY = "up";
+//			directionX = "right";
+//			directionY = "up";
+			setMovementAction("right","up");
 		}
 		else if (dx < 0 && dy > 0) {
-			directionY = "down";
-			directionX = "left";
+//			directionY = "down";
+//			directionX = "left";
+			setMovementAction("left","down");
 		}
 		move();
 		if (x > camera.getState().getMainWindow().getScreenWidth()/2) {

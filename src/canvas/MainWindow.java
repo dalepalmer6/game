@@ -54,8 +54,10 @@ public class MainWindow {
 	private int vaoId;
 	private Texture tilesetTexture;
 	private Texture battleBGTexture;
+	private Texture battleBGPalette;
 	private float[] battleBGVars;
 	private boolean useTransparency;
+	int counter = 0;
 	
 	public void setTextureAtlas(TextureAtlas ta) {
 		this.textureAtlas = ta;
@@ -174,19 +176,32 @@ public class MainWindow {
 		GL20.glUseProgram(pId);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, battleBGTexture.getTextureID());
+		
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, battleBGPalette.getTextureID());
+		
 //		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-        int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
-        GL20.glUniform1i(loc,2);
-        	loc = GL20.glGetUniformLocation(pId, "time");
+//        int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
+//        GL20.glUniform1i(loc,1);
+		
+		int loc = GL20.glGetUniformLocation(pId, "time");
         int fx = GL20.glGetUniformLocation(pId, "freqx");
         int fy = GL20.glGetUniformLocation(pId, "freqy");
         int ax = GL20.glGetUniformLocation(pId, "amplitudex");
         int ay = GL20.glGetUniformLocation(pId, "amplitudey");
         int sx = GL20.glGetUniformLocation(pId, "speedx");
         int sy = GL20.glGetUniformLocation(pId, "speedy");
+        int tex = GL20.glGetUniformLocation(pId, "texture_diffuse");
+        int pal = GL20.glGetUniformLocation(pId, "texture_color_palette");
+        int frameCount = GL20.glGetUniformLocation(pId, "frames");
         
+        counter++;
+        
+        GL20.glUniform1i(tex,0);
+        GL20.glUniform1i(pal,2);
+        GL20.glUniform1f(frameCount,counter);
         GL20.glUniform1f(loc,dTime/10e9f);
         GL20.glUniform1f(fx,battleBGVars[1]);
         GL20.glUniform1f(fy,battleBGVars[4]);
@@ -449,10 +464,11 @@ public class MainWindow {
 		return new Point(x, y);
 	}
 
-	public void setBattleTexture(Texture t, float[] vals) {
+	public void setBattleTexture(Texture t, float[] vals, Texture p) {
 		if (battleBGTexture == null) {
 			battleBGTexture = t;
 			battleBGVars = vals;
+			battleBGPalette = p;
 		}
 	}
 

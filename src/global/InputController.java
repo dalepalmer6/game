@@ -42,6 +42,25 @@ public class InputController {
 		controllerSignals.put("ENTER",ENTER);
 	}
 	
+	public boolean anyKeyDown() {
+		boolean any = false;
+		for (String key : controllerSignals.keySet()) {
+			any = any || controllerSignals.get(key);
+		}
+		return any;
+	}
+	
+	public boolean anyKeyDownExcept(String except) {
+		boolean any = false;
+		for (String key : controllerSignals.keySet()) {
+			if (except.equals(key)) {
+				continue;
+			}
+			any = any || controllerSignals.get(key);
+		}
+		return any;
+	}
+	
 	public void pollKeyEnter() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !ENTER) {
 			System.out.println("Keydown: return");
@@ -85,7 +104,7 @@ public class InputController {
 			setSignal("BACK", false);
 			BACK = false;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_Z) && !holdable) {
 			setSignal("BACK",false);
 		}
 	}

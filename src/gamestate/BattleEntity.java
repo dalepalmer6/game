@@ -12,17 +12,11 @@ public class BattleEntity {
 	protected String texture;
 	protected String name;
 	protected int status = 0;
-	//0 - normal
-	//1 - cold
-	//2 - blind
-	//4 - asthma
-	//8 - stone
-	//16 - dead 
-	//32 - 
 	protected int turnsAsleep = 0;
 	protected int width;
 	protected int height;
 	protected EntityStats stats;
+	protected EntityStats battleStats;
 	protected SpritesheetCoordinates spriteData;
 	protected BattleAction actionToPerform;
 	//position to be drawn on screen
@@ -41,6 +35,10 @@ public class BattleEntity {
 	//3 - power shield
 	private int shieldCharge; //num hits the shield will endure
 	protected String predicate = "";
+	
+	public void applyBattleWear() {
+		stats.applyBattleWear(battleStats);
+	}
 	
 	public void consumePP(int usedPP) {
 		
@@ -84,10 +82,6 @@ public class BattleEntity {
 		return predicate;
 	}
 	
-//	public void setState(String string) {
-//		// TODO Auto-generated method stub
-//		state = string;
-//	}
 	public EnemyAction getRandomAction() {
 		return null;
 	}
@@ -98,6 +92,10 @@ public class BattleEntity {
 	
 	public EntityStats getStats() {
 		return stats;
+	}
+	
+	public EntityStats getBattleStats() {
+		return battleStats;
 	}
 	
 	public SpritesheetCoordinates getSpriteData() {
@@ -120,20 +118,12 @@ public class BattleEntity {
 		return width;
 	}
 	
-//	public BattleEntity(String texture, String name, int hp, int pp) {
-//		this.texture = texture;
-//		this.name = name;
-//		this.spriteData = new SpritesheetCoordinates();
-//		spriteData.setPose("front_");
-//		spriteData.addStateToPose("front_",0,0,32,64);
-//		this.stats = new EntityStats(hp,pp,0,0,0,0,0,0,0,0,0,0,0);
-//	}
-//	
 	public BattleEntity(String texture, String name, EntityStats es, StartupNew systemState) {
 		this.texture = texture;
 		this.systemState=systemState;
 		this.name = name;
 		this.stats = es;
+		this.battleStats = es.createCopy();
 	}
 	
 	public void ai() {
@@ -170,11 +160,11 @@ public class BattleEntity {
 
 	public int getState() {
 		// TODO Auto-generated method stub
-		return status;
+		return stats.getStatus();
 	}
 
 	public void setStatus(int status) {
-		this.status = status;
+		this.stats.setStatus(status);
 	}	
 	
 	public void setDefend(boolean b) {
@@ -183,13 +173,22 @@ public class BattleEntity {
 	}
 	
 	public boolean addStatus(int status) {
-		int oldStatus = this.status;
-		this.status |= status;
-		return oldStatus != this.status;
+		int oldStatus = stats.getStatus();
+		
+		stats.setStatus(stats.getStatus() | status);
+		return oldStatus != stats.getStatus();
 	}
 	
+	public boolean addStatus(StatusConditions status) {
+		int oldStatus = stats.getStatus();
+		
+		stats.setStatus(stats.getStatus() | status.getIndex());
+		return oldStatus != stats.getStatus();
+	}
+	
+	//remove the status bit
 	public boolean removeStatus(int status) {
-		this.status ^= status;
+		stats.setStatus(stats.getStatus() & ~status);
 		return true;
 	}
 	

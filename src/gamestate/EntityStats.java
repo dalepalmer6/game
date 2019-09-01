@@ -4,6 +4,22 @@ import java.util.HashMap;
 
 public class EntityStats {
 	private HashMap<String, Integer> stats;
+	public static HashMap<String,String> statNames = new HashMap<String,String>() {{
+		put("LVL","Level");
+		put("CURHP","Current HP");
+		put("CURPP","Current PP");
+		put("HP","HP");
+		put("PP","PP");
+		put("ATK","Offense");
+		put("DEF","Defense");
+		put("IQ","IQ");
+		put("VIT","Vitality");
+		put("LUCK","Luck");
+		put("GUTS","Guts");
+		put("SPD","Speed");
+		put("CURXP","Current Experience");
+	}};
+	private int status;
 	
 	public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 		stats = new HashMap<String,Integer>();
@@ -20,6 +36,15 @@ public class EntityStats {
 		stats.put("GUTS",guts);
 		stats.put("LUCK",luck);
 		stats.put("CURXP",curxp);
+		status = 0;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+	
+	public void setStatus(int s) {
+		status = s;
 	}
 	
 	public String toString() {
@@ -51,6 +76,13 @@ public class EntityStats {
 	public void replaceStat(String stat, int val) {
 		stats.put(stat,val);
 	}
+	
+	//sets the stats 
+	public void applyBattleWear(EntityStats worn) {
+		replaceStat("CURHP",worn.getStat("CURHP"));
+		replaceStat("CURPP",worn.getStat("CURPP"));
+		setStatus(worn.getStatus());
+	}
 
 	public EntityStats createCopy() {
 		// TODO Auto-generated method stub
@@ -67,6 +99,7 @@ public class EntityStats {
 				stats.get("GUTS"),
 				stats.get("LUCK"),
 				stats.get("CURXP"));
+		clone.setStatus(status);
 		return clone;
 	}
 }

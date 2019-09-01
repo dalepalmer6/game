@@ -13,8 +13,8 @@ public class BattleSelectionTextWindow extends SelectionTextWindow {
 	}
 	
 	public void getPreviousWindow() {
-		BattleMenu m = (BattleMenu) state.getMenuStack().peek();
-		m.popWindowStackAndRemoveMI(this);
+		BattleMenu m = state.battleMenu;
+		m.popWindowStackAndRemoveMI();
 	}
 	
 	@Override
