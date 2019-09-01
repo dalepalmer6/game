@@ -167,22 +167,37 @@ public class MainWindow {
 	}
 	
 	public void drawBattleBG() {
-		renderTile(0,0,getScreenWidth(),getScreenHeight(),0,0,256,256);
+		
+		int TILE_SIZE = 100;
+//		for (int i = 0; i < SCREEN_WIDTH; i+=TILE_SIZE) {
+//			for (int j = 0; j < SCREEN_HEIGHT; j+=TILE_SIZE) {
+				renderTile(0,0,256,256,0,0,256,256);
+//			}
+//		}
+		
 	}
 	
 	public void useShader() {
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		float dTime = time - System.nanoTime();
 		GL20.glUseProgram(pId);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, battleBGTexture.getTextureID());
 		
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		GL11. glShadeModel(GL11.GL_FLAT);
+		
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, battleBGPalette.getTextureID());
 		
-//		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		
+//		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
 //        int loc = GL20.glGetUniformLocation(pId, "s_baseMap");
 //        GL20.glUniform1i(loc,1);
 		
@@ -218,7 +233,16 @@ public class MainWindow {
         v2.setXYZ(1f, -1f, 0); v2.setRGB(0, 0, 1); v2.setST(1, 1);
         TexturedVertex v3 = new TexturedVertex(); 
         v3.setXYZ(1f, 1f, 0); v3.setRGB(1, 1, 1); v3.setST(1, 0);
-         
+        
+//        TexturedVertex v0 = new TexturedVertex(); 
+//        v0.setXYZ(-1f, 2, 0); v0.setRGB(1, 0, 0); v0.setST(0, 0);
+//        TexturedVertex v1 = new TexturedVertex(); 
+//        v1.setXYZ(-1, -2, 0); v1.setRGB(0, 1, 0); v1.setST(0, 1);
+//        TexturedVertex v2 = new TexturedVertex(); 
+//        v2.setXYZ(1f, -2, 0); v2.setRGB(0, 0, 1); v2.setST(1, 1);
+//        TexturedVertex v3 = new TexturedVertex(); 
+//        v3.setXYZ(1f, 2, 0); v3.setRGB(1, 1, 1); v3.setST(1, 0);
+        
         TexturedVertex[] vertices = new TexturedVertex[] {v0, v1, v2, v3};
         // Put each 'Vertex' in one FloatBuffer
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length *
@@ -416,10 +440,13 @@ public class MainWindow {
 //		GL11.glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 //		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
+//		GL11.glViewport(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);        // Reset The Current Viewport
+		
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
 		
 		setupShaders();
 		

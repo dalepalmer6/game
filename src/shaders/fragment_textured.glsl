@@ -20,24 +20,34 @@ vec2 distorsion(vec2 p)
 {	
 	vec2 res = vec2(0.0,0.0);
 	vec2 r = vec2(floor(gl_FragCoord.x), floor(gl_FragCoord.y));
-	if (mod(r.y,2) == 0.0) {
-		res.x = p.x + amplitudex * sin( freqx + time*speedx);
-	} else {
-		res.x = p.x - amplitudex * sin( freqx + time*speedx);
-	}
+	//if (mod(r.y,4) == 0.0) {
+		res.x = p.x + amplitudex * sin( time*freqx + int(r.y/8)*speedx);
+	//} else {
+//		res.x = time*2 + p.x - amplitudex * sin( freqx + time*speedx);
+	//}
+	
+	//res.x = time*2 + p.x;
 	
 	//res.y = p.y + amplitudey * (freqy + time*speedy);
-	res.y = p.y;
+	res.y = time*2 + p.y;
 	return res;
 }
 
 vec4 swapPaletteColor(vec4 colorIndex)
 {
-	vec4 texel = texture2D(texture_color_palette,vec2((colorIndex.x)/10.0,colorIndex.y));
-	//vec4 texel = texture2D(texture_color_palette,vec2(mod(-0.5 + (colorIndex.x + time),11)/11.0,colorIndex.y/8.0));
+	//vec4 texel = texture2D(texture_color_palette,vec2(2 + (mod((((colorIndex.x)+time)*255),13))/10,0.10));
+	//float indexX = mod((colorIndex.x)*15,15);
+	//float indexX = 0.0625;
+	//float indexX = mod(time*4 + colorIndex.x*255/15,15);
+	float indexX = time*4 + colorIndex.x*255/15;
+	vec4 texel = texture2D(texture_color_palette,vec2(indexX,0));
 	return texel;
 }
 
 void main(void) {
-	gl_FragColor = swapPaletteColor(texture2D(texture_diffuse,distorsion(pass_TextureCoord)));
+	//gl_FragColor = swapPaletteColor(texture2D(texture_diffuse,distorsion(pass_TextureCoord)));
+	
+	gl_FragColor = swapPaletteColor(texture2D(texture_diffuse,pass_TextureCoord));
+	
+	//gl_FragColor = swapPaletteColor(texture2D(texture_diffuse,(pass_TextureCoord)));
 }

@@ -64,7 +64,13 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 		approachTargetPos();
 		if (targetY == y && !textInitted) {
 			textInitted = true;
-			textName = new TextLabel(name,(int)x+24,(int)y-52,state);
+			if (name != null) {
+				if (!name.equals("NewEntityName")) {
+					textName = new TextLabel(name,(int)x+24,(int)y-52,state);
+				}
+			}
+			
+			
 			this.text = new Text(shouldDrawAll,textString,(int)x+TEXT_START_X,(int)y+TEXT_START_Y,this.width,this.height,m.charList);
 			this.text.setRenderWindow(this);
 			text.setState(state);
@@ -113,7 +119,7 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 	public void draw(MainWindow m) {
 		initDrawWindow(m);
 		drawBlackWindow(m);
-		if (name != null && textInitted) {
+		if (name != null && textInitted && textName != null) {
 			drawNameWindow(m);
 		}
 		if (textInitted) {
