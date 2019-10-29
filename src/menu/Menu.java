@@ -121,10 +121,15 @@ public class Menu implements MenuInterface {
 		return popping;
 	}
 	
+	public void pop() {
+		state.getMenuStack().popStack();
+	}
+	
 	public void onPop() {
 		popping = true;
+		//TODO what was this supposed to do??
 		if (canRemove) {
-			state.getMenuStack().pop();
+			pop();
 		}
 	}
 	

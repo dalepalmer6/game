@@ -31,10 +31,12 @@ public class Animation extends MenuItem {
 	protected AnimationCoordinates coordinates;
 	protected double tickCount = 0;
 //	protected double ticksPerFrame = 0.34;
-	protected double ticksPerFrame = 0.34;
+	protected double ticksPerFrame = 0.20;
 	protected TileMetadata tm;
 	protected boolean complete;
 	protected boolean done;
+	private boolean sfxPlay;
+	private String sfxPath;
 	
 	public boolean isComplete() {
 		return complete;
@@ -93,30 +95,29 @@ public class Animation extends MenuItem {
 	}
 	
 	public void createAnimation() {
-//		state.setCurrentAnimation(texture);
-//		try {
-//			state.createAtlas();//rather than this, simply use opengl to bind the texture
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		try {
 			textureSlick = BufferedImageUtil.getTexture("", state.getAnimation(texture));
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		coordinates.setPose(0);
 		parseXMLFile();
-//		tm = coordinates.getPose(0).getStateByNum(0);
-//		animItem = new AnimationItem(texture,state,0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
 	}
 	
 	public TileMetadata getStateByNum(int i) {
 		return coordinates.getPose(0).getStateByNum(i);
 	} 
 	
+	public void setSFXPath(String p) {
+		this.sfxPath = p;
+		sfxPlay = true;
+	}
+	
 	public void updateAnim() {
+		if (sfxPlay) {
+			sfxPlay = false;
+			state.setSFX(sfxPath);
+		}
 		System.out.println(tickCount);
 		tickCount += ticksPerFrame;
 		int i = (int) tickCount % coordinates.getPose(0).getNumStates();
@@ -124,9 +125,7 @@ public class Animation extends MenuItem {
 		if (tickCount >= coordinates.getPose(0).getNumStates()-1) {
 			state.getMenuStack().peek().setToRemove(this);
 			state.battleMenu.setGetResultText();
-//			((BattleMenu)state.getMenuStack().peek()).getCurrentActiveBattleAction().setComplete();
 			tickCount = 0;
-//			((BattleMenu)state.getMenuStack().peek()).getCurrentAction().setComplete();
 		}
 		
 		TileMetadata tm = coordinates.getPose(0).getStateByNum(i);
@@ -140,13 +139,17 @@ public class Animation extends MenuItem {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureSlick.getTextureID());
 		m.renderAnimation(textureSlick,x,y,width,height,tm.getX(),tm.getY(),tm.getWidth(),tm.getHeight(),false);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, state.getTextureAtlas().getTexture().getTextureID());
-//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 	}
 
 	public void bindAnimToTwo() {
 		// TODO Auto-generated method stub
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureSlick.getTextureID());
+	}
+
+	public void loadImage() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

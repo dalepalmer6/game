@@ -18,22 +18,6 @@ public class EnemySpawnEntity extends Entity {
 	
 	public void draw(MainWindow m) {}
 	
-//	public void setNewParams(double x, double y, int w, int h, String name, int v1, int v2, int v3, int v4, float p1, float p2, float p3, float p4) {
-//		// TODO Auto-generated method stub
-//		this.x = x;
-//		this.y = y;
-//		this.width = w;
-//		this.height = h;
-//		this.name = name;
-//		this.enemies = new ArrayList<Enemy>();
-//		enemies.add(state.enemies.get(v1));
-//		enemies.add(state.enemies.get(v2));
-//		enemies.add(state.enemies.get(v3));
-//		enemies.add(state.enemies.get(v4));
-//		rates = new float[]{p1,p2,p3,p4};
-//		
-//	}
-	
 	public void setNewParams(int index, double x, double y, int w, int h) {
 		this.index = index;
 		this.x = x;
@@ -66,17 +50,6 @@ public class EnemySpawnEntity extends Entity {
 	public String toString() {
 		String value = "";
 		value += index + "," + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + "\n";
-//		for (Enemy e : enemies) {
-//			if (e == null) {
-//				break;
-//			}
-//			value += e.getId() + ",";
-//		}
-//		value += "\n";
-//		for (float val : rates) {
-//			value += val + ",";
-//		}
-//		value += "\n";
 		return value;
 	}
 	
@@ -94,10 +67,7 @@ public class EnemySpawnEntity extends Entity {
 				enemies.add(state.enemies.get(ids[i]));
 			}
 		}
-		
 		this.index = index;
-//		rates = new float[] {0f,0f,0f,0f};
-		
 	}
 	
 	public String getName() {
@@ -136,9 +106,11 @@ public class EnemySpawnEntity extends Entity {
 							ArrayList<Enemy> picked = new ArrayList<Enemy>();
 							picked.add(enemies.get(j));
 							EnemyEntity en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
-//							while (en.checkCollisions()) {
-//								en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
-//							}
+							while (en.checkCollisions()) {
+								randW = (int) (Math.random()*width);
+								randH = (int) (Math.random()*height);
+								en = new EnemyEntity((x+randW),(y+randH),24*4,32*4,state,picked);
+							}
 							Entity eStatic = state.allEntities.get("redDressLady");
 							en.setSpriteCoords(eStatic.getSpriteCoordinates());
 							spawned.add(en);
@@ -158,16 +130,5 @@ public class EnemySpawnEntity extends Entity {
 			done = true;
 		}
 	}
-	
-//	public void setRates(float[] x) {
-//		rates = x;
-//	}
-//	
-//	public void setEnemies(String[] enemyNames) {
-//		enemies = new ArrayList<Enemy>();
-//		for (String name : enemyNames) {
-//			enemies.add(state.enemies.get(Integer.parseInt(name)));
-//		}
-//	}
 	
 }

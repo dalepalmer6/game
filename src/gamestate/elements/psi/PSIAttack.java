@@ -32,7 +32,7 @@ public class PSIAttack extends Item{
 	}
 	
 	public void consume(BattleEntity user) {
-		user.getStats().replaceStat("CURPP",user.getStats().getStat("CURPP") - ppUsed);
+		user.getBattleStats().replaceStat("CURPP",user.getBattleStats().getStat("CURPP") - ppUsed);
 	}
 	
 	

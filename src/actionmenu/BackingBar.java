@@ -11,10 +11,10 @@ public class BackingBar extends MenuItem {
 	}
 	
 	public void draw(MainWindow m) {
-		state.getMainWindow().setTexture("img\\menu.png");
+		m.setTexture("img\\menu.png");
 		//draw the backing bar
-		for (int i = 0; i < state.getMainWindow().getScreenWidth(); i+=128) {
-			state.getMainWindow().renderTile(i,y,128,128,0,0,32,32);
+		for (int i = 0; i < m.getScreenWidth(); i+=128) {
+			m.renderTile(i,y,128,128,0,0,32,32);
 		}
 	}
 	

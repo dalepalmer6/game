@@ -45,7 +45,7 @@ public class BattleEntity {
 	}
 	
 	public boolean hasEnoughPP(int usedPP) {
-		if (stats.getStat("CURPP") < usedPP) {
+		if (battleStats.getStat("CURPP") < usedPP) {
 			return false;
 		} else {
 			return true;
@@ -151,20 +151,20 @@ public class BattleEntity {
 			//also check the status of shields such as PSI Shield or Power Shield when implemented
 			damage /= 2;
 		}
-		int hp = this.stats.getStat("CURHP");
+		int hp = this.battleStats.getStat("CURHP");
 		hp -= damage;
 		hp = Math.max(0,hp);
-		stats.replaceStat("CURHP",hp);
+		battleStats.replaceStat("CURHP",hp);
 		return damage;
 	}
 
 	public int getState() {
 		// TODO Auto-generated method stub
-		return stats.getStatus();
+		return battleStats.getStatus();
 	}
 
 	public void setStatus(int status) {
-		this.stats.setStatus(status);
+		this.battleStats.setStatus(status);
 	}	
 	
 	public void setDefend(boolean b) {
@@ -173,22 +173,22 @@ public class BattleEntity {
 	}
 	
 	public boolean addStatus(int status) {
-		int oldStatus = stats.getStatus();
+		int oldStatus = battleStats.getStatus();
 		
-		stats.setStatus(stats.getStatus() | status);
-		return oldStatus != stats.getStatus();
+		battleStats.setStatus(battleStats.getStatus() | status);
+		return oldStatus != battleStats.getStatus();
 	}
 	
 	public boolean addStatus(StatusConditions status) {
-		int oldStatus = stats.getStatus();
+		int oldStatus = battleStats.getStatus();
 		
-		stats.setStatus(stats.getStatus() | status.getIndex());
-		return oldStatus != stats.getStatus();
+		battleStats.setStatus(battleStats.getStatus() | status.getIndex());
+		return oldStatus != battleStats.getStatus();
 	}
 	
 	//remove the status bit
 	public boolean removeStatus(int status) {
-		stats.setStatus(stats.getStatus() & ~status);
+		battleStats.setStatus(battleStats.getStatus() & ~status);
 		return true;
 	}
 	

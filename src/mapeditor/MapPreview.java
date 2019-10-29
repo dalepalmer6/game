@@ -7,7 +7,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.newdawn.slick.opengl.Texture;
 
 import canvas.Clickable;
 import canvas.Controllable;
@@ -19,12 +18,8 @@ import gamestate.Pose;
 import gamestate.TileMetadata;
 import global.InputController;
 import mapeditor.tools.MapTool;
-import mapeditor.tools.SingleTile;
 import menu.MenuItem;
 import menu.StartupNew;
-import tiles.MultiInstanceTile;
-import tiles.PremadeTileObject;
-import tiles.SingleInstanceTile;
 
 public class MapPreview extends MenuItem implements Controllable, Drawable, Hoverable, Clickable {
 	private Map map;
@@ -181,9 +176,9 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 			//for every row
 			for (int j = (int) this.y; j <= this.y + height; j+= TILE_SIZE) {
 				//for every column
-				m.renderTile(this.x,j,width,1,1,1,1,1);
+				m.renderTileImmediate(this.x,j,width,1,1,1,1,1,false);
 			}
-			m.renderTile(i,this.y,1,height,1,1,1,1);
+			m.renderTileImmediate(i,this.y,1,height,1,1,1,1,false);
 		}
 	}
 
@@ -222,7 +217,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 					continue;
 				}
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
+				m.renderMapTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 			}
 		}
 	}
@@ -241,7 +236,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 				}
 				int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
+				m.renderMapTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, (float)tile.getDx(instance),(float)tile.getDy(instance),(float)tile.getDw(instance),(float)tile.getDh(instance));
 			}
 		}
 }
@@ -260,7 +255,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 					}
 					int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //					m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-					m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
+					m.renderMapTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 				}
 			}
 	}
@@ -279,7 +274,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 //				}
 				int instance  = map.inspectSurroundings(i+viewX,j+viewY);
 //				m.renderTile(x + (i-1)*TILE_SIZE, y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tileMap.getTile(0).getInstance(0).getDx(),tileMap.getTile(0).getInstance(0).getDy(),tileMap.getTile(0).getInstance(0).getDw(),tileMap.getTile(0).getInstance(0).getDh());
-				m.renderTiles(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance),false);
+				m.renderMapTile(x + ((i-1)*TILE_SIZE),y + (j-1)*TILE_SIZE,TILE_SIZE,TILE_SIZE, tile.getDx(instance),tile.getDy(instance),tile.getDw(instance),tile.getDh(instance));
 			}
 		}
 	}
@@ -294,7 +289,7 @@ public class MapPreview extends MenuItem implements Controllable, Drawable, Hove
 			Pose pose = e.getSpriteCoordinates().getPose("idle", "","down");
 			TileMetadata tm = pose.getStateByNum(0);
 			e.initDrawEntity(m,e.getTexture());
-			m.renderTile(e.getX()+x-(viewX)*TILE_SIZE, e.getY()+y-(viewY)*TILE_SIZE, e.getWidth(), e.getHeight(), tm.getX(), tm.getY(), tm.getWidth(), tm.getHeight(),tm.getFlipState());
+			m.renderTile(e.getX()+x-(viewX)*TILE_SIZE, e.getY()+y-(viewY)*TILE_SIZE, e.getWidth(), e.getHeight(), (float) tm.getX(), (float) tm.getY(), (float) tm.getWidth(), (float) tm.getHeight());
 		}
 	}
 	

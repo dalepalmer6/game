@@ -21,6 +21,11 @@ public class DoorEntity extends Entity {
 		
 	}
 	
+	@Override
+	public canvas.renderer.entities.Entity drawEntity(MainWindow m) {
+		return null;
+	}
+	
 	public void interact() {}
 	
 	public void setNewParams(double x, double y, int w, int h, String name, String appFlag, String disFlag, String newMap) {

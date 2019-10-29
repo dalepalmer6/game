@@ -17,6 +17,7 @@ public class DamageMenuItem extends MenuItem {
 	int killTime = 120;
 	private boolean disallowProgress;
 	private boolean setMiss;
+	private boolean mortal;
 	
 	public DamageMenuItem(int dmg, int x, int y, StartupNew state) {
 		super("" + dmg, x,y, state);
@@ -105,6 +106,10 @@ public class DamageMenuItem extends MenuItem {
 		
 	}
 	
+	public void setMortal() {
+		mortal = true;
+	}
+	
 	public void updateAnim() {
 		if (aliveTime > killTime) {
 			state.getMenuStack().peek().setToRemove(this);
@@ -117,7 +122,11 @@ public class DamageMenuItem extends MenuItem {
 						bm.setPollForActions();
 					}
 					if (bm.getCurrentActiveBattleAction().isComplete()) {
-						bm.setGetNextPrompt();
+//						if (!mortal) {
+							bm.setGetNextPrompt();
+//						}
+						
+//						bm.setGetNext();
 					} else {
 						if (bm.getCurrentActiveBattleAction().isContinuous()&& bm.getCurrentActiveBattleAction().needAnim() && !bm.getCurrentActiveBattleAction().isComplete()) {
 							bm.setGetAnimation(true);

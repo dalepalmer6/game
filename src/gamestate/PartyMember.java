@@ -93,7 +93,13 @@ public class PartyMember {
 	}
 	
 	public void updateStats() {
-		stats = baseStats.createCopy();
+		setStats(stats.getStat("CURHP"),stats.getStat("CURPP"),stats.getStatus());
+		
+		for (String s : stats.getStatKeys()) {
+			stats.replaceStat(s,baseStats.getStat(s));
+		}
+		
+//		stats = baseStats.createCopy();
 		for (Item i : equips) {
 			stats.addStats(((EquipmentItem) i).getStats());
 		}
@@ -245,7 +251,7 @@ public class PartyMember {
 		// TODO Auto-generated method stub
 		this.baseStats.replaceStat("CURHP",stat);
 		this.baseStats.replaceStat("CURPP",stat2);
-		this.status = status;
+		this.baseStats.setStatus(status);
 	}
 	
 	public void addStats(EntityStats diffs) {

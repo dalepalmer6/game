@@ -123,10 +123,11 @@ public class EnemyOptionPanel extends MenuItem {
 //		m.setUseShader(true);
 //		m.setTexture("img\\battlebg.png");
 		m.setBattleTexture(battleBGTexture,battleBGVars,palette);
-		m.setUseShader(true);
-		m.drawBattleBG();
+//		m.setUseShader(true);
+		state.setDrawBattleBG(true);
+//		m.drawBattleBG();
 //		m.renderTile(0,0,m.getScreenWidth(),m.getScreenHeight(),0,0,256,256);
-		m.setUseShader(false);
+//		m.setUseShader(false);
 //		m.setUseShader(false);
 	}
 	

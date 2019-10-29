@@ -1,6 +1,7 @@
 package gamestate;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class EntityStats {
 	private HashMap<String, Integer> stats;
@@ -20,6 +21,10 @@ public class EntityStats {
 		put("CURXP","Current Experience");
 	}};
 	private int status;
+	
+	public Set<String> getStatKeys() {
+		return stats.keySet();
+	}
 	
 	public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
 		stats = new HashMap<String,Integer>();
@@ -60,7 +65,8 @@ public class EntityStats {
 				stats.get("SPD") + "," +
 				stats.get("GUTS") + "," +
 				stats.get("LUCK") + "," +
-				stats.get("CURXP");
+				stats.get("CURXP") + "," +
+				status;
 	}
 	
 	public void addStats(EntityStats es) {

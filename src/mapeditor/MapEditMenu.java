@@ -45,6 +45,9 @@ public class MapEditMenu extends Menu {
 	
 	
 	public void update(InputController input) {
+		if (input.getSignals().get("BACK")) {
+			canRemove = true;
+		}
 		prevTool.update(input);
 		currentToolButtons = prevTool.getAssociatedButtons();
 		toolInfoWindow.setTool(prevTool);
@@ -64,6 +67,7 @@ public class MapEditMenu extends Menu {
 	
 	public MapEditMenu(StartupNew m, TileHashMap tm) {
 		super(m);
+		canRemove = false;
 		this.map = new Map("podunk",34,34, tm, state);
 		prevTool = new MapTool(state);
 		mapPreview = new MapPreview(TILE_SIZE,3 * TILE_SIZE,3 * TILE_SIZE, map, tm,state);

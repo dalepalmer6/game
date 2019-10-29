@@ -20,7 +20,6 @@ public class InBattleWindow extends Menu implements Controllable{
 		stw.setCurrentOpen(stw.getTextStartX()+96,stw.getTextStartY());
 		stw.setTextStart(stw.getTextStartX()+96,stw.getTextStartY());
 		stw.setSteps(680,0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

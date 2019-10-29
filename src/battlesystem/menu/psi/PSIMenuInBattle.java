@@ -46,7 +46,6 @@ public class PSIMenuInBattle extends InBattleWindow {
 		}
 		for (int i = psiSTW.getYStart(); i < maxY; i++) {
 			MenuItem mi = labels.get(i);
-			//psiSTW.getX() + psiSTW.getTextStartX() + 16,psiSTW.getY()+y
 			mi.setY(psiSTW.getY() + 32 + (x++)*48);
 			addToMenuItems(mi);
 		}
@@ -61,14 +60,7 @@ public class PSIMenuInBattle extends InBattleWindow {
 			backShouldExit = true;
 		}
 		
-//		if (!state.inBattle) {
-//			index = invisSelectItem.getIndex();
-//		} else {
-			index = state.battleMenu.getIndex()-1;
-//		}
-//		if (party.get(index).getItemsList().get(0).getId() != 0) {
-//			descWindow.setText(((PSIAttackMenuItem) psiSTW.getSelectedItem()).getPSI().getDescription());
-//		}
+		index = state.battleMenu.getIndex()-1;
 		
 		if (lastClassWindowSelection != classificationWindow.getSelectedItem()) {
 			menuItems.remove(psiSTW);
@@ -101,8 +93,9 @@ public class PSIMenuInBattle extends InBattleWindow {
 		PartyMember pm = party.get(0);
 		psiSTW = new PSISelectionTextWindow(state.getMainWindow().getScreenWidth()/2 - (8/2)*72,32,12,3,state,pm);
 		psiSTW.setYSelectionSize(5);
+		psiSTW.createGrid(5,15,288,psiSTW.getTextStartY());
 		
-		enumPSIForMember();
+//		enumPSIForMember();
 
 	}
 	
@@ -129,7 +122,6 @@ public class PSIMenuInBattle extends InBattleWindow {
 		for (PSIFamily pf : psiFams) {
 			j = 0;
 			for (PSIAttack attack : pf.getStages()) {
-//				psiSTW.setCurrentOpen(x+=32*2,y);
 				long comparator = (long) Math.pow(2,attack.getId());
 				if ((comparator & knownPSI) == comparator) {
 					atLeastOne = true;
@@ -143,7 +135,6 @@ public class PSIMenuInBattle extends InBattleWindow {
 				addToMenuItems(tl);
 				atLeastOne = false;
 			}
-//			x = 288;
 			y += 24*2;
 			i++;
 		}

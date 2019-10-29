@@ -82,44 +82,39 @@ public class Item{
 	
 	//predefine a bunch of use cases for items that will be assigned to items
 	public int healTarget(BattleEntity user, BattleEntity target) {
-//		if ((target.getState() & 16) == 16) {
-//			//is deadl, return 0;
-//			return 0;
-//		}
-		int hp = target.getStats().getStat("CURHP");
-		int maxHP = target.getStats().getStat("HP");
+		int hp = target.getBattleStats().getStat("CURHP");
+		int maxHP = target.getBattleStats().getStat("HP");
 		int dhp = calculateDamage();
 		hp += (dhp);
 		hp = Math.min(maxHP,hp);
-		target.getStats().replaceStat("CURHP",hp);
-//		return target.getName() + " recovered " + dhp + "HP!";
+		target.getBattleStats().replaceStat("CURHP",hp);
 		return dhp;
 	}
 	
 	public int healTarget(BattleEntity user, BattleEntity target, int amount) {
-		int hp = target.getStats().getStat("CURHP");
-		int maxHP = target.getStats().getStat("HP");
+		int hp = target.getBattleStats().getStat("CURHP");
+		int maxHP = target.getBattleStats().getStat("HP");
 		int dhp = amount;
 		hp += (dhp);
 		hp = Math.min(maxHP,hp);
-		target.getStats().replaceStat("CURHP",hp);
+		target.getBattleStats().replaceStat("CURHP",hp);
 //		return target.getName() + " recovered " + dhp + "HP!";
 		return dhp;
 	}
 	
 	public int suckPP(BattleEntity user, BattleEntity target) {
-		int pp = user.getStats().getStat("CURPP");
-		int maxPP = user.getStats().getStat("PP");
+		int pp = user.getBattleStats().getStat("CURPP");
+		int maxPP = user.getBattleStats().getStat("PP");
 		int dpp = calculateDamage();
-		int enemyPP = target.getStats().getStat("CURPP");
+		int enemyPP = target.getBattleStats().getStat("CURPP");
 		while (dpp > enemyPP) {
 			dpp--;
 		}
 		enemyPP -= dpp;
 		pp+=dpp;
 		pp = Math.min(maxPP,pp);
-		target.getStats().replaceStat("CURPP",enemyPP);
-		user.getStats().replaceStat("CURPP",pp);
+		target.getBattleStats().replaceStat("CURPP",enemyPP);
+		user.getBattleStats().replaceStat("CURPP",pp);
 		usedString = user.getName() + " sucked " + dpp + "PP from " + target.getName();
 		return dpp;
 	}
@@ -136,12 +131,12 @@ public class Item{
 	}
 	
 	public int healPP(BattleEntity user, BattleEntity target) {
-		int pp = target.getStats().getStat("CURPP");
-		int maxPP = target.getStats().getStat("PP");
+		int pp = target.getBattleStats().getStat("CURPP");
+		int maxPP = target.getBattleStats().getStat("PP");
 		int dpp = calculateDamage();
 		pp += (dpp);
 		pp = Math.min(maxPP,pp);
-		target.getStats().replaceStat("CURPP",pp);
+		target.getBattleStats().replaceStat("CURPP",pp);
 		return dpp;
 	}
 	
@@ -154,7 +149,7 @@ public class Item{
 			case "null" : damageElement |= 8;break;
 			default : damageElement = 0; break;
 		}
-		int hp = target.getStats().getStat("CURHP");
+		int hp = target.getBattleStats().getStat("CURHP");
 		int damage = calculateDamage();
 		if (target.getShieldType() == 2) {
 			damage/=2;
@@ -193,7 +188,7 @@ public class Item{
 		usedString = "[PLAYSFX_healedbeta.wav]";
 		for (StatusConditions s : statusesHealed) {
 			if (statusesAffected.contains(s)) {
-				usedString += String.format("%s %s[PROMPTINPUT]",be.getName(),s.getCureText());
+				usedString += be.getName() + " " + s.getCureText() + "[PROMPTINPUT]";
 				healed = true;
 			}
 			if (be.removeStatus(s.getIndex()) && s.equals(StatusConditions.DEAD)) {
@@ -206,27 +201,6 @@ public class Item{
 		}
 		
 		return 0;
-//		boolean[] affected = new boolean[statusesHealed.size()];
-//		for (int i = 0; i < affected.length; i++) {
-//			affected[i] = (be.getState() & status) == 0;
-//		}
-//		int beStatus = be.getState();
-//		if ((beStatus & 16) == 16 && (status & 16) == 0) {
-//			healTarget(be,be,30);
-//		}
-//		beStatus &= status;
-//		if (beStatus != be.getState()) {
-//			usedString = String.format("[PLAYSFX_healedbeta.wav]%s",be.getName());;
-//		} else {
-//			usedString = "Nothing happened.";
-//		}
-//		for (int i = 0; i < affected.length; i++) {
-//			if (affected[i]) {
-//				usedString += "[PROMPTINPUT]" + statusesHealed.get(i);
-//			}
-//		}
-//		be.setStatus(beStatus);
-//		return 0;
 	}
 	
 	public int causeStatus(BattleEntity be, int status) {
@@ -247,8 +221,8 @@ public class Item{
 	}
 	
 	public int changeStat(BattleEntity be, int diff, String stat) {
-		int oldStat = be.getStats().getStat(stat);
-		be.getStats().replaceStat(stat,oldStat + diff);
+		int oldStat = be.getBattleStats().getStat(stat);
+		be.getBattleStats().replaceStat(stat,oldStat + diff);
 		String sfxPlay = null;
 		String changeType = null;
 		if (diff < 0) {
@@ -612,7 +586,8 @@ public class Item{
 			BattleEntity targetBE = pm.createBattleEntity();
 			determineAction(user.createBattleEntity(),targetBE);
 			result += usedString;
-			pm.setStats(targetBE.getStats().getStat("CURHP"),targetBE.getStats().getStat("CURPP"),targetBE.getState());
+//			pm.setStats(targetBE.getBattleStats().getStat("CURHP"),targetBE.getStats().getStat("CURPP"),targetBE.getState());
+			targetBE.applyBattleWear();
 		}
 		if (consume) {
 			consume(user);

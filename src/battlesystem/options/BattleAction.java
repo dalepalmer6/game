@@ -65,7 +65,7 @@ public class BattleAction {
 				Animation anim = ((PSIAttack)itemToUse).getAnimation();
 				if (actor instanceof Enemy) {
 					anim = new Animation(state,"enemypsi",0,0,state.getMainWindow().getScreenWidth(),state.getMainWindow().getScreenHeight());
-					anim.createAnimation();
+//					anim.createAnimation();
 				} else {
 					if (anim == null) {
 						//no animation for the psi
@@ -79,6 +79,7 @@ public class BattleAction {
 				state.getMenuStack().peek().addToMenuItems(anim);
 				state.setCurrentAnimation(anim.getTexture() + ".png");
 				anim.bindAnimToTwo();
+				anim.setSFXPath("psi/freezeg.wav");
 				anim.updateAnim();
 				break;
 			default : 	bm.setGetResultText();
@@ -90,10 +91,10 @@ public class BattleAction {
 	
 	public String doBash(BattleEntity user, BattleEntity target) {
 		String result = "";
-		int targetDef = target.getStats().getStat("DEF");
-		int userOff = user.getStats().getStat("ATK");
-		int targetSpd = target.getStats().getStat("SPD");
-		int userSpd = user.getStats().getStat("SPD");
+		int targetDef = target.getBattleStats().getStat("DEF");
+		int userOff = user.getBattleStats().getStat("ATK");
+		int targetSpd = target.getBattleStats().getStat("SPD");
+		int userSpd = user.getBattleStats().getStat("SPD");
 		double posneg = Math.random();
 		double randAdjust = Math.random()*25/100;
 		double critRand = Math.random();
@@ -102,7 +103,7 @@ public class BattleAction {
 		int damage;
 		
 		//critrate
-		double guts = user.getStats().getStat("GUTS");
+		double guts = user.getBattleStats().getStat("GUTS");
 		double critRate = Math.max(1f/20f,guts/500);
 		if (critRand < critRate) {
 			//set the SMAAAAAAASH text to display, use graphic/TMI, make a big deal.
@@ -322,6 +323,17 @@ public class BattleAction {
 							break;
 			case "defend" : break;
 		}
+		
+		BattleEntity targ = recipient;
+		if (targ instanceof PCBattleEntity) {
+			
+			int index = state.battleMenu.getPartyMembers().indexOf(targ);
+			if (state.battleMenu.getPSWs().get(index).getTargetHP() - getDamageDealt() <= 0) {
+				state.setSFX("mortaldmg.wav");
+				result += String.format("%s %s!",targ.getName(), "took mortal damage");
+			};
+		}
+		
 		index++;
 		return result;
 	}
@@ -418,6 +430,10 @@ public class BattleAction {
 			actor.takeDamage((int) dmg,16);
 			createDOTMenuItem((int)dmg,actor);
 		}
+		
+//		for (StatusConditions sc : conditions) {
+//			battleString = sc.doActionOnTurn(actor);
+//		}
 		
 		
 		if (!battleString.equals("")) {

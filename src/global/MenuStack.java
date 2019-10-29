@@ -22,11 +22,16 @@ public class MenuStack {
 		}
 	}
 	
+	public Menu popStack() {
+		return stack.remove(stack.size()-1);
+	}
+	
 	public Menu pop() {
 		if (stack.size() != 0) {
-			Menu m = stack.remove(stack.size()-1);
+			Menu m = peek();
+			m.onPop();
 			if (stack.size() != 0) {
-				peek().reloadActionOnPop();
+				m.reloadActionOnPop();
 			}
 			
 			return m;

@@ -371,6 +371,7 @@ public class Text implements Drawable{
 		return done;
 	}
 	
+	//TODO - CLEAN UP IN HERE - ALOT OF CODE CAN BE MOVED TO AN UPDATE METHOD
 	public void draw(MainWindow m, int r, int g, int b) {
 		GL11.glColor3f(r,g,b);
 		initDrawText(m);
@@ -690,7 +691,6 @@ public class Text implements Drawable{
 	}
 	
 	public void drawChar(MainWindow m,int i,char c, int curX,int curY) {
-//		char c = chars[i];
 		if (charList.getCharObjects().get(c) == null) {
 			return;
 		}

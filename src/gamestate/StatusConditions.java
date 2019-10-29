@@ -13,7 +13,13 @@ public enum StatusConditions {
 			1,
 			null,
 			null,
-			null),
+			null) {
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "";
+		}
+	},
 	COLD(1,
 			false,
 			false,
@@ -22,7 +28,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.COLD,
 			"%s caught a cold!",
-			"%s got over the cold!"),
+			"%s got over the cold!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "Is suffering from a cold";
+		}
+	},
 	
 	POISON(2,
 			false,
@@ -32,7 +44,18 @@ public enum StatusConditions {
 			1,
 			StatusIcons.POISON,
 			"%s became poisoned!",
-			"%s was cured of the poison!"),
+			"%s was cured of the poison!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			String battleString = "[PROMPTINPUT]";
+			double dmg = 20 + 4 - Math.random()*8;
+			battleString += String.format(StatusConditions.POISON.getActionString(),actor.getName());
+			actor.takeDamage((int) dmg,16);
+//			createDOTMenuItem((int)dmg,actor);
+			return battleString;
+		}
+	},
 	
 	ASTHMA(4,
 			false,
@@ -42,17 +65,29 @@ public enum StatusConditions {
 			5/8,
 			StatusIcons.ASTHMA,
 			"%s couldn't stop coughing!",
-			"%s got over the asthma attack!"),
+			"%s got over the asthma attack!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "Asthma";
+		}
+	},
 	
 	STONE(8,
 			false,
 			false,
 			"Stone",
-			 "%s is petrified and cannot move.",
+			 "%s is petrified and can't move.",
 			1,
 			StatusIcons.STONE,
 			"%s turned to stone!",
-			"%s became softened!"),
+			"%s became softened!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "Is petrify";
+		}
+	},
 	
 	DEAD(16,
 			false,
@@ -62,7 +97,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.DEAD,
 			"%s got hurt and collapsed!",
-			"%s was revived!"),
+			"%s was revived!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "is daed";
+		}
+	},
 	
 	AMNESIA(32,
 			false,
@@ -72,7 +113,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.AMNESIA,
 			"%s became unable to concentrate!",
-			"%s was able to concentrate again!"),
+			"%s was able to concentrate again!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "amnesiac";
+		}
+	},
 	
 	CRYING(64,
 			false,
@@ -82,7 +129,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.CRYING,
 			"%s started to cry!",
-			"%s stopped crying!"),
+			"%s stopped crying!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "crying";
+		}
+	},
 	
 	UNKNOWN(128,
 			false,
@@ -92,7 +145,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.UNKNOWN,
 			"??",
-			"??"),
+			"??"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "??";
+		}
+	},
 	
 	SLEEP(256,
 			false,
@@ -102,7 +161,13 @@ public enum StatusConditions {
 			0.33,
 			StatusIcons.SLEEP,
 			"%s fell asleep!",
-			"%s woke up!"),
+			"%s woke up!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "sleep";
+		}
+	},
 	
 	PARALYZE(512,
 			false,
@@ -112,7 +177,13 @@ public enum StatusConditions {
 			1,
 			StatusIcons.PARALYZE,
 			"%s became paralyzed!",
-			"%s was able to move freely again!");
+			"%s was able to move freely again!"){
+		
+		@Override
+		public String doActionOnTurn(BattleEntity actor) {
+			return "prz";
+		}
+	};
 	
 	public static String getFailed() {
 		return "But it failed.";
@@ -202,6 +273,10 @@ public enum StatusConditions {
 		this.cureText = cureText;
 	}
 	
+	public String doActionOnTurn(BattleEntity actor) {
+		return "";
+	}
+	
 	public String getCureText() {
 		if (cureText == null) {
 			return "";
@@ -241,6 +316,10 @@ public enum StatusConditions {
 	public boolean canBeCombined() {
 		return canBeCombined;
 	}
+	
+//	public boolean persisitsOutOfBattle() {
+//		return persists;
+//	}
 	
 	public String getActionString() {
 		return action;

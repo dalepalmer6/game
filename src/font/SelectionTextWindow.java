@@ -111,8 +111,6 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 				y += stepForwardY;
 			}
 		}
-//		featherMenuItem.setX(selections.get(selectedY).get(selectedX).getX());
-//		featherMenuItem.setY(selections.get(selectedY).get(selectedX).getY());
 		featherMenuItem.updateAnim();
 		
 		for (ArrayList<MenuItem> list : selections) {
@@ -423,17 +421,12 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	
 	public void drawSelections(MainWindow mw) {
 		Text.initDrawText(mw);
-//		int i = yStart;
-//		for (ArrayList<MenuItem> mis : selections) {
 		if (!grid) {
 			yStart = 0;
 			yEnd = selections.size();
 		}
 		for (int i = yStart; i < yEnd; i++) {
 			ArrayList<MenuItem> mis = selections.get(i);
-//			if (i++ > yEnd) {
-//				break;
-//			}
 			for (MenuItem m : mis) {
 				if (m == null) {
 					continue;

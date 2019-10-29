@@ -19,7 +19,6 @@ public class PCBattleEntity extends BattleEntity {
 	public PCBattleEntity(String texture, String name, String id, EntityStats stats, StartupNew state,int status) {
 		super(texture,name,stats,state);
 		this.id = id;
-		this.status = status;
 	}
 	
 	public void setPartyMember(PartyMember pm) {

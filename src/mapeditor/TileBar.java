@@ -206,8 +206,8 @@ public class TileBar extends LeftClickableItem implements Hoverable, Clickable {
 				int drawingY = (j) * TILE_SIZE;
 				Tile tile = getCurrentTileFromInterestList(i, j);
 				if (tile != null) {
-					m.renderTiles(drawingX + this.x, drawingY + this.y, tilesize,
-							tilesize, tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0),false);
+					m.renderMapTile(drawingX + this.x, drawingY + this.y, tilesize,
+							tilesize, tile.getDx(0), tile.getDy(0), tile.getDw(0), tile.getDh(0));
 				}
 			}
 		}

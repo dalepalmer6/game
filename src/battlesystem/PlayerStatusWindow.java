@@ -23,7 +23,7 @@ public class PlayerStatusWindow extends MenuItem {
 	private int targetPP;
 //	private String statusCondition;
 	private int status;
-	private int lastStatus;
+	private int lastStatus = -1;
 	private double tickCount = 0;
 	private double ticksPerFrame = 0.25;
 	private int[] HPoffsetX = {0,0,0};
@@ -40,13 +40,17 @@ public class PlayerStatusWindow extends MenuItem {
 	private Entity avatar;
 	private ArrayList<MenuItem> statusMenuItems;
 	
+	public int getTargetHP() {
+		return targetHP;
+	}
+	
 	public ArrayList<MenuItem> getStatusIcons() {
 		return statusMenuItems;
 	}
 	
 	public void updateAnim() {
 		status = battleEntity.getState();
-		if (lastStatus != status) {
+		if (lastStatus == -1 || lastStatus != status) {
 			//recreate the menuItems
 			for (MenuItem mi : statusMenuItems) {
 				state.getMenuStack().peek().setToRemove(mi);
@@ -113,8 +117,8 @@ public class PlayerStatusWindow extends MenuItem {
 		avatar.setXYOnScreen(x+80,y);
 		textName = new Text(true,be.getName(),((int)this.x+64),((int)this.y+64),100,100,state.charList);
 		this.name = be.getName();
-		this.HP = be.getStats().getStat("CURHP");
-		this.PP = be.getStats().getStat("CURPP");
+		this.HP = be.getBattleStats().getStat("CURHP");
+		this.PP = be.getBattleStats().getStat("CURPP");
 		String digits = HP + "";
 		while (digits.length() < 3) {
 			digits = "0" + digits;
@@ -329,23 +333,7 @@ public class PlayerStatusWindow extends MenuItem {
 			x += 8*4;
 		}
 	}
-	
-//	public void drawPP(MainWindow m) {
-//		int pp = PP;
-////		drawPPIndicator(m);
-//		String digits = String.valueOf(pp);
-//		while (digits.length() < 3) {
-//			digits = "0" + digits;
-//		}
-//		char[] digitsArray = digits.toCharArray();
-//		double x = this.x + 29*4;
-//		double y = this.drawingY + 34*4;
-//		for (char c : digitsArray) {
-//			drawDigit(m,Integer.parseInt(String.valueOf(c)),0, x,y);
-//			x += 8*4;
-//		}
-//	}
-	
+
 	public void draw(MainWindow m) {
 		avatar.draw(m);
 		m.setTexture("img\\battlehud.png");

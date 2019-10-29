@@ -30,6 +30,7 @@ import gamestate.EntityStats;
 import gamestate.LevelupData;
 import gamestate.PCBattleEntity;
 import gamestate.PartyMember;
+import gamestate.StatusConditions;
 import global.InputController;
 import menu.AnimationMenu;
 import menu.DrawableObject;
@@ -37,6 +38,7 @@ import menu.Menu;
 import menu.MenuItem;
 import menu.StartupNew;
 import menu.TexturedMenuItem;
+import menu.gameovermenu.GameOverMenu;
 
 public class BattleMenu extends Menu {
 //	private BattleMenuSelectionTextWindow actionMenu;
@@ -89,6 +91,9 @@ public class BattleMenu extends Menu {
 	private boolean forceWaitForPrompt;
 	private TexturedMenuItem youWon;
 	private BattleActionMenu actionMenu;
+	private boolean mortalDamage;
+	private String mortalDeathString;
+	private BattleTextWindow promptBak;
 	
 	public ArrayList<BattleEntity> getPartyMembers() {
 		return party;
@@ -144,14 +149,17 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void generateGreeting() {
-		String greeting = enemies.get(0).getPredicate();
-		greeting = predicateToUpperCase(greeting);
-		greeting += enemies.get(0).getName();
+		String pred = enemies.get(0).getPredicate();
+		pred = predicateToUpperCase(pred);
+		String name = enemies.get(0).getName();
+		String and = null;
 		if (enemies.size() > 1) {
-			greeting += " and cohorts";
+			and = "and cohorts";
+		} else {
+			and = "";
 		}
-		greeting += " suddenly attacked"; // unique string?
-		greeting += ".";
+		String greet = "suddenly attacked";
+		String greeting = String.format("%s %s %s %s!",pred,name,and,greet);
 		setPromptGreet(greeting);
 		waitToStart = true;
 	}
@@ -243,6 +251,16 @@ public class BattleMenu extends Menu {
 		((BattleTextWindow)prompt).loadAnimOnExit();
 	}
 	
+	public void setPromptMortal() {
+		prompt = createTextWindow(mortalDeathString);
+		if (needNextPrompt) {
+			needNextPrompt = false;
+			prompt.setPollForActionsOnExit();
+		}
+		readyToDisplay = true;
+		((BattleTextWindow)prompt).setPollForActionsOnExit();
+	}
+	
 	public void setPromptSecond(String s) {
 		if (s.equals("donothing")) {
 			readyToDisplay = false;
@@ -278,6 +296,7 @@ public class BattleMenu extends Menu {
 				//get the x y coordinates to put the damage
 				
 				DamageMenuItem mi = getDamageMenuItem(currentBattleAction.getDamageDealt(), currentBattleAction.getTarget());
+				
 				
 				mi.setDisallowAutoProgress(disallowAutoProgress);
 				mi.setIsHealing(currentBattleAction.isHealing());
@@ -320,7 +339,7 @@ public class BattleMenu extends Menu {
 			x = (int) (eo.getX() + eo.getWidth()/2);
 			y = (int) (eo.getY() + eo.getHeight()/2);
 			eop.setToShake(index);
-			if (currentBattleAction.getTarget().getStats().getStat("CURHP") <= 0) {
+			if (currentBattleAction.getTarget().getBattleStats().getStat("CURHP") <= 0) {
 				eop.setKilled(index);
 			}
 		}
@@ -378,7 +397,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void setPromptPartyDead() {
-		prompt = createTextWindow("You lost the battle.");
+		prompt = createTextWindow(String.format("%s lost the battle.", partyMembers.get(0).getName()));
 		while (state.getMenuStack().peek() != this) {
 			state.getMenuStack().pop();
 		}
@@ -405,15 +424,14 @@ public class BattleMenu extends Menu {
 		state.setAudioOverride(false);
 		state.setBGM("you win.ogg");
 //		state.setAudioOverride(true);
-		menuItems.remove(actionMenu);
+//		menuItems.remove(actionMenu);
 		ended = true;
 		getNext = false;
 		prompt = createTextWindow(" ");
 		youWon = new TexturedMenuItem("You win",prompt.getX() + prompt.getWidth()*2 - (74*4/2),prompt.getY() + 64,74*4,8*4,state,"battlehud.png",128,21,74,8);
-//		prompt.setPollForActionsOnExit();
-		for (int i = 0; i < partyMembers.size(); i++) {
-			partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"),party.get(i).getState());
-		}
+//		for (int i = 0; i < partyMembers.size(); i++) {
+//			partyMembers.get(i).setStats(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"),party.get(i).getState());
+//		}
 		readyToDisplay = true;
 //		battleSceneEnd = false;
 		doOnce = false;
@@ -423,9 +441,19 @@ public class BattleMenu extends Menu {
 	public void showWinnings() {
 		menuItems.remove(youWon);
 		getNext = false;
-		int awardEXP = expPool/calculateAlivePartyMembers();
+		int awardEXP = Math.max(1,expPool/calculateAlivePartyMembers());
 		state.getGameState().addFundsToBank(moneyGained);
-		prompt = createTextWindow(party.get(0).getName() + " and co. " +  " received " + awardEXP + " experience points.");
+		
+		String and = null;
+		if (getAliveMembers().size() == 1) {
+			and = "";
+		} else {
+			and = "and co.";
+		}
+		
+		String results = String.format("%s %s received %d experience points.",getAliveMembers().get(0).getName(),and,awardEXP);
+		
+		prompt = createTextWindow(results);
 		levelupString = "";
 		int index = 0;
 		for (PartyMember pm : partyMembers) {
@@ -524,11 +552,17 @@ public class BattleMenu extends Menu {
 		state.getMenuStack().push(an);
 	}
 	
+	@Override
 	public void doDoneFadeOutAction() {
 		// TODO Auto-generated method stub
-		killBattleMenu();
-		state.setAudioOverride(false);
-		state.setBGM(state.getGameState().getMap().getBGM());
+		if (calculateAlivePartyMembers() == 0) {
+//			state.getMenuStack().pop();
+			state.getMenuStack().push(new GameOverMenu(state));
+		} else {
+			killBattleMenu();
+			state.setAudioOverride(false);
+			state.setBGM(state.getGameState().getMap().getBGM());
+		}
 	}
 	
 	public void killBattleMenu() {
@@ -558,6 +592,12 @@ public class BattleMenu extends Menu {
 			//create the You Won prompt, then the exp divying screen, then go through anyone's level ups
 			createYouWin();
 		}
+//		if (mortalDamage && getNext) {
+//			promptBak = prompt;
+//			mortalDamage = false;
+//			setPromptSecond(mortalDeathString);
+//			prompt.setGetNext();
+//		}
 		
 		if (displayRecExp && getNext) {
 			showWinnings();
@@ -577,7 +617,7 @@ public class BattleMenu extends Menu {
 				for (int i = 0; i < enemies.size(); i++) {
 					BattleEntity e = enemies.get(i);
 					if (checkIfPlayerCanAct(e)) {
-						if (e.getStats().getStat("CURHP") <= 0) {
+						if (e.getBattleStats().getStat("CURHP") <= 0) {
 							alertDeadEntity = true;
 							deadEntities.add(e);
 							break;
@@ -592,7 +632,7 @@ public class BattleMenu extends Menu {
 							alertDeadEntity = true;
 //							locked = true;
 							deadEntities.add(e);
-							e.setStatus(16);
+							e.setStatus(StatusConditions.DEAD.getIndex());
 							break;
 						}
 					}
@@ -640,10 +680,11 @@ public class BattleMenu extends Menu {
 			}
 			
 			if (endBattleSceneGameOver && getNext) {
-				state.getMenuStack().pop();
+//				state.getMenuStack().pop();
+//				state.getMenuStack().push(new GameOverMenu(state));
+				endBattleRoutine();
 				state.inBattle = false;
-				state.setDrawAllMenus(false);
-				state.getGameState().reloadInitialMap();
+//				state.setDrawAllMenus(false);
 				state.getGameState().setCanEncounter(true);
 				state.getGameState().resetNumEntities();
 			}
@@ -758,7 +799,7 @@ public class BattleMenu extends Menu {
 			
 			for (int i = 0; i < party.size(); i++) {
 				pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5));
-				pswList.get(i).updateStatus(party.get(i).getStats().getStat("CURHP"),party.get(i).getStats().getStat("CURPP"));
+				pswList.get(i).updateStatus(party.get(i).getBattleStats().getStat("CURHP"),party.get(i).getBattleStats().getStat("CURPP"));
 				if (i == indexMembers-1 && i >= 0) {
 					pswList.get(i).setTargetPosY(state.getMainWindow().getScreenHeight()-(64*5)-32);
 				}
@@ -768,12 +809,13 @@ public class BattleMenu extends Menu {
 		
 		if (readyToDisplay) {
 			windowStack.clear();
-			addMenuItem(prompt);
+			
 			if (battleSceneEnd) {
 				battleSceneEnd = false;
 				addToMenuItems(youWon);
 			}
 			readyToDisplay = false;
+			addMenuItem(prompt);
 			prompt.setGetNext();
 //			if (currentBattleAction != null) {
 //				if (currentBattleAction.isComplete()) {
@@ -798,6 +840,16 @@ public class BattleMenu extends Menu {
 		}
 		return i;
 	}
+	
+	private List<BattleEntity> getAliveMembers() {
+		ArrayList<BattleEntity> bes = new ArrayList<BattleEntity>();
+		for (BattleEntity be : party) {
+			if (checkIfPlayerCanAct(be)) {
+				bes.add(be);
+			}
+		}
+		return bes;
+	}
 
 	public void sortTurnStackBySpeed()
     {
@@ -819,8 +871,8 @@ public class BattleMenu extends Menu {
             	adj2 *= -1;
             }
             for (int j = i+1; j < n; j++) {
-            	 if (turnStack.get(j).getStats().getStat("SPD") * adj1
-                 		< turnStack.get(min_idx).getStats().getStat("SPD") * adj2) {
+            	 if (turnStack.get(j).getBattleStats().getStat("SPD") * adj1
+                 		< turnStack.get(min_idx).getBattleStats().getStat("SPD") * adj2) {
             		 min_idx = j;
             	 }
             }
@@ -993,6 +1045,11 @@ public class BattleMenu extends Menu {
 
 	public void setForceWaitForGetPrompt() {
 		forceWaitForPrompt = true;
+	}
+
+	public boolean canGetNext() {
+		// TODO Auto-generated method stub
+		return getNext;
 	}
 
 }

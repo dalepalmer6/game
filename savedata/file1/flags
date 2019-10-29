@@ -7,13 +7,13 @@ melody5,true
 melody2,true
 melody3,true
 melody1,true
-loidInParty,false
+loidInParty,true
 dollDead,true
 melody8,true
 nintenInParty,true
-anaInParty,false
+anaInParty,true
 dadFirstCall,true
-pippiInParty,false
+pippiInParty,true
 playPoltergeist,true
 lampDead,true
 teddyInParty,false
