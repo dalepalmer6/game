@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import menu.MenuItem;
 import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.sprites.TileMetadata;
 
@@ -109,6 +110,7 @@ public class Animation extends MenuItem {
 	}
 	
 	public void updateAnim() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (sfxPlay) {
 			sfxPlay = false;
 			state.setSFX(sfxPath);

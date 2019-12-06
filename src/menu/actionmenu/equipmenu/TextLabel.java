@@ -1,8 +1,6 @@
 package menu.actionmenu.equipmenu;
 
-import font.CharList;
 import menu.MenuItem;
-import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
 
@@ -13,7 +11,7 @@ public class TextLabel extends MenuItem {
 	
 	public TextLabel(String t, int x, int y,SystemState state) {
 		super(t,x,y,state);
-		textObject = new TextEngine(true,t,x,y,0,0,state.charList);
+		textObject = state.createTextEngine(true,t,x,y,0,0);
 		textObject.setAsSingleString();
 	}
 	

@@ -7,6 +7,7 @@ import gamestate.partymembers.PartyMember;
 import menu.actionmenu.PlayerInfoWindow;
 import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -17,6 +18,7 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 	
 	public void reloadActionOnPop() {
 //		inventories = new ArrayList<SelectionTextWindow>();
+		MotherSystemState state = (MotherSystemState) this.state;
 		int j = 0;
 		for (SelectionTextWindow stw:  inventories) {
 //			SelectionTextWindow base = new SelectionTextWindow(0,0,0,0,state);
@@ -38,11 +40,11 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 		}
 	}
 	
-	public GoodsMenuOutOfBattle(SystemState state, ArrayList<PartyMember> party) {
+	public GoodsMenuOutOfBattle(MotherSystemState state, ArrayList<PartyMember> party) {
 		this(state,party,false);
 	}
 	
-	public GoodsMenuOutOfBattle(SystemState state, ArrayList<PartyMember> party,boolean selling) {
+	public GoodsMenuOutOfBattle(MotherSystemState state, ArrayList<PartyMember> party,boolean selling) {
 		super(state,party);
 		this.selling = selling;
 		inventories = new ArrayList<SelectionTextWindow>();
@@ -66,14 +68,15 @@ public class GoodsMenuOutOfBattle extends PlayerInfoWindow {
 			addMenuItem(descWindow);
 		}
 		index = 0;
-		if (!state.inBattle) {
+		MotherSystemState mstate = (MotherSystemState) this.state;
+		if (!mstate.inBattle) {
 			menuTitle.setText("Goods");
 		}
 		
 	}
 	
 	public void update(InputController input) {
-		
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (!backShouldExit && input.getSignals().get("BACK")) {
 			inventories.get(index).setDrawOnly(true);
 			backShouldExit = true;

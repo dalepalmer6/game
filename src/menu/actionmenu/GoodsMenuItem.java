@@ -6,6 +6,7 @@ import battlesystem.menu.GoodsMenuInBattle;
 import gamestate.partymembers.PartyMember;
 import menu.TexturedMenuItem;
 import menu.actionmenu.goodsmenu.GoodsMenuOutOfBattle;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class GoodsMenuItem extends TexturedMenuItem {
@@ -31,6 +32,7 @@ public class GoodsMenuItem extends TexturedMenuItem {
 //		state.setSFX("window.wav");
 //		state.playSFX();
 		
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (state.inBattle) {
 			GoodsMenuInBattle gmib = new GoodsMenuInBattle(state,party.get(0));
 			state.getMenuStack().push(gmib);

@@ -1,17 +1,13 @@
 package system;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,51 +20,24 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.BufferedImageUtil;
 import org.newdawn.slick.util.ResourceLoader;
 
-import battlesystem.Enemy;
-import battlesystem.EnemyAction;
 import battlesystem.menu.BattleMenu;
-import battlesystem.menu.SelectTargetMenu;
-import battlesystem.options.EnemyOptionPanel;
-import battlesystem.options.PSI;
-import canvas.renderer.models.RawModel;
-import canvas.renderer.shaders.BattleBGShader;
 import font.CharList;
-import gamestate.EnemySpawnGroup;
-import gamestate.EntityStats;
-import gamestate.GameState;
 import gamestate.GameState;
 import gamestate.cutscene.Cutscene;
-import gamestate.elements.items.EquipmentItem;
-import gamestate.elements.items.Item;
-import gamestate.elements.psi.PSIAttack;
-import gamestate.elements.psi.PSIAttackUsableInAndOutOfBattle;
-import gamestate.elements.psi.PSIAttackUsableInBattle;
-import gamestate.elements.psi.PSIAttackUsableOutOfBattle;
-import gamestate.entities.DoorEntity;
 import gamestate.entities.Entity;
-import gamestate.partymembers.PartyMember;
-import gamestate.psi.PSIClassification;
-import gamestate.psi.PSIClassificationList;
-import gamestate.psi.PSIFamily;
 import menu.DrawableObject;
 import menu.LeftClickableItem;
 import menu.Menu;
-import menu.MenuItem;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
-import menu.animation.Animation;
 import menu.animation.AnimationFadeFromBlack;
 import menu.animation.AnimationMenu;
 import menu.animation.AnimationMenuFadeFromBlack;
-import menu.continuemenu.SelectSaveFileMenu;
 import menu.mainmenu.ContinueMenuItem;
 import menu.mainmenu.MainMenu;
 import menu.mainmenu.MapPreviewTestButton;
@@ -77,9 +46,7 @@ import menu.mainmenu.OptionsMenuItem;
 import menu.mapeditmenu.mappreview.MapPreview;
 import menu.text.TextEngine;
 import menu.windows.SelectionTextWindow;
-import menu.windows.SimpleDialogMenu;
 import system.controller.InputController;
-import system.interfaces.Controllable;
 import system.interfaces.Drawable;
 import system.interfaces.Hoverable;
 import system.map.Tile;
@@ -130,8 +97,6 @@ public class SystemState{
 	private Menu removeThisMenu;
 	private boolean clearTheMenuStack;
 	private boolean drawAllMenus;
-	public boolean inBattle;
-	public BattleMenu battleMenu;
 	private Audio bgm;
 	private float bgmStart;
 	private float bgmEnd;
@@ -929,7 +894,7 @@ public class SystemState{
 	}
 	
 	public TextEngine createTextEngine(boolean drawAll, String text, int x, int y, int w, int h) {
-		return new TextEngine(true, text ,x , y ,w, h, charList);
+		return new TextEngine(drawAll, text ,x , y ,w, h, charList);
 	}
 
 //	public void setCurrentAnimation(String string) {

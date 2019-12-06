@@ -1,46 +1,30 @@
 package system;
 
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.newdawn.slick.openal.Audio;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.util.BufferedImageUtil;
-import org.newdawn.slick.util.ResourceLoader;
 
 import battlesystem.Enemy;
 import battlesystem.EnemyAction;
 import battlesystem.menu.BattleMenu;
-import battlesystem.menu.SelectTargetMenu;
 import battlesystem.options.EnemyOptionPanel;
 import canvas.renderer.models.RawModel;
 import canvas.renderer.shaders.BattleBGShader;
-import font.CharList;
 import gamestate.EnemySpawnGroup;
 import gamestate.EntityStats;
 import gamestate.GameState;
 import gamestate.MotherGameState;
-import gamestate.cutscene.Cutscene;
 import gamestate.elements.items.EquipmentItem;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
@@ -53,36 +37,9 @@ import gamestate.partymembers.PartyMember;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIClassificationList;
 import gamestate.psi.PSIFamily;
-import menu.DrawableObject;
-import menu.LeftClickableItem;
-import menu.Menu;
-import menu.MenuItem;
-import menu.actionmenu.goodsmenu.InvisibleMenuItem;
 import menu.animation.Animation;
-import menu.animation.AnimationFadeFromBlack;
-import menu.animation.AnimationMenu;
-import menu.animation.AnimationMenuFadeFromBlack;
-import menu.continuemenu.SelectSaveFileMenu;
-import menu.mainmenu.ContinueMenuItem;
-import menu.mainmenu.MainMenu;
-import menu.mainmenu.MapPreviewTestButton;
-import menu.mainmenu.NewGameMenuItem;
-import menu.mainmenu.OptionsMenuItem;
-import menu.mapeditmenu.mappreview.MapPreview;
 import menu.text.MotherTextEngine;
 import menu.text.TextEngine;
-import menu.windows.SelectionTextWindow;
-import menu.windows.SimpleDialogMenu;
-import system.controller.InputController;
-import system.interfaces.Controllable;
-import system.interfaces.Drawable;
-import system.interfaces.Hoverable;
-import system.map.Tile;
-import system.map.TileHashMap;
-import tiles.ChangeWithFlagTile;
-import tiles.MultiInstanceTile;
-import tiles.PremadeTileObject;
-import tiles.SingleInstanceTile;
 
 public class MotherSystemState extends SystemState {
 	public MotherGameState gameState;
@@ -777,6 +734,6 @@ public class MotherSystemState extends SystemState {
 	
 	@Override
 	public TextEngine createTextEngine(boolean drawAll, String text, int x, int y, int w, int h) {
-		return new MotherTextEngine(true, text ,x , y ,w, h, charList);
+		return new MotherTextEngine(drawAll, text ,x , y ,w, h, charList);
 	}
 }

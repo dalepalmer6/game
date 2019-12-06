@@ -58,7 +58,7 @@ public class BattleAction {
 		return completed;
 	}
 	
-	public void createAnim(SystemState state) throws IOException {
+	public void createAnim(MotherSystemState state) throws IOException {
 		BattleMenu bm = state.battleMenu;
 		switch(usedAction) {
 			case "psi" : //draw anim only if the psi has an animation
@@ -164,6 +164,7 @@ public class BattleAction {
 	}
 	
 	public String doAction() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		damageDealt = 0;
 		String result = "";
 		if (doNothing) {
@@ -502,6 +503,7 @@ public class BattleAction {
 	}
 	
 	public DamageMenuItem createDOTMenuItem(int dmg, BattleEntity target) {
+		MotherSystemState state = (MotherSystemState) this.state;
 		DamageMenuItem mi = state.battleMenu.getDamageMenuItem(dmg,target);
 		mi.setDamageOverTime(true);
 		state.battleMenu.addMenuItem(mi);

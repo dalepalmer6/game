@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import gamestate.partymembers.PartyMember;
 import menu.Menu;
 import menu.MenuItem;
-import menu.actionmenu.goodsmenu.GoodsMenu;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
 import menu.windows.TextWindow;
-import system.SystemState;
+import system.MotherSystemState;
 import system.controller.InputController;
 import system.interfaces.Controllable;
 
@@ -39,7 +38,7 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 		
 	}
 	
-	public PlayerInfoWindow(SystemState state, ArrayList<PartyMember> party) {
+	public PlayerInfoWindow(MotherSystemState state, ArrayList<PartyMember> party) {
 		super(state);
 		this.party = party;
 		addMenuItem(new BackingBar(state));
@@ -91,6 +90,7 @@ public class PlayerInfoWindow extends Menu implements Controllable{
 	}
 	
 	public void update(InputController input) {
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (!state.inBattle) {
 			index = invisSelectItem.getIndex();
 		} else {

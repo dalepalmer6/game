@@ -3,13 +3,8 @@ package battlesystem.menu.psi;
 import java.util.ArrayList;
 
 import battlesystem.BattleEntity;
-import battlesystem.Enemy;
-import battlesystem.PCBattleEntity;
-import battlesystem.menu.BattleMenu;
 import battlesystem.menu.SelectTargetMenu;
 import battlesystem.options.BattleAction;
-import battlesystem.options.BattleSelectionTextWindow;
-import battlesystem.options.itemsmenu.BattleEntitySelectItem;
 import gamestate.elements.psi.PSIAttack;
 import gamestate.partymembers.PartyMember;
 import menu.Menu;
@@ -18,6 +13,7 @@ import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
 import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
 import menu.teleportmenu.TeleportDestinationMenuItem;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class PSIAttackMenuItem extends MenuItem {
@@ -64,6 +60,7 @@ int index;
 			all = true;
 			onParty = false;
 		}
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (state.inBattle) {
 			//use in battle, needs a User and a Target
 			BattleEntity user = state.battleMenu.getPartyMembers().get(index);

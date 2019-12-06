@@ -16,6 +16,7 @@ import menu.animation.SwirlAnimation;
 import menu.atmmenu.ATMMenu;
 import menu.atmmenu.DigitScroller;
 import menu.shopmenu.ShopMenu;
+import menu.text.TextEngine.TextPosition;
 import menu.windows.SelectionTextWindow;
 import system.MainWindow;
 import system.MotherSystemState;
@@ -23,19 +24,27 @@ import system.SystemState;
 import system.characters.PartyCharacter;
 
 public class MotherTextEngine extends TextEngine {
-
+	
 	public MotherTextEngine(boolean shouldDrawAll, String s, int x, int y, int width, int height, CharList cd) {
 		super(shouldDrawAll, s, x, y, width, height, cd);
 	}
 
 	protected MotherSystemState state;
 
+	@Override
 	public void setState(SystemState state) {
 		this.state = (MotherSystemState) state;
 	}
 	
 	@Override
-	public void handleControlCodes(int i, MainWindow m, int curX, int curY, char[] chars, int scale) {
+	public MotherSystemState getState() {
+		return state;
+	}
+	
+	@Override
+	public void handleControlCodes(int i, MainWindow m, TextPosition tp, char[] chars, int scale) {
+		int curX = tp.getCurX();
+		int curY = tp.getCurY();
 		if (controlCodes.containsKey(i)) {
 			String[] controls = controlCodes.get(i).split(",");
 			String newListOfControlCodes = "";
@@ -295,6 +304,7 @@ public class MotherTextEngine extends TextEngine {
 			}
 			controlCodes.put(i,newListOfControlCodes);
 		}
+		tp.setCurXY(curX,curY);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package battlesystem.options;
 
 import battlesystem.menu.BattleMenu;
 import menu.windows.TextWindowWithPrompt;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -39,6 +40,7 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 	public void next() {
 		//if there is more text, move the text up, and print until the next line or whatever the case may be
 		//for now, just drop the box.
+		MotherSystemState state = (MotherSystemState) this.state;
 		text.setFreeze(false);
 		if (text.getDrawState()) {
 			state.getMenuStack().peek().setToRemove(this);

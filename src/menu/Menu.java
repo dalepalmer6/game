@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 import system.interfaces.Controllable;
@@ -128,6 +129,7 @@ public class Menu implements MenuInterface {
 	public void updateAll(InputController input) {
 		// TODO Auto-generated method stub
 		if (backShouldExit) {
+			MotherSystemState state = (MotherSystemState) this.state;
 			if (input.getSignals().get("BACK") && state.getMenuStack().peek() != state.battleMenu) {
 				onPop();
 			}

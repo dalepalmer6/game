@@ -3,6 +3,7 @@ package menu.windows;
 import org.lwjgl.opengl.GL11;
 
 import menu.MenuItem;
+import menu.text.MotherTextEngine;
 import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
@@ -85,7 +86,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		this.y = y;
 		this.width = width * TILE_SIZE;
 		this.height = height * TILE_SIZE;
-		this.text = new TextEngine(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
+		this.text = state.createTextEngine(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height);
 		this.text.setRenderWindow(this);
 		this.text.setState(state);
 		this.m = m;

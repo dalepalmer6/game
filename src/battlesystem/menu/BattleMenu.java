@@ -166,6 +166,7 @@ public class BattleMenu extends Menu {
 	
 	public void startBattle(ArrayList<EnemyEntity> enemyEntities) {
 		//set the state to draw all menus at once, to facilitate the menu system
+		MotherSystemState state = (MotherSystemState) this.state;
 		deadEntities = new ArrayList<BattleEntity>();
 		state.getMenuStack().pop();
 //		state.setBGM(enemy); //depend on the enemy
@@ -556,6 +557,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void killBattleMenu() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		state.getMenuStack().pop();
 		state.setShouldFadeIn();
 		
@@ -578,6 +580,7 @@ public class BattleMenu extends Menu {
 	}
 	
 	public void update(InputController input) {
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (battleSceneEnd && getNext && !ended) {
 			//create the You Won prompt, then the exp divying screen, then go through anyone's level ups
 			createYouWin();

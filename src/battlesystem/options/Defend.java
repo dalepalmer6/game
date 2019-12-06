@@ -6,6 +6,7 @@ import battlesystem.menu.BattleMenu;
 import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.TexturedMenuItem;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class Defend extends TexturedMenuItem{
@@ -17,6 +18,7 @@ public class Defend extends TexturedMenuItem{
 	}
 	
 	public String execute() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		BattleMenu m =  state.battleMenu;
 		m.setCurrentAction(new BattleAction(state));
 		m.getCurrentAction().setUser(m.getCurrentPartyMember());

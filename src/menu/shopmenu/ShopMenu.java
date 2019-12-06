@@ -37,6 +37,7 @@ public class ShopMenu extends Menu {
 	}
 	
 	public void addSellWindow() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		menuItems.clear();
 		//push the item menu, so that on a return, the item is staged for sale
 		selling = true;

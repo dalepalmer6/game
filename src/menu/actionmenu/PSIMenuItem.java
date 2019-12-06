@@ -8,6 +8,7 @@ import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.TexturedMenuItem;
 import menu.actionmenu.psimenu.PSIMenuOutOfBattle;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class PSIMenuItem extends TexturedMenuItem {
@@ -29,6 +30,7 @@ public class PSIMenuItem extends TexturedMenuItem {
 
 	public String execute() {
 		//create the PSI Menu
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (state.inBattle) {
 			PSIMenuInBattle psim = new PSIMenuInBattle(state,party.get(0));
 			state.getMenuStack().push(psim);

@@ -3,6 +3,7 @@ package battlesystem.menu;
 import battlesystem.options.BattleTextWindow;
 import menu.MenuItem;
 import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 
 /*draws the damage that an attack dealt*/
@@ -111,6 +112,7 @@ public class DamageMenuItem extends MenuItem {
 	}
 	
 	public void updateAnim() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (aliveTime > killTime) {
 			state.getMenuStack().peek().setToRemove(this);
 		}

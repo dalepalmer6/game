@@ -10,6 +10,7 @@ import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
 import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class UseMenuItem extends MenuItem {
@@ -41,6 +42,7 @@ public class UseMenuItem extends MenuItem {
 			all = true;
 			onParty = false;
 		}
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (state.inBattle) {
 			if (!item.canUseInBattle()) {
 				return null;

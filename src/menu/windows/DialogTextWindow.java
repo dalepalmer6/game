@@ -1,6 +1,7 @@
 package menu.windows;
 
 import menu.actionmenu.equipmenu.TextLabel;
+import menu.text.MotherTextEngine;
 import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
@@ -70,7 +71,7 @@ public class DialogTextWindow extends TextWindowWithPrompt {
 			}
 			
 			
-			this.text = new TextEngine(shouldDrawAll,textString,(int)x+TEXT_START_X,(int)y+TEXT_START_Y,this.width,this.height,m.charList);
+			this.text = state.createTextEngine(shouldDrawAll,textString,(int)x+TEXT_START_X,(int)y+TEXT_START_Y,this.width,this.height);
 			this.text.setRenderWindow(this);
 			text.setState(state);
 		}

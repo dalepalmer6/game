@@ -35,6 +35,7 @@ public class PSIMenuInBattle extends InBattleWindow {
 	}
 	
 	public void update(InputController input) {
+		MotherSystemState state = (MotherSystemState) this.state;
 		int x = 0;
 		int maxY = 0;
 		for (TextLabel tl : labels) {

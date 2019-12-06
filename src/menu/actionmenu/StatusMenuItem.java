@@ -6,6 +6,7 @@ import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.TexturedMenuItem;
 import menu.actionmenu.statusmenu.StatusMenu;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class StatusMenuItem extends TexturedMenuItem {
@@ -18,6 +19,7 @@ public class StatusMenuItem extends TexturedMenuItem {
 	}
 	
 	public String execute() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		StatusMenu sm = new StatusMenu(state,party);
 		sm.createMenu();
 		state.getMenuStack().push(sm);

@@ -4,17 +4,12 @@ import java.util.ArrayList;
 
 import gamestate.EntityStats;
 import gamestate.elements.items.EquipmentItem;
-import gamestate.elements.items.Item;
 import gamestate.partymembers.PartyMember;
-import menu.Menu;
 import menu.MenuItem;
-import menu.actionmenu.BackingBar;
 import menu.actionmenu.PlayerInfoWindow;
-import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
-import menu.actionmenu.statusmenu.TextWindowWithLabels;
 import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
-import system.SystemState;
+import system.MotherSystemState;
 import system.controller.InputController;
 
 public class EquipsMenu extends PlayerInfoWindow {
@@ -31,7 +26,7 @@ public class EquipsMenu extends PlayerInfoWindow {
 	private ArrayList<TextLabel> diffLabels;
 	private ArrayList<TextLabel> statsAndVals;
 	
-	public EquipsMenu(SystemState m, ArrayList<PartyMember> party) {
+	public EquipsMenu(MotherSystemState m, ArrayList<PartyMember> party) {
 		super(m,party);
 		reload();
 		loadCurrentPCData();

@@ -2,6 +2,7 @@ package battlesystem.options;
 
 import battlesystem.menu.BattleMenu;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -13,6 +14,7 @@ public class BattleSelectionTextWindow extends SelectionTextWindow {
 	}
 	
 	public void getPreviousWindow() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		BattleMenu m = state.battleMenu;
 		m.popWindowStackAndRemoveMI();
 	}

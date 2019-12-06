@@ -89,6 +89,10 @@ public class TextEngine implements Drawable{
 		}
 	}
 	
+	public SystemState getState() {
+		return state;
+	}
+	
 	//for the editor only
 	public TextEngine(String s, int x, int y,int width, int height, CharList cd) {
 		this(false,s,x,y,width,height,cd);
@@ -314,7 +318,7 @@ public class TextEngine implements Drawable{
 						flags.add(flagName);
 					}
 					
-					if (!state.getGameState().getFlag(flagName)) {
+					if (!getState().getGameState().getFlag(flagName)) {
 						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
 						i-=controlCode.length()+2;
 						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
@@ -330,12 +334,12 @@ public class TextEngine implements Drawable{
 				if (controlCode.startsWith("HAVEFUNDSINBANK_")) {
 					int amount = 0;
 					if (controlCode.substring(16).equals("")) {
-						amount = state.getGameState().getWindowArgument();
+						amount = getState().getGameState().getWindowArgument();
 					} else {
 						amount = Integer.parseInt(controlCode.substring(16));
 					}
 					
-					if (state.getGameState().getFundsInBank() < amount) {
+					if (getState().getGameState().getFundsInBank() < amount) {
 						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
 						i-=controlCode.length()+2;
 						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
@@ -351,12 +355,12 @@ public class TextEngine implements Drawable{
 				if (controlCode.startsWith("HAVEFUNDSONHAND_")) {
 					int amount = 0;
 					if (controlCode.substring(16).equals("")) {
-						amount = state.getGameState().getWindowArgument();
+						amount = getState().getGameState().getWindowArgument();
 					} else {
 						amount = Integer.parseInt(controlCode.substring(16));
 					}
 					
-					if (state.getGameState().getFundsOnHand() < amount) {
+					if (getState().getGameState().getFundsOnHand() < amount) {
 						String toRemove = parsedString.substring(parsedString.indexOf("[" + controlCode + "]"),parsedString.indexOf("[ELSE]")+6);
 						i-=controlCode.length()+2;
 						parsedString = parsedString.replaceFirst(Pattern.quote(toRemove),"");
@@ -387,8 +391,8 @@ public class TextEngine implements Drawable{
 //		}
 		if (waitForAudio) {
 			freeze = true;
-			if (state.getBGMEnded()) {
-				state.resetBGMEnded();
+			if (getState().getBGMEnded()) {
+				getState().resetBGMEnded();
 				waitForAudio = false;
 			}
 		}
@@ -414,10 +418,10 @@ public class TextEngine implements Drawable{
 				}
 			}
 			
-			if ((it = state.getSelectionStack().peek()) instanceof DecisionMenuItem) {
+			if ((it = getState().getSelectionStack().peek()) instanceof DecisionMenuItem) {
 				waitingForDecision = false;
-				state.getSelectionStack().pop();
-				state.getMenuStack().peek().removeMenuItem(choiceWindow);
+				getState().getSelectionStack().pop();
+				getState().getMenuStack().peek().removeMenuItem(choiceWindow);
 				choice =  ((DecisionMenuItem) it).getIndex();
 				parsedString = "";
 				String splitString[] = choices[choice].split(Pattern.quote("[TEXT]"));
@@ -523,7 +527,12 @@ public class TextEngine implements Drawable{
 			if (i == 0 && chars[i] == '@') {
 				drawChar(m,i,'@',curX-4*4,curY);
 			}
-			handleControlCodes(i, m, curX, curY, chars, scale);
+			
+			TextPosition tp = new TextPosition(curX, curY);
+			handleControlCodes(i, m, tp, chars, scale);
+			curX = tp.getCurX();
+			curY = tp.getCurY();
+			
 			if (i < drawUntil) {
 				if (chars.length == 0) {
 					return;
@@ -542,7 +551,7 @@ public class TextEngine implements Drawable{
 		GL11.glColor3f(255,255,255);
 	}
 
-	public void handleControlCodes(int i, MainWindow m, int curX, int curY, char[] chars, int scale) {
+	public void handleControlCodes(int i, MainWindow m, TextPosition tp, char[] chars, int scale) {
 		
 	}
 	
@@ -563,6 +572,28 @@ public class TextEngine implements Drawable{
 		targetY = i;
 	}
 	
-	
+	class TextPosition {
+		private int curX;
+		private int curY; 
+		
+		private TextPosition(int x, int y) {
+			this.curX = x;
+			this.curY = y;
+		}
+		
+		public int getCurX() {
+			return curX;
+		} 
+		
+		public int getCurY() {
+			return curY;
+		}
+		
+		public void setCurXY(int x, int y) {
+			curX = x;
+			curY = y;
+		}
+		
+	}
 	
 }

@@ -129,6 +129,7 @@ public class SwirlAnimation extends Animation {
 			fadeOut = false;
 //			ftb = new AnimationFadeToBlack(state);
 			AnimationMenu m = new AnimationMenu(state);
+			m.setStartBattle(true, this);
 			m.createAnimMenu();
 			state.getMenuStack().push(m);
 		}

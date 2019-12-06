@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gamestate.EntityStats;
-import gamestate.elements.items.Item;
 import gamestate.partymembers.PartyMember;
-import menu.Menu;
 import menu.actionmenu.PlayerInfoWindow;
-import menu.actionmenu.goodsmenu.GoodsMenu;
-import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
-import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
-import system.SystemState;
+import system.MotherSystemState;
 import system.controller.InputController;
 import system.data.StatusConditions;
-import system.interfaces.Controllable;
 
 public class StatusMenu extends PlayerInfoWindow {
 	private ArrayList<PartyMember> party;
@@ -25,21 +19,10 @@ public class StatusMenu extends PlayerInfoWindow {
 	private ArrayList<TextWindowWithLabels> statuses;
 	private TextWindow confirmAction;
 	
-	public StatusMenu(SystemState m, ArrayList<PartyMember> party) {
+	public StatusMenu(MotherSystemState m, ArrayList<PartyMember> party) {
 		super(m,party);
 		this.party = party;
 	}
-	
-//	public void update(InputController input) {
-//		this.setToRemove(statuses.get(index));
-//		index = invisSelectItem.getIndex();
-//		this.addToMenuItems(statuses.get(index));
-//		if (invisSelectItem.getCanLoadInventory()) {
-//			GoodsMenu gm = new GoodsMenu(state,party,index);
-//			gm.createMenu();
-//			state.getMenuStack().push(gm);
-//		}
-//	}
 	
 	public void createMenu() {
 		//hardcoded menu here

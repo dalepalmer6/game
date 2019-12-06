@@ -10,6 +10,7 @@ import menu.actionmenu.PSIMenuItem;
 import menu.actionmenu.PauseMenuSelectionWindow;
 import menu.actionmenu.StatusMenuItem;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -49,6 +50,7 @@ public class BattleMenuSelectionTextWindow extends PauseMenuSelectionWindow {
 	}
 	
 	public void getPreviousWindow() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		BattleMenu m = state.battleMenu;
 		m.popWindowStackAndRemoveMI();
 	}

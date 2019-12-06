@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import battlesystem.menu.psi.PSIAttackMenuItem;
 import gamestate.elements.UsableOutOfBattle;
-import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
-import gamestate.elements.psi.PSIAttackUsableOutOfBattle;
 import gamestate.partymembers.PartyMember;
 import menu.actionmenu.PlayerInfoWindow;
 import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -20,6 +19,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	
 	public void reloadActionOnPop() {
 //		inventories = new ArrayList<SelectionTextWindow>();
+		MotherSystemState state = (MotherSystemState) this.state;
 		int j = 0;
 		for (SelectionTextWindow stw:  inventories) {
 //			SelectionTextWindow base = new SelectionTextWindow(0,0,0,0,state);
@@ -40,11 +40,11 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 		}
 	}
 	
-	public PSIMenuOutOfBattle(SystemState state, ArrayList<PartyMember> party) {
+	public PSIMenuOutOfBattle(MotherSystemState state, ArrayList<PartyMember> party) {
 		this(state,party,false);
 	}
 	
-	public PSIMenuOutOfBattle(SystemState state, ArrayList<PartyMember> party,boolean selling) {
+	public PSIMenuOutOfBattle(MotherSystemState state, ArrayList<PartyMember> party,boolean selling) {
 		super(state,party);
 		inventories = new ArrayList<SelectionTextWindow>();
 		for (int i = 0; i < party.size(); i++) {
@@ -74,7 +74,7 @@ public class PSIMenuOutOfBattle extends PlayerInfoWindow {
 	}
 	
 	public void update(InputController input) {
-		
+		MotherSystemState state = (MotherSystemState) this.state;
 		if (!backShouldExit && input.getSignals().get("BACK")) {
 			inventories.get(index).setDrawOnly(true);
 			backShouldExit = true;

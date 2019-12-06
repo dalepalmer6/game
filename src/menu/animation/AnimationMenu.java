@@ -6,6 +6,13 @@ import system.controller.InputController;
 
 public class AnimationMenu extends Menu {
 	private boolean complete = false;
+	private boolean startBattle;
+	private SwirlAnimation prevAnim;
+	
+	public void setStartBattle(boolean b, SwirlAnimation anim) {
+		startBattle = b;
+		prevAnim = anim;
+	}
 	
 	public AnimationMenu(SystemState m) {
 		super(m);
@@ -19,8 +26,8 @@ public class AnimationMenu extends Menu {
 	
 	@Override
 	public void doDoneFadeOutAction() {
-		if (isSwirl()) {
-			((SwirlAnimation)menuItems.get(0)).startBattle();
+		if (startBattle) {
+			prevAnim.startBattle();
 		}
 	}
 	

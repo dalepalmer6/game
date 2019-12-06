@@ -12,6 +12,7 @@ import menu.PlayerStatusWindow;
 import menu.TexturedMenuItem;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
 import menu.windows.TextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -42,6 +43,7 @@ public class SelectTargetMenu extends Menu {
 	}
 	
 	public void update(InputController input) {
+		MotherSystemState state = (MotherSystemState) this.state;
 		boolean onFoes = targets.get(0) instanceof Enemy;
 		
 		if (all) {

@@ -8,6 +8,7 @@ import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.TexturedMenuItem;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class Bash extends TexturedMenuItem{
@@ -26,6 +27,7 @@ public class Bash extends TexturedMenuItem{
 	}
 	
 	public String execute() {
+		MotherSystemState state = (MotherSystemState) this.state;
 		//show the options who can be attacked
 		BattleMenu m = state.battleMenu;
 		m.setCurrentAction(new BattleAction(state));

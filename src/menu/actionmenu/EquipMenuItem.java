@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import gamestate.partymembers.PartyMember;
 import menu.TexturedMenuItem;
 import menu.actionmenu.equipmenu.EquipsMenu;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class EquipMenuItem extends TexturedMenuItem {
@@ -18,6 +19,7 @@ public class EquipMenuItem extends TexturedMenuItem {
 	}
 	
 	public String execute() {
+		MotherSystemState state = (MotherSystemState) this.state;
 //		state.setSFX("window.wav");
 //		state.playSFX();
 //		EquipmentSelectionTextWindows estw = new EquipmentSelectionTextWindows(state,party);

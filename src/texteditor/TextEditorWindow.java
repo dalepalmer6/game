@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,11 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import menu.Menu;
+import menu.text.MotherTextEngine;
 import menu.text.TextEngine;
 import menu.windows.DialogTextWindow;
 import system.SystemState;
@@ -253,7 +252,7 @@ public class TextEditorWindow {
 				int index = Integer.parseInt(stringNumberInput.getText(), 16);
 				String s = state.textData.get(index);
 				stringEditor.setText(s);
-				TextEngine textObject = new TextEngine(true,stringEditor.getText(),0,0,32,32,state.charList);
+				TextEngine textObject = new MotherTextEngine(true,stringEditor.getText(),0,0,32,32,state.charList);
 				textObject.setParsedString();
 				textObject.setState(state);
 				textObject.parse();
@@ -378,7 +377,7 @@ public class TextEditorWindow {
 			return false;
 		}
 		inputField.setText(text);
-		TextEngine textObject = new TextEngine(true,text,0,0,32,32,state.charList);
+		TextEngine textObject = new MotherTextEngine(true,text,0,0,32,32,state.charList);
 		textObject.setParsedString();
 		textObject.setState(state);
 		textObject.parse();
