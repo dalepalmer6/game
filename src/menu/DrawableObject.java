@@ -1,7 +1,5 @@
 package menu;
 
-import org.lwjgl.opengl.GL11;
-
 import system.MainWindow;
 import system.interfaces.Drawable;
 
@@ -27,11 +25,7 @@ public class DrawableObject implements Drawable {
 	
 	@Override
 	public void draw(MainWindow m) {
-//		// TODO Auto-generated method stub
-//		m.setTexture("img/button.png");
-//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-//		GL11.glEnable(GL11.GL_TEXTURE_2D);
-//		m.renderTile(x,y,width,height);
+
 	}
 
 }

@@ -1,19 +1,15 @@
 package menu.windows;
 
-import java.util.ArrayList;
-
 import org.lwjgl.opengl.GL11;
 
 import menu.MenuItem;
-import menu.text.Text;
+import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
-import system.controller.InputController;
-import system.interfaces.Controllable;
 import system.interfaces.Drawable;
 
 public class TextWindow extends MenuItem implements Drawable{
-	public Text text;
+	public TextEngine text;
 	private double tickCount;
 	private double ticksPerFrame = 0.5;
 	protected int TEXT_START_X = 48;
@@ -89,7 +85,7 @@ public class TextWindow extends MenuItem implements Drawable{
 		this.y = y;
 		this.width = width * TILE_SIZE;
 		this.height = height * TILE_SIZE;
-		this.text = new Text(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
+		this.text = new TextEngine(shouldDrawAll,s,x+TEXT_START_X,y+TEXT_START_Y,this.width,this.height,m.charList);
 		this.text.setRenderWindow(this);
 		this.text.setState(state);
 		this.m = m;
@@ -187,7 +183,7 @@ public class TextWindow extends MenuItem implements Drawable{
 	}
 	
 	public void drawText(MainWindow m) {
-		Text.initDrawText(m);
+		TextEngine.initDrawText(m);
 		text.draw(m);
 	}
 	

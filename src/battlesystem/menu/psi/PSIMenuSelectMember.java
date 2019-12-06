@@ -13,11 +13,12 @@ import menu.actionmenu.goodsmenu.GoodsMenu;
 import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
 public class PSIMenuSelectMember extends Menu {
-	private SelectionTextWindow psiSTW;
+	private PSISelectionTextWindow psiSTW;
 	private SelectionTextWindow classificationWindow;
 	private ArrayList<PartyMember> party;
 	private ArrayList<SelectionTextWindow> psiLists;
@@ -43,7 +44,7 @@ public class PSIMenuSelectMember extends Menu {
 	public void enumPSIForMember() {
 		currentPartyMember = party.get(index);
 		int classId = classificationWindow.getSelectedIndex();
-		ArrayList<PSIFamily> psiFams = state.psiClassList.getPSIClassifications().get(classId).getFamilies();
+		ArrayList<PSIFamily> psiFams = ((MotherSystemState) state).psiClassList.getPSIClassifications().get(classId).getFamilies();
 		psiSTW = new PSISelectionTextWindow(320,0,9,4,state,currentPartyMember);
 		psiSTW.createGrid(5,5);
 		psiSTW.setDrawOnly(true);
@@ -101,7 +102,7 @@ public class PSIMenuSelectMember extends Menu {
 	public void createMenu() {
 		classificationWindow = new SelectionTextWindow(0,0,3,4,state);
 		addMenuItem(classificationWindow);
-		for (PSIClassification psic : state.psiClassList.getPSIClassifications()) {
+		for (PSIClassification psic : ((MotherSystemState) state).psiClassList.getPSIClassifications()) {
 			classificationWindow.add(new ClassificationMenuItem(state,psic));
 		}
 		PartyMember pm = party.get(0);

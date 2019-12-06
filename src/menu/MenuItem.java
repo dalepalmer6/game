@@ -1,31 +1,23 @@
 package menu;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
-import menu.text.Text;
+import menu.text.TextEngine;
 import system.MainWindow;
-import system.MenuStack;
 import system.SystemState;
-import system.controller.InputController;
 import system.interfaces.Clickable;
 import system.interfaces.Drawable;
 import system.interfaces.Hoverable;
 
 public class MenuItem extends LeftClickableItem implements MenuItemInterface, Hoverable, Drawable, Clickable {
 	protected String text;
-	protected Text textObject;
+	protected TextEngine textObject;
 	private Color textColor = Color.white;
 	private Color bgColor = Color.black;
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
 	protected SystemState state;
-	private double savedX;
-	private double savedY;
 	protected double shakeApplyY = 0;
 	protected int drawingY;
 	protected boolean hovered;
@@ -109,7 +101,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.y = y;
 		targetX = x;
 		targetY = y;
-		textObject = new Text(true,t,(int)x,(int)y,0,0,state.charList);
+		textObject = state.createTextEngine(true,t,(int)x,(int)y,0,0);
 		textObject.setAsSingleString();
 	}
 	
@@ -122,7 +114,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.height = height;
 		targetY = y;
 //		if (!t.equals("")) {
-		this.textObject = new Text(true,t,width,height,width,height,m.charList);
+		this.textObject = state.createTextEngine(true,t,width,height,width,height);
 //		}
 		
 		
@@ -149,8 +141,6 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	@Override
 	public void draw(MainWindow m) {
 		//for each MenuItem, draw to the canvas
-//		m.setTexture("img/" + this.image);
-//		m.renderTile(x,y,width,height,0,0,490,234);
 		textObject.draw(m);
 	}
 

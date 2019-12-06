@@ -8,12 +8,14 @@ import menu.Menu;
 import menu.animation.Animation;
 import menu.animation.AnimationMenu;
 import menu.animation.SwirlAnimation;
+import system.MotherSystemState;
 import system.SystemState;
 
-public class EnemyEntity extends Entity {
+public class EnemyEntity extends MotherEntity {
 	private ArrayList<Enemy> enemys;//should only have one
 	public void setToRemove(boolean b) {
 		super.setToRemove(b);
+		MotherSystemState state = (MotherSystemState) getState();
 		state.getGameState().addNumEntities(-1);
 	}
 	
@@ -46,6 +48,7 @@ public class EnemyEntity extends Entity {
 
 	@Override
 	public void act() {
+		MotherSystemState state = (MotherSystemState) getState();
 		for (Entity e : interactables) {
 			if (e instanceof Player && !state.getGameState().isInvincible()) {
 				

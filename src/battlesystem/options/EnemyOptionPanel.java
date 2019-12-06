@@ -8,22 +8,16 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL40;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
-import battlesystem.Enemy;
-import battlesystem.options.EnemyOption;
 import menu.MenuItem;
 import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class EnemyOptionPanel extends MenuItem {
 	private ArrayList<EnemyOption> enemyOptions;
-	private int allEnemyWidths;
 	private int selected = -2;
 	private Texture battleBGTexture;
 	private float[] battleBGVars;
@@ -83,20 +77,16 @@ public class EnemyOptionPanel extends MenuItem {
 	
 	public EnemyOptionPanel(SystemState m) {
 		super("", 0, 400, m.getMainWindow().getScreenWidth(), m.getMainWindow().getScreenHeight()-400, m);
-		// TODO Auto-generated constructor stub
 		enemyOptions = new ArrayList<EnemyOption>();
-		allEnemyWidths = 0;
-	
 	}
 	
 	public void addEnemyOption(EnemyOption e) {
 		this.enemyOptions.add(e);
+		String texture = enemyOptions.get(0).getEnemy().getBattleBG();
 		if (enemyOptions.size() == 1) {
-			try {
-				String texture = enemyOptions.get(0).getEnemy().getBattleBG();
+			try (BufferedReader br = new BufferedReader(new FileReader(new File("img/battlebgs/" + texture.substring(0,texture.indexOf(".")))))) {
 				battleBGTexture = BufferedImageUtil.getTexture("", ImageIO.read(new File("img/battlebgs/" + texture)));
 				palette = BufferedImageUtil.getTexture("", ImageIO.read(new File("img/" + "palettetest.png")));
-				BufferedReader br = new BufferedReader(new FileReader(new File("img/battlebgs/" + texture.substring(0,texture.indexOf(".")))));
 				String row = br.readLine();
 				String[] split = row.split(",");
 				battleBGVars = new float[split.length];
@@ -105,7 +95,6 @@ public class EnemyOptionPanel extends MenuItem {
 					battleBGVars[i++] = Float.parseFloat(s);
 				}
 			} catch (IOException err) {
-				// TODO Auto-generated catch block
 				err.printStackTrace();
 			}
 		}
@@ -120,16 +109,8 @@ public class EnemyOptionPanel extends MenuItem {
 	}
 	
 	public void drawBG(MainWindow m) {
-//		m.setUseShader(true);
-//		m.setTexture("img\\battlebg.png");
 		m.setBattleTexture(battleBGTexture,battleBGVars,palette);
-//		m.setBattleTexture(,battleBGVars,palette);
-//		m.setUseShader(true);
-		state.setDrawBattleBG(true);
-//		m.drawBattleBG();
-//		m.renderTile(0,0,m.getScreenWidth(),m.getScreenHeight(),0,0,256,256);
-//		m.setUseShader(false);
-//		m.setUseShader(false);
+		((MotherSystemState) state).setDrawBattleBG(true);
 	}
 	
 	public void draw(MainWindow m) {

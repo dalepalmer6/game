@@ -9,6 +9,7 @@ import menu.TexturedMenuItem;
 import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
 import system.SystemState;
+import system.characters.PartyCharacter;
 import system.controller.InputController;
 
 public class CharacterNameInputMenu extends Menu {
@@ -52,14 +53,15 @@ public class CharacterNameInputMenu extends Menu {
 	
 	public void create() {
 //		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		String entityId = "";
+		PartyCharacter character = null;
 		switch(index) {
-			case 0: entityId = SystemState.Characters.NINTEN.getId(); break;
-			case 1: entityId = SystemState.Characters.ANA.getId(); break;
-			case 2: entityId = SystemState.Characters.LOID.getId(); break;
-			case 3: entityId = SystemState.Characters.TEDDY.getId(); break;
-			case 4: entityId = SystemState.Characters.NINTEN.getId(); break;
+			case 0: character = PartyCharacter.NINTEN; break;
+			case 1: character = PartyCharacter.ANA; break;
+			case 2: character = PartyCharacter.LOID; break;
+			case 3: character = PartyCharacter.TEDDY; break;
+			case 4: character = PartyCharacter.NINTEN; break;
 		}
+		String entityId = character.getId();
 		Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
 		//int x, int y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh
 		TexturedMenuItem tmi = new TexturedMenuItem("",150+6*64,0,24*4,32*4,state,entityId + ".png",0,0,24,32);
@@ -69,7 +71,7 @@ public class CharacterNameInputMenu extends Menu {
 //		STW.createGrid(15,7);
 		STW.setSteps(64,0);
 		TextWindow TW = new TextWindow(true,input,1402-36,300-152,6,1,state); 
-		TextWindow descriptionTW = new TextWindow(true,state.characterNamingStrings[index],150,300-152,6,1,state);
+		TextWindow descriptionTW = new TextWindow(true,character.getNamingDescription(),150,300-152,6,1,state);
 //		int x = STW.getTextStartX();
 		int x = 0;
 		int y = 0;

@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -12,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import menu.MenuItem;
-import menu.mapeditmenu.tools.MapTool;
 import system.MainWindow;
 import system.SystemState;
 import system.controller.InputController;
@@ -88,10 +86,6 @@ public class TilePreview extends MenuItem implements Controllable, Drawable, Hov
 	
 	public void editMap(int id) {
 		//on click, change the collision data to the current Collision value
-//			input.setHoldableState(true);
-			Point xyMouse = getMouseCoordinates();
-//			int xMouse = (int) xyMouse.getX();
-//			int yMouse = (int) xyMouse.getY();
 			Point xy = getTilePosition();
 			int x = (int) xy.getX() - 1;
 			int y = (int) xy.getY() - 1;

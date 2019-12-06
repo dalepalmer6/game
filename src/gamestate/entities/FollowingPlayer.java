@@ -1,9 +1,10 @@
 package gamestate.entities;
 
 import gamestate.cutscene.MovementData;
+import system.MotherSystemState;
 import system.SystemState;
 
-public class FollowingPlayer extends Entity {
+public class FollowingPlayer extends MotherEntity {
 	private int indexInParty;
 	private Player player;
 	
@@ -41,6 +42,7 @@ public class FollowingPlayer extends Entity {
 	
 	public FollowingPlayer(int scale, Entity e, SystemState m, int i) {
 		super(e.getTexture(),e.getX(),e.getY(),e.getWidth()*scale,scale*e.getHeight(),m,e.getName());
+		MotherSystemState state = (MotherSystemState) getState();
 		spriteCoordinates = e.getSpriteCoordinates();
 		indexInParty = i;
 		this.player = state.getGameState().getPlayer();

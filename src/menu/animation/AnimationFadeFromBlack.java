@@ -1,11 +1,7 @@
 package menu.animation;
 
-import java.io.IOException;
-
-import battlesystem.menu.BattleMenu;
 import system.MainWindow;
 import system.SystemState;
-import system.sprites.TileMetadata;
 
 public class AnimationFadeFromBlack extends Animation {
 	private float alpha;

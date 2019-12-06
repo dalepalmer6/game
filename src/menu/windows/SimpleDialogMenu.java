@@ -6,7 +6,6 @@ import system.SystemState;
 
 public class SimpleDialogMenu extends Menu {
 	private TextWindow tw;
-	private String text;
 	
 	public SimpleDialogMenu(SystemState m) {
 		super(m);

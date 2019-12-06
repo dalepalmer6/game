@@ -2,6 +2,7 @@ package gamestate.entities;
 
 import gamestate.cutscene.Cutscene;
 import gamestate.cutscene.CutsceneData;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class HotSpot extends DoorEntity {
@@ -39,8 +40,8 @@ public class HotSpot extends DoorEntity {
 	
 	public void act() {
 		for (Entity e : interactables) {
-			if (e instanceof Player && state.getCutscene() == null) {
-				state.setCutscene(cutscene);
+			if (e instanceof Player && ((MotherSystemState) state).getCutscene() == null) {
+				((MotherSystemState) state).setCutscene(cutscene);
 				cutscene.loadEntityToCutsceneData();
 			}
 		}

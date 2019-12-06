@@ -2,11 +2,9 @@ package menu.animation;
 
 import java.util.ArrayList;
 
-import battlesystem.BattleEntity;
-import battlesystem.Enemy;
 import battlesystem.menu.BattleMenu;
 import gamestate.entities.EnemyEntity;
-import gamestate.entities.Entity;
+import system.MotherSystemState;
 import system.SystemState;
 import system.sprites.TileMetadata;
 
@@ -15,7 +13,6 @@ public class SwirlAnimation extends Animation {
 	private float timer = 0f;
 	private float length = 36f;
 	private boolean fadeOut;
-	private boolean readyToStart;
 	private AnimationFadeToBlack ftb;
 	ArrayList<EnemyEntity> enemyEntities = new ArrayList<EnemyEntity>();
 	
@@ -51,7 +48,7 @@ public class SwirlAnimation extends Animation {
 	
 	public void calculateEnemiesThatCanJoin(EnemyEntity enemyEntity) {
 		state.getGameState().setMaxAllies(enemyEntity.getMaxAllies());
-		ArrayList<EnemyEntity> enemyEntities = state.getGameState().getEnemyEntities();
+		ArrayList<EnemyEntity> enemyEntities = ((MotherSystemState) state).getGameState().getEnemyEntities();
 		state.getGameState().saveEnemyEntities(enemyEntities);
 		enemyEntities = sort(enemyEntities);
 		
@@ -115,15 +112,6 @@ public class SwirlAnimation extends Animation {
 	public void updateAnim() {
 		SystemState.out.println(tickCount);
 		
-//		if (readyToStart) {
-//			state.getMenuStack().peek().setToRemove(this);
-//			state.getGameState().setEnemiesCanJoin(false);
-//			BattleMenu m = new BattleMenu(state);
-//			m.startBattle(enemies);
-////			state.getMenuStack().push(m);
-//			state.setShouldFadeIn();
-//		}
-		
 		int i = (int) Math.min(coordinates.getPose(0).getNumStates(),tickCount % coordinates.getPose(0).getNumStates());
 		if (timer < length) {
 			timer += ticksPerFrame;
@@ -148,7 +136,6 @@ public class SwirlAnimation extends Animation {
 		if (ftb != null) {
 			if (ftb.isComplete()) {
 				complete = true;
-				readyToStart = true;
 			}
 		}
 		

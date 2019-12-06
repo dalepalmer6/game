@@ -12,8 +12,8 @@ import battlesystem.menu.BattleMenu;
 import battlesystem.menu.DamageMenuItem;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
-import menu.TexturedMenuItem;
 import menu.animation.Animation;
+import system.MotherSystemState;
 import system.SystemState;
 import system.data.StatusConditions;
 
@@ -33,7 +33,7 @@ public class BattleAction {
 	private int index = 0;
 	private boolean actionDone;
 	private int damageDealt;
-	private boolean defending;
+//	private boolean defending;
 	private boolean isHealing = false;
 	private String resultText;
 	private boolean needDamageNums;
@@ -42,7 +42,7 @@ public class BattleAction {
 	private boolean continuous;
 	private int continuousCounter = 0;
 	private String flavorTextAttack;
-	private boolean thunderWillHit = true;
+//	private boolean thunderWillHit = true;
 	private boolean isSmash = false;
 	private boolean damageOverTime;
 	
@@ -77,7 +77,7 @@ public class BattleAction {
 				}
 				
 				state.getMenuStack().peek().addToMenuItems(anim);
-				state.setCurrentAnimation(anim.getTexture() + ".png");
+//				state.setCurrentAnimation(anim.getTexture() + ".png");
 				anim.bindAnimToTwo();
 				anim.setSFXPath("psi/freezeg.wav");
 				anim.updateAnim();
@@ -648,7 +648,7 @@ public class BattleAction {
 		} else if (enemyAction.getAction() == 35) {
 			//is a psi
 			usedAction = "psi";
-			itemToUse = state.psi.get(enemyAction.getUseVariable());
+			itemToUse = ((MotherSystemState) state).psi.get(enemyAction.getUseVariable());
 			enemyAction.setTarget(itemToUse.getTargetType());
 		} 
 		else if (enemyAction.getAction() == 36) {

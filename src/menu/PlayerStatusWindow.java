@@ -6,13 +6,13 @@ import java.util.List;
 import battlesystem.BattleEntity;
 import battlesystem.PCBattleEntity;
 import gamestate.entities.Entity;
-import menu.text.Text;
+import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
 import system.data.StatusConditions;
 
 public class PlayerStatusWindow extends MenuItem {
-	private Text textName;
+	private TextEngine textName;
 //	private int width=64*4;
 //	private int height=64*4;
 	private String name;
@@ -114,7 +114,7 @@ public class PlayerStatusWindow extends MenuItem {
 		lastStatus = status;
 		avatar = state.allEntities.get(battleEntity.getId().toLowerCase()).createCopy(x+96,y-15,96,128,"copy");
 		avatar.setXYOnScreen(x+80,y);
-		textName = new Text(true,be.getName(),((int)this.x+64),((int)this.y+64),100,100,state.charList);
+		textName = new TextEngine(true,be.getName(),((int)this.x+64),((int)this.y+64),100,100,state.charList);
 		this.name = be.getName();
 		this.HP = be.getBattleStats().getStat("CURHP");
 		this.PP = be.getBattleStats().getStat("CURPP");
@@ -337,7 +337,7 @@ public class PlayerStatusWindow extends MenuItem {
 		avatar.draw(m);
 		m.setTexture("img\\battlehud.png");
 		drawWindow(m);
-		Text.initDrawText(m);
+		TextEngine.initDrawText(m);
 		textName.setX(this.x+64);
 		textName.setY(this.y+32);
 		textName.draw(m);

@@ -1,7 +1,6 @@
 package gamestate;
 
-import java.util.ArrayList;
-
+import system.MotherSystemState;
 import system.SystemState;
 
 public class EnemySpawnGroup {
@@ -32,7 +31,7 @@ public class EnemySpawnGroup {
 	public String toString() {
 		String string = index + ": ";
 		for (int i : enemies) {
-			string += state.enemies.get(i).getName() + ",";
+			string += ((MotherSystemState) state).enemies.get(i).getName() + ",";
 		}
 		return string;
 	}

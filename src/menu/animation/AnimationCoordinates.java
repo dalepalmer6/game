@@ -7,10 +7,8 @@ import system.sprites.TileMetadata;
 
 public class AnimationCoordinates {
 	private HashMap<Integer,Pose> coordinates;
-	private String texture;
 	
-	public AnimationCoordinates(String texture) {
-		this.texture = texture;
+	public AnimationCoordinates() {
 		coordinates = new HashMap<Integer,Pose>();
 	}
 	

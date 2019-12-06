@@ -6,6 +6,7 @@ import gamestate.elements.items.Item;
 import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
 import menu.actionmenu.goodsmenu.goodsactionmenu.GoodsActionMenu;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class GoodsSelectMenuItem extends MenuItem {
@@ -37,7 +38,7 @@ public class GoodsSelectMenuItem extends MenuItem {
 			state.getSelectionStack().push(this);
 			state.getMenuStack().pop();
 //			state.setSelling(true);
-			state.setIndexOfParty(partyIndex);
+			((MotherSystemState) state).setIndexOfParty(partyIndex);
 		}
 		
 		return null;

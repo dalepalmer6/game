@@ -6,7 +6,7 @@ package system;
 public class MenuRunner {
 
 	public static void main(String[] args) {
-		SystemState state = new SystemState();
+		MotherSystemState state = new MotherSystemState();
 		AssetLoader al = new AssetLoader(state);
 		new Thread(al).start();
 		state.run();

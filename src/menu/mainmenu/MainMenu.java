@@ -2,10 +2,6 @@ package menu.mainmenu;
 
 import menu.Menu;
 import menu.TexturedMenuItem;
-import menu.text.Text;
-import menu.windows.SelectionTextWindow;
-import menu.windows.TextWindow;
-import system.MenuStack;
 import system.SystemState;
 import system.controller.InputController;
 

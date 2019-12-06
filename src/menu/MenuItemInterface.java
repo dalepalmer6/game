@@ -1,6 +1,5 @@
 package menu;
 
-import system.controller.InputController;
 import system.interfaces.Clickable;
 
 public interface MenuItemInterface extends Clickable {

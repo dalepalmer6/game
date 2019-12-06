@@ -13,6 +13,7 @@ import menu.mapeditmenu.MapNames;
 import menu.windows.TextWindow;
 import system.MainWindow;
 import system.SystemState;
+import system.characters.PartyCharacter;
 
 public class SaveFileMenuItem extends MenuItem {
 	GameState gs;
@@ -47,13 +48,13 @@ public class SaveFileMenuItem extends MenuItem {
 		for (boolean need : needed) {
 			if (need) {
 				switch(i++) {
-					case 0: entityId = SystemState.Characters.NINTEN.getId(); break;
-					case 1: entityId = SystemState.Characters.ANA.getId(); break;
-					case 2: entityId = SystemState.Characters.LOID.getId(); break;
+					case 0: entityId = PartyCharacter.NINTEN.getId(); break;
+					case 1: entityId = PartyCharacter.ANA.getId(); break;
+					case 2: entityId = PartyCharacter.LOID.getId(); break;
 					case 3: entityId = "pippi"; break;
-					case 4: entityId = SystemState.Characters.TEDDY.getId(); break;
+					case 4: entityId = PartyCharacter.TEDDY.getId(); break;
 				}
-				Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
+//				Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
 				//int x, int y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh
 				TexturedMenuItem tmi = new TexturedMenuItem("",this.x + (x+=96),this.y + y,24*4,32*4,state,entityId + ".png",0,0,24,32);
 				addMenuItem(tmi);
@@ -101,8 +102,8 @@ public class SaveFileMenuItem extends MenuItem {
 		for (int i = 0; i < 9; i++) {
 			if (gs.getFlag("melody" + (i+1))) {
 				//add a menu item for the melody
-				int dx = 0;
-				int dy = 0;
+//				int dx = 0;
+//				int dy = 0;
 				int wid = 12;
 				int hgt = 18;
 				TexturedMenuItem tmi = new TexturedMenuItem("",(int) x + 768 + ((wid+4)*4*i) + 64, (int) y + 88, wid * 4, hgt * 4, state, "melodies.png",i*wid,0,wid,hgt);

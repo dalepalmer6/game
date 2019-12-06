@@ -1,5 +1,6 @@
 package gamestate.cutscene;
 
+import system.MotherSystemState;
 import system.SystemState;
 
 public class IntroCutscene extends Cutscene {
@@ -10,7 +11,7 @@ public class IntroCutscene extends Cutscene {
 	}
 	
 	public void onEndAction() {
-		state.setDoneIntro();
+		((MotherSystemState) state).setDoneIntro();
 	}
 
 }

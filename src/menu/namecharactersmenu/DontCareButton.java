@@ -2,6 +2,7 @@ package menu.namecharactersmenu;
 
 import menu.MenuItem;
 import system.SystemState;
+import system.characters.PartyCharacter;
 
 public class DontCareButton extends MenuItem {
 	int index;
@@ -12,7 +13,7 @@ public class DontCareButton extends MenuItem {
 	}
 	
 	public String execute() {
-		state.getMenuStack().peek().setInput(state.defaultNames[index]);
+		state.getMenuStack().peek().setInput(PartyCharacter.getPCById(index).getDefaultName());
 		return null;
 	}
 	

@@ -6,17 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import battlesystem.PCBattleEntity;
-import battlesystem.menu.psi.PSIAttackMenuItem;
 import gamestate.EntityStats;
 import gamestate.elements.items.EquipmentItem;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
-import gamestate.entities.Entity;
-import gamestate.psi.PSIFamily;
-import menu.actionmenu.equipmenu.TextLabel;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class PartyMember {
@@ -25,11 +21,10 @@ public class PartyMember {
 	private int status = 0;
 	private EntityStats stats;
 	private EntityStats baseStats;//non modified by equipment, serves as a reference
-	private Entity entity;
 	private long knownPSI;
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<EquipmentItem> equips = new ArrayList<EquipmentItem>(4);//in the future, make the index here reference the inventory instead of an item
-	private SystemState state;
+	private MotherSystemState state;
 	private int index;
 	private String saveFile;
 	
@@ -175,7 +170,7 @@ public class PartyMember {
 	
 	public PartyMember(String id, String saveFileToLoad, SystemState state) {
 		this.saveFile = saveFileToLoad;
-		this.state = state;
+		this.state = (MotherSystemState) state;
 		this.id = id;
 		loadStats(id);
 	}
@@ -184,8 +179,7 @@ public class PartyMember {
 		//load from a saved file
 		String pathToEntity = "savedata/" + saveFile + "/" + i;
 		File file = new File(pathToEntity);
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+		try (BufferedReader br = new BufferedReader(new FileReader(file))){
 			String[] row;
 			//first line contains stat data
 			//NAME,LEVEL,CURHP,CURPP,HP,PP,OFFENSE,DEFENSE,VITALITY,IQ,GUTS,LUCK,SPEED,CURRENTXP

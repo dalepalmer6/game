@@ -1,8 +1,5 @@
 package menu;
 
-import org.lwjgl.opengl.GL11;
-
-import system.MainWindow;
 import system.controller.InputController;
 import system.interfaces.Clickable;
 

@@ -14,6 +14,7 @@ import menu.Menu;
 import menu.teleportmenu.TeleportDestinationMenuItem;
 import menu.text.TextUtil;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.data.StatusConditions;
 
@@ -294,21 +295,21 @@ public class Item{
 	
 	public int useBreadCrumbs(BattleEntity user) {
 		//create a door with the saved coordinates at your position
-		DoorEntity door = user.getSystemState().createWarpDoor();
+		DoorEntity door = ((MotherSystemState)user.getSystemState()).createWarpDoor();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}
 	
 	public int goToEveLoc(BattleEntity user) {
 		//warp to Eve's resting place
-		DoorEntity door = user.getSystemState().createWarpDoor();
+		DoorEntity door = ((MotherSystemState)user.getSystemState()).createWarpDoor();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}
 	
 	public int goToMagicant(BattleEntity user) {
 		//action to warp to magicant
-		DoorEntity door = user.getSystemState().createMagicantWarp();
+		DoorEntity door = ((MotherSystemState)user.getSystemState()).createMagicantWarp();
 		user.getSystemState().getGameState().getEntityList().add(door);
 		return 0;
 	}

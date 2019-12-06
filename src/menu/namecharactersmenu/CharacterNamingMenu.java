@@ -7,6 +7,7 @@ import menu.intromenu.IntroWindowMenu;
 import menu.windows.DialogTextWindow;
 import menu.windows.SelectionTextWindow;
 import system.SystemState;
+import system.characters.PartyCharacter;
 import system.controller.InputController;
 import system.interfaces.Drawable;
 
@@ -23,11 +24,11 @@ public class CharacterNamingMenu extends Menu{
 	
 	public CharacterNamingMenu(SystemState m) {
 		super(m);
-		state.namesOfCharacters = new String[state.defaultNames.length];
-		int j = 0;
-		for (String name : state.defaultNames) {
-			state.namesOfCharacters[j++] = name;
-		}
+//		state.namesOfCharacters = new String[state.defaultNames.length];
+//		int j = 0;
+//		for (String name : state.defaultNames) {
+//			state.namesOfCharacters[j++] = name;
+//		}
 		index = 0;
 	}
 	
@@ -46,18 +47,17 @@ public class CharacterNamingMenu extends Menu{
 		if (index < 0) {
 			index = 0;
 		}
-		addMenuItem(new MenuItem("test",0,0,state));
-		if (inputtedName != null && index < state.defaultNames.length) {
-			state.namesOfCharacters[index] = inputtedName;
+		addMenuItem(new MenuItem(" ",0,0,state));
+		if (inputtedName != null && index < 5) {
+			PartyCharacter.getPCById(index).updateNameOfCharacter(inputtedName);
 			inputtedName = null;
 		}
-		if (index >= state.defaultNames.length) {
+		if (index >= 5) {
 			//create the starting textbox.
 			IntroWindowMenu m = new IntroWindowMenu(state);
 			state.getMenuStack().clear();
 			state.getMenuStack().push(m);
-			DialogTextWindow dtw = new DialogTextWindow("[_87C][_87D][_87E][_87F][_880][_881][STOPBGM][_882] ",150,150,22,15,state);
-//			m.addMenuItem(dtw);
+//			DialogTextWindow dtw = new DialogTextWindow("[_87C][_87D][_87E][_87F][_880][_881][STOPBGM][_882] ",150,150,22,15,state);
 			return;
 		}
 		CharacterNameInputMenu m = new CharacterNameInputMenu(state,index);

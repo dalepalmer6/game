@@ -2,11 +2,9 @@ package menu.tileeditmenu;
 
 import java.util.ArrayList;
 
-import menu.Menu;
 import menu.actionmenu.equipmenu.TextLabel;
 import menu.mapeditmenu.MapEditMenu;
 import menu.mapeditmenu.tilebar.TileBar;
-import menu.mapeditmenu.tools.MapTool;
 import menu.mapeditmenu.tools.SingleTile;
 import system.SystemState;
 import system.controller.InputController;

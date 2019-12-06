@@ -75,6 +75,7 @@ import menu.mainmenu.MapPreviewTestButton;
 import menu.mainmenu.NewGameMenuItem;
 import menu.mainmenu.OptionsMenuItem;
 import menu.mapeditmenu.mappreview.MapPreview;
+import menu.text.TextEngine;
 import menu.windows.SelectionTextWindow;
 import menu.windows.SimpleDialogMenu;
 import system.controller.InputController;
@@ -101,10 +102,8 @@ public class SystemState{
 	int updates = 0;
 	int frames = 0;
 	private InputController input = new InputController();
-	private MainWindow mainWindow;
+	protected MainWindow mainWindow;
 	private MenuStack menuStack;
-//	private ArrayList<Controllable> c = new ArrayList<Controllable>();
-	private Controllable c;
 	private SelectionStack selectionStack;
 	private List<DrawableObject> drawables = new ArrayList<DrawableObject>();
 	public List<String> imageFileNames = new ArrayList<String>();
@@ -121,26 +120,15 @@ public class SystemState{
 	public HashMap<String,Entity> allEntities = new HashMap<String,Entity>();
 	public ArrayList<String> allEntitiesNames;
 	public final ArrayList<Entity> entities = new ArrayList<Entity>();
-	private String outputFromSelect = "";
 	public GameState gameState;
-	private TextureAtlas textureAtlas = new TextureAtlas();
+	protected TextureAtlas textureAtlas = new TextureAtlas();
 	public boolean needToPop;
-//	public static int mapPreviewEditTool = 0;
-	public ArrayList<PartyMember> party = new ArrayList<PartyMember>();
 	public ArrayList<String> mapNames = new ArrayList<String>();
-	public ArrayList<Item> items;
-	public ArrayList<PSIAttack> psi;
-	public PSIClassificationList psiClassList;
-	public HashMap<Integer,Enemy> enemies;
-	public HashMap<Integer,EnemySpawnGroup> enemySpawnGroups;
 	private Map<String, BufferedImage> animations = new HashMap<String,BufferedImage>();
-	private ImagePacker packer = new ImagePacker(2048,2048,0,false);
 	private String currentTileset = null;
-	private String currentAnimation = null;
 	public boolean canLoad;
 	private Menu removeThisMenu;
 	private boolean clearTheMenuStack;
-	private String resultOfMenuToDisplay;
 	private boolean drawAllMenus;
 	public boolean inBattle;
 	public BattleMenu battleMenu;
@@ -157,83 +145,27 @@ public class SystemState{
 	private boolean savedAudio;
 	private boolean fadeOutIsDone;
 	private boolean shouldFadeIn;
-	private Menu fadeOutMenu;
-	private Item itemToBuy;
-	private String teleportDest;
-	private int teleportDestX;
-	private int teleportDestY;
-	private boolean doTeleportRoutine;
-	private boolean doShakeScreen;
-	private double shakeFactor;
-	private double shakeTimer;
 	public Texture tilesetTexture;
-	private boolean doorCollided;
 	private float oldBGMStart;
 	private float oldBGMEnd;
 	private Cutscene currentCutscene;
 	public ArrayList<String> textData;
-	private double savedXPos;
-	private double savedYPos;
-	private String savedMapName;
-	public String[] defaultNames = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
-	public String[] namesOfCharacters = {"Ninten", "Ana", "Lloyd", "Teddy", "Prime Rib"};
-	public String[] characterNamingStrings = {"Name this boy.", "And this girl.", "Name your friend.", "Name this macho guy.", "What's your favorite food?"};
-	private boolean keepThreadOnExit;
 	private boolean textEditor;
-	public HashMap<Integer,EnemyAction> enemyActions;
 	private Menu needToAddMenu;
 	private Menu savedMenu;
 	private boolean needAddSavedMenu;
-	private EnemyOptionPanel eop;
-	private int indexOfParty;
 	private boolean createNewFile;
-	private boolean restoreAudioWhenDone ;
-	private boolean switchedBackToOldBGM;
 	private boolean bgmEnded;
-	private int cameraShake;
-	private boolean setStartFlags;
-	private boolean doneIntro;
 	private String saveFileName;
 	public boolean justTextData;
-	private boolean shouldDrawBattleBG;
+	private boolean restoreAudioWhenDone;
 	
 	public void setSaveFileName(String s) {
 		saveFileName = s;
 	}
 	
-	public void setStartFlags() {
-		setStartFlags = true;
-	}
-	
 	public void setNeedAddSavedMenu(Menu m) {
 		needToAddMenu = m;
-	}
-	
-	public static enum Characters {
-		NINTEN("ninten"),
-		ANA("ana"),
-		LOID("loid"),
-		TEDDY("teddy"),
-		FAVFOOD("favfood");
-		
-		private String id;
-		
-		public String getId() {
-			return id;
-		}
-		
-		private Characters(String s) {
-			this.id = s;
-		}
-		
-	}
-	
-	public boolean getDoorCollided() {
-		return doorCollided;
-	}
-	
-	public void setDoorCollided(boolean  b) {
-		doorCollided = b;
 	}
 	
 	public boolean getFadeOutIsDone() {
@@ -313,20 +245,12 @@ public class SystemState{
 		return pathToAnimsTextures;
 	}
 	
-	public void addPartyMember(PartyMember n) {
-		this.party.add(n);
-	}
-	
 	public GameState getGameState() {
 		return gameState;
 	}
 	
 	public SelectionStack getSelectionStack() {
 		return selectionStack;
-	}
-	
-	public void setOutputFromSelect(String s) {
-		outputFromSelect = s;
 	}
 	
 	public Entity getEntityFromEnum(String name) {
@@ -350,184 +274,6 @@ public class SystemState{
 		return new system.map.Map(mapname,34,34, null, this,true);
 	}
 	
-	public void loadAllEnemyGroups() {
-		int x = 0;
-		enemySpawnGroups = new HashMap<Integer,EnemySpawnGroup>();
-		BufferedReader br;
-		try {
-			br = new BufferedReader(new FileReader("data/enemygroups.data"));
-			String rowIds = "";
-			String rowPercents = "";
-			while ((rowIds  = br.readLine()) != null) {
-				String[] enemyIds = rowIds.split(",");
-				rowPercents = br.readLine();
-				String[] spawnPercs = rowPercents.split(",");
-				int[] ids = new int[enemyIds.length];
-				float[] percs = new float[spawnPercs.length];
-				for (int i = 0; i < enemyIds.length; i++) {
-					ids[i] = Integer.parseInt(enemyIds[i]);
-				}
-				for (int i = 0; i < spawnPercs.length; i++) {
-					percs[i] = Float.parseFloat(spawnPercs[i]);
-				}
-				EnemySpawnGroup esg = new EnemySpawnGroup(x,ids,percs,this);
-				enemySpawnGroups.put(x,esg);
-				x++;
-			}
-			
-		} catch(IOException e) {
-			
-		}
-	}
-	
-	public void loadAllPSI() {
-		psi = new ArrayList<PSIAttack>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("data/psi.csv"));
-			br.readLine();//skip the headers
-			String row= "";
-			int id = 0;
-			String name;
-			String desc;
-			int target;
-			boolean inBattleUsable;
-			boolean outBattleUsable;
-			int action = 0;
-			String anim;
-			String classification;
-			String family;
-			String stage;
-			int minDmg;
-			int maxDmg;
-			int ppUse;
-			while ((row = br.readLine()) != null) {
-				String[] split = row.split(",");
-				id = Integer.parseInt(split[0]);
-				name = split[1];
-				desc = split[2];
-				target = Integer.parseInt(split[3]);
-				inBattleUsable = Boolean.parseBoolean(split[4]);
-				outBattleUsable = Boolean.parseBoolean(split[5]);
-				action = Integer.parseInt(split[6]);
-				anim = split[7];
-				classification = split[8];
-				family = split[9];
-				stage = split[10];
-				minDmg = Integer.parseInt(split[11]);
-				maxDmg = Integer.parseInt(split[12]);
-				ppUse = Integer.parseInt(split[13]);
-				PSIAttack psiAttack = null;
-				if (inBattleUsable && outBattleUsable) {
-					psiAttack = new PSIAttackUsableInAndOutOfBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
-					psi.add(psiAttack);
-				} else if (inBattleUsable){
-					psiAttack = new PSIAttackUsableInBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
-					psi.add(psiAttack);
-				} else if (outBattleUsable) {
-					psiAttack = new PSIAttackUsableOutOfBattle(id,name,desc,target,action,anim,classification,family,stage,ppUse);
-					psi.add(psiAttack);
-				}
-				psiAttack.setMinMaxDmg(minDmg,maxDmg);
-				if (anim.equals("undef")) {
-					
-				} else {
-					Animation animate = new Animation(this,anim,0,0,mainWindow.getScreenWidth(),mainWindow.getScreenHeight());
-//					animate.createAnimation();
-					psiAttack.setAnim(animate);
-				}
-			}
-			//create the classifications ordering now.
-			psiClassList = new PSIClassificationList();
-			ArrayList<PSIClassification> psiClasses = new ArrayList<PSIClassification>();
-			ArrayList<PSIFamily> psiFamilies = new ArrayList<PSIFamily>();
-			ArrayList<String> encounteredFamilies = new ArrayList<String>();
-			ArrayList<String> encounteredClasses = new ArrayList<String>();
-			for (PSIAttack pi : psi) {
-				//pass 1, get all unique families from PSIAttacks, adding the stages to the families
-				//pass 2, get all unique classifications from families, adding the families to the classifications
-				String fam = pi.getFamily();
-				if (!encounteredFamilies.contains(fam)) {
-					encounteredFamilies.add(fam);
-					//for each element that pi != p2, check if p2's family is = fam. if so, add to teh family
-					PSIFamily createdFam = new PSIFamily(fam);
-					for (PSIAttack pi2 : psi) {
-						if (pi2.getFamily().equalsIgnoreCase(fam)) {
-							createdFam.addStage(pi2);
-						}
-					}
-					psiFamilies.add(createdFam);
-				}
-			}
-			for (PSIFamily pf : psiFamilies) {
-				String classif = pf.getStage(0).getClassification();
-				if (!encounteredClasses.contains(classif)) {
-					encounteredClasses.add(classif);
-					PSIClassification psiClass = new PSIClassification(classif);
-					for (PSIFamily pf2 : psiFamilies) {
-						String class2 = pf2.getStage(0).getClassification();
-						if (classif.equalsIgnoreCase(class2)) {
-							psiClass.addFamily(pf2);
-						}
-					}
-					psiClassList.addClassification(psiClass);
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void loadAllItems() {
-		items = new ArrayList<Item>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("data/items.csv"));
-			br.readLine();//skip the headers
-			String row= "";
-			int id = 0;
-			String name;
-			String desc;
-			int target;
-			int equippable;
-			boolean inBattleUsable;
-			boolean outBattleUsable;
-			int action = 0;
-			while ((row = br.readLine()) != null) {
-				String[] split = row.split(",");
-				id = Integer.parseInt(split[0]);
-				name = split[1];
-				desc = split[2];
-				target = Integer.parseInt(split[3]);
-				equippable = Integer.parseInt(split[4],16);
-				inBattleUsable = Boolean.parseBoolean(split[5]);
-				outBattleUsable = Boolean.parseBoolean(split[6]);
-				action = Integer.parseInt(split[7]);
-				int off = Integer.parseInt(split[8]);
-				int def = Integer.parseInt(split[9]);
-				int spd = Integer.parseInt(split[10]);
-				int luck = Integer.parseInt(split[11]);
-				int hp = Integer.parseInt(split[12]);
-				int pp = Integer.parseInt(split[13]);
-				long resists = Long.parseLong(split[14]);
-				String participle = split[15];
-				int value = Integer.parseInt(split[16]);
-				int useVariable = Integer.parseInt(split[17]);
-				if ((equippable & 15) != 0) {
-					EquipmentItem newItem = new EquipmentItem(id,name,desc,target,action,equippable,off,def,spd,luck,hp,pp,resists,participle,value);
-					newItem.setUsage(false,false);
-					items.add(newItem);
-				} else {
-					Item newItem = new Item(id,name,desc,target,action,equippable,participle,value,useVariable);
-					newItem.setUsage(inBattleUsable,outBattleUsable);
-					items.add(newItem);
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public String getPathToTilesets() {
 		return pathToTilesets;
 	}
@@ -541,21 +287,10 @@ public class SystemState{
 			loadCoordinatesFromFile(f.getName(),e);
 			allEntities.put(f.getName(),e);
 		}
-//		allEntitiesNames = new ArrayList<String>();
-//		Entity ness = new Entity("ninten.png",0,0,0,0,this,"ninten");
-//		allEntities.put("ninten",ness);
-//		loadCoordinatesFromFile("ninten", ness);
-//		allEntitiesNames.add("redDressLady");
-//		for (String s : allEntitiesNames) {
-//			Entity e = new Entity("entities.png",0,0,24,32,this,s);
-//			loadCoordinatesFromFile(s, e);
-//			allEntities.put(s,e);
-//		}
 	}
 	
 	public void loadCoordinatesFromFile(String fname,Entity e) {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("entities/" + fname)));
+		try (BufferedReader br = new BufferedReader(new FileReader(new File("entities/" + fname)))){
 			String row = "";
 			while ((row = br.readLine()) != null) {
 				String[] split = row.split(",");
@@ -571,10 +306,8 @@ public class SystemState{
 				e.getSpriteCoordinates().addStateToPose(pose,x,y,width,height,flipped);
 			}
 		} catch (FileNotFoundException err) {
-			// TODO Auto-generated catch block
 			err.printStackTrace();
 		} catch (IOException err) {
-			// TODO Auto-generated catch block
 			err.printStackTrace();
 		}
 	}
@@ -585,10 +318,6 @@ public class SystemState{
 			newIntArray[i] = Integer.parseInt(s[i]);
 		}
 		return newIntArray;
-	}
-	
-	public void loadCurrentAnimation() {
-		
 	}
 	
 	public void loadAllTiles(String tileset) {
@@ -606,8 +335,8 @@ public class SystemState{
 //		textureAtlas.setRectByName(tileset);
 //		Rectangle tileBounds = textureAtlas.getCurrentRectangle();
 		int i = 0;
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(tileset.substring(0,tileset.length()-4) + ".ts"));//"tilesets/onett.ts"));
+		try (BufferedReader br = new BufferedReader(new FileReader(tileset.substring(0,tileset.length()-4) + ".ts"))){
+			//"tilesets/onett.ts"));
 			br.readLine();
 			String row = br.readLine();
 			String tileMetadata = "";
@@ -735,18 +464,14 @@ public class SystemState{
 	public void loadImageData() {
 		for (String filePath : imageFileNames) {
 			try {
-//				filePath = "img/" + filePath;
-				//TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(filePath))
 				textures.put(filePath, ImageIO.read(new File(filePath)));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		try {
 			createAtlas();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -759,7 +484,6 @@ public class SystemState{
 			try {
 				tilesets.put(filePath, ImageIO.read(new File(filePath)));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -773,87 +497,20 @@ public class SystemState{
 			try {
 				animations.put(filePath, ImageIO.read(new File(filePath)));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public void loadAllEnemies() {
-		String pathToEntity = "data/enemies.csv";
-		File file = new File(pathToEntity);
-		enemies = new HashMap<Integer,Enemy>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			//skip headers
-			String row = br.readLine();
-			int i = 0;
-			while ((row=br.readLine()) != null) {
-				String[] data = row.split(",");
-				String name=data[1];
-				int hp=Integer.parseInt(data[2]);
-				int pp=Integer.parseInt(data[3]);
-				int off=Integer.parseInt(data[4]);
-				int def=Integer.parseInt(data[5]);
-				int vit=Integer.parseInt(data[6]);
-				int iq=Integer.parseInt(data[7]);
-				int speed=Integer.parseInt(data[8]);
-				int guts=Integer.parseInt(data[9]);
-				int luck=Integer.parseInt(data[10]);
-				int xp = Integer.parseInt(data[11]);
-				int money = Integer.parseInt(data[12]);
-				String texture = data[13];
-//				int width = Integer.parseInt(data[13]);
-//				int height = Integer.parseInt(data[14]);
-				String entityName = data[14];
-				String[] potentialEnemyActions = data[17].split("_");
-				String bgm = data[18];
-				String battleBG = data[19];
-				String predicate = data[20];
-				String resist = data[21];
-				int numberAllies = Integer.parseInt(data[22]);
-				EnemyAction[] enemyActions = new EnemyAction[potentialEnemyActions.length];
-				for (int x = 0; x < potentialEnemyActions.length; x++) {
-					enemyActions[x] = this.enemyActions.get(Integer.parseInt(potentialEnemyActions[x]));
-				}
-//				public EntityStats(int lvl,int chp, int cpp, int hp,int pp,int atk, int def, int iq,int spd,int guts, int luck, int vit,int curxp) {
-				EntityStats stats = new EntityStats(0,hp,pp,hp,pp,off,def,iq,speed,guts,luck,vit,xp);
-				Enemy e = new Enemy(i,texture,name,stats,xp,money,entityName,this);
-				e.setActions(enemyActions);
-				e.setBGM(bgm);
-				e.setBattleBG(battleBG);
-				e.setResistances(Integer.parseInt(resist));
-				e.setMaxAllies(numberAllies);
-				if (predicate.equals(" ")) {
-					e.setPredicate("");
-				} else {
-					e.setPredicate(predicate);
-				}
-				
-				enemies.put(i++,e);
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+	//when all textures are finalized this method should not exist so we dont 
+	//generate this on startup. (This introduces unnecessary overhead)
 	public void createAtlas() throws IOException {
 		int squareSize = 2048;
-//		if (getCurrentAnimation() != null) {
-//			squareSize = 4096;
-//		}
 		ImagePacker packer = new ImagePacker(squareSize,squareSize,0,false);
 		for (String key : textures.keySet()) {
 			BufferedImage t = textures.get(key);
 			packer.insertImage(key,t);
 		}
-//		if (getCurrentAnimation() != null) {
-//			packer.insertImage(getCurrentAnimation(),animations.get(getCurrentAnimation()));
-//		}
 		textureAtlas.setTexture(BufferedImageUtil.getTexture("", packer.getImage()));
 		textureAtlas.setRects(packer.getRects());
 		mainWindow.setTextureAtlas(textureAtlas);
@@ -865,8 +522,6 @@ public class SystemState{
 				drawables.add(drawable);
 			}
 		}
-		
-//		drawables.addAll(d);
 	}
 	
 	public List<DrawableObject> getDrawables() {
@@ -896,10 +551,8 @@ public class SystemState{
 				textData.add(line.substring(5));
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -917,14 +570,11 @@ public class SystemState{
 		this.justTextData = justTextData;
 		if (justTextData) {
 			textEditor = true;
-			namesOfCharacters=defaultNames;
 			charList = new CharList();
 			gameState = new GameState();
 			loadMapNames();
 			loadAllStrings();
 			loadAllEntities();
-			loadAllItems();
-			loadAllEnemyGroups();
 			menuStack = new MenuStack();
 			selectionStack = new SelectionStack();
 		} else {
@@ -933,16 +583,8 @@ public class SystemState{
 			loadMapNames();
 			loadTileSets();
 			loadAllImages("");
-			loadAllImages("enemies");
 			loadImageData();
 			loadAllEntities();
-			loadAllItems();
-//			loadAllAnims();
-//			loadAllPSI();
-			loadAllEnemyActions();
-			loadAllEnemies();
-			loadAllStrings();
-			loadAllEnemyGroups();
 			
 			setBGM("motherearth.ogg");
 			textureAtlas.getTexture().bind();
@@ -951,47 +593,18 @@ public class SystemState{
 			
 			selectionStack = new SelectionStack();
 			menuStack = new MenuStack();
-				Menu m = new MainMenu(this);
-					SelectionTextWindow STW = new SelectionTextWindow(mainWindow.getScreenWidth()/2 - (2*64),mainWindow.getScreenHeight()-(7*64),4,3,this);
-					STW.add(new NewGameMenuItem((int) STW.getX(),(int) STW.getY() + 16,this));
-					STW.add(new ContinueMenuItem((int) STW.getX(),(int) STW.getY() + 48,this));
-					STW.add(new OptionsMenuItem((int) STW.getX(),(int) STW.getY() + 80,this));
-					STW.add(new MapPreviewTestButton((int) STW.getX(),(int) STW.getY() + 112,this));
-				m.addMenuItem(STW);
+			
+			//create the main menu
+			Menu m = new MainMenu(this);
+			SelectionTextWindow STW = new SelectionTextWindow(mainWindow.getScreenWidth()/2 - (2*64),mainWindow.getScreenHeight()-(7*64),4,3,this);
+			STW.add(new NewGameMenuItem((int) STW.getX(),(int) STW.getY() + 16,this));
+			STW.add(new ContinueMenuItem((int) STW.getX(),(int) STW.getY() + 48,this));
+			STW.add(new OptionsMenuItem((int) STW.getX(),(int) STW.getY() + 80,this));
+			STW.add(new MapPreviewTestButton((int) STW.getX(),(int) STW.getY() + 112,this));
+			m.addMenuItem(STW);
 			menuStack.push(m);
-			//test the music
-//			setBGM("eb_title.wav");
-//			bgm.playAsMusic(1.0f, 1.0f, false);
 		}
 		
-	}
-	
-	private void loadAllEnemyActions() {
-		// TODO Auto-generated method stub
-		String pathToEntity = "data/enemyactions.csv";
-		File file = new File(pathToEntity);
-		enemyActions = new HashMap<Integer,EnemyAction>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			//skip headers
-			String row = br.readLine();
-			int i = 0;
-			while ((row=br.readLine()) != null) {
-				String[] data = row.split(",");
-				String text = data[1];
-				int action = Integer.parseInt(data[2]);
-				int useVar = Integer.parseInt(data[3]);
-				int target = Integer.parseInt(data[4]);
-				EnemyAction ea = new EnemyAction(text,action,useVar,target);
-				enemyActions.put(i++,ea);
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public Point getMouseCoordinates() {
@@ -1032,7 +645,6 @@ public class SystemState{
 	
 	public void update() {
 		if (fadeOutIsDone) {
-			Menu savedMenu = menuStack.pop();
 			if (menuStack.peek() != null) {
 				menuStack.peek().doDoneFadeOutAction();
 			} 
@@ -1098,6 +710,8 @@ public class SystemState{
 			}
 		}
 		
+		GameState gameState = getGameState();
+		
 		if (gameState != null) {
 			gameState.updateTimer();
 			input.setHoldable(true);
@@ -1130,34 +744,42 @@ public class SystemState{
 				menuStack.pop();
 				menuStack.pop();
 				needToPop = false;
-				//CREATE AN INSTANCE OF THE GAME STATE YOU NEED
-				GameState gs = new GameState(this);
-				this.setGameState(gs);
+				
+				GameState gs = createGameState();
+				setGameState(gs);
 				if (!createNewFile) {
 					gs.loadFromSaveFile(saveFileName);
-					gameState.loadMapData();
+					gs.loadMapData();
 				}else {
 //					gs.loadFromSaveFile("test");
 					setAudioOverride(true);
-					gameState.setDoIntro(true);
+					gs.setDoIntro(true);
 				}
 			}
 		}
 	}
 	
+	public GameState createGameState() {
+		return new GameState(this);
+	}
 	
-	
-	public void render() {
-		if (gameState == null) {
-			getMainWindow().renderBG("bg.png");
-		}
-		
+	public void drawGameState() {
+		GameState gameState = getGameState();
 		if (gameState != null && gameState.shouldDraw()) {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, mainWindow.getFrameBufferColorTextureId());
 			mainWindow.renderMap();
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 			gameState.drawGameState();
 		}
+	}
+	
+	public void render() {
+		GameState gameState = getGameState();
+		if (gameState == null) {
+			getMainWindow().renderBG("bg.png");
+		}
+		
+		drawGameState();
 		
 		getMainWindow().drawDrawables(drawables);
 	}
@@ -1198,7 +820,6 @@ public class SystemState{
 				if (!textEditor) {
 					System.exit(0);
 				}
-				
 			}
 			frameCount++;
 		}
@@ -1239,54 +860,37 @@ public class SystemState{
 	}
 
 	public void setGameState(GameState gs) {
-		// TODO Auto-generated method stub
 		this.gameState = gs;
 	}
 
 	public TextureAtlas getTextureAtlas() {
-		// TODO Auto-generated method stub
 		return textureAtlas;
 	}
 
-	public void setControllable(Entity e) {
-		// TODO Auto-generated method stub
-		c = (Controllable) e;
-	}
-
 	public void setToRemove(Menu menu) {
-		// TODO Auto-generated method stub
 		removeThisMenu = menu;
 	}
 
 	public void setClearMenuStack() {
-		// TODO Auto-generated method stub
 		clearTheMenuStack = true;
 	}
 
+	//TODO is this used?
 	public void setResultOfMenuToDisplay(String string) {
-		// TODO Auto-generated method stub
-		resultOfMenuToDisplay = string;
+//		resultOfMenuToDisplay = string;
 	}
 
 	public void setDrawAllMenus(boolean b) {
-		// TODO Auto-generated method stub
 		drawAllMenus = b;
 	}
 
 	public void setAudioOverride(boolean b) {
-		// TODO Auto-generated method stub
+		
 		audioOverride = b;
 	}
 
 	public void setFadeOutDone() {
-		// TODO Auto-generated method stub
 		fadeOutIsDone = true;
-	}
-
-	public void saveCoordinates() {
-		savedXPos = gameState.getPlayer().getX();
-		savedYPos = gameState.getPlayer().getY();
-		savedMapName = gameState.getMap().getMapId();
 	}
 
 	public void stopBGM() {
@@ -1305,7 +909,6 @@ public class SystemState{
 	}
 	
 	public void saveCurrentDialogMenu() {
-		// TODO Auto-generated method stub
 		savedMenu = menuStack.peek();
 	}
 	
@@ -1314,7 +917,6 @@ public class SystemState{
 	}
 
 	public void addSavedMenu(boolean b) {
-		// TODO Auto-generated method stub
 		needAddSavedMenu = b;
 	}
 
@@ -1323,8 +925,24 @@ public class SystemState{
 	}
 
 	public void setRestoreAudioWhenDone() {
-		// TODO Auto-generated method stub
 		restoreAudioWhenDone = true;
 	}
+	
+	public TextEngine createTextEngine(boolean drawAll, String text, int x, int y, int w, int h) {
+		return new TextEngine(true, text ,x , y ,w, h, charList);
+	}
 
+//	public void setCurrentAnimation(String string) {
+//		
+//	}
+
+	public Cutscene getCutscene() {
+		// TODO Auto-generated method stub
+		return currentCutscene;
+	}
+	
+	public void setCutscene(Cutscene cutscene) {
+		// TODO Auto-generated method stub
+		currentCutscene = cutscene;
+	}
 }

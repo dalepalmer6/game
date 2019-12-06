@@ -1,15 +1,11 @@
 package menu.animation;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.Node;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -19,11 +15,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import battlesystem.menu.BattleMenu;
 import menu.MenuItem;
 import system.MainWindow;
 import system.SystemState;
-import system.sprites.Pose;
 import system.sprites.TileMetadata;
 
 public class Animation extends MenuItem {
@@ -55,7 +49,7 @@ public class Animation extends MenuItem {
 	public Animation(SystemState m, String texture, int x, int y, int w, int h) {
 		super("",x,y,w,h,m);
 		this.texture = texture;
-		coordinates = new AnimationCoordinates(texture);
+		coordinates = new AnimationCoordinates();
 	}
 	
 	public String removePNGExtension(String fname) {
@@ -73,7 +67,7 @@ public class Animation extends MenuItem {
 			NodeList nList = doc.getElementsByTagName("spr");
 			for(int i = 0 ; i < nList.getLength(); i++){
 			    Element subTextureElement = (Element)nList.item(i);
-			    String name = subTextureElement.getAttribute("name");
+//			    String name = subTextureElement.getAttribute("name");
 			    String  x= subTextureElement.getAttribute("x");
 			    String y= subTextureElement.getAttribute("y");
 			    String width = subTextureElement.getAttribute("w");

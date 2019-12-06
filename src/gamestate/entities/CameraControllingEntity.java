@@ -4,7 +4,7 @@ import gamestate.GameState;
 import gamestate.camera.Camera;
 import system.SystemState;
 
-public class CameraControllingEntity extends Entity {
+public class CameraControllingEntity extends MotherEntity {
 	protected Camera camera;
 	
 	public void setCamera(Camera c) {

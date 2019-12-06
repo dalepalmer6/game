@@ -1,10 +1,8 @@
 package battlesystem;
 
-import java.util.ArrayList;
-
 import battlesystem.options.BattleAction;
 import gamestate.EntityStats;
-import menu.windows.TextWindowWithPrompt;
+import system.MotherSystemState;
 import system.SystemState;
 import system.data.StatusConditions;
 import system.sprites.SpritesheetCoordinates;
@@ -21,7 +19,7 @@ public class BattleEntity {
 	protected SpritesheetCoordinates spriteData;
 	protected BattleAction actionToPerform;
 	//position to be drawn on screen
-	protected SystemState systemState;
+	protected MotherSystemState systemState;
 	private boolean defending;
 	protected int resistances;
 	//0 - none
@@ -87,7 +85,7 @@ public class BattleEntity {
 		return null;
 	}
 	
-	public SystemState getSystemState() {
+	public MotherSystemState getSystemState() {
 		return systemState;
 	}
 	
@@ -121,7 +119,7 @@ public class BattleEntity {
 	
 	public BattleEntity(String texture, String name, EntityStats es, SystemState systemState) {
 		this.texture = texture;
-		this.systemState=systemState;
+		this.systemState=(MotherSystemState)	systemState;
 		this.name = name;
 		this.stats = es;
 		this.battleStats = es.createCopy();

@@ -1,13 +1,11 @@
 package menu.windows;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import font.CharacterData;
 import menu.FeatherMenuItem;
 import menu.MenuItem;
-import menu.text.Text;
+import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
 import system.controller.InputController;
@@ -406,7 +404,6 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 		}
 		if (t != null) {
 			appendOutput(t);
-			state.setOutputFromSelect(output);
 			SystemState.out.println(output);
 		}
 		
@@ -422,7 +419,7 @@ public class SelectionTextWindow extends TextWindow implements Controllable{
 	}
 	
 	public void drawSelections(MainWindow mw) {
-		Text.initDrawText(mw);
+		TextEngine.initDrawText(mw);
 		if (!grid) {
 			yStart = 0;
 			yEnd = selections.size();

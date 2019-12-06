@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import gamestate.elements.items.Item;
 import menu.Menu;
 import menu.actionmenu.equipmenu.TextLabel;
-import menu.actionmenu.goodsmenu.GoodsMenu;
 import menu.actionmenu.goodsmenu.GoodsMenuOutOfBattle;
 import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
 import menu.windows.DialogTextWindow;
 import menu.windows.SelectionTextWindow;
 import menu.windows.SimpleDialogMenu;
-import menu.windows.TextWindowWithPrompt;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -28,7 +27,6 @@ public class ShopMenu extends Menu {
 	private String regreeting = "Is there anything else I can do for you?[CHOOSE][CHOICE]Buy[TEXT][BUYWINDOW][CHOICE]Sell[TEXT][SELLWINDOW]";
 	private String sellText = "I see. [WAIT20][NEWLINE]I can probably give you %d for %s. [NEWLINE]Is that alright?[CHOOSE][CHOICE]Yes[TEXT]Ok, let's do this.[CONSUMEITEM_%d_%d][ADDMONEY_%d][CHOICE]No[TEXT]Oh, you changed your mind?";
 	private boolean selling;
-	private boolean skip;
 	
 	public void addBuyWindow() {
 		menuItems.clear();
@@ -46,7 +44,6 @@ public class ShopMenu extends Menu {
 //		m.createMenu();
 //		m.setSelling(true);
 		state.getMenuStack().push(m);
-		skip = true;
 	}
 	
 	public ShopMenu(SystemState state, String shopName) {
@@ -59,33 +56,29 @@ public class ShopMenu extends Menu {
 		menuItems.clear();
 //		selling = false;
 		int temp = -1;
-		if ((temp=state.getPartyIndex()) != -1) {
-			state.setIndexOfParty(temp);
+		if ((temp=((MotherSystemState) state).getPartyIndex()) != -1) {
+			((MotherSystemState) state).setIndexOfParty(temp);
 			selling = true;
 		}
 		addMenuItem(new DialogTextWindow(regreeting,state));
 	}
 	
 	public void readFile() {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("data/shops/" + shopName + ".csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader("data/shops/" + shopName + ".csv"))) {
 			String row;
 			while ((row = br.readLine()) != null) {
 				String[] ids = row.split(",");
 				saleItems = new ArrayList<ShopMenuItem>();
 				for (int i = 0; i < ids.length; i++) {
-					saleItems.add(new ShopMenuItem(state.items.get(Integer.parseInt(ids[i])),state));
+					saleItems.add(new ShopMenuItem(((MotherSystemState) state).items.get(Integer.parseInt(ids[i])),state));
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			SimpleDialogMenu.createDialogBox(state, "ERROR: FILE NOT FOUND, " + shopName + ".csv","SystemState Error");
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -96,7 +89,7 @@ public class ShopMenu extends Menu {
 		if (selling) {
 			selling = false;
 			Item item = ((GoodsSelectMenuItem) state.getSelectionStack().peek()).getItem();
-			String out = String.format(sellText,item.getValue()/2,item.getName(),item.getId(),state.getPartyIndex(),item.getValue()/2);
+			String out = String.format(sellText,item.getValue()/2,item.getName(),item.getId(),((MotherSystemState) state).getPartyIndex(),item.getValue()/2);
 			SimpleDialogMenu.createDialogBox(state,out);
 		}
 	}

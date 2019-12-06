@@ -14,6 +14,7 @@ import menu.actionmenu.equipmenu.TextLabel;
 import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
 import menu.actionmenu.goodsmenu.InvisibleMenuItem;
 import menu.windows.SelectionTextWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 
@@ -87,7 +88,7 @@ public class PSIMenuInBattle extends InBattleWindow {
 		classificationWindow = new SelectionTextWindow(state.getMainWindow().getScreenWidth()/2 - (16/2)*72,32,2,3,state);
 		addMenuItem(classificationWindow);
 		classificationWindow.setSteps(48*2,24*2);
-		for (PSIClassification psic : state.psiClassList.getPSIClassifications()) {
+		for (PSIClassification psic : ((MotherSystemState) state).psiClassList.getPSIClassifications()) {
 			classificationWindow.add(new ClassificationMenuItem(state,psic));
 		}
 		PartyMember pm = party.get(0);
@@ -102,7 +103,7 @@ public class PSIMenuInBattle extends InBattleWindow {
 	public void enumPSIForMember() {
 		this.pm = party.get(0);
 		classId = classificationWindow.getSelectedIndex();
-		ArrayList<PSIFamily> psiFams = state.psiClassList.getPSIClassifications().get(classId).getFamilies();
+		ArrayList<PSIFamily> psiFams = ((MotherSystemState) state).psiClassList.getPSIClassifications().get(classId).getFamilies();
 		psiSTW.clearSelections();
 		psiSTW.createGrid(5,15,288,psiSTW.getTextStartY());
 		if (backShouldExit) {

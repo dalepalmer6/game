@@ -6,7 +6,7 @@ import gamestate.GameState;
 import gamestate.elements.items.Item;
 import system.SystemState;
 
-public class PresentEntity extends Entity{
+public class PresentEntity extends MotherEntity{
 	private int itemId;
 	private Item item;
 	private String flagName;

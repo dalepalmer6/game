@@ -35,6 +35,7 @@ import menu.animation.AnimationMenu;
 import menu.animation.AnimationMenuFadeFromBlack;
 import menu.animation.SwirlAnimation;
 import menu.mapeditmenu.MapEditMenu;
+import system.MotherSystemState;
 import system.SystemState;
 import system.SystemState;
 import system.controller.InputController;
@@ -45,14 +46,14 @@ import system.map.Tile;
 import tiles.ChangeWithFlagTile;
 import tiles.TileInstance;
 
-public class GameState extends GameState {
+public class MotherGameState extends GameState {
 	private ArrayList<DrawableObject> drawables = new ArrayList<DrawableObject>();
 	private ArrayList<Entity> entities;
 	private Player player;
 	private Camera camera;
 	private Map map;
 	private MapRenderer mapRenderer;
-	private SystemState state;
+	private MotherSystemState state;
 	private ArrayList<RedrawObject> ro;
 	private ArrayList<PartyMember> party = new ArrayList<PartyMember>();
 	private final String pathToMaps = "/maps/";
@@ -274,18 +275,18 @@ public class GameState extends GameState {
 		}
 	}
 	
-	public GameState() {
+	public MotherGameState() {
 		shouldDraw = false;
 		flags = new HashMap<String,Boolean>();
 	}
 	
-	public GameState(SystemState s) {
+	public MotherGameState(SystemState s) {
 		//load in the system.map name from the external file
 		//should be loaded from the save data if using a continue
 		this(s,new Map("house - myhome",5,5,s.tileMap,s));
 	}
 	
-	public GameState(SystemState s, Map m) {
+	public MotherGameState(SystemState s, Map m) {
 		this.timeCreated = System.nanoTime();
 		lastSavedMap = m;
 		this.entities = new ArrayList<Entity>();
@@ -293,7 +294,7 @@ public class GameState extends GameState {
 			this.currentMapName = m.getMapId();
 		}
 		timer = 0;
-		this.state = s;
+		this.state = (MotherSystemState) s;
 		this.camera = new Camera(state);
 		this.map = m;
 		flags = new HashMap<String,Boolean>();

@@ -1,6 +1,7 @@
 package menu.teleportmenu;
 
 import menu.MenuItem;
+import system.MotherSystemState;
 import system.SystemState;
 
 public class TeleportDestinationMenuItem extends MenuItem {
@@ -28,8 +29,7 @@ public class TeleportDestinationMenuItem extends MenuItem {
 	}
 	
 	public String execute() {
-		state.setTeleportVariables(newMapName, newX, newY, true);
-//		state.getMenuStack().pop();
+		((MotherSystemState) state).setTeleportVariables(newMapName, newX, newY, true);
 		state.getMenuStack().clear();
 		return null;
 	}

@@ -6,10 +6,11 @@ import battlesystem.Enemy;
 import gamestate.EnemySpawnGroup;
 import gamestate.GameState;
 import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.sprites.SpritesheetCoordinates;
 
-public class EnemySpawnEntity extends Entity {
+public class EnemySpawnEntity extends MotherEntity {
 	private int index;
 	private ArrayList<EnemyEntity> spawned;
 	private ArrayList<Enemy> enemies;
@@ -62,13 +63,13 @@ public class EnemySpawnEntity extends Entity {
 		this.spriteCoordinates = new SpritesheetCoordinates();
 		spriteCoordinates.setPose("idle_down");
 		spriteCoordinates.addStateToPose("idle_down",0,0,12,12);
-		EnemySpawnGroup esg = state.enemySpawnGroups.get(index);
+		EnemySpawnGroup esg = ((MotherSystemState) state).enemySpawnGroups.get(index);
 		int[] ids = esg.getEnemies();
 		rates = esg.getPercents();
 		enemies = new ArrayList<Enemy>();
 		if (!state.justTextData) {
 			for (int i = 0; i < ids.length; i++) {
-				enemies.add(state.enemies.get(ids[i]));
+				enemies.add(((MotherSystemState) state).enemies.get(ids[i]));
 			}
 		}
 		this.index = index;
@@ -87,6 +88,7 @@ public class EnemySpawnEntity extends Entity {
 	}
 	
 	public void update(GameState gs) {
+		MotherSystemState state = (MotherSystemState) getState();
 		for (int i = 0; i < enemies.size(); i++) {
 			if (enemies.get(i) == null) {
 				for (int j = i; j < enemies.size(); j++) {
@@ -95,6 +97,7 @@ public class EnemySpawnEntity extends Entity {
 				break;
 			}
 		}
+		
 		if (!done) {
 			//only do this once when entity is loaded
 			spawned = new ArrayList<EnemyEntity>(); 

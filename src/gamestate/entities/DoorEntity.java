@@ -9,10 +9,11 @@ import menu.animation.Animation;
 import menu.animation.AnimationFadeToBlack;
 import menu.animation.AnimationMenu;
 import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.sprites.SpritesheetCoordinates;
 
-public class DoorEntity extends Entity {
+public class DoorEntity extends MotherEntity {
 	//do not draw these
 	private int destX;
 	private int destY;
@@ -93,6 +94,7 @@ public class DoorEntity extends Entity {
 	}
 	
 	public void act() {
+		MotherSystemState state = (MotherSystemState) getState();
 		for (Entity e : interactables) {
 //			if (state.getGameState().getFlag("teleportingIn")) {
 //				return;

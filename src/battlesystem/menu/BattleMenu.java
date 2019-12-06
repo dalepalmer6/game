@@ -8,38 +8,27 @@ import java.util.List;
 import battlesystem.BattleEntity;
 import battlesystem.Enemy;
 import battlesystem.PCBattleEntity;
-import battlesystem.options.Bash;
 import battlesystem.options.BattleAction;
-import battlesystem.options.BattleMenuSelectionTextWindow;
 import battlesystem.options.BattleSelectionTextWindow;
 import battlesystem.options.BattleTextWindow;
-import battlesystem.options.Defend;
 import battlesystem.options.EnemyOption;
 import battlesystem.options.EnemyOptionPanel;
-import battlesystem.options.Goods;
-import battlesystem.options.RunAway;
 import gamestate.EntityStats;
 import gamestate.entities.EnemyEntity;
-import gamestate.entities.Entity;
 import gamestate.partymembers.PartyMember;
 import menu.DrawableObject;
 import menu.Menu;
 import menu.MenuItem;
 import menu.PlayerStatusWindow;
 import menu.TexturedMenuItem;
-import menu.actionmenu.GoodsMenuItem;
-import menu.actionmenu.PSIMenuItem;
 import menu.animation.AnimationMenu;
 import menu.gameovermenu.GameOverMenu;
-import menu.windows.SelectionTextWindow;
 import menu.windows.TextWindow;
-import menu.windows.TextWindowWithPrompt;
-import system.MainWindow;
+import system.MotherSystemState;
 import system.SystemState;
 import system.controller.InputController;
 import system.data.LevelupData;
 import system.data.StatusConditions;
-import system.interfaces.Controllable;
 
 public class BattleMenu extends Menu {
 //	private BattleMenuSelectionTextWindow actionMenu;
@@ -201,7 +190,7 @@ public class BattleMenu extends Menu {
 			state.getMainWindow().getScreenHeight()/2 -(((Enemy) e).getHeight()/2),state));
 			j++;
 		} 
-		state.setEOP(eop);
+		((MotherSystemState) state).setEOP(eop);
 		state.setAudioOverride(false);
 		state.setBGM(((Enemy)enemies.get(0)).getBGM());
 		state.setAudioOverride(true);

@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import menu.MenuItem;
 import menu.actionmenu.equipmenu.TextLabel;
-import menu.text.Text;
+import menu.text.TextEngine;
 import system.MainWindow;
 import system.SystemState;
 

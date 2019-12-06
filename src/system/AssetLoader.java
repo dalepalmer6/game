@@ -10,7 +10,7 @@ public class AssetLoader implements Runnable {
 	@Override
 	public void run() {
 		state.loadAllAnims();
-		state.loadAllPSI();
+		((MotherSystemState) state).loadAllPSI();
 	}
 
 }

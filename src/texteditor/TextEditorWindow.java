@@ -29,7 +29,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import menu.Menu;
-import menu.text.Text;
+import menu.text.TextEngine;
 import menu.windows.DialogTextWindow;
 import system.SystemState;
 import system.map.Map;
@@ -253,7 +253,7 @@ public class TextEditorWindow {
 				int index = Integer.parseInt(stringNumberInput.getText(), 16);
 				String s = state.textData.get(index);
 				stringEditor.setText(s);
-				Text textObject = new Text(true,stringEditor.getText(),0,0,32,32,state.charList);
+				TextEngine textObject = new TextEngine(true,stringEditor.getText(),0,0,32,32,state.charList);
 				textObject.setParsedString();
 				textObject.setState(state);
 				textObject.parse();
@@ -378,7 +378,7 @@ public class TextEditorWindow {
 			return false;
 		}
 		inputField.setText(text);
-		Text textObject = new Text(true,text,0,0,32,32,state.charList);
+		TextEngine textObject = new TextEngine(true,text,0,0,32,32,state.charList);
 		textObject.setParsedString();
 		textObject.setState(state);
 		textObject.parse();
@@ -444,7 +444,7 @@ public class TextEditorWindow {
 //			if (tw.needToCreateFlags) {
 //				tw.createFlagCheckboxes();
 //				tw.setFlags();
-				Text text = new Text(tw.inputField.getText(),0,0,0,0,tw.state.charList);
+				TextEngine text = new TextEngine(tw.inputField.getText(),0,0,0,0,tw.state.charList);
 				text.setState(tw.state);
 				text.setParsedString();
 				text.parse();
