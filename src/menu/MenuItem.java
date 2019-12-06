@@ -6,13 +6,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import canvas.Clickable;
-import canvas.Drawable;
-import canvas.Hoverable;
-import canvas.MainWindow;
-import font.Text;
-import global.InputController;
-import global.MenuStack;
+import menu.text.Text;
+import system.MainWindow;
+import system.MenuStack;
+import system.SystemState;
+import system.controller.InputController;
+import system.interfaces.Clickable;
+import system.interfaces.Drawable;
+import system.interfaces.Hoverable;
 
 public class MenuItem extends LeftClickableItem implements MenuItemInterface, Hoverable, Drawable, Clickable {
 	protected String text;
@@ -22,7 +23,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	private String imageNeutral = "button.png";
 	private String imageHovered = "button2.png";
 	private String image = this.imageNeutral;
-	protected StartupNew state;
+	protected SystemState state;
 	private double savedX;
 	private double savedY;
 	protected double shakeApplyY = 0;
@@ -31,7 +32,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 	protected double targetX;
 	protected double targetY;
 	
-	public void setState(StartupNew state) {
+	public void setState(SystemState state) {
 		this.state = state;
 	}
 	
@@ -101,7 +102,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		this.bgColor = color;
 	}
 	
-	public MenuItem(String t, double x, double y, StartupNew m) {
+	public MenuItem(String t, double x, double y, SystemState m) {
 		state = m;
 		text = t;
 		this.x = x;
@@ -112,7 +113,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		textObject.setAsSingleString();
 	}
 	
-	public MenuItem(String t, double x, double y, int width, int height, StartupNew m) {
+	public MenuItem(String t, double x, double y, int width, int height, SystemState m) {
 		state = m;
 		text = t;
 		this.x = x;
@@ -127,7 +128,7 @@ public class MenuItem extends LeftClickableItem implements MenuItemInterface, Ho
 		
 	}
 	
-	public MenuItem( double x, double y, int width, int height, StartupNew m) {
+	public MenuItem( double x, double y, int width, int height, SystemState m) {
 		state = m;
 		this.x = x;
 		this.y = y;

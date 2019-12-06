@@ -1,28 +1,20 @@
 package menu;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import battlesystem.options.EnemyOption;
-import canvas.Controllable;
-import canvas.Drawable;
-import font.SelectionTextWindow;
-import font.TextWindow;
-import global.InputController;
-import global.MenuStack;
-import menu.namecharactersmenu.PromptForCharacterNameButton;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
+import system.interfaces.Controllable;
 
 public class Menu implements MenuInterface {
 	private String title = "Welcome to Game!";
 	protected List<MenuItem> menuItems;
 	protected List<DrawableObject> drawables = new ArrayList<DrawableObject>();
 	private String id;
-	protected StartupNew state;
+	protected SystemState state;
 	protected String input="";
-	private Controllable focused;
 	protected ArrayList<MenuItem> needToAdd = new ArrayList<MenuItem>();
 	protected ArrayList<MenuItem> needToRemove = new ArrayList<MenuItem>();
 	protected boolean backShouldExit = true;
@@ -66,7 +58,7 @@ public class Menu implements MenuInterface {
 	public String getInput() {
 		return input;
 	}
-	public Menu(StartupNew m) {
+	public Menu(SystemState m) {
 		this.state = m;
 		menuItems = new ArrayList<MenuItem>();
 	}
@@ -113,7 +105,7 @@ public class Menu implements MenuInterface {
 		
 	}
 	
-	public StartupNew getState() {
+	public SystemState getState() {
 		return state;
 	}
 	
@@ -129,7 +121,7 @@ public class Menu implements MenuInterface {
 		popping = true;
 		//TODO what was this supposed to do??
 		if (canRemove) {
-			pop();
+			state.getMenuStack().pop();
 		}
 	}
 	

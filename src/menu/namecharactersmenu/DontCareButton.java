@@ -1,12 +1,12 @@
 package menu.namecharactersmenu;
 
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class DontCareButton extends MenuItem {
 	int index;
 	
-	public DontCareButton(StartupNew state, int index) {
+	public DontCareButton(SystemState state, int index) {
 		super("Don't Care", 0, 0, state);
 		this.index = index;
 	}

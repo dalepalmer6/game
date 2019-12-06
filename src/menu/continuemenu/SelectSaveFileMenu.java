@@ -1,11 +1,11 @@
 package menu.continuemenu;
 
-import font.FileSelectionTextWindow;
-import menu.StartupNew;
+import menu.filemenu.FileSelectionTextWindow;
+import system.SystemState;
 
 public class SelectSaveFileMenu extends LoadSavedFileMenu {
 
-	public SelectSaveFileMenu(StartupNew m) {
+	public SelectSaveFileMenu(SystemState m) {
 		super(m);
 		// TODO Auto-generated constructor stub
 	}

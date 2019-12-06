@@ -1,13 +1,13 @@
 package battlesystem.options;
 
-import battlesystem.BattleMenu;
-import font.SelectionTextWindow;
-import global.InputController;
-import menu.StartupNew;
+import battlesystem.menu.BattleMenu;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class BattleSelectionTextWindow extends SelectionTextWindow {
 
-	public BattleSelectionTextWindow(String orient, int x, int y, int width, int height, StartupNew m) {
+	public BattleSelectionTextWindow(String orient, int x, int y, int width, int height, SystemState m) {
 		super(orient,x, y, width, height, m);
 		// TODO Auto-generated constructor stub
 	}

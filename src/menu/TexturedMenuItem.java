@@ -1,6 +1,7 @@
 package menu;
 
-import canvas.MainWindow;
+import system.MainWindow;
+import system.SystemState;
 
 public class TexturedMenuItem extends MenuItem {
 	protected int dx;
@@ -14,7 +15,7 @@ public class TexturedMenuItem extends MenuItem {
 	private int borderDH;
 	private int hoveredDy;
 	
-	public TexturedMenuItem(String text, double x, double y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh) {
+	public TexturedMenuItem(String text, double x, double y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh) {
 		super(text,x,y,width,height,state);
 		this.texture = texture;
 		this.dx = dx;
@@ -28,7 +29,7 @@ public class TexturedMenuItem extends MenuItem {
 		this.hoveredDy = dy + dh;
 	}
 	
-	public TexturedMenuItem(double x, double y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh) {
+	public TexturedMenuItem(double x, double y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh) {
 		super(x,y,width,height,state);
 		this.texture = texture;
 		this.dx = dx;

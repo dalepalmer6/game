@@ -1,14 +1,14 @@
 package menu.namecharactersmenu;
 
-import canvas.Drawable;
-import font.DialogTextWindow;
-import font.SelectionTextWindow;
-import global.InputController;
 import menu.BackButton;
-import menu.IntroWindowMenu;
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.intromenu.IntroWindowMenu;
+import menu.windows.DialogTextWindow;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
+import system.interfaces.Drawable;
 
 public class CharacterNamingMenu extends Menu{
 	private int curX = 10;
@@ -21,7 +21,7 @@ public class CharacterNamingMenu extends Menu{
 		inputtedName = s;
 	}
 	
-	public CharacterNamingMenu(StartupNew m) {
+	public CharacterNamingMenu(SystemState m) {
 		super(m);
 		state.namesOfCharacters = new String[state.defaultNames.length];
 		int j = 0;
@@ -64,10 +64,4 @@ public class CharacterNamingMenu extends Menu{
 		m.create();
 		state.getMenuStack().push(m);
 	}
-	
-	public MenuItem createMenuItem(int index,String text) {
-		MenuItem mi = new PromptForCharacterNameButton(index,text,curX,curY, state);
-		return mi;
-	}
-	
 }

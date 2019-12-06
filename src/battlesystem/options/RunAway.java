@@ -1,12 +1,12 @@
 package battlesystem.options;
 
-import battlesystem.BattleMenu;
+import battlesystem.menu.BattleMenu;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class RunAway extends MenuItem{
 
-	public RunAway(String t, int x, int y, StartupNew m) {
+	public RunAway(String t, int x, int y, SystemState m) {
 		super(t, x, y, m);
 		// TODO Auto-generated constructor stub
 	}

@@ -1,17 +1,17 @@
 package battlesystem.options.itemsmenu;
 
-import battlesystem.BattleMenu;
+import battlesystem.menu.BattleMenu;
 import battlesystem.options.BattleAction;
 import battlesystem.options.BattleSelectionTextWindow;
-import font.SelectionTextWindow;
 import gamestate.elements.items.Item;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
 
 public class ItemMenuItem extends MenuItem {
 	private Item item;
 	
-	public ItemMenuItem(Item item, StartupNew state) {
+	public ItemMenuItem(Item item, SystemState state) {
 		super(item.getName(), 0, 0, state);
 		this.item = item;
 	}

@@ -1,6 +1,6 @@
 package tiles;
 
-import mapeditor.Tile;
+import system.map.Tile;
 
 public class SingleInstanceTile extends Tile {
 	

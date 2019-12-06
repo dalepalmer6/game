@@ -19,19 +19,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 
-import gamestate.DoorEntity;
-import gamestate.Enemy;
-import gamestate.EnemySpawnEntity;
+import battlesystem.Enemy;
 import gamestate.EnemySpawnGroup;
-import gamestate.Entity;
-import gamestate.HotSpot;
-import gamestate.PresentEntity;
 import gamestate.elements.items.Item;
-import mapeditor.Map;
-import mapeditor.MapEditMenu;
-import mapeditor.tools.DoorTool;
-import mapeditor.tools.SingleEntity;
-import menu.StartupNew;
+import gamestate.entities.DoorEntity;
+import gamestate.entities.EnemySpawnEntity;
+import gamestate.entities.Entity;
+import gamestate.entities.HotSpot;
+import gamestate.entities.PresentEntity;
+import menu.mapeditmenu.MapEditMenu;
+import menu.mapeditmenu.tools.DoorTool;
+import menu.mapeditmenu.tools.SingleEntity;
+import system.SystemState;
+import system.map.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -58,7 +58,7 @@ public class EntityEditor {
 	private JComboBox<Entity> entityComboBox;
 	private ArrayList<Entity> entities;
 	private Entity entity;
-	private StartupNew state;
+	private SystemState state;
 	private Map map;
 	private JComboBox<String>  itemComboBox;
 	private JTextField  cutsceneComboBox;
@@ -233,7 +233,7 @@ public class EntityEditor {
 	/**
 	 * Create the application.
 	 */
-	public EntityEditor(StartupNew state) {
+	public EntityEditor(SystemState state) {
 		this.state = state;
 		initialize();
 		setMap(((MapEditMenu)state.getMenuStack().peek()).getMapPreview().getMap());

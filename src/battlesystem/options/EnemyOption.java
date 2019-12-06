@@ -1,12 +1,12 @@
 package battlesystem.options;
 
-import battlesystem.BattleMenu;
-import canvas.MainWindow;
-import gamestate.Enemy;
-import gamestate.PCBattleEntity;
-import gamestate.Pose;
+import battlesystem.Enemy;
+import battlesystem.PCBattleEntity;
+import battlesystem.menu.BattleMenu;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.MainWindow;
+import system.SystemState;
+import system.sprites.Pose;
 
 public class EnemyOption extends MenuItem {
 	private Enemy enemy;
@@ -38,7 +38,7 @@ public class EnemyOption extends MenuItem {
 		selected = b;
 	}
 	
-	public EnemyOption(Enemy enemy,int x,int y, StartupNew s) {
+	public EnemyOption(Enemy enemy,int x,int y, SystemState s) {
 		super(enemy.getName(),0,0,0,0,s);
 		this.enemy = enemy;
 		this.x = x;

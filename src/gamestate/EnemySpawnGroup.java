@@ -2,15 +2,15 @@ package gamestate;
 
 import java.util.ArrayList;
 
-import menu.StartupNew;
+import system.SystemState;
 
 public class EnemySpawnGroup {
 	private int index;
 	private int[] enemies;
 	private float[] percents;
-	private StartupNew state;
+	private SystemState state;
 	
-	public EnemySpawnGroup(int index, int[] enemyIndex, float[] percents, StartupNew state) {
+	public EnemySpawnGroup(int index, int[] enemyIndex, float[] percents, SystemState state) {
 		this.enemies = enemyIndex;
 		this.percents = percents;
 		this.index = index;

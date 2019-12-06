@@ -1,20 +1,20 @@
 package battlesystem.options;
 
-import actionmenu.goodsmenu.GoodsMenu;
-import battlesystem.BattleMenu;
+import battlesystem.menu.BattleMenu;
 import battlesystem.menu.psi.PSIMenuSelectMember;
 import battlesystem.menu.psi.PSIPickMenu;
 import battlesystem.options.itemsmenu.ItemMenuItem;
 import battlesystem.options.psimenu.PSIAttackMenuItem;
-import font.SelectionTextWindow;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.actionmenu.goodsmenu.GoodsMenu;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
 
 public class PSI extends MenuItem{
 
-	public PSI(String t, int x, int y, StartupNew m) {
+	public PSI(String t, int x, int y, SystemState m) {
 		super(t, x, y, m);
 		// TODO Auto-generated constructor stub
 	}

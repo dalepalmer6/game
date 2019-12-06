@@ -3,9 +3,11 @@ package gamestate;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import canvas.MainWindow;
-import mapeditor.Tile;
-import menu.StartupNew;
+import gamestate.entities.Entity;
+import gamestate.map.MapRenderer;
+import system.MainWindow;
+import system.SystemState;
+import system.map.Tile;
 import tiles.TileInstance;
 
 public class RedrawObject {
@@ -19,7 +21,7 @@ public class RedrawObject {
 	int dh;
 	TileInstance t;
 	Entity e;
-	private StartupNew state;
+	private SystemState state;
 	
 	public void draw(MainWindow m, MapRenderer mr) {
 		if (e == null) {
@@ -36,7 +38,7 @@ public class RedrawObject {
 	}
 	
 	
-	public RedrawObject(double x, double y, int width, int height, int dx, int dy, int dw, int dh,StartupNew state) {
+	public RedrawObject(double x, double y, int width, int height, int dx, int dy, int dw, int dh,SystemState state) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -48,7 +50,7 @@ public class RedrawObject {
 		this.state = state;
 	}
 	
-	public RedrawObject(Entity e, StartupNew state) {
+	public RedrawObject(Entity e, SystemState state) {
 		this.e = e;
 		this.state =state;
 		this.y = e.getYOnScreen() + e.getHeight();

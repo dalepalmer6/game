@@ -2,7 +2,7 @@ package font;
 
 import org.newdawn.slick.opengl.Texture;
 
-import mapeditor.Tile;
+import system.map.Tile;
 
 public class CharacterData{
 	private char character;

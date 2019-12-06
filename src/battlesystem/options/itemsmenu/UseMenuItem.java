@@ -1,19 +1,17 @@
 package battlesystem.options.itemsmenu;
 
-import battlesystem.BattleMenu;
-import battlesystem.options.BattleAction;
+import battlesystem.BattleEntity;
+import battlesystem.menu.BattleMenu;
 import battlesystem.options.BattleSelectionTextWindow;
-import font.SelectionTextWindow;
-import gamestate.PCBattleEntity;
 import gamestate.elements.UsableInBattle;
 import gamestate.elements.items.Item;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class UseMenuItem extends MenuItem{
 	private Item item;
 	
-	public UseMenuItem(StartupNew state, Item i) {
+	public UseMenuItem(SystemState state, Item i) {
 		super("Use",0,0,state);
 		item = i;
 	}
@@ -25,7 +23,7 @@ public class UseMenuItem extends MenuItem{
 		if (item instanceof UsableInBattle) {
 			if (item.getTargetType() == 0) {
 				//select a party member
-				for (PCBattleEntity pc : m.getPartyMembers()) {
+				for (BattleEntity pc : m.getPartyMembers()) {
 					stw.add(new BattleEntitySelectItem(pc,item,state));
 				}
 			}

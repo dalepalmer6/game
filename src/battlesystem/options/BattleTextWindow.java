@@ -1,9 +1,9 @@
 package battlesystem.options;
 
-import battlesystem.BattleMenu;
-import font.TextWindowWithPrompt;
-import global.InputController;
-import menu.StartupNew;
+import battlesystem.menu.BattleMenu;
+import menu.windows.TextWindowWithPrompt;
+import system.SystemState;
+import system.controller.InputController;
 
 public class BattleTextWindow extends TextWindowWithPrompt {
 	private boolean loadAnimOnExit;
@@ -15,7 +15,7 @@ public class BattleTextWindow extends TextWindowWithPrompt {
 	private boolean setKillEntity;
 	private boolean setNeedMenu;
 	
-	public BattleTextWindow(String s, int x, int y, int width, int height, StartupNew m) {
+	public BattleTextWindow(String s, int x, int y, int width, int height, SystemState m) {
 		super(s, x,y,width,height,m);
 		textString = s;
 	}

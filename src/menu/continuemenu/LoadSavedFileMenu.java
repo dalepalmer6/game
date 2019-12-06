@@ -1,18 +1,18 @@
 package menu.continuemenu;
 
-import font.FileSelectionTextWindow;
-import font.SelectionTextWindow;
 import gamestate.GameState;
-import global.InputController;
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.filemenu.FileSelectionTextWindow;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class LoadSavedFileMenu extends Menu {
 	private GameState[] files;
 	protected FileSelectionTextWindow stw;
 	
-	public LoadSavedFileMenu(StartupNew m) {
+	public LoadSavedFileMenu(SystemState m) {
 		super(m);
 		files = new GameState[3];
 		createGameStates();

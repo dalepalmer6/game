@@ -14,18 +14,34 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import canvas.Controllable;
-import canvas.Drawable;
+import gamestate.camera.Camera;
+import gamestate.cutscene.Cutscene;
+import gamestate.cutscene.CutsceneData;
+import gamestate.cutscene.IntroCutscene;
+import gamestate.cutscene.TrainCutscene;
 import gamestate.elements.items.Item;
-import global.InputController;
-import mapeditor.Map;
-import mapeditor.MapEditMenu;
-import mapeditor.Tile;
-import menu.AnimationMenu;
-import menu.AnimationMenuFadeFromBlack;
+import gamestate.entities.DoorEntity;
+import gamestate.entities.EnemyEntity;
+import gamestate.entities.EnemySpawnEntity;
+import gamestate.entities.Entity;
+import gamestate.entities.FollowingPlayer;
+import gamestate.entities.IntroEntity;
+import gamestate.entities.Player;
+import gamestate.entities.TrainEntity;
+import gamestate.map.MapRenderer;
+import gamestate.partymembers.PartyMember;
 import menu.DrawableObject;
-import menu.StartupNew;
-import menu.SwirlAnimation;
+import menu.animation.AnimationMenu;
+import menu.animation.AnimationMenuFadeFromBlack;
+import menu.animation.SwirlAnimation;
+import menu.mapeditmenu.MapEditMenu;
+import system.SystemState;
+import system.SystemState;
+import system.controller.InputController;
+import system.interfaces.Controllable;
+import system.interfaces.Drawable;
+import system.map.Map;
+import system.map.Tile;
 import tiles.ChangeWithFlagTile;
 import tiles.TileInstance;
 
@@ -36,7 +52,7 @@ public class GameState {
 	private Camera camera;
 	private Map map;
 	private MapRenderer mapRenderer;
-	private StartupNew state;
+	private SystemState state;
 	private ArrayList<RedrawObject> ro;
 	private ArrayList<PartyMember> party = new ArrayList<PartyMember>();
 	private final String pathToMaps = "/maps/";
@@ -183,7 +199,7 @@ public class GameState {
 	public void loadMap(int scale) {
 		camera.setStop(false);
 		map.parseMap(scale,currentMapName);
-		System.out.println("Successfully loaded.");
+//		SystemState.out.println("Successfully loaded.");
 		AnimationMenu m = new AnimationMenuFadeFromBlack(state);
 		state.setBGM(map.getBGM());
 		m.createAnimMenu();
@@ -263,13 +279,13 @@ public class GameState {
 		flags = new HashMap<String,Boolean>();
 	}
 	
-	public GameState(StartupNew s) {
-		//load in the map name from the external file
+	public GameState(SystemState s) {
+		//load in the system.map name from the external file
 		//should be loaded from the save data if using a continue
 		this(s,new Map("house - myhome",5,5,s.tileMap,s));
 	}
 	
-	public GameState(StartupNew s, Map m) {
+	public GameState(SystemState s, Map m) {
 		this.timeCreated = System.nanoTime();
 		lastSavedMap = m;
 		this.entities = new ArrayList<Entity>();
@@ -362,9 +378,9 @@ public class GameState {
 	
 	public void loadMapData() {
 		boolean override = false;
-//		if (map != null) {
-//			if (map.getBGM() != null && savedBGM != null) {
-//				if (!map.getBGM().equals(savedBGM)) {
+//		if (system.map != null) {
+//			if (system.map.getBGM() != null && savedBGM != null) {
+//				if (!system.map.getBGM().equals(savedBGM)) {
 //					//save the override bgm and overwrite them
 //					override = true;
 //					saveBGMFromMap();
@@ -373,7 +389,7 @@ public class GameState {
 //		}
 		loadMap(4);
 //		if (override) {
-//			map.setBGM(map.getBGM());
+//			system.map.setBGM(system.map.getBGM());
 //		} else if (savedBGM != null) {
 //			state.setBGM(savedBGM);
 //		}
@@ -494,7 +510,6 @@ private void addPartyMembersNeeded() {
 				Tile tilefg = state.tileMap.getTile(valfg);
 				int instancefg  = map.inspectSurroundings((int)(j + camera.getX()/128),(int)(i + camera.getY()/128));
 				mapRenderer.drawTile(state.getMainWindow(),j,i,tilebg,instancebg,tilefg,instancefg);
-//				mapRenderer.drawTile(state.getMainWindow(),j,i,state.tileMap.getTile(val),instance);
 			}
 		}
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -572,7 +587,7 @@ private void addPartyMembersNeeded() {
 	}
 	
 	public void updateTiles() {
-		//only do this on a flag change or map load if slowdown occurs
+		//only do this on a flag change or system.map load if slowdown occurs
 		ArrayList<ChangeWithFlagTile> flagTiles = new ArrayList<ChangeWithFlagTile>();
 		for (int i : state.tileMap.getTileMap().keySet()) {
 			if (state.tileMap.getTile(i) instanceof ChangeWithFlagTile) {
@@ -794,9 +809,9 @@ private void addPartyMembersNeeded() {
 					teleportFailedTimer = 120;
 					state.stopBGM();
 					state.setSFX("teleportfail.wav");
-					player.actionTaken = ("charred");
-					player.directionX = "";
-					player.directionY = "";
+					player.setActionTaken("charred");
+					player.setDirectionX("");
+					player.setDirectionY("");
 					setFlag("teleporting",false);
 				} else {
 					player.update(this);
@@ -824,9 +839,9 @@ private void addPartyMembersNeeded() {
 			entitiesCanMove = false;
 			teleportFailedTimer--;
 			for (Entity player : savedParty) {
-				player.directionX = "";
-				player.directionY = "";
-				player.actionTaken = "charred";
+				player.setActionTaken("charred");
+				player.setDirectionX("");
+				player.setDirectionY("");
 			}
 			if (teleportFailedTimer == -1) {
 				entitiesCanMove = true;
@@ -843,7 +858,7 @@ private void addPartyMembersNeeded() {
 		}
 		updateSystemFlags();
 		updateTiles();
-		//get all entities that belong in the map (in the viewport bounds)
+		//get all entities that belong in the system.map (in the viewport bounds)
 		
 		if (!doIntro) {
 			for (Entity e : map.getEntitiesInView((int)camera.getX(), (int)camera.getY())) {
@@ -959,10 +974,10 @@ private void addPartyMembersNeeded() {
 				if (!(e == e2)) {
 					if (!(e instanceof DoorEntity || e instanceof EnemySpawnEntity)) {
 						if (e.checkCollision(e2)) {
-							e.deltaX = 0;
-							e.deltaY = 0;
-							e2.deltaX = 0;
-							e2.deltaY = 0;
+							e.setDeltaX(0);
+							e.setDeltaY(0);
+							e2.setDeltaX(0);
+							e2.setDeltaY(0);
 						}
 					}
 						if (e.checkCollisionWithTolerance(e2,32)) {
@@ -1121,7 +1136,7 @@ private void addPartyMembersNeeded() {
 			pw.close();
 		}
 		
-		//write all system info, money on hand, in bank, x,y, map name
+		//write all system info, money on hand, in bank, x,y, system.map name
 		file = new File(savedataLoc + "sys");
 		file.createNewFile();
 		PrintWriter pw = new PrintWriter(file);

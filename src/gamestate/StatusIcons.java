@@ -1,7 +1,7 @@
 package gamestate;
 
-import menu.StartupNew;
 import menu.TexturedMenuItem;
+import system.SystemState;
 
 public enum StatusIcons {
 	NORMAL(0,0,0,0),
@@ -46,7 +46,7 @@ public enum StatusIcons {
 	}
 	
 	/*
-	 * When this method is called, we need to set the (StartupNew) state variable before we can draw it
+	 * When this method is called, we need to set the (SystemState) state variable before we can draw it
 	 * */
 	public TexturedMenuItem getMenuItem(double x, double y) {
 		return new TexturedMenuItem(x,y,w*4,h*4,null,texture,this.x,this.y,w,h);

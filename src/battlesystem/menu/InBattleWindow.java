@@ -2,19 +2,19 @@ package battlesystem.menu;
 
 import java.util.ArrayList;
 
-import canvas.Controllable;
-import font.SelectionTextWindow;
-import gamestate.PartyMember;
-import global.InputController;
+import gamestate.partymembers.PartyMember;
 import menu.Menu;
-import menu.StartupNew;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
+import system.interfaces.Controllable;
 
 public class InBattleWindow extends Menu implements Controllable{
 	protected SelectionTextWindow stw;
 	protected PartyMember pm;
 	protected ArrayList<PartyMember> party;
 	
-	public InBattleWindow(StartupNew m) {
+	public InBattleWindow(SystemState m) {
 		super(m);
 		stw = new SelectionTextWindow("horizontal",state.getMainWindow().getScreenWidth()/2 - (16/2)*72,32,16,2,state);
 		stw.setCurrentOpen(stw.getTextStartX()+96,stw.getTextStartY());

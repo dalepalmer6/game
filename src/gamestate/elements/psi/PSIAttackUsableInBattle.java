@@ -1,6 +1,6 @@
 package gamestate.elements.psi;
 
-import gamestate.BattleEntity;
+import battlesystem.BattleEntity;
 import gamestate.elements.UsableInBattle;
 
 public class PSIAttackUsableInBattle extends PSIAttack implements UsableInBattle {

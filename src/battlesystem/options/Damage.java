@@ -1,6 +1,6 @@
 package battlesystem.options;
 
-import gamestate.BattleEntity;
+import battlesystem.BattleEntity;
 
 public class Damage {
 	

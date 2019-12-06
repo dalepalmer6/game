@@ -1,19 +1,19 @@
 package menu.mainmenu;
 
-import global.MenuStack;
-import mapeditor.MapEditMenu;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.mapeditmenu.MapEditMenu;
+import system.MenuStack;
+import system.SystemState;
 
 public class MapPreviewTestButton extends MenuItem {
 	private static String text = "Map Editor";
 	
-	public MapPreviewTestButton(int x, int y, StartupNew m) {
+	public MapPreviewTestButton(int x, int y, SystemState m) {
 		super(text,x,y,m);
 	}
 	
 	public String execute() {
-		System.out.println("Loading map edit.");
+//		SystemState.out.println("Loading system.map edit.");
 		state.getMenuStack().push(new MapEditMenu(state,state.tileMap));
 		return null;
 	}

@@ -2,17 +2,17 @@ package battlesystem.menu;
 
 import java.util.ArrayList;
 
-import actionmenu.goodsmenu.GoodsSelectMenuItem;
-import font.SelectionTextWindow;
-import font.TextWindow;
-import gamestate.PartyMember;
 import gamestate.elements.items.Item;
-import global.InputController;
-import menu.StartupNew;
+import gamestate.partymembers.PartyMember;
+import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
+import menu.windows.SelectionTextWindow;
+import menu.windows.TextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class GoodsMenuInBattle extends InBattleWindow {
 	
-	public GoodsMenuInBattle(StartupNew state, PartyMember p) {
+	public GoodsMenuInBattle(SystemState state, PartyMember p) {
 		super(state);
 		int width = 2;
 		int height = 10;

@@ -1,6 +1,7 @@
 package menu;
 
 import menu.namecharactersmenu.CharacterNamingMenu;
+import system.SystemState;
 
 public class SubmitButton extends MenuItem {
 	private String output = "";
@@ -9,7 +10,7 @@ public class SubmitButton extends MenuItem {
 		this.output = s;
 	}
 	
-	public SubmitButton(StartupNew m) {
+	public SubmitButton(SystemState m) {
 		super("Done",0,0,m);
 	}
 	

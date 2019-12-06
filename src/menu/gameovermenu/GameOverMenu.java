@@ -1,9 +1,9 @@
 package menu.gameovermenu;
 
-import font.DialogTextWindow;
-import menu.AnimationMenu;
 import menu.Menu;
-import menu.StartupNew;
+import menu.animation.AnimationMenu;
+import menu.windows.DialogTextWindow;
+import system.SystemState;
 
 public class GameOverMenu extends Menu {
 	private String GAME_OVER_STRING = "@Well [NINTEN], it seems like you went in over your head.[PROMPTINPUT]@Did you want to give it another shot?"
@@ -11,7 +11,7 @@ public class GameOverMenu extends Menu {
 			+ "[CHOICE]Yes[TEXT]@That's my boy! Off you go!"
 			+ "[CHOICE]No[TEXT]@I see. Well, try to get some rest then.";
 	
-	public GameOverMenu(StartupNew s) {
+	public GameOverMenu(SystemState s) {
 		super(s);
 		
 		//draw the entity in the center of the screen

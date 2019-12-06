@@ -1,7 +1,8 @@
 package menu;
 
-import canvas.MainWindow;
-import font.TextWindow;
+import menu.windows.TextWindow;
+import system.MainWindow;
+import system.SystemState;
 
 public class ButtonMenuItem extends MenuItem {
 	private int width;
@@ -17,7 +18,7 @@ public class ButtonMenuItem extends MenuItem {
 		on = !on;
 	}
 	
-	public ButtonMenuItem(String t, int x, int y, int width, int height, StartupNew m) {
+	public ButtonMenuItem(String t, int x, int y, int width, int height, SystemState m) {
 		super(t, x, y,175,63, m);
 		this.width = width;
 		this.height = height;

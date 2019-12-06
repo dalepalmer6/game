@@ -2,8 +2,8 @@ package menu;
 
 import org.lwjgl.opengl.GL11;
 
-import canvas.Drawable;
-import canvas.MainWindow;
+import system.MainWindow;
+import system.interfaces.Drawable;
 
 public class DrawableObject implements Drawable {
 	protected double x;

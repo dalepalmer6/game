@@ -3,19 +3,19 @@ package gamestate.elements.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import font.SelectionTextWindow;
-import font.TextUtil;
-import gamestate.BattleEntity;
-import gamestate.DoorEntity;
+import battlesystem.BattleEntity;
+import battlesystem.PCBattleEntity;
 import gamestate.EntityStats;
-import gamestate.PCBattleEntity;
-import gamestate.PartyMember;
-import gamestate.StatusConditions;
 import gamestate.elements.Usable;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.entities.DoorEntity;
+import gamestate.partymembers.PartyMember;
 import menu.Menu;
-import menu.StartupNew;
-import menu.TeleportDestinationMenuItem;
+import menu.teleportmenu.TeleportDestinationMenuItem;
+import menu.text.TextUtil;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.data.StatusConditions;
 
 public class Item{
 	protected String name;
@@ -285,7 +285,7 @@ public class Item{
 	}
 	
 	public int useBread(BattleEntity user) {
-		//transform the bread item and store the x,y and map name
+		//transform the bread item and store the x,y and system.map name
 		int index = ((PCBattleEntity)user).getItems().indexOf(this);
 		((PCBattleEntity) user).getItems().set(index, user.getSystemState().items.get(86));
 		user.getSystemState().saveCoordinates();
@@ -392,7 +392,7 @@ public class Item{
 			break;
 			case 22: 
 				//teleport a
-				StartupNew state = user.getSystemState();
+				SystemState state = user.getSystemState();
 				Menu m = new Menu(state);
 				SelectionTextWindow stw = new SelectionTextWindow(0,0,10,10,state);
 				/*make this its own method and get the destinations from a different place*/

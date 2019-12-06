@@ -3,16 +3,16 @@ package menu.continuemenu;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import actionmenu.equipmenu.TextLabel;
-import canvas.MainWindow;
-import font.TextWindow;
-import gamestate.Entity;
 import gamestate.GameState;
-import mapeditor.MapNames;
-import menu.AnimationMenu;
+import gamestate.entities.Entity;
 import menu.MenuItem;
-import menu.StartupNew;
 import menu.TexturedMenuItem;
+import menu.actionmenu.equipmenu.TextLabel;
+import menu.animation.AnimationMenu;
+import menu.mapeditmenu.MapNames;
+import menu.windows.TextWindow;
+import system.MainWindow;
+import system.SystemState;
 
 public class SaveFileMenuItem extends MenuItem {
 	GameState gs;
@@ -21,7 +21,7 @@ public class SaveFileMenuItem extends MenuItem {
 	ArrayList<MenuItem> partyMems;
 	private boolean doSave;
 	
-	public SaveFileMenuItem(String s, StartupNew state, GameState gs, String name, int i) {
+	public SaveFileMenuItem(String s, SystemState state, GameState gs, String name, int i) {
 		super(s,256,i*384,state);
 		this.gs = gs;
 		this.name = name;
@@ -47,14 +47,14 @@ public class SaveFileMenuItem extends MenuItem {
 		for (boolean need : needed) {
 			if (need) {
 				switch(i++) {
-					case 0: entityId = StartupNew.Characters.NINTEN.getId(); break;
-					case 1: entityId = StartupNew.Characters.ANA.getId(); break;
-					case 2: entityId = StartupNew.Characters.LOID.getId(); break;
+					case 0: entityId = SystemState.Characters.NINTEN.getId(); break;
+					case 1: entityId = SystemState.Characters.ANA.getId(); break;
+					case 2: entityId = SystemState.Characters.LOID.getId(); break;
 					case 3: entityId = "pippi"; break;
-					case 4: entityId = StartupNew.Characters.TEDDY.getId(); break;
+					case 4: entityId = SystemState.Characters.TEDDY.getId(); break;
 				}
 				Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
-				//int x, int y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh
+				//int x, int y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh
 				TexturedMenuItem tmi = new TexturedMenuItem("",this.x + (x+=96),this.y + y,24*4,32*4,state,entityId + ".png",0,0,24,32);
 				addMenuItem(tmi);
 			}
@@ -65,7 +65,7 @@ public class SaveFileMenuItem extends MenuItem {
 		if (!doSave) {
 			state.setSaveFileName(name);
 			state.getMenuStack().clear();
-			System.out.println("Loading a previous game.");
+			SystemState.out.println("Loading a previous game.");
 			AnimationMenu an = new AnimationMenu(state);
 			an.createAnimMenu();
 			state.getMenuStack().push(an);

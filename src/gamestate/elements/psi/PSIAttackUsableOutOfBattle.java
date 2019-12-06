@@ -1,7 +1,7 @@
 package gamestate.elements.psi;
 
-import gamestate.PartyMember;
 import gamestate.elements.UsableOutOfBattle;
+import gamestate.partymembers.PartyMember;
 
 public class PSIAttackUsableOutOfBattle extends PSIAttack implements UsableOutOfBattle {
 

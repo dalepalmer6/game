@@ -2,22 +2,22 @@ package battlesystem.options;
 
 import java.util.ArrayList;
 
-import battlesystem.BattleMenu;
-import battlesystem.SelectTargetMenu;
-import font.SelectionTextWindow;
-import gamestate.PartyMember;
+import battlesystem.menu.BattleMenu;
+import battlesystem.menu.SelectTargetMenu;
+import gamestate.partymembers.PartyMember;
 import menu.MenuItem;
-import menu.StartupNew;
 import menu.TexturedMenuItem;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
 
 public class Bash extends TexturedMenuItem{
 
-//	public Bash(String t, int x, int y, StartupNew m) {
+//	public Bash(String t, int x, int y, SystemState m) {
 //		super(t, x, y, m);
 //		// TODO Auto-generated constructor stub
 //	}
 	
-	public Bash(StartupNew state, PartyMember pm, int ty) {
+	public Bash(SystemState state, PartyMember pm, int ty) {
 		super("Bash",64,ty,16*4,16*4,state,"battlehud.png",0,16,16,16);
 		setHovered(0,0,16,16);
 //		this.party = new ArrayList<PartyMember>();

@@ -2,21 +2,21 @@ package battlesystem.options;
 
 import java.util.ArrayList;
 
-import actionmenu.EquipMenuItem;
-import actionmenu.GoodsMenuItem;
-import actionmenu.PSIMenuItem;
-import actionmenu.PauseMenuSelectionWindow;
-import actionmenu.StatusMenuItem;
-import battlesystem.BattleMenu;
-import font.SelectionTextWindow;
-import gamestate.PartyMember;
-import global.InputController;
-import menu.StartupNew;
+import battlesystem.menu.BattleMenu;
+import gamestate.partymembers.PartyMember;
+import menu.actionmenu.EquipMenuItem;
+import menu.actionmenu.GoodsMenuItem;
+import menu.actionmenu.PSIMenuItem;
+import menu.actionmenu.PauseMenuSelectionWindow;
+import menu.actionmenu.StatusMenuItem;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class BattleMenuSelectionTextWindow extends PauseMenuSelectionWindow {
 	private int index;
 	
-	public BattleMenuSelectionTextWindow(StartupNew m, ArrayList<PartyMember> party, int index) {
+	public BattleMenuSelectionTextWindow(SystemState m, ArrayList<PartyMember> party, int index) {
 		super(m, party);
 		this.index = index;
 		createButtons();

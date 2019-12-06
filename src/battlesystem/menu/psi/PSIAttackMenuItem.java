@@ -2,30 +2,30 @@ package battlesystem.menu.psi;
 
 import java.util.ArrayList;
 
-import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
-import actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
-import battlesystem.BattleMenu;
-import battlesystem.SelectTargetMenu;
+import battlesystem.BattleEntity;
+import battlesystem.Enemy;
+import battlesystem.PCBattleEntity;
+import battlesystem.menu.BattleMenu;
+import battlesystem.menu.SelectTargetMenu;
 import battlesystem.options.BattleAction;
 import battlesystem.options.BattleSelectionTextWindow;
 import battlesystem.options.itemsmenu.BattleEntitySelectItem;
-import font.SelectionTextWindow;
-import gamestate.BattleEntity;
-import gamestate.Enemy;
-import gamestate.PCBattleEntity;
-import gamestate.PartyMember;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.partymembers.PartyMember;
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
-import menu.TeleportDestinationMenuItem;
+import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenu;
+import menu.actionmenu.goodsmenu.goodsactionmenu.use.PartyMemberSelectMenuItem;
+import menu.teleportmenu.TeleportDestinationMenuItem;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
 
 public class PSIAttackMenuItem extends MenuItem {
 private PSIAttack psi;
 ArrayList<PartyMember> party;
 int index;
 	
-	public PSIAttackMenuItem(PSIAttack psi, int x, int y, StartupNew m, ArrayList<PartyMember> party, int index) {
+	public PSIAttackMenuItem(PSIAttack psi, int x, int y, SystemState m, ArrayList<PartyMember> party, int index) {
 		super(psi.getStage(),x,y,m);
 		this.psi = psi;
 		this.party = party;
@@ -33,7 +33,7 @@ int index;
 		// TODO Auto-generated constructor stub
 	}
 
-	public PSIAttackMenuItem(PSIAttack psi, String fullName, int x, int y, StartupNew m, ArrayList<PartyMember> party, int index) {
+	public PSIAttackMenuItem(PSIAttack psi, String fullName, int x, int y, SystemState m, ArrayList<PartyMember> party, int index) {
 		super(fullName,x,y,m);
 		this.psi = psi;
 		this.party = party;

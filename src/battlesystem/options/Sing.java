@@ -1,10 +1,10 @@
 package battlesystem.options;
 
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class Sing extends MenuItem {
-	public Sing(StartupNew state) {
+	public Sing(SystemState state) {
 		super("Sing",0,0,state);
 	}
 }

@@ -2,17 +2,17 @@ package battlesystem.menu.psi;
 
 import java.util.ArrayList;
 
-import actionmenu.PlayerInfoWindow;
-import actionmenu.equipmenu.TextLabel;
-import font.SelectionTextWindow;
-import font.TextWindow;
-import gamestate.PartyMember;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.partymembers.PartyMember;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
-import global.InputController;
 import menu.Menu;
-import menu.StartupNew;
+import menu.actionmenu.PlayerInfoWindow;
+import menu.actionmenu.equipmenu.TextLabel;
+import menu.windows.SelectionTextWindow;
+import menu.windows.TextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class PSIPickMenu extends Menu {
 	private int classId;
@@ -28,8 +28,8 @@ public class PSIPickMenu extends Menu {
 	private ArrayList<PSIFamily> psiFamilies;
 	
 	// PSIPickMenu(state,index,party,classId);
-//	public PSIPickMenu(StartupNew state, int index, ArrayList<PartyMember> party, int classId) {
-	public PSIPickMenu(StartupNew state, SelectionTextWindow classes, SelectionTextWindow psistw, ArrayList<TextLabel> labels) {
+//	public PSIPickMenu(SystemState state, int index, ArrayList<PartyMember> party, int classId) {
+	public PSIPickMenu(SystemState state, SelectionTextWindow classes, SelectionTextWindow psistw, ArrayList<TextLabel> labels) {
 		super(state);
 		psiSTW = psistw;
 		classificationWindow = classes;
@@ -39,7 +39,7 @@ public class PSIPickMenu extends Menu {
 	}
 	
 	
-	public PSIPickMenu(StartupNew state, ArrayList<PartyMember> party, int index, ArrayList<PSIFamily> psiFams) {
+	public PSIPickMenu(SystemState state, ArrayList<PartyMember> party, int index, ArrayList<PSIFamily> psiFams) {
 		// TODO Auto-generated constructor stub
 		super(state);
 		this.partyMember = party.get(index);

@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL40;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 
-import gamestate.Enemy;
+import battlesystem.Enemy;
 import battlesystem.options.EnemyOption;
-import canvas.MainWindow;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.MainWindow;
+import system.SystemState;
 
 public class EnemyOptionPanel extends MenuItem {
 	private ArrayList<EnemyOption> enemyOptions;
@@ -81,7 +81,7 @@ public class EnemyOptionPanel extends MenuItem {
 //		selected = -2;
 	}
 	
-	public EnemyOptionPanel(StartupNew m) {
+	public EnemyOptionPanel(SystemState m) {
 		super("", 0, 400, m.getMainWindow().getScreenWidth(), m.getMainWindow().getScreenHeight()-400, m);
 		// TODO Auto-generated constructor stub
 		enemyOptions = new ArrayList<EnemyOption>();
@@ -123,6 +123,7 @@ public class EnemyOptionPanel extends MenuItem {
 //		m.setUseShader(true);
 //		m.setTexture("img\\battlebg.png");
 		m.setBattleTexture(battleBGTexture,battleBGVars,palette);
+//		m.setBattleTexture(,battleBGVars,palette);
 //		m.setUseShader(true);
 		state.setDrawBattleBG(true);
 //		m.drawBattleBG();

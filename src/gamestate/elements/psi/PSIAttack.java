@@ -1,9 +1,9 @@
 package gamestate.elements.psi;
 
-import gamestate.BattleEntity;
-import gamestate.PartyMember;
+import battlesystem.BattleEntity;
 import gamestate.elements.items.Item;
-import menu.Animation;
+import gamestate.partymembers.PartyMember;
+import menu.animation.Animation;
 
 public class PSIAttack extends Item{
 	private Animation anim;

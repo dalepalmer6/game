@@ -2,20 +2,20 @@ package battlesystem.menu.psi;
 
 import java.util.ArrayList;
 
-import actionmenu.PlayerInfoWindow;
-import actionmenu.equipmenu.TextLabel;
-import actionmenu.goodsmenu.GoodsSelectMenuItem;
-import actionmenu.goodsmenu.InvisibleMenuItem;
 import battlesystem.menu.InBattleWindow;
-import font.SelectionTextWindow;
-import gamestate.PartyMember;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.partymembers.PartyMember;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
-import global.InputController;
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.actionmenu.PlayerInfoWindow;
+import menu.actionmenu.equipmenu.TextLabel;
+import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
+import menu.actionmenu.goodsmenu.InvisibleMenuItem;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class PSIMenuInBattle extends InBattleWindow {
 	private PSISelectionTextWindow psiSTW;
@@ -25,7 +25,7 @@ public class PSIMenuInBattle extends InBattleWindow {
 	private MenuItem lastClassWindowSelection;
 	private int index;
 	
-	public PSIMenuInBattle(StartupNew state, PartyMember pm) {
+	public PSIMenuInBattle(SystemState state, PartyMember pm) {
 		super(state);
 		this.party = new ArrayList<PartyMember>();
 		this.party.add(pm);

@@ -1,16 +1,16 @@
 package battlesystem.options.itemsmenu;
 
-import battlesystem.BattleMenu;
-import gamestate.BattleEntity;
+import battlesystem.BattleEntity;
+import battlesystem.menu.BattleMenu;
 import gamestate.elements.items.Item;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class BattleEntitySelectItem extends MenuItem{
 	private BattleEntity target;
 	private Item item;
 	
-	public BattleEntitySelectItem(BattleEntity p, Item i, StartupNew m) {
+	public BattleEntitySelectItem(BattleEntity p, Item i, SystemState m) {
 		super(p.getName(),0,0,m);
 		// TODO Auto-generated constructor stub
 		target = p;

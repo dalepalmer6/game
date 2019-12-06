@@ -2,19 +2,19 @@ package battlesystem.menu.psi;
 
 import java.util.ArrayList;
 
-import actionmenu.equipmenu.TextLabel;
-import actionmenu.goodsmenu.GoodsMenu;
-import actionmenu.goodsmenu.GoodsSelectMenuItem;
-import actionmenu.goodsmenu.InvisibleMenuItem;
-import font.SelectionTextWindow;
-import gamestate.PartyMember;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
+import gamestate.partymembers.PartyMember;
 import gamestate.psi.PSIClassification;
 import gamestate.psi.PSIFamily;
-import global.InputController;
 import menu.Menu;
-import menu.StartupNew;
+import menu.actionmenu.equipmenu.TextLabel;
+import menu.actionmenu.goodsmenu.GoodsMenu;
+import menu.actionmenu.goodsmenu.GoodsSelectMenuItem;
+import menu.actionmenu.goodsmenu.InvisibleMenuItem;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class PSIMenuSelectMember extends Menu {
 	private SelectionTextWindow psiSTW;
@@ -27,14 +27,14 @@ public class PSIMenuSelectMember extends Menu {
 	private boolean lockedIn;
 	private PartyMember currentPartyMember;
 	
-	public PSIMenuSelectMember(StartupNew state, ArrayList<PartyMember> party, int index) {
+	public PSIMenuSelectMember(SystemState state, ArrayList<PartyMember> party, int index) {
 		super(state);
 		this.party = party;
 		this.index = index;
 		this.lockedIn = true;
 	}
 	
-	public PSIMenuSelectMember(StartupNew state, ArrayList<PartyMember> party) {
+	public PSIMenuSelectMember(SystemState state, ArrayList<PartyMember> party) {
 		super(state);
 		this.party = party;
 		index = 0;

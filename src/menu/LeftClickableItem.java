@@ -2,9 +2,9 @@ package menu;
 
 import org.lwjgl.opengl.GL11;
 
-import canvas.Clickable;
-import canvas.MainWindow;
-import global.InputController;
+import system.MainWindow;
+import system.controller.InputController;
+import system.interfaces.Clickable;
 
 public class LeftClickableItem extends DrawableObject implements Clickable {
 	

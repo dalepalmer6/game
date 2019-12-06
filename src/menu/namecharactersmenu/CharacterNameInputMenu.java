@@ -1,16 +1,15 @@
 package menu.namecharactersmenu;
 
-import font.NameInputSelectionTextWindow;
-import font.SelectionTextWindow;
-import font.TextWindow;
-import gamestate.Entity;
-import global.InputController;
+import gamestate.entities.Entity;
 import menu.BackButton;
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
 import menu.SubmitButton;
 import menu.TexturedMenuItem;
+import menu.windows.SelectionTextWindow;
+import menu.windows.TextWindow;
+import system.SystemState;
+import system.controller.InputController;
 
 public class CharacterNameInputMenu extends Menu {
 //	private String input = "";
@@ -38,7 +37,7 @@ public class CharacterNameInputMenu extends Menu {
 	public String getInput() {
 		return input;
 	}
-	public CharacterNameInputMenu(StartupNew m, int index) {
+	public CharacterNameInputMenu(SystemState m, int index) {
 		super(m);
 		this.index = index;
 		backShouldExit = false;
@@ -55,14 +54,14 @@ public class CharacterNameInputMenu extends Menu {
 //		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		String entityId = "";
 		switch(index) {
-			case 0: entityId = StartupNew.Characters.NINTEN.getId(); break;
-			case 1: entityId = StartupNew.Characters.ANA.getId(); break;
-			case 2: entityId = StartupNew.Characters.LOID.getId(); break;
-			case 3: entityId = StartupNew.Characters.TEDDY.getId(); break;
-			case 4: entityId = StartupNew.Characters.NINTEN.getId(); break;
+			case 0: entityId = SystemState.Characters.NINTEN.getId(); break;
+			case 1: entityId = SystemState.Characters.ANA.getId(); break;
+			case 2: entityId = SystemState.Characters.LOID.getId(); break;
+			case 3: entityId = SystemState.Characters.TEDDY.getId(); break;
+			case 4: entityId = SystemState.Characters.NINTEN.getId(); break;
 		}
 		Entity e = state.getEntityFromEnum(entityId).createCopy(0,0,16*4,24*4,"entity");
-		//int x, int y, int width, int height,  StartupNew state, String texture, int dx, int dy, int dw, int dh
+		//int x, int y, int width, int height,  SystemState state, String texture, int dx, int dy, int dw, int dh
 		TexturedMenuItem tmi = new TexturedMenuItem("",150+6*64,0,24*4,32*4,state,entityId + ".png",0,0,24,32);
 		addMenuItem(tmi);
 		String alphabet = "ABCDEabcde01234FGHIJfghij56789KLMNOklmno* \"@@PQRSTpqrst\"\"'=/UVWXYuvwxy+- $ Z()  z!?., :;  ";

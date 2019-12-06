@@ -1,16 +1,16 @@
 package battlesystem.options;
 
-import actionmenu.goodsmenu.GoodsMenu;
-import battlesystem.BattleMenu;
+import battlesystem.menu.BattleMenu;
 import battlesystem.options.itemsmenu.ItemMenuItem;
-import font.SelectionTextWindow;
 import gamestate.elements.items.Item;
 import menu.MenuItem;
-import menu.StartupNew;
+import menu.actionmenu.goodsmenu.GoodsMenu;
+import menu.windows.SelectionTextWindow;
+import system.SystemState;
 
 public class Goods extends MenuItem{
 
-	public Goods(String t, int x, int y, StartupNew m) {
+	public Goods(String t, int x, int y, SystemState m) {
 		super(t, x, y, m);
 		// TODO Auto-generated constructor stub
 	}

@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import battlesystem.BattleMenu;
-import battlesystem.DamageMenuItem;
-import gamestate.BattleEntity;
-import gamestate.Enemy;
-import gamestate.PCBattleEntity;
-import gamestate.StatusConditions;
+import battlesystem.BattleEntity;
+import battlesystem.Enemy;
+import battlesystem.EnemyAction;
+import battlesystem.PCBattleEntity;
+import battlesystem.menu.BattleMenu;
+import battlesystem.menu.DamageMenuItem;
 import gamestate.elements.items.Item;
 import gamestate.elements.psi.PSIAttack;
-import menu.Animation;
-import menu.EnemyAction;
-import menu.StartupNew;
 import menu.TexturedMenuItem;
+import menu.animation.Animation;
+import system.SystemState;
+import system.data.StatusConditions;
 
 public class BattleAction {
 	private BattleEntity actor;
@@ -26,7 +26,7 @@ public class BattleAction {
 	private boolean healing;
 	private Item itemToUse;
 	private boolean completed = false;
-	private StartupNew state;
+	private SystemState state;
 //	private BattleMenu bm = state.battleMenu;
 	private boolean targetAll;
 	private ArrayList<BattleEntity> targets;
@@ -58,7 +58,7 @@ public class BattleAction {
 		return completed;
 	}
 	
-	public void createAnim(StartupNew state) throws IOException {
+	public void createAnim(SystemState state) throws IOException {
 		BattleMenu bm = state.battleMenu;
 		switch(usedAction) {
 			case "psi" : //draw anim only if the psi has an animation
@@ -431,11 +431,6 @@ public class BattleAction {
 			createDOTMenuItem((int)dmg,actor);
 		}
 		
-//		for (StatusConditions sc : conditions) {
-//			battleString = sc.doActionOnTurn(actor);
-//		}
-		
-		
 		if (!battleString.equals("")) {
 			battleString += "[PROMPTINPUT]";
 		}
@@ -540,7 +535,7 @@ public class BattleAction {
 		usedAction += actExtend;
 	}
 	
-	public BattleAction(StartupNew state) {
+	public BattleAction(SystemState state) {
 		this.state = state;
 	}
 	

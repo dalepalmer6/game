@@ -2,11 +2,11 @@ package menu.namecharactersmenu;
 
 import menu.Menu;
 import menu.MenuItem;
-import menu.StartupNew;
+import system.SystemState;
 
 public class CharacterInputButton extends MenuItem {
 
-	public CharacterInputButton(char c,int x, int y, StartupNew m) {
+	public CharacterInputButton(char c,int x, int y, SystemState m) {
 		super(Character.toString(c),0,0,m); 
 	}
 	
@@ -19,7 +19,7 @@ public class CharacterInputButton extends MenuItem {
 		Menu m = state.getMenuStack().peek();
 		m.appendInput(this.text);
 		return null;
-//		System.out.println(this.text);
+//		SystemState.out.println(this.text);
 //		return this.text;
 	}
 }

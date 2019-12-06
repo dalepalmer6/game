@@ -28,11 +28,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import font.DialogTextWindow;
-import font.Text;
-import mapeditor.Map;
 import menu.Menu;
-import menu.StartupNew;
+import menu.text.Text;
+import menu.windows.DialogTextWindow;
+import system.SystemState;
+import system.map.Map;
 
 public class TextEditorWindow {
 	private JFrame frame;
@@ -44,7 +44,7 @@ public class TextEditorWindow {
 	private JComboBox mapEntitiesNamesComboBox;
 	private JTextArea parsedTextArea;
 	private GridBagConstraints c;
-	private StartupNew state;
+	private SystemState state;
 	private JPanel flagCheckboxes;
 	private ArrayList<String> flagsOn;
 	private JPanel panel2;
@@ -62,7 +62,7 @@ public class TextEditorWindow {
 	
 	public TextEditorWindow() {
 		flagsOn = new ArrayList<String>();
-		state = new StartupNew();
+		state = new SystemState();
 		state.init(true);
 		//state.textData;
 		//state.mapNames;
@@ -405,7 +405,7 @@ public class TextEditorWindow {
 			c.gridy = i++;
 			flagCheckboxes.add(jcb,c);
 		}
-		System.out.println(flags);
+		SystemState.out.println(flags);
 		frame.revalidate();
 		return true;
 	}
@@ -419,7 +419,7 @@ public class TextEditorWindow {
 	}
 	
 	public void loadAction() { 
-		System.out.println("Creating the LWJGL context.");
+		SystemState.out.println("Creating the LWJGL context.");
 		setFlags();
 		Menu m = new Menu(state);
 		m.addMenuItem(new DialogTextWindow(inputField.getText(),"Test Entity",state));
